@@ -35,9 +35,7 @@ export default function RootLayout({ children, modal }: Props) {
                               </div>
                             </div>
                           </div>
-                          <div className={styles.nav}>
-                            <NavMenu />
-                          </div>
+                          <NavMenu />
                           <div className={styles.bottomNav}>
                             <MoreMenu />
                           </div>
