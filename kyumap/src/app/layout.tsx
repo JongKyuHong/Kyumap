@@ -5,6 +5,7 @@ import Image from "next/image";
 import Logo from "../../public/logo.png";
 import NavMenu from "./_component/NavMenu";
 import MoreMenu from "./_component/MoreMenu";
+import MenuDetail from "./_component/MenuDetail";
 
 type Props = { children: ReactNode; modal: ReactNode };
 
@@ -36,9 +37,7 @@ export default function RootLayout({ children, modal }: Props) {
                             </div>
                           </div>
                           <NavMenu />
-                          <div className={styles.bottomNav}>
-                            <MoreMenu />
-                          </div>
+                          <MoreMenu />
                         </div>
                       </div>
                     </div>
@@ -52,6 +51,7 @@ export default function RootLayout({ children, modal }: Props) {
                 {modal}
               </div>
             </div>
+            <MenuDetail />
           </div>
         </div>
       </div>
