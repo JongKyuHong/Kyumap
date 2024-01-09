@@ -47,12 +47,6 @@
   text-decoration: none;
 }
 
-.navLink:-webkit-any-link {
-  color: -webkit-link;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
 .navLinkInner {
   padding-top: 12px;
   padding-bottom: 12px;
@@ -66,6 +60,11 @@
   border-bottom-right-radius: 8px;
   padding-left: 12px;
   border-top-left-radius: 8px;
+}
+
+.navLinkInner:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s;
 }
 
 @media (min-height: 600px) {
@@ -90,6 +89,7 @@
     flex-direction: row;
   }
 }
+
 .menuBtn {
   overflow-y: visible;
   overflow-x: visible;
