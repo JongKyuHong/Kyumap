@@ -1,12 +1,21 @@
+"use client";
+
 import Link from "next/link";
 import styles from "./moremenu.module.css";
+import { useState } from "react";
 
 export default function MoreMenu() {
+  const [clicked, setClicked] = useState(false);
+
+  const onClickBtn = () => {
+    setClicked(!clicked);
+  };
+
   return (
     <div className={styles.bottomNav}>
       <span className={styles.nav}>
         <div className={styles.navInner}>
-          <Link className={styles.navLink} href="/">
+          <Link className={styles.navLink} href="#" onClick={onClickBtn}>
             <div className={styles.navLinkInner}>
               <div>
                 <div className={styles.menuBtn}>

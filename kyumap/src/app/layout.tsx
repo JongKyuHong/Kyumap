@@ -48,13 +48,13 @@ export default function RootLayout({ children, modal }: Props) {
                     <main>{children}</main>
                   </div>
                 </div>
-                {modal}
               </div>
             </div>
             <MenuDetail />
           </div>
         </div>
       </div>
+      {modal}
     </body>
   );
 }
