@@ -12,7 +12,7 @@
 }
 
 .Container:focus-visible {
-  outline: -webkit-focus-ring-color auto 1px;
+  outline: rgb(0, 0, 0) auto 1px;
 }
 
 .Nav {
@@ -72,6 +72,7 @@
 .navInner6 {
   transform: translateX(0%) translateZ(1px);
   width: 100%;
+  top: 0;
   box-sizing: border-box;
   pointer-events: all;
   transition-property: opacity, transform;
@@ -83,8 +84,30 @@
   position: absolute;
 }
 
+.navInner62 {
+  transform: translateX(100%) translateZ(1px);
+  width: 100%;
+  opacity: 0;
+  box-sizing: border-box;
+  transition-property: opacity, transform;
+  pointer-events: none;
+  transition-timing-function: cubic-bezier(0.08, 0.52, 0.52, 1);
+  transition-duration: 200ms;
+  z-index: 0;
+  left: 0;
+  position: absolute;
+}
+
+.navInner6:focus-visible {
+  outline: rgb(0, 0, 0) auto 1px;
+}
+
 .navInner7 {
   padding: 8px;
+}
+
+.navInner7:focus-visible {
+  outline: rgb(0, 0, 0) auto 1px;
 }
 
 .navLink {
@@ -111,6 +134,7 @@
   border-right-width: 0;
   border-right-color: rgba(0, 0, 0, 0.4);
   box-sizing: border-box;
+  border-top-width: 0;
   user-select: none;
   padding-right: 0;
   flex-shrink: 0;
@@ -136,17 +160,14 @@
   outline: none;
 }
 
-.navLink:hover {
-  text-decoration: none;
-}
-
+.navLink,
 .navLink:visited {
   color: rgb(0, 55, 107);
   text-decoration: none;
 }
 
-.navLink:focus:not([data-focus-visible-added]) {
-  outline: none;
+.navLink:hover {
+  text-decoration: none;
 }
 
 .navLink:active {
@@ -175,6 +196,34 @@
   flex-grow: 0;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+}
+
+.linkDiv:focus-visible {
+  outline: rgb(0, 0, 0) auto 1px;
+}
+
+.divHover {
+  border-radius: 8px;
+}
+
+.linkDivOuter {
+  border-radius: 8px;
+  bottom: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.05);
+  opacity: 0;
+  right: 0;
+  pointer-events: none;
+  border-top-right-radius: inherit;
+  border-top-left-radius: inherit;
+  transition-duration: 100ms;
+  border-bottom-right-radius: inherit;
+  border-bottom-left-radius: inherit;
+  transition-timing-function: cubic-bezier(0, 0, 1, 1);
+  transition-property: opacity;
+  left: 0;
+  border-bottom-left-radius: inherit;
+  position: absolute;
 }
 
 .linkInnerDiv {
@@ -328,4 +377,13 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   display: block;
+}
+
+.underline {
+  height: 6px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  margin-left: -8px;
+  margin-right: -8px;
+  background-color: rgba(219, 219, 219, 0.3);
 }
