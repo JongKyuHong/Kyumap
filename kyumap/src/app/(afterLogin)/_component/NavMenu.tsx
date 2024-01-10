@@ -1,5 +1,5 @@
 "use client";
-import styles from "./navmeun.module.css";
+import styles from "./navmenu.module.css";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
 {
@@ -12,9 +12,9 @@ export default function NavMenu() {
         <div className={styles.navDiv}>
           <span className={styles.navSpan}>
             <div className={styles.navSpanDiv}>
-              <Link className={styles.navLink} href="/">
+              <Link className={styles.navLink} href="/home">
                 <div className={styles.LinkDiv}>
-                  {segment === null ? (
+                  {segment === "home" ? (
                     <>
                       <div>
                         <div className={styles.navIconWrapper}>
@@ -198,7 +198,7 @@ export default function NavMenu() {
         <div className={styles.navDiv}>
           <span className={styles.navSpan}>
             <div className={styles.navSpanDiv}>
-              <Link className={styles.navLink} href="/">
+              <Link className={styles.navLink} href="#">
                 <div className={styles.LinkDiv}>
                   <div>
                     <div className={styles.navIconWrapper}>
