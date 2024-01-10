@@ -1,17 +1,24 @@
-import { ReactNode } from "react";
+"use client";
+
+import { ReactNode, useState } from "react";
 import styles from "./layout.module.css";
 import Link from "next/link";
 import Image from "next/image";
-import mainLogo from "../../public/mainLogo.png";
+import smallLogo from "../../../public/smallLogo.png";
 import NavMenu from "./_component/NavMenu";
-import MoreMenu from "./_component/MoreMenu";
 import MenuDetail from "./_component/MenuDetail";
 
 type Props = { children: ReactNode; modal: ReactNode };
 
 export default function RootLayout({ children, modal }: Props) {
+  const [clicked, setClicked] = useState(false);
+
+  const onClickBtn = () => {
+    console.log(clicked, "hi");
+    setClicked(!clicked);
+  };
   return (
-    <body className={styles.rootBody}>
+    <div className={styles.rootBody}>
       <div className={styles.rootParent}>
         <div className={styles.rootChild}>
           <div className={styles.leafParent}>
@@ -25,19 +32,62 @@ export default function RootLayout({ children, modal }: Props) {
                           <div className={styles.logoOuter}>
                             <div className={styles.logoInner}>
                               <div className={styles.logo}>
-                                <Link className={styles.logoDetail} href="/">
+                                <Link
+                                  className={styles.logoDetail}
+                                  href="/home"
+                                >
                                   <Image
-                                    src={mainLogo}
+                                    src={smallLogo}
                                     alt="logo"
-                                    width={40}
-                                    height={40}
+                                    width={103}
+                                    height={29}
                                   />
                                 </Link>
                               </div>
                             </div>
                           </div>
                           <NavMenu />
-                          <MoreMenu />
+                          <div className={styles.bottomNav}>
+                            <span className={styles.nav} onClick={onClickBtn}>
+                              <div className={styles.navInner}>
+                                <div className={styles.navLink}>
+                                  <div className={styles.navLinkInner}>
+                                    <div>
+                                      <div className={styles.menuBtn}>
+                                        <div className={styles.menuBtnInner}>
+                                          <svg
+                                            aria-label="설정"
+                                            className={styles.menuBtnsetting}
+                                            fill="currentColor"
+                                            height="24"
+                                            role="img"
+                                            viewBox="0 0 24 24"
+                                            width="24"
+                                          >
+                                            <title>설정</title>
+                                            <path d="M3.5 6.5h17a1.5 1.5 0 0 0 0-3h-17a1.5 1.5 0 0 0 0 3Zm17 4h-17a1.5 1.5 0 0 0 0 3h17a1.5 1.5 0 0 0 0-3Zm0 7h-17a1.5 1.5 0 0 0 0 3h17a1.5 1.5 0 0 0 0-3Z"></path>
+                                          </svg>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className={styles.menuTitleOuter}>
+                                      <div className={styles.menuTitle}>
+                                        <div className={styles.menuTitleInner}>
+                                          <span className={styles.menuSpan}>
+                                            <span
+                                              className={styles.menuSpanInner}
+                                            >
+                                              더 보기
+                                            </span>
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -50,11 +100,11 @@ export default function RootLayout({ children, modal }: Props) {
                 </div>
               </div>
             </div>
-            <MenuDetail />
+            {clicked ? <MenuDetail /> : <div></div>}
           </div>
         </div>
       </div>
       {modal}
-    </body>
+    </div>
   );
 }
