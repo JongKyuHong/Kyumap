@@ -1,10 +1,21 @@
 .Container {
   position: fixed;
-  transform: translate(12px, 1203px) translate(0px, -100%);
   left: 0;
   margin-right: -9999px;
   top: 0;
   position: absolute;
+}
+
+@media (max-width: 1263px) {
+  .Container {
+    transform: translate(60px, 90dvh) translate(0px, -100%);
+  }
+}
+
+@media (min-width: 1264px) {
+  .Container {
+    transform: translate(12px, 94dvh) translate(0px, -100%);
+  }
 }
 
 .Container:focus-visible {
@@ -57,10 +68,8 @@
 }
 
 .navInner5 {
-  height: 404.5px;
-  overflow-x: hidden;
+  overflow: hidden;
   width: auto;
-  overflow-y: hidden;
   position: relative;
   outline: none;
 }
@@ -74,7 +83,6 @@
 }
 
 .navInner6 {
-  transform: translateX(0%) translateZ(1px);
   width: 100%;
   top: 0;
   box-sizing: border-box;
@@ -89,7 +97,6 @@
 }
 
 .navInner62 {
-  transform: translateX(-100%) translateZ(1px);
   width: 100%;
   top: 0;
   visibility: hidden;
@@ -105,7 +112,6 @@
 }
 
 .navInnerOuter {
-  transform: translateX(100%) translateZ(1px);
   width: 100%;
   opacity: 0;
   box-sizing: border-box;
