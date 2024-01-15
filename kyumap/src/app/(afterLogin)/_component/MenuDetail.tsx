@@ -366,7 +366,11 @@ export default function MenuDetail() {
                                         <div className={styles.navIcon}>
                                           <div className={styles.innerIcon}>
                                             <div
-                                              className={styles.innerIconDiv2}
+                                              className={
+                                                darkMode
+                                                  ? styles.innerIconDiv2Dark
+                                                  : styles.innerIconDiv2
+                                              }
                                             >
                                               <div
                                                 className={
@@ -384,7 +388,9 @@ export default function MenuDetail() {
                                               ></div>
                                               <input
                                                 dir="ltr"
-                                                aria-checked="false"
+                                                aria-checked={
+                                                  darkMode ? "true" : "false"
+                                                }
                                                 role="switch"
                                                 className={
                                                   darkMode
@@ -399,7 +405,13 @@ export default function MenuDetail() {
                                       </div>
                                     </div>
                                   </div>
-                                  <div className={styles.linkDivOuter}></div>
+                                  <div
+                                    className={
+                                      darkMode
+                                        ? styles.linkDivOuter2
+                                        : styles.linkDivOuter
+                                    }
+                                  ></div>
                                 </div>
                               </div>
                             </div>

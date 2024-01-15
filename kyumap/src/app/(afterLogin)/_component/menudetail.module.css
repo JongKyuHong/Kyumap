@@ -247,6 +247,26 @@
   position: absolute;
 }
 
+.linkDivOuter2 {
+  border-radius: 8px;
+  bottom: 0;
+  top: 0;
+  background-color: rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  right: 0;
+  pointer-events: none;
+  border-top-right-radius: inherit;
+  border-top-left-radius: inherit;
+  transition-duration: 100ms;
+  border-bottom-right-radius: inherit;
+  border-bottom-left-radius: inherit;
+  transition-timing-function: cubic-bezier(0, 0, 1, 1);
+  transition-property: opacity;
+  left: 0;
+  border-bottom-left-radius: inherit;
+  position: absolute;
+}
+
 .linkInnerDiv {
   min-width: 0;
   justify-content: center;
@@ -605,6 +625,35 @@
   outline: none;
 }
 
+.innerIconDiv2Dark {
+  height: 16px;
+  padding-top: 0;
+  overflow-x: hidden;
+  width: 26px;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  overflow-y: hidden;
+  border-top-right-radius: 16px;
+  border-left-width: 0;
+  padding-left: 0;
+  border-top-left-radius: 16px;
+  border-right-width: 0;
+  box-sizing: border-box;
+  border-top-width: 0;
+  padding-right: 0;
+  display: inline-block;
+  position: relative;
+  z-index: 0;
+  opacity: 1;
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0.17, 0.17, 0, 1);
+  background-color: rgb(50, 53, 57);
+  transition-property: opacity;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  outline: none;
+}
+
 .iconDiv {
   bottom: 0;
   top: 0;
@@ -664,6 +713,7 @@
   background-color: rgb(15, 20, 25);
   border-top-left-radius: 14px;
   border-bottom-left-radius: 14px;
+  transform: translateX(10px);
   left: 2px;
   box-sizing: border-box;
   border-bottom-right-radius: 14px;
@@ -695,6 +745,11 @@
   margin-right: 0;
   position: absolute;
   outline: none;
+}
+
+.iconInput[type="checkbox"] {
+  appearance: auto;
+  border: initial;
 }
 
 .iconInputDark {
