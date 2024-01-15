@@ -1,19 +1,45 @@
 "use client";
 
 import styles from "./menudetail.module.css";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 export default function DarkMode() {
   const [darkMode, setDark] = useState(false);
 
+  useEffect(() => {
+    const preDark = localStorage.getItem("color-theme");
+    console.log(preDark, "다크모드");
+    if (!preDark || preDark === "light") {
+      setDark(false);
+      localStorage.setItem("color-theme", "light");
+      document.documentElement.setAttribute("color-theme", "light");
+    } else {
+      setDark(true);
+      localStorage.setItem("color-theme", "dark");
+      document.documentElement.setAttribute("color-theme", "dark");
+    }
+  }, []);
+
   const onClickDark = useCallback(() => {
-    setClicked((darkMode) => !darkMode);
-    console.log(darkMode, "clicked dark");
+    if (darkMode) {
+      // 이미 다크모드에서 눌렀으므로 light모드로
+      document.documentElement.setAttribute("color-theme", "light");
+      setDark(false);
+    } else {
+      document.documentElement.setAttribute("color-theme", "dark");
+      setDark(true);
+    }
   }, [darkMode]);
 
   return (
     <div className={styles.darkDiv}>
-      <div className={styles.navLink} onClick={onClickDark}>
+      <div
+        className={styles.navLink}
+        onClick={onClickDark}
+        style={{
+          colorScheme: darkMode ? "dark" : "light",
+        }}
+      >
         <div className={styles.linkDiv}>
           <div className={styles.linkInnerDiv}>
             <div className={styles.linkInnerDiv2}>
@@ -28,7 +54,11 @@ export default function DarkMode() {
               </div>
               <div className={styles.navIcon}>
                 <div className={styles.innerIcon}>
-                  <div className={styles.innerIconDiv2}>
+                  <div
+                    className={
+                      darkMode ? styles.innerIconDiv2Dark : styles.innerIconDiv2
+                    }
+                  >
                     <div
                       className={darkMode ? styles.iconDivDark : styles.iconDiv}
                     ></div>
@@ -39,7 +69,7 @@ export default function DarkMode() {
                     ></div>
                     <input
                       dir="ltr"
-                      aria-checked="false"
+                      aria-checked={darkMode ? "true" : "false"}
                       role="switch"
                       className={
                         darkMode ? styles.iconInputDark : styles.iconInput
@@ -52,7 +82,9 @@ export default function DarkMode() {
             </div>
           </div>
         </div>
-        <div className={styles.linkDivOuter}></div>
+        <div
+          className={darkMode ? styles.linkDivOuter2 : styles.linkDivOuter}
+        ></div>
       </div>
     </div>
   );
