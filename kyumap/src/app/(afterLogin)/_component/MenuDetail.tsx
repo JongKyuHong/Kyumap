@@ -7,10 +7,10 @@ import { useCallback, useState } from "react";
 export default function MenuDetail() {
   const [clicked, setClicked] = useState(false);
 
-  const onClickBtn = () => {
+  const onClickBtn = useCallback(() => {
+    setClicked((clicked) => !clicked);
     console.log(clicked, "click");
-    setClicked(!clicked);
-  };
+  }, [clicked]);
 
   // const CalculateXY = useCallback(() => {
   //   if (document.documentElement.clientWidth > 1264) {
@@ -51,7 +51,11 @@ export default function MenuDetail() {
                               transform: clicked
                                 ? "translateX(-100%) translateZ(1px)"
                                 : "translateX(0%) translateZ(1px)",
+                              opacity: clicked ? 0 : 1,
+                              pointerEvents: clicked ? "none" : "all",
+                              visibility: clicked ? "hidden" : "visible",
                             }}
+                            aria-hidden={clicked ? "true" : "false"}
                           >
                             <div className={styles.navInner7}>
                               <Link className={styles.navLink} href="#">
@@ -258,7 +262,11 @@ export default function MenuDetail() {
                               transform: clicked
                                 ? "translateX(0%) translageZ(1px)"
                                 : "translateX(100%) translageZ(1px)",
+                              opacity: clicked ? 1 : 0,
+                              pointerEvents: clicked ? "all" : "none",
+                              visibility: clicked ? "visible" : "hidden",
                             }}
+                            aria-hidden={clicked ? "false" : "true"}
                           >
                             <div className={styles.modeInner}>
                               <div className={styles.modeDiv}>

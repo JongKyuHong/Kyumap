@@ -86,12 +86,10 @@
   width: 100%;
   top: 0;
   box-sizing: border-box;
-  pointer-events: all;
   transition-property: opacity, transform;
   transition-timing-function: cubic-bezier(0.08, 0.52, 0.52, 1);
   transition-duration: 200ms;
   z-index: 0;
-  opacity: 1;
   left: 0;
   position: absolute;
 }
@@ -99,11 +97,8 @@
 .navInner62 {
   width: 100%;
   top: 0;
-  visibility: hidden;
-  opacity: 0;
   box-sizing: border-box;
   transition-property: opacity, transform;
-  pointer-events: none;
   transition-timing-function: cubic-bezier(0.08, 0.52, 0.52, 1);
   transition-duration: 200ms;
   z-index: 0;
