@@ -543,7 +543,7 @@
   align-content: stretch;
   border-bottom-left-radius: 0;
   background-color: transparent;
-  box-sizing: bordre-box;
+  box-sizing: border-box;
   display: flex;
   border-bottom-right-radius: 0;
   position: static;
@@ -621,6 +621,22 @@
   position: absolute;
 }
 
+.iconDivDark {
+  bottom: 0;
+  top: 0;
+  transition-duration: 200ms;
+  right: 0;
+  box-sizing: border-box;
+  pointer-events: none;
+  transition-timing-function: cubic-bezier(0.17, 0.17, 0, 1);
+  z-index: 0;
+  opacity: 1;
+  transition-property: opacity;
+  left: 0;
+  background-color: rgb(248, 249, 249);
+  position: absolute;
+}
+
 .iconDiv2 {
   width: 12px;
   top: 2px;
@@ -640,7 +656,48 @@
   position: absolute;
 }
 
+.iconDiv2Dark {
+  width: 12px;
+  top: 2px;
+  height: 12px;
+  border-top-right-radius: 14px;
+  background-color: rgb(15, 20, 25);
+  border-top-left-radius: 14px;
+  border-bottom-left-radius: 14px;
+  left: 2px;
+  box-sizing: border-box;
+  border-bottom-right-radius: 14px;
+  pointer-events: none;
+  z-index: 0;
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0.17, 0.17, 0, 1);
+  transition-property: transform;
+  position: absolute;
+}
+
 .iconInput {
+  width: 100%;
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  height: 100%;
+  padding-bottom: 0;
+  top: 0;
+  padding-left: 0;
+  touch-action: manipulation;
+  box-sizing: border-box;
+  padding-right: 0;
+  cursor: pointer;
+  opacity: 0.001;
+  margin-left: 0;
+  -webkit-tap-highlight-color: transparent;
+  left: 0;
+  margin-right: 0;
+  position: absolute;
+  outline: none;
+}
+
+.iconInputDark {
   width: 100%;
   padding-top: 0;
   margin-top: 0;

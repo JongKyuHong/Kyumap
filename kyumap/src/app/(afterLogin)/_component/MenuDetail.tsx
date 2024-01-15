@@ -6,6 +6,12 @@ import { useCallback, useState } from "react";
 
 export default function MenuDetail() {
   const [clicked, setClicked] = useState(false);
+  const [darkMode, setDark] = useState(false);
+
+  const onClickDark = useCallback(() => {
+    setDark((darkMode) => !darkMode);
+    console.log(darkMode, "clicked dark");
+  }, [darkMode]);
 
   const onClickBtn = useCallback(() => {
     setClicked((clicked) => !clicked);
@@ -265,6 +271,7 @@ export default function MenuDetail() {
                               opacity: clicked ? 1 : 0,
                               pointerEvents: clicked ? "all" : "none",
                               visibility: clicked ? "visible" : "hidden",
+                              // transition-property: opacity, transform;
                             }}
                             aria-hidden={clicked ? "false" : "true"}
                           >
@@ -336,7 +343,10 @@ export default function MenuDetail() {
                                 </div>
                               </div>
                               <div className={styles.darkDiv}>
-                                <div className={styles.navLink}>
+                                <div
+                                  className={styles.navLink}
+                                  onClick={onClickDark}
+                                >
                                   <div className={styles.linkDiv}>
                                     <div className={styles.linkInnerDiv}>
                                       <div className={styles.linkInnerDiv2}>
@@ -359,16 +369,28 @@ export default function MenuDetail() {
                                               className={styles.innerIconDiv2}
                                             >
                                               <div
-                                                className={styles.iconDiv}
+                                                className={
+                                                  darkMode
+                                                    ? styles.iconDivDark
+                                                    : styles.iconDiv
+                                                }
                                               ></div>
                                               <div
-                                                className={styles.iconDiv2}
+                                                className={
+                                                  darkMode
+                                                    ? styles.iconDiv2Dark
+                                                    : styles.iconDiv2
+                                                }
                                               ></div>
                                               <input
                                                 dir="ltr"
                                                 aria-checked="false"
                                                 role="switch"
-                                                className={styles.iconInput}
+                                                className={
+                                                  darkMode
+                                                    ? styles.iconInputDark
+                                                    : styles.iconInput
+                                                }
                                                 type="checkbox"
                                               ></input>
                                             </div>
