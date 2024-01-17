@@ -1,7 +1,42 @@
+"use client";
+
 import Link from "next/link";
 import styles from "./menudetail.module.css";
+import { useCallback, useState } from "react";
+import DarkMode from "./DarkMode";
 
 export default function MenuDetail() {
+  const [clicked, setClicked] = useState(false);
+  const [darkMode, setDark] = useState(false);
+
+  const onClickDark = useCallback(() => {
+    setDark((darkMode) => !darkMode);
+    console.log(darkMode, "clicked dark");
+  }, [darkMode]);
+
+  const onClickBtn = useCallback(() => {
+    setClicked((clicked) => !clicked);
+    console.log(clicked, "click");
+  }, [clicked]);
+
+  // const CalculateXY = useCallback(() => {
+  //   if (document.documentElement.clientWidth > 1264) {
+  //     console.log("얼마나 호출되나 보자1");
+  //     return {
+  //       tansform: `translate(12px ${
+  //         document.documentElement.clientHeight - 76
+  //       }px) translate(0px, -100%)`,
+  //     };
+  //   } else {
+  //     console.log("얼마나 호출되나 보자2");
+  //     return {
+  //       transform: `translate(12px ${
+  //         document.documentElement.clientHeight - 20
+  //       }px) translate(0px, -100%)`,
+  //     };
+  //   }
+  // }, [document.documentElement.clientHeight]);
+
   return (
     <div>
       <div>
@@ -13,8 +48,22 @@ export default function MenuDetail() {
                   <div className={styles.navInner2}>
                     <div className={styles.navInner3}>
                       <div className={styles.navInner4}>
-                        <div className={styles.navInner5}>
-                          <div className={styles.navInner6}>
+                        <div
+                          className={styles.navInner5}
+                          style={{ height: clicked ? "119px" : "290px" }}
+                        >
+                          <div
+                            className={styles.navInner6}
+                            style={{
+                              transform: clicked
+                                ? "translateX(-100%) translateZ(1px)"
+                                : "translateX(0%) translateZ(1px)",
+                              opacity: clicked ? 0 : 1,
+                              pointerEvents: clicked ? "none" : "all",
+                              visibility: clicked ? "hidden" : "visible",
+                            }}
+                            aria-hidden={clicked ? "true" : "false"}
+                          >
                             <div className={styles.navInner7}>
                               <Link className={styles.navLink} href="#">
                                 <div className={styles.linkDiv}>
@@ -154,7 +203,10 @@ export default function MenuDetail() {
                                 <div className={styles.linkDivOuter}></div>
                               </Link>
                               <div>
-                                <div className={styles.navLink}>
+                                <div
+                                  className={styles.navLink}
+                                  onClick={onClickBtn}
+                                >
                                   <div className={styles.linkDiv}>
                                     <div className={styles.linkInnerDiv}>
                                       <div className={styles.linkInnerDiv2}>
@@ -211,8 +263,98 @@ export default function MenuDetail() {
                               </div>
                             </div>
                           </div>
-                          <div className={styles.navInner62}></div>
+                          <div
+                            className={styles.navInner62}
+                            style={{
+                              transform: clicked
+                                ? "translateX(0%) translageZ(1px)"
+                                : "translateX(100%) translageZ(1px)",
+                              opacity: clicked ? 1 : 0,
+                              pointerEvents: clicked ? "all" : "none",
+                              visibility: clicked ? "visible" : "hidden",
+                              // transition-property: opacity, transform;
+                            }}
+                            aria-hidden={clicked ? "false" : "true"}
+                          >
+                            <div className={styles.modeInner}>
+                              <div className={styles.modeDiv}>
+                                <div className={styles.modeDivInner}>
+                                  <div className={styles.linkInnerDiv}>
+                                    <div className={styles.linkInnerDiv2}>
+                                      <div
+                                        className={styles.navIcon}
+                                        onClick={onClickBtn}
+                                      >
+                                        <div className={styles.iconInner}>
+                                          <div className={styles.iconInnerDiv}>
+                                            <div
+                                              className={styles.iconInnerDiv2}
+                                            >
+                                              <span className={styles.iconSpan}>
+                                                <svg
+                                                  aria-label="돌아가기"
+                                                  className={styles.iconSpansvg}
+                                                  fill="currentColor"
+                                                  height="12"
+                                                  role="img"
+                                                  viewBox="0 0 24 24"
+                                                  width="12"
+                                                >
+                                                  <title>돌아가기</title>
+                                                  <path d="M21 17.502a.997.997 0 0 1-.707-.293L12 8.913l-8.293 8.296a1 1 0 1 1-1.414-1.414l9-9.004a1.03 1.03 0 0 1 1.414 0l9 9.004A1 1 0 0 1 21 17.502Z"></path>
+                                                </svg>
+                                              </span>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div className={styles.iconTitle}>
+                                        <div className={styles.titleInner}>
+                                          <div className={styles.spanOuter}>
+                                            <span className={styles.Span2}>
+                                              <span
+                                                className={styles.innerSpan}
+                                              >
+                                                모드전환
+                                              </span>
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div className={styles.navIcon}>
+                                        <div className={styles.innerIcon}>
+                                          <div className={styles.innerIconDiv}>
+                                            <svg
+                                              aria-label="테마 아이콘"
+                                              className={styles.Icon}
+                                              fill="currentColor"
+                                              height="18"
+                                              role="img"
+                                              viewBox="0 0 24 24"
+                                              width="18"
+                                            >
+                                              <title>테마 아이콘</title>
+                                              <path d="M12.00018,4.5a1,1,0,0,0,1-1V2a1,1,0,0,0-2,0V3.5A1.00005,1.00005,0,0,0,12.00018,4.5ZM5.28241,6.69678A.99989.99989,0,1,0,6.69647,5.28271l-1.06054-1.061A.99989.99989,0,0,0,4.22186,5.63574ZM4.50018,12a1,1,0,0,0-1-1h-1.5a1,1,0,0,0,0,2h1.5A1,1,0,0,0,4.50018,12Zm.78223,5.30322-1.06055,1.061a.99989.99989,0,1,0,1.41407,1.41406l1.06054-1.061a.99989.99989,0,0,0-1.41406-1.41407ZM12.00018,19.5a1.00005,1.00005,0,0,0-1,1V22a1,1,0,0,0,2,0V20.5A1,1,0,0,0,12.00018,19.5Zm6.71729-2.19678a.99989.99989,0,0,0-1.41406,1.41407l1.06054,1.061A.99989.99989,0,0,0,19.778,18.36426ZM22.00018,11h-1.5a1,1,0,0,0,0,2h1.5a1,1,0,0,0,0-2ZM18.01044,6.98975a.996.996,0,0,0,.707-.293l1.06055-1.061A.99989.99989,0,0,0,18.364,4.22168l-1.06054,1.061a1,1,0,0,0,.707,1.707ZM12.00018,6a6,6,0,1,0,6,6A6.00657,6.00657,0,0,0,12.00018,6Zm0,10a4,4,0,1,1,4-4A4.00458,4.00458,0,0,1,12.00018,16Z"></path>
+                                            </svg>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <DarkMode />
+                            </div>
+                          </div>
                         </div>
+                        <div
+                          className={styles.navInnerOuter}
+                          style={{
+                            transform: clicked
+                              ? "translateX(100%) translateZ(1px)"
+                              : "translateX(200%) translateZ(1px)",
+                          }}
+                        ></div>
                       </div>
                     </div>
                   </div>
