@@ -11,11 +11,10 @@ import MenuDetail from "./_component/MenuDetail";
 type Props = { children: ReactNode; modal: ReactNode };
 
 export default function RootLayout({ children, modal }: Props) {
-  const [clicked, setClicked] = useState(false);
+  const [clickedMenu, setMenu] = useState(false);
 
-  const onClickBtn = () => {
-    console.log(clicked, "hi");
-    setClicked(!clicked);
+  const onClickMenu = () => {
+    setMenu(!clickedMenu);
   };
   return (
     <div className={styles.rootBody}>
@@ -47,8 +46,11 @@ export default function RootLayout({ children, modal }: Props) {
                             </div>
                           </div>
                           <NavMenu />
-                          <div className={styles.bottomNav}>
-                            <span className={styles.nav} onClick={onClickBtn}>
+                          <div
+                            className={styles.bottomNav}
+                            onClick={onClickMenu}
+                          >
+                            <span className={styles.nav}>
                               <div className={styles.navInner}>
                                 <div className={styles.navLink}>
                                   <div className={styles.navLinkInner}>
@@ -99,8 +101,11 @@ export default function RootLayout({ children, modal }: Props) {
                   </div>
                 </div>
               </div>
+              <div>
+                <div></div>
+              </div>
             </div>
-            {clicked ? <MenuDetail /> : <div></div>}
+            {clickedMenu ? <MenuDetail /> : <div></div>}
           </div>
         </div>
       </div>
