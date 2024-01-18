@@ -1,4 +1,23 @@
-:root :root[color-theme="light"] {
+:root {
+  --gradient-purple: 118, 56, 25;
+  --gradient-yellow: 255, 214, 0;
+  --gradient-orange: 255, 255, 0;
+  --gradient-pink: 255, 1, 105;
+  --gradient-lavender: 211, 0, 197;
+  --gradient-purple: 118, 56, 25;
+  --ig-link: 0, 55, 107;
+  --ig-primary-background: 255, 255, 255;
+  --ig-separator: 219, 219, 219;
+  --ig-primary-text: 0, 0, 0;
+  --ig-elevated-separator: 219, 219, 219;
+
+  --header-height: 0px;
+  --desktop-story-tray-bottom-margin-denser: 24px;
+  --nav-wide-width: 335px;
+  --feed-sidebar-width: 319px;
+}
+
+:root[color-theme="light"] {
   --max-width: 1100px;
   --border-radius: 12px;
   --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
