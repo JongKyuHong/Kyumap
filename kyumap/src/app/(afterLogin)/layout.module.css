@@ -305,6 +305,25 @@
   }
 }
 
+@media (min-width: 1264px) {
+  .rightSectionWrapper {
+    width: calc(100% - var(--nav-medium-width));
+  }
+}
+
+@media (min-width: 768px) {
+  .rightSectionWrapper {
+    width: calc(100% - var(--nav-narrow-width));
+  }
+}
+
+@media (max-width: 767px) {
+  .rightSectionWrapper {
+    max-height: calc(100% - var(--revamp-nav-bottom-toolbar-height));
+    flex-grow: 1;
+  }
+}
+
 .rightSectionInner {
   min-height: 100vh;
   overflow-x: hidden;
