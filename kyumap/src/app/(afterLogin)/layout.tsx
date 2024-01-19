@@ -7,6 +7,7 @@ import Image from "next/image";
 import smallLogo from "../../../public/smallLogo.png";
 import NavMenu from "./_component/NavMenu";
 import MenuDetail from "./_component/MenuDetail";
+import RightSection from "./_component/RightSection";
 
 type Props = { children: ReactNode; modal: ReactNode };
 
@@ -118,9 +119,7 @@ export default function RootLayout({ children, modal }: Props) {
                   </div>
                 </div>
                 <div className={styles.rightSectionWrapper}>
-                  <div className={styles.rightSectionInner}>
-                    <main>{children}</main>
-                  </div>
+                  <RightSection />
                 </div>
               </div>
               <div>

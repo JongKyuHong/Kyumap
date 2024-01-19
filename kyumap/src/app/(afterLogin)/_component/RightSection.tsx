@@ -1,4 +1,6 @@
 import styles from "./rightsection.module.css";
+import Link from "next/link";
+import Image from "next/image";
 
 export default function RightSearchZone() {
   return (
@@ -54,7 +56,31 @@ export default function RightSearchZone() {
                       <div className={styles.headerInner4}>
                         <div className={styles.headerfront}>
                           <div className={styles.frontInner}>
-                            <div className={styles.frontInner2}></div>
+                            <div className={styles.frontInner2}>
+                              <canvas
+                                className={styles.innerCanvas}
+                                style={{
+                                  height: "54px",
+                                  width: "54px",
+                                  left: "-5px",
+                                  position: "absolute",
+                                  top: "-5px",
+                                }}
+                              />
+                              <Link
+                                style={{ height: "44px", width: "44px" }}
+                                className={styles.canvasLink}
+                                href="#"
+                              >
+                                <Image
+                                  alt={`누구님의 프로필 사진`}
+                                  className={styles.linkImage}
+                                  height={44}
+                                  width={44}
+                                  src={"/chi.png"}
+                                ></Image>
+                              </Link>
+                            </div>
                           </div>
                         </div>
                         <div className={styles.headermid}></div>
