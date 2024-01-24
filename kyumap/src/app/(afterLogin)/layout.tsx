@@ -8,6 +8,7 @@ import smallLogo from "../../../public/smallLogo.png";
 import NavMenu from "./_component/NavMenu";
 import MenuDetail from "./_component/MenuDetail";
 import RightSection from "./_component/RightSection";
+import MainSection from "./_component/MainSection";
 
 type Props = { children: ReactNode; modal: ReactNode };
 
@@ -119,7 +120,41 @@ export default function RootLayout({ children, modal }: Props) {
                   </div>
                 </div>
                 <div className={styles.rightSectionWrapper}>
-                  <RightSection />
+                  <section className={styles.rootSection}>
+                    <main className={styles.rootMain}>
+                      <div className={styles.mainrootDiv}>
+                        <MainSection />
+                        <RightSection />
+                      </div>
+                      <div>
+                        <div>
+                          <div></div>
+                        </div>
+                      </div>
+                      <div>
+                        <div>
+                          <div></div>
+                        </div>
+                      </div>
+                      <div>
+                        <div>
+                          <div></div>
+                        </div>
+                      </div>
+                      <div>
+                        <div>
+                          <div></div>
+                        </div>
+                      </div>
+                      <div>
+                        <div>
+                          <div></div>
+                        </div>
+                      </div>
+                      <div></div>
+                    </main>
+                    <div></div>
+                  </section>
                 </div>
               </div>
               <div>
