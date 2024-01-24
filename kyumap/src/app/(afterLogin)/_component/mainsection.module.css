@@ -456,9 +456,655 @@
   border-bottom-left-radius: 4px;
 }
 
+.articleBodyDiv {
+  padding: 0;
+  margin: 0;
+  border-bottom-width: 0;
+  border-left-width: 0;
+  font-size: 100%;
+  touch-action: manipulation;
+  flex-direction: column;
+  border-right-width: 0;
+  box-sizing: border-box;
+  border-top-width: 0;
+  display: flex;
+  flex-shrink: 0;
+  align-items: stretch;
+  position: relative;
+  vertical-align: baseline;
+}
+
+.bodyInnerDiv {
+  width: calc(min(470px, 100vw) - 2px);
+}
+
+.bodyInnerDiv2 {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bodyInnerDiv3 {
+  background-color: rgb(var(--ig-highlight-background));
+  display: block;
+  width: 100%;
+  position: relative;
+}
+
+.bodyInnerDiv4 {
+  padding-bottom: 125.04%;
+  display: block;
+  overflow: hidden;
+  padding-bottom: 100%;
+  position: relative;
+}
+
+.postImage {
+  left: 0;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  user-select: none;
+  position: absolute;
+  border: 0;
+}
+
+.bodyInnerDiv4Outer {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.articleBodyFooter {
+  width: 100%;
+}
+
 .articleContent {
   position: relative;
   display: block;
+}
+
+.articleContentDiv {
+  height: 100%;
+  background-color: rgb(var(--ig-primary-background));
+  flex-direction: column;
+  display: flex;
+  position: relative;
+}
+
+.postIcon {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr 1fr;
+}
+
+.leftSectionIcon {
+  display: flex;
+}
+
+.iconSpan {
+  margin-left: -8px;
+}
+
+.iconDiv {
+  padding-bottom: 8px;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 8px;
+  border-bottom-style: none;
+  padding-left: 8px;
+  justify-content: center;
+  background-color: transparent;
+  touch-action: manipulation;
+  border-right-style: none;
+  border-left: 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding-right: 8px;
+  margin-left: 0;
+  -webkit-tap-highlight-color: transparent;
+  border-top-style: none;
+  border-right: 0;
+  border-left-style: none;
+  text-align: inherit;
+  margin-right: 0;
+  list-style: none;
+  border-bottom: 0;
+  border-top: 0;
+  text-decoration: none;
+  outline: none;
+}
+
+.iconInnerDiv {
+  justify-content: center;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+}
+
+.iconSvg {
+  color: rgb(var(--ig-primary-text));
+  position: relative;
+  display: block;
+}
+
+.rightSectionIcon {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.iconInnerDiv2 {
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-bottom-style: none;
+  padding-bottom: 0;
+  justify-content: center;
+  padding-left: 0;
+  background-color: transparent;
+  touch-action: manipulation;
+  border-right-style: none;
+  border-left: 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  padding-right: 0;
+  cursor: pointer;
+  margin-left: 0;
+  -webkit-tap-highlight-color: transparent;
+  border-top-style: none;
+  border-right: 0;
+  border-left-style: none;
+  text-align: inherit;
+  margin-right: 0;
+  list-style: none;
+  border-bottom: 0;
+  border-top: 0;
+  text-decoration: none;
+  outline: none;
+}
+
+.iconSvgOuterDiv {
+  justify-content: center;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+}
+
+.likeSection {
+  margin-bottom: 0;
+}
+
+.likeSectionDiv {
+  overflow: visible;
+  min-width: 0;
+  min-height: 0;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-direction: row;
+  align-self: 0;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 1;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.likeSectionInnerDiv {
+  overflow: visible;
+  margin-top: auto;
+  min-width: 0;
+  margin-bottom: auto;
+  min-height: 0;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  margin-right: auto;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 1;
+  margin-left: auto;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.likeSectionSpan {
+  line-height: var(--base-line-clamp-line-height);
+  overflow: visible;
+  min-width: 0;
+  margin: 0 !important;
+  max-width: 100%;
+  font-size: var(--system-14-font-size);
+  font-weight: 400;
+  color: rgb(var(--ig-primary-text));
+  word-wrap: break-word;
+  position: relative;
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  word-break: break-word;
+}
+
+.likeSectionSpan::before {
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.likeSectionSpan::after {
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.likeModalLink {
+  outline: none;
+  text-decoration: none;
+  padding: 0;
+  margin: 0;
+  display: inline;
+  background-color: transparent;
+  touch-action: manipulation;
+  box-sizing: border-box;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  text-align: inherit;
+  list-style: none;
+}
+
+.likeModalLink:visited {
+  color: rgb(var(--ig-link));
+}
+
+.likeInnerSpan {
+  min-width: 0;
+  margin: 0 !important;
+  max-width: 100%;
+  font-size: var(--system-14-font-size);
+  display: inline;
+  color: rgb(var(--ig-primary-text));
+  word-wrap: break-word;
+  font-weight: 600;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  word-break: break-word;
+}
+
+.likeCountSpan {
+  padding: 0;
+  margin: 0;
+  word-wrap: break-word;
+  text-align: inherit;
+  text-decoration: none;
+}
+
+.postContent {
+  overflow: visible;
+  margin-top: 8px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  box-sizing: border-box;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  position: static;
+  display: inline-block;
+  align-items: stretch;
+  flex-direction: row;
+  align-self: auto;
+  justify-content: flex-start;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.postUserName {
+  margin-right: 4px;
+  display: inline-block;
+}
+
+.postUserNameSpan {
+  display: inline;
+}
+
+.postUserProfile {
+  color: rgb(var(--ig-secondary-button));
+  height: auto;
+  border-bottom-color: var(--always-dark-overlay);
+  padding-top: 0;
+  min-width: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  min-height: 0;
+  border-bottom-style: none;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  width: auto;
+  font-weight: var(--font-weight-system-semibold);
+  display: inline;
+  color: rgb(var(--ig-secondary-button));
+  border-top-left-radius: 2px;
+  border-left-width: 0;
+  justify-content: center;
+  padding-left: 0;
+  appearance: none;
+  border-top-color: var(--always-dark-overlay);
+  background-color: transparent;
+  touch-action: manipulation;
+  flex-basis: auto;
+  border-right-style: none;
+  border-right-width: 0;
+  border-right-color: var(--always-dark-overlay);
+  box-sizing: border-box;
+  border-top-width: 0;
+  user-select: none;
+  align-items: center;
+  padding-right: 0;
+  flex-shrink: 0;
+  border-left-color: var(--always-dark-overlay);
+  text-align: center;
+  cursor: pointer;
+  border-top-right-radius: 2px;
+  outline-style: none;
+  flex-direction: row;
+  position: relative;
+  margin-left: 0;
+  z-index: 0;
+  -webkit-tap-highlight-color: transparent;
+  font-family: var(--font-family-system);
+  font-size: 0.875rem;
+  border-top-style: none;
+  line-height: var(--system-14-line-height);
+  border-left-style: none;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  margin-right: 0;
+  list-style: none;
+  text-decoration: none;
+  outline: none;
+}
+
+.postUserNameSpan:visited {
+  color: rgb(var(--ig-link));
+  text-decoration: none;
+}
+
+.postContentSpan {
+  display: inline !important;
+  margin: 0 !important;
+  color: rgb(var(--ig-primary-text));
+  font-weight: var(--font-weight-system-regular);
+  margin: 0;
+  font-size: var(--system-14-font-size);
+  line-height: var(--system-14-line-height);
+  margin: 3px 0 4px;
+  font-family: var(--font-family-system);
+}
+
+.hashTag {
+  color: rgb(var(--ig-link));
+  text-decoration: none;
+  word-wrap: break-word;
+  padding: 0;
+  margin: 0;
+  display: inline;
+  background-color: transparent;
+  touch-action: manipulation;
+  border-left: 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  border-right: 0;
+  text-align: inherit;
+  list-style: none;
+  border-bottom: 0;
+  border-top: 0;
+  outline: none;
+}
+
+.hashTag:visited {
+  color: rgb(var(--ig-link));
+}
+
+.postComment {
+  overflow: visible;
+  margin-top: 8px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  position: static;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.commentLink {
+  text-decoration: none;
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+  touch-action: manipulation;
+  border: 0;
+  box-sizing: border-box;
+  display: flex;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  text-align: inherit;
+  list-style: none;
+  outline: none;
+  color: rgb(var(--ig-link));
+}
+
+.commentLink:visited {
+  color: rgb(var(--ig-link));
+}
+
+.linkCommentSpan {
+  overflow: visible;
+  min-width: 0;
+  margin: 0 !important;
+  max-width: 100%;
+  font-size: var(--system-14-font-size);
+  font-weight: 400;
+  word-wrap: break-word;
+  color: rgb(var(--ig-secondary-text));
+  position: relative;
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  word-wrap: break-word;
+}
+
+.linkCommentSpan::before {
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.linkCommentSpan::after {
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.linkCommentInnerSpan {
+  padding: 0;
+  margin: 0;
+  word-wrap: break-word;
+  text-align: inherit;
+  text-decoration: none;
+}
+
+.commentInput {
+  overflow: visible;
+  margin-top: 8px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  position: static;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.inputSection {
+  border: none;
+  padding: 0 !important;
+  padding: 0;
+  top: -2px;
+  width: 100%;
+  color: rgb(var(--ig-secondary-text));
+  flex-shrink: 0;
+  font-size: var(--system-14-font-size);
+  justify-content: center;
+  line-height: var(--system-14-line-height);
+  position: relative;
+}
+
+.inputSecitonDiv {
+  padding: 0;
+  background-color: rgb(var(--ig-primary-background));
+  border: none;
+  border-radius: 38px;
+  align-items: center;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+}
+
+.formInput {
+  padding: 0;
+  border: none;
+  border-radius: 38px;
+  margin: 0;
+  background-color: rgb(var(--ig-primary-background));
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  flex-shrink: 1;
+  font: inherit;
+  font-size: 100%;
+}
+
+.formInputDiv {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  flex-shrink: 1;
+  font: inherit;
+  font-size: 100%;
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
+
+.formInputInnerDiv {
+  padding: 0;
+  order: 3;
+  margin-right: 6px;
+}
+
+.formInputInnerDiv2 {
+  padding: 0;
+  margin: 0;
+  border-bottom-style: none;
+  justify-content: center;
+  background-color: transparent;
+  touch-action: manipulation;
+  border-right-style: none;
+  border-left: 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  padding-right: 0;
+  cursor: pointer;
+  margin-left: 0;
+  -webkit-tap-highlight-color: transparent;
+  border-top-style: none;
+  border-right: 0;
+  border-left-style: none;
+  text-align: inherit;
+  margin-right: 0;
+  list-style: none;
+  border-bottom: 0;
+  border-top: 0;
+  text-decoration: none;
+  outline: none;
+}
+
+.formInputInnerDiv3 {
+  justify-content: center;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+}
+
+.Emoticon {
+  color: rgb(var(--ig-secondary-text));
+  position: relative;
+  display: block;
+}
+
+.formInputTextArea {
+  height: 18px !important;
+  width: 0;
+  max-height: 80px;
+  padding-top: 0;
+  border-bottom-style: none;
+  height: var(--system-14-line-height);
+  padding-bottom: 0;
+  background-color: rgb(var(--ig-primary-background));
+  resize: none;
+  padding-left: 0;
+  border-right-style: none;
+  display: flex;
+  color: rgb(var(--ig-primary-text));
+  padding-right: 0;
+  font-size: inherit;
+  flex-grow: 1;
+  font-family: var(--font-family-system);
+  border-top-style: none;
+  border-left-style: none;
+  outline: none;
+  line-height: var(--system-14-line-height);
+  max-width: 100%;
+  -webkit-appearance: none;
+  border: 1px solid #ccd0d5;
+  border-radius: 0;
+  margin: 0;
 }
 
 .articleMoreInfo {
