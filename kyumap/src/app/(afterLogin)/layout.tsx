@@ -14,6 +14,7 @@ type Props = { children: ReactNode; modal: ReactNode };
 
 export default function RootLayout({ children, modal }: Props) {
   const [clickedMenu, setMenu] = useState(false);
+  const [clickedEmotionMenu, setEmotionMenu] = useState(false);
 
   const onClickMenu = () => {
     setMenu(!clickedMenu);
@@ -161,7 +162,13 @@ export default function RootLayout({ children, modal }: Props) {
                 <div></div>
               </div>
             </div>
-            {clickedMenu ? <MenuDetail /> : <div></div>}
+            {clickedMenu ? (
+              <MenuDetail />
+            ) : clickedEmotionMenu ? (
+              <Emoticon />
+            ) : (
+              <div></div>
+            )}
           </div>
         </div>
       </div>
