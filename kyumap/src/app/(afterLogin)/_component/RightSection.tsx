@@ -60,7 +60,7 @@ export default function RightSearchZone() {
                         position: "relative",
                       }}
                     >
-                      {"게시글을 article로 출력"}
+                      {/* {"게시글을 article로 출력"} */}
                       <article>
                         <div className={styles.articleDiv}>
                           <div className={styles.articleHead}>
@@ -89,7 +89,9 @@ export default function RightSearchZone() {
                                       <span className={styles.articleUserSpan}>
                                         <Image
                                           alt="프로필 사진"
-                                          src="#"
+                                          src="/chi.png"
+                                          width={1}
+                                          height={1}
                                           className={
                                             styles.articleUserProfileImage
                                           }
@@ -135,7 +137,9 @@ export default function RightSearchZone() {
                                                         className={
                                                           styles.linkInnerSpan
                                                         }
-                                                      ></span>
+                                                      >
+                                                        {"사용자 명"}
+                                                      </span>
                                                     </div>
                                                   </div>
                                                 </Link>
@@ -352,65 +356,68 @@ export default function RightSearchZone() {
                   <div className={styles.headerInner2}>
                     <div className={styles.headerInner3}>
                       <div className={styles.headerInner4}>
-                        <div className={styles.headerfront}>
-                          <div className={styles.frontInner}>
-                            <div className={styles.frontInner2}>
-                              <canvas
-                                className={styles.innerCanvas}
-                                style={{
-                                  height: "54px",
-                                  width: "54px",
-                                  left: "-5px",
-                                  position: "absolute",
-                                  top: "-5px",
-                                }}
-                              />
-                              <Link
-                                style={{ height: "44px", width: "44px" }}
-                                className={styles.canvasLink}
-                                href="#"
-                              >
-                                <Image
-                                  alt={`누구님의 프로필 사진`}
-                                  className={styles.linkImage}
-                                  height={44}
-                                  width={44}
-                                  src={"/chi.png"}
+                        <div className={styles.headerInner5}>
+                          <div className={styles.headerfront}>
+                            <div className={styles.frontInner}>
+                              <div className={styles.frontInner2}>
+                                <canvas
+                                  className={styles.innerCanvas}
+                                  style={{
+                                    height: "54px",
+                                    width: "54px",
+                                    left: "-5px",
+                                    position: "absolute",
+                                    top: "-5px",
+                                  }}
                                 />
-                              </Link>
-                            </div>
-                          </div>
-                        </div>
-                        <div className={styles.headerMid}>
-                          <div className={styles.headermidInner}>
-                            <div className={styles.headermidInner2}>
-                              <div className={styles.midSpanDiv}>
                                 <Link
+                                  style={{ height: "44px", width: "44px" }}
+                                  className={styles.canvasLink}
                                   href="#"
-                                  className={styles.spandivLink}
-                                ></Link>
+                                >
+                                  <Image
+                                    alt={`누구님의 프로필 사진`}
+                                    className={styles.linkImage}
+                                    height={44}
+                                    width={44}
+                                    src={"/chi.png"}
+                                  />
+                                </Link>
                               </div>
-                              <span
-                                className={styles.midSpan}
-                                style={{
-                                  lineHeight:
-                                    "var(--base-line-clamp-line-height)",
-                                }}
-                              >
-                                <span className={styles.midInnerspan}>
-                                  <div className={styles.innerSpanDiv}>
-                                    <span className={styles.divInnerSpan}>
-                                      {"사용자 이름"}
-                                    </span>
-                                  </div>
-                                </span>
-                              </span>
                             </div>
                           </div>
-                        </div>
-                        <div className={styles.headerback}>
-                          <div className={styles.backInnerDiv}>
-                            <div className={styles.backInnerDiv2}>전환</div>
+
+                          <div className={styles.headerMid}>
+                            <div className={styles.headermidInner}>
+                              <div className={styles.headermidInner2}>
+                                <div className={styles.midSpanDiv}>
+                                  <Link
+                                    href="#"
+                                    className={styles.spandivLink}
+                                  ></Link>
+                                </div>
+                                <span
+                                  className={styles.midSpan}
+                                  style={{
+                                    lineHeight:
+                                      "var(--base-line-clamp-line-height)",
+                                  }}
+                                >
+                                  <span className={styles.midInnerspan}>
+                                    <div className={styles.innerSpanDiv}>
+                                      <span className={styles.divInnerSpan}>
+                                        {"사용자 이름"}
+                                      </span>
+                                    </div>
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className={styles.headerback}>
+                            <div className={styles.backInnerDiv}>
+                              <div className={styles.backInnerDiv2}>전환</div>
+                            </div>
                           </div>
                         </div>
                       </div>
