@@ -5,6 +5,7 @@ import styles from "./emoticon.module.css";
 
 export default function Emoticon() {
   const [viewportSize, setViewportSize] = useState({ width: 0, height: 0 });
+  const [isModalVisible, setIsModalVisible] = useState(true);
   const debounce = (func: (...args: any[]) => void, delay: number) => {
     let timerId: NodeJS.Timeout;
 
@@ -25,20 +26,20 @@ export default function Emoticon() {
       width: window.innerWidth || document.documentElement.clientWidth,
       height: window.innerHeight || document.documentElement.clientHeight,
     });
-  }, 300); // 300ms 딜레이
+  }, 3); // 300ms 딜레이
 
   useEffect(() => {
     // 화면 크기가 변경될 때마다 실행되는 이벤트 핸들러 등록
     window.addEventListener("resize", handleResize);
-
+    handleResize();
     // 컴포넌트가 언마운트될 때 이벤트 핸들러 제거
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [handleResize]);
+  }, []);
 
-  const translateValue = `${viewportSize.width / 2}px, ${
-    viewportSize.height / 2
+  const translateValue = `${viewportSize.width - 513}px, ${
+    viewportSize.height - 109
   }px`;
 
   return (
@@ -46,6 +47,7 @@ export default function Emoticon() {
       className={styles.rootDiv}
       style={{
         transform: `translate(${translateValue}) translate(0px, -100%)`,
+        display: isModalVisible ? "block" : "none",
       }}
     >
       <div className={styles.EmoticonModal}>

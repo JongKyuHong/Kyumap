@@ -2,7 +2,7 @@ import styles from "./mainsection.module.css";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function MainSection() {
+export default function MainSection({ onClickEmoticon }: any) {
   return (
     <div style={{ maxWidth: "630px", width: "100%" }}>
       <div className={styles.rootDivInner}>
@@ -250,8 +250,8 @@ export default function MainSection() {
                                         d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"
                                         fill="none"
                                         stroke="currentColor"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
                                       ></path>
                                     </svg>
                                   </div>
@@ -285,9 +285,9 @@ export default function MainSection() {
                                           fill="none"
                                           points="20 21 12 13.44 4 21 4 3 20 3 20 21"
                                           stroke="currentColor"
-                                          stroke-linecap="round"
-                                          stroke-linejoin="round"
-                                          stroke-width="2"
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          strokeWidth="2"
                                         ></polygon>
                                       </svg>
                                     </div>
@@ -396,6 +396,7 @@ export default function MainSection() {
                                               role="img"
                                               viewBox="0 0 24 24"
                                               width="13"
+                                              onClick={onClickEmoticon}
                                             >
                                               <title>이모티콘</title>
                                               <path d="M15.83 10.997a1.167 1.167 0 1 0 1.167 1.167 1.167 1.167 0 0 0-1.167-1.167Zm-6.5 1.167a1.167 1.167 0 1 0-1.166 1.167 1.167 1.167 0 0 0 1.166-1.167Zm5.163 3.24a3.406 3.406 0 0 1-4.982.007 1 1 0 1 0-1.557 1.256 5.397 5.397 0 0 0 8.09 0 1 1 0 0 0-1.55-1.263ZM12 .503a11.5 11.5 0 1 0 11.5 11.5A11.513 11.513 0 0 0 12 .503Zm0 21a9.5 9.5 0 1 1 9.5-9.5 9.51 9.51 0 0 1-9.5 9.5Z"></path>
@@ -442,7 +443,7 @@ export default function MainSection() {
                     width="25"
                     x="72"
                     y="47"
-                    transform="rotate(-90deg, 50, 50)"
+                    transform="rotate(-90, 50, 50)"
                   ></rect>
                   <rect
                     className={styles.loadingAnimation1}
@@ -453,7 +454,7 @@ export default function MainSection() {
                     width="25"
                     x="72"
                     y="47"
-                    transform="rotate(-60deg, 50, 50)"
+                    transform="rotate(-60, 50, 50)"
                   ></rect>
                   <rect
                     className={styles.loadingAnimation1}
@@ -464,7 +465,7 @@ export default function MainSection() {
                     width="25"
                     x="72"
                     y="47"
-                    transform="rotate(-30deg, 50, 50)"
+                    transform="rotate(-30, 50, 50)"
                   ></rect>
                   <rect
                     className={styles.loadingAnimation1}
@@ -475,7 +476,7 @@ export default function MainSection() {
                     ry="3"
                     x="72"
                     y="47"
-                    transform="rotate(0deg, 50, 50)"
+                    transform="rotate(0, 50, 50)"
                   ></rect>
                   <rect
                     className={styles.loadingAnimation1}
@@ -486,7 +487,7 @@ export default function MainSection() {
                     ry="3"
                     x="72"
                     y="47"
-                    transform="rotate(30deg, 50, 50)"
+                    transform="rotate(30, 50, 50)"
                   ></rect>
                   <rect
                     className={styles.loadingAnimation1}
@@ -497,7 +498,7 @@ export default function MainSection() {
                     ry="3"
                     x="72"
                     y="47"
-                    transform="rotate(60deg, 50, 50)"
+                    transform="rotate(60, 50, 50)"
                   ></rect>
                   <rect
                     className={styles.loadingAnimation1}
@@ -508,7 +509,7 @@ export default function MainSection() {
                     ry="3"
                     x="72"
                     y="47"
-                    transform="rotate(90deg, 50, 50)"
+                    transform="rotate(90, 50, 50)"
                   ></rect>
                   <rect
                     className={styles.loadingAnimation1}
@@ -519,7 +520,7 @@ export default function MainSection() {
                     ry="3"
                     x="72"
                     y="47"
-                    transform="rotate(120deg, 50, 50)"
+                    transform="rotate(120, 50, 50)"
                   ></rect>
                   <rect
                     className={styles.loadingAnimation1}
@@ -530,7 +531,7 @@ export default function MainSection() {
                     ry="3"
                     x="72"
                     y="47"
-                    transform="rotate(150deg, 50, 50)"
+                    transform="rotate(150, 50, 50)"
                   ></rect>
                   <rect
                     className={styles.loadingAnimation1}
@@ -541,7 +542,7 @@ export default function MainSection() {
                     ry="3"
                     x="72"
                     y="47"
-                    transform="rotate(180deg, 50, 50)"
+                    transform="rotate(180, 50, 50)"
                   ></rect>
                   <rect
                     className={styles.loadingAnimation1}
@@ -552,7 +553,7 @@ export default function MainSection() {
                     ry="3"
                     x="72"
                     y="47"
-                    transform="rotate(210deg, 50, 50)"
+                    transform="rotate(210, 50, 50)"
                   ></rect>
                   <rect
                     className={styles.loadingAnimation1}
@@ -563,7 +564,7 @@ export default function MainSection() {
                     ry="3"
                     x="72"
                     y="47"
-                    transform="rotate(240deg, 50, 50)"
+                    transform="rotate(240, 50, 50)"
                   ></rect>
                 </svg>
               </div>
