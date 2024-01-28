@@ -8,15 +8,26 @@ import smallLogo from "../../../public/smallLogo.png";
 import NavMenu from "./_component/NavMenu";
 import MenuDetail from "./_component/MenuDetail";
 import RightSection from "./_component/RightSection";
+import MainSection from "./_component/MainSection";
+import Emoticon from "./_component/Emoticon";
 
 type Props = { children: ReactNode; modal: ReactNode };
 
 export default function RootLayout({ children, modal }: Props) {
   const [clickedMenu, setMenu] = useState(false);
+  const [clickedEmotionMenu, setEmotionMenu] = useState(false);
 
   const onClickMenu = () => {
     setMenu(!clickedMenu);
+    setEmotionMenu(false);
   };
+
+  const onClickEmoticon = () => {
+    setEmotionMenu(!clickedEmotionMenu);
+    setMenu(false);
+    console.log("로그로그", clickedEmotionMenu);
+  };
+
   return (
     <div>
       <div>
@@ -119,7 +130,41 @@ export default function RootLayout({ children, modal }: Props) {
                   </div>
                 </div>
                 <div className={styles.rightSectionWrapper}>
-                  <RightSection />
+                  <section className={styles.rootSection}>
+                    <main className={styles.rootMain}>
+                      <div className={styles.mainrootDiv}>
+                        <MainSection onClickEmoticon={onClickEmoticon} />
+                        <RightSection />
+                      </div>
+                      <div>
+                        <div>
+                          <div></div>
+                        </div>
+                      </div>
+                      <div>
+                        <div>
+                          <div></div>
+                        </div>
+                      </div>
+                      <div>
+                        <div>
+                          <div></div>
+                        </div>
+                      </div>
+                      <div>
+                        <div>
+                          <div></div>
+                        </div>
+                      </div>
+                      <div>
+                        <div>
+                          <div></div>
+                        </div>
+                      </div>
+                      <div></div>
+                    </main>
+                    <div></div>
+                  </section>
                 </div>
               </div>
               <div>
@@ -127,6 +172,7 @@ export default function RootLayout({ children, modal }: Props) {
               </div>
             </div>
             {clickedMenu ? <MenuDetail /> : <div></div>}
+            {clickedEmotionMenu ? <Emoticon /> : <div></div>}
           </div>
         </div>
       </div>

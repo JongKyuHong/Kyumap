@@ -11,16 +11,41 @@
   --ig-primary-text: 0, 0, 0;
   --ig-elevated-separator: 219, 219, 219;
   --always-dark-overlay: rgba(0, 0, 0, 0.4);
+  --ig-secondary-button: 38, 38, 38;
   --ig-secondary-background: 250, 250, 250;
-  --ig-link: 0, 55, 107;
+  --ig-primary-text: 0, 0, 0;
+  --grey-7: 85, 85, 85;
+  --ig-highlight-background: 239, 239, 239;
+  --ig-primary-icon: 38, 38, 38;
+  --ig-secondary-text: 115, 115, 115;
+  --ig-banner-background: 255, 255, 255;
+
+  --web-always-black: 0, 0, 0;
+
+  --font-weight-system-semibold: 600;
+  --font-weight-system-regular: 400;
+
+  --system-14-font-size: 14px;
+  --system-14-line-height: 18px;
+  --system-12-font-size: 12px;
+  --system-32-font-size: 32px;
+
+  --base-line-clamp-line-height: 18px;
 
   --header-height: 0px;
   --desktop-story-tray-bottom-margin-denser: 24px;
   --nav-wide-width: 335px;
   --nav-medium-width: 244px;
   --nav-narrow-width: 72px;
+
   --revamp-nav-bottom-toolbar-height: 50px;
+  --revamp-feed-card-dense-padding: 16px;
+  --revamp-feed-card-media-min-width: 390px;
+
   --feed-sidebar-width: 319px;
+
+  --font-family-system: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
 }
 
 :root[color-theme="light"] {
