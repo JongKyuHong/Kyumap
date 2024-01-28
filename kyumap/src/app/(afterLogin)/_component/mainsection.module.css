@@ -982,7 +982,6 @@
 .inputSection {
   border: none;
   padding: 0 !important;
-  padding: 0;
   top: -2px;
   width: 100%;
   color: rgb(var(--ig-secondary-text));
@@ -1079,12 +1078,10 @@
 }
 
 .formInputTextArea {
-  height: 18px !important;
   width: 0;
   max-height: 80px;
   padding-top: 0;
   border-bottom-style: none;
-  height: var(--system-14-line-height);
   padding-bottom: 0;
   background-color: rgb(var(--ig-primary-background));
   resize: none;

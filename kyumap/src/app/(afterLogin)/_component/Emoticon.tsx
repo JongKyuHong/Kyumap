@@ -38,8 +38,8 @@ export default function Emoticon() {
     };
   }, []);
 
-  const translateValue = `${viewportSize.width - 513}px, ${
-    viewportSize.height - 109
+  const translateValue = `${viewportSize.width - 623}px, ${
+    viewportSize.height - 69
   }px`;
 
   return (
