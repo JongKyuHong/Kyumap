@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { ReactEventHandler, ReactNode, useState, useRef } from "react";
 import styles from "./layout.module.css";
 import Link from "next/link";
 import Image from "next/image";
@@ -17,15 +17,23 @@ export default function RootLayout({ children, modal }: Props) {
   const [clickedMenu, setMenu] = useState(false);
   const [clickedEmotionMenu, setEmotionMenu] = useState(false);
 
+  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
+  const svgRef = useRef<SVGSVGElement>(null);
+
+  const handleSvgClick = () => {
+    if (svgRef.current) {
+      const svgRect = svgRef.current.getBoundingClientRect();
+      const modalTop = svgRect.top + window.scrollY;
+      const modalLeft = svgRect.right + window.scrollX;
+      setModalPosition({ top: modalTop, left: modalLeft });
+      setEmotionMenu(!clickedEmotionMenu);
+      setMenu(false);
+    }
+  };
+
   const onClickMenu = () => {
     setMenu(!clickedMenu);
     setEmotionMenu(false);
-  };
-
-  const onClickEmoticon = () => {
-    setEmotionMenu(!clickedEmotionMenu);
-    setMenu(false);
-    console.log("로그로그", clickedEmotionMenu);
   };
 
   return (
@@ -133,7 +141,7 @@ export default function RootLayout({ children, modal }: Props) {
                   <section className={styles.rootSection}>
                     <main className={styles.rootMain}>
                       <div className={styles.mainrootDiv}>
-                        <MainSection onClickEmoticon={onClickEmoticon} />
+                        <MainSection onClick={handleSvgClick} ref={svgRef} />
                         <RightSection />
                       </div>
                       <div>
@@ -172,7 +180,11 @@ export default function RootLayout({ children, modal }: Props) {
               </div>
             </div>
             {clickedMenu ? <MenuDetail /> : <div></div>}
-            {clickedEmotionMenu ? <Emoticon /> : <div></div>}
+            {clickedEmotionMenu ? (
+              <Emoticon top={modalPosition.top} left={modalPosition.left} />
+            ) : (
+              <div></div>
+            )}
           </div>
         </div>
       </div>
