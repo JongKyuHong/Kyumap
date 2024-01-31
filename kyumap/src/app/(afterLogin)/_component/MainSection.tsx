@@ -76,6 +76,15 @@ export default function MainSection() {
               >
                 {/* {"게시글을 article로 출력"} */}
                 <Post onClickProps={handleSvgClick} ref={svgRef} />
+                <Post onClickProps={handleSvgClick} ref={svgRef} />
+                <Post onClickProps={handleSvgClick} ref={svgRef} />
+                <Post onClickProps={handleSvgClick} ref={svgRef} />
+                <Post onClickProps={handleSvgClick} ref={svgRef} />
+                <Post onClickProps={handleSvgClick} ref={svgRef} />
+                <Post onClickProps={handleSvgClick} ref={svgRef} />
+                <Post onClickProps={handleSvgClick} ref={svgRef} />
+                <Post onClickProps={handleSvgClick} ref={svgRef} />
+                <Post onClickProps={handleSvgClick} ref={svgRef} />
               </div>
             </div>
             <div className={styles.postFooter}>
