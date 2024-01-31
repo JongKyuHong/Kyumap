@@ -64,13 +64,21 @@ export default function RootLayout({ children, modal }: Props) {
                                     >
                                       <div className={styles.logoImageOuter}>
                                         <div className={styles.logoImageInner}>
-                                          <Image
-                                            className={styles.logo}
-                                            src={smallLogo}
-                                            alt="logo"
-                                            width={103}
-                                            height={29}
-                                          />
+                                          <picture>
+                                            <source
+                                              srcSet="/smallLogo2.png"
+                                              width="24px"
+                                              height="24px"
+                                              media="(max-width: 1263px)"
+                                            />
+                                            <Image
+                                              className={styles.logo}
+                                              src={smallLogo}
+                                              alt="logo"
+                                              width={103}
+                                              height={29}
+                                            />
+                                          </picture>
                                         </div>
                                       </div>
                                     </Link>
