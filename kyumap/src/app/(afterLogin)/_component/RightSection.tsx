@@ -41,7 +41,6 @@ export default function RightSection() {
                         </div>
                       </div>
                     </div>
-
                     <div className={styles.headerMid}>
                       <div className={styles.headermidInner}>
                         <div className={styles.headermidInner2}>
