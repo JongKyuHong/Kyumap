@@ -1,9 +1,15 @@
 "use client";
 
-import React, { forwardRef } from "react";
-import styles from "./mainsection.module.css";
+import React, { forwardRef, useState } from "react";
+import styles from "./post.module.css";
 import Link from "next/link";
 import Image from "next/image";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "dayjs/locale/ko";
+
+dayjs.locale("ko");
+dayjs.extend(relativeTime);
 
 interface Props {
   onClickProps: () => void;
@@ -13,6 +19,19 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
   { onClickProps },
   ref
 ) {
+  const [isMouseHover, setMouseHover] = useState(false);
+  const [isClicked, setClicked] = useState(false);
+
+  const dummyData = {
+    User: {
+      id: "jongkyu",
+      image: "/chi3.png",
+    },
+    content: "치이카와 너무 귀여워",
+    createdAt: new Date(),
+    Images: "/chi2.png",
+  };
+
   return (
     <article>
       <div className={styles.articleDiv}>
@@ -40,7 +59,7 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
                     <span className={styles.articleUserSpan}>
                       <Image
                         alt="프로필 사진"
-                        src="/chi.png"
+                        src={`${dummyData.User.image}`}
                         width={1}
                         height={1}
                         className={styles.articleUserProfileImage}
@@ -68,7 +87,7 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
                                 <div className={styles.linkInnerDiv}>
                                   <div className={styles.linkInnerDiv2}>
                                     <span className={styles.linkInnerSpan}>
-                                      {"사용자 명"}
+                                      {dummyData.User.id}
                                     </span>
                                   </div>
                                 </div>
@@ -77,6 +96,22 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
                           </span>
                         </span>
                       </span>
+                    </div>
+                  </div>
+                  <div className={styles.articleDay}>
+                    <span className={styles.articleDaySpan}>
+                      <span className={styles.articleDayInnerSpan} dir="auto">
+                        {"•"}
+                      </span>
+                    </span>
+                    <div className={styles.articleDayDiv}>
+                      <Link href="#" className={styles.articleDayLink}>
+                        <span className={styles.articleDayLinkSpan}>
+                          <time className={styles.articleDayTime}>
+                            {dayjs(dummyData.createdAt).fromNow(true)}
+                          </time>
+                        </span>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -149,22 +184,44 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
               <div className={styles.postIcon}>
                 <div className={styles.leftSectionIcon}>
                   <span className={styles.iconSpan}>
-                    <div className={styles.iconDiv} role="button" tabIndex={0}>
+                    <div
+                      className={styles.iconDiv}
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => setClicked(!isClicked)}
+                    >
                       <div className={styles.iconInnerDiv}>
-                        <span>
-                          <svg
-                            aria-label="좋아요"
-                            className={styles.iconSvg}
-                            fill="currentColor"
-                            height="24"
-                            role="img"
-                            viewBox="0 0 24 24"
-                            width="24"
-                          >
-                            <title>좋아요</title>
-                            <path d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938m0-2a6.04 6.04 0 0 0-4.797 2.127 6.052 6.052 0 0 0-4.787-2.127A6.985 6.985 0 0 0 .5 9.122c0 3.61 2.55 5.827 5.015 7.97.283.246.569.494.853.747l1.027.918a44.998 44.998 0 0 0 3.518 3.018 2 2 0 0 0 2.174 0 45.263 45.263 0 0 0 3.626-3.115l.922-.824c.293-.26.59-.519.885-.774 2.334-2.025 4.98-4.32 4.98-7.94a6.985 6.985 0 0 0-6.708-7.218Z"></path>
-                          </svg>
-                        </span>
+                        {isClicked ? (
+                          <span className={styles.iconInnerDivSpan}>
+                            <svg
+                              aria-label="좋아요 취소"
+                              className={styles.iconSvgClicked}
+                              fill="red"
+                              height="24"
+                              role="img"
+                              viewBox="0 0 48 48"
+                              width="24"
+                            >
+                              <title>좋아요 취소</title>
+                              <path d="M34.6 3.1c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5s1.1-.2 1.6-.5c1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z"></path>
+                            </svg>
+                          </span>
+                        ) : (
+                          <span className={styles.iconInnerDivSpan}>
+                            <svg
+                              aria-label="좋아요"
+                              className={styles.iconSvg}
+                              fill="currentColor"
+                              height="24"
+                              role="img"
+                              viewBox="0 0 24 24"
+                              width="24"
+                            >
+                              <title>좋아요</title>
+                              <path d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938m0-2a6.04 6.04 0 0 0-4.797 2.127 6.052 6.052 0 0 0-4.787-2.127A6.985 6.985 0 0 0 .5 9.122c0 3.61 2.55 5.827 5.015 7.97.283.246.569.494.853.747l1.027.918a44.998 44.998 0 0 0 3.518 3.018 2 2 0 0 0 2.174 0 45.263 45.263 0 0 0 3.626-3.115l.922-.824c.293-.26.59-.519.885-.774 2.334-2.025 4.98-4.32 4.98-7.94a6.985 6.985 0 0 0-6.708-7.218Z"></path>
+                            </svg>
+                          </span>
+                        )}
                       </div>
                     </div>
                   </span>
