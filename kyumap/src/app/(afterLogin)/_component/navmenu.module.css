@@ -201,3 +201,9 @@
   text-overflow: ellipsis;
   display: block;
 }
+
+@media (max-width: 1263px) {
+  .titleSpan {
+    display: none;
+  }
+}
