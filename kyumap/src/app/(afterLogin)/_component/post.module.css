@@ -714,7 +714,8 @@
   }
 }
 
-.iconInnerDivSpan {
+.iconDiv.clicked .iconInnerDivSpan,
+.iconDiv:hover .iconInnerDivSpan {
   animation-timing-function: ease-in-out;
   transform: scale(1);
   animation-duration: 0.45s;
