@@ -19,6 +19,8 @@
   --ig-primary-icon: 38, 38, 38;
   --ig-secondary-text: 115, 115, 115;
   --ig-banner-background: 255, 255, 255;
+  --ig-secondary-icon: 142, 142, 142;
+  --ig-badge: 255, 48, 64;
 
   --web-always-black: 0, 0, 0;
 
@@ -41,6 +43,7 @@
   --revamp-nav-bottom-toolbar-height: 50px;
   --revamp-feed-card-dense-padding: 16px;
   --revamp-feed-card-media-min-width: 390px;
+  --revamp-feed-item-spacing: 20px;
 
   --feed-sidebar-width: 319px;
 
