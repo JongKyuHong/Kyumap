@@ -1,0 +1,228 @@
+.rootDiv {
+  left: 0;
+  margin-right: -9999px;
+  top: 0;
+  position: absolute;
+}
+
+.EmoticonModal {
+  max-height: inherit;
+  min-width: inherit;
+  height: inherit;
+  min-height: inherit;
+  width: inherit;
+  max-width: inherit;
+  justify-content: inherit;
+  flex-grow: inherit;
+  align-content: inherit;
+  position: relative;
+  display: inherit;
+  align-items: inherit;
+  flex-direction: inherit;
+  flex-shrink: inherit;
+}
+
+.EmoticonModalDiv {
+  position: relative;
+}
+
+.EmoticonModalDiv2 {
+  display: flex;
+}
+
+.EmoticonModalDiv3 {
+  width: 100%;
+  overflow: hidden;
+  height: 100%;
+  margin-bottom: 16px;
+  border-top-left-radius: 6px;
+  background-color: rgb(var(--ig-banner-background));
+  flex-direction: column;
+  display: flex;
+  box-shadow: 0 4px 12px rgba(var(--web-always-black), 0.15);
+  border-top-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+  position: relative;
+  border-bottom-right-radius: 6px;
+}
+
+.EmoticonModalDiv4 {
+  overflow: auto;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  position: static;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.EmoticonModalDiv5 {
+  overflow: visible;
+  margin-bottom: 8px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  margin-left: 8px;
+  margin-right: 8px;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.EmoticonModalDiv6 {
+  overflow: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  flex-direction: row;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  flex-wrap: wrap;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.EmoticonModalDiv7 {
+  overflow: visible;
+  margin-top: 8px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  margin-left: 8px;
+  margin-right: 8px;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.EmoticonSpan {
+  line-height: var(--base-line-clamp-line-height);
+  overflow: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  flex-direction: row;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  flex-wrap: wrap;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.EmoticonSpan::before {
+  margin-top: -3px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.EmoticonSpan::after {
+  margin-top: -4px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.EmoticonListDiv {
+  border-bottom-color: var(--always-dark-overlay);
+  padding-top: 0;
+  min-width: 0;
+  margin-top: 0;
+  min-height: 0;
+  border-bottom-width: 0;
+  border-bottom-style: solid;
+  padding-bottom: 0;
+  border-right-style: solid;
+  border-left-width: 0;
+  padding-left: 0;
+  border-top-color: var(--always-dark-overlay);
+  background-color: transparent;
+  touch-action: manipulation;
+  flex-basis: auto;
+  border-right-width: 0;
+  border-right-color: var(--always-dark-overlay);
+  box-sizing: border-box;
+  border-top-width: 0;
+  user-select: none;
+  padding-right: 0;
+  border-top-right-radius: inherit;
+  display: inline-flex;
+  flex-shrink: 0;
+  border-left-color: var(--always-dark-overlay);
+  border-left-style: solid;
+  cursor: pointer;
+  outline-style: none;
+  align-items: stretch;
+  flex-direction: row;
+  border-top-left-radius: inherit;
+  position: relative;
+  margin-left: 0;
+  z-index: 0;
+  -webkit-tap-highlight-color: transparent;
+  border-bottom-right-radius: inherit;
+  text-align: inherit;
+  border-bottom-left-radius: inherit;
+  border-top-style: solid;
+  margin-right: 0;
+  list-style: none;
+  text-decoration: none;
+  outline: none;
+}
+
+.EmoticonListInnerDiv {
+  align-items: center;
+  border: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  font: inherit;
+  font-size: var(--system-32-font-size);
+  font-weight: normal;
+  height: 32px;
+  justify-content: center;
+  margin: 6px;
+  padding: 0;
+  position: relative;
+  vertical-align: baseline;
+  width: 32px;
+}

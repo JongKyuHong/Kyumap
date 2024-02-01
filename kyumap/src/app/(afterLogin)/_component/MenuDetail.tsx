@@ -343,7 +343,7 @@ export default function MenuDetail() {
                                   </div>
                                 </div>
                               </div>
-                              <DarkMode />
+                              {/* <DarkMode /> */}
                             </div>
                           </div>
                         </div>
