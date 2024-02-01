@@ -1,5 +1,5 @@
 "use client";
-import React, { forwardRef, useRef, useState } from "react";
+import React, { useRef, useState, useCallback } from "react";
 import styles from "./mainsection.module.css";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,17 +9,32 @@ import Post from "./Post";
 export default function MainSection() {
   const [clickedEmotionMenu, setEmotionMenu] = useState(false);
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
-  const svgRef = useRef<SVGSVGElement>(null);
 
-  const handleSvgClick = () => {
-    if (svgRef.current) {
-      const svgRect = svgRef.current.getBoundingClientRect();
-      const modalTop = svgRect.top + window.scrollY;
-      const modalLeft = svgRect.right + window.scrollX;
-      setModalPosition({ top: modalTop, left: modalLeft });
-      setEmotionMenu(!clickedEmotionMenu);
-    }
-  };
+  const svgRef = useRef(Array.from({ length: 10 }, () => React.createRef()));
+
+  // const handleSvgClick = (index: number) => {
+  //   if (svgRef[index].current) {
+  //     const svgRect = svgRef[index].current!.getBoundingClientRect();
+  //     const modalTop = svgRect.top + window.scrollY;
+  //     const modalLeft = svgRect.right + window.scrollX;
+  //     setModalPosition({ top: modalTop, left: modalLeft });
+  //     setEmotionMenu(!clickedEmotionMenu);
+  //   }
+  // };
+
+  const handleSvgClick = useCallback(
+    (index: number) => {
+      if (svgRef.current[index].current) {
+        const svgRect = svgRef.current[index].current.getBoundingClientRect();
+        const modalTop = svgRect.top + window.scrollY;
+        const modalLeft = svgRect.right + window.scrollX;
+        setModalPosition({ top: modalTop, left: modalLeft });
+        setEmotionMenu(!clickedEmotionMenu);
+      }
+    },
+    [clickedEmotionMenu]
+  );
+
   return (
     <div style={{ maxWidth: "630px", width: "100%" }}>
       <div className={styles.rootDivInner}>
@@ -75,6 +90,13 @@ export default function MainSection() {
                 }}
               >
                 {/* {"게시글을 article로 출력"} */}
+                {/* {svgRef.map((ref, index) => (
+                  <Post
+                    key={index}
+                    onClickProps={() => handleSvgClick(index)}
+                    ref={ref}
+                  />
+                ))} */}
                 <Post onClickProps={handleSvgClick} ref={svgRef} />
                 <Post onClickProps={handleSvgClick} ref={svgRef} />
                 <Post onClickProps={handleSvgClick} ref={svgRef} />
