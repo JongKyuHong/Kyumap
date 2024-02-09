@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { useRouter } from "next/navigation";
 import "dayjs/locale/ko";
 
 dayjs.locale("ko");
@@ -382,18 +383,23 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
                             </div>
                           </div>
                         </div>
-                        <textarea
-                          aria-label="댓글 달기..."
-                          placeholder="댓글 달기..."
-                          autoComplete="off"
-                          autoCorrect="off"
+                        <Link
+                          href="/detail"
                           className={styles.formInputTextArea}
-                          style={{
-                            height: "18px !important",
-                            resize: "none",
-                            border: "none",
-                          }}
-                        ></textarea>
+                        >
+                          <textarea
+                            aria-label="댓글 달기..."
+                            className={styles.formInputTextArea}
+                            placeholder="댓글 달기..."
+                            autoComplete="off"
+                            autoCorrect="off"
+                            style={{
+                              height: "18px !important",
+                              resize: "none",
+                              border: "none",
+                            }}
+                          ></textarea>
+                        </Link>
                       </div>
                     </form>
                   </div>
