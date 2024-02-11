@@ -395,8 +395,6 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
                             autoCorrect="off"
                             style={{
                               height: "18px !important",
-                              resize: "none",
-                              border: "none",
                             }}
                           ></textarea>
                         </Link>
