@@ -20,6 +20,7 @@ export default function Emoticon({ top, left }: propsType) {
   }, []);
 
   const translateValue = `${modalPosition.width}px, ${modalPosition.height}px`;
+  console.log(translateValue, "tra");
   return (
     <div
       className={styles.rootDiv}
