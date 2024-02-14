@@ -5,22 +5,33 @@
   --gradient-pink: 255, 1, 105;
   --gradient-lavender: 211, 0, 197;
   --gradient-purple: 118, 56, 25;
+
   --ig-link: 0, 55, 107;
   --ig-primary-background: 255, 255, 255;
   --ig-separator: 219, 219, 219;
   --ig-primary-text: 0, 0, 0;
+  --ig-primary-button: 0, 149, 246;
   --ig-elevated-separator: 219, 219, 219;
   --always-dark-overlay: rgba(0, 0, 0, 0.4);
   --ig-secondary-button: 38, 38, 38;
   --ig-secondary-background: 250, 250, 250;
-  --ig-primary-text: 0, 0, 0;
-  --grey-7: 85, 85, 85;
   --ig-highlight-background: 239, 239, 239;
   --ig-primary-icon: 38, 38, 38;
   --ig-secondary-text: 115, 115, 115;
   --ig-banner-background: 255, 255, 255;
+  --ig-secondary-icon: 142, 142, 142;
+  --ig-badge: 255, 48, 64;
+
+  --overlay-alpha-80: rgba(0, 0, 0, 0.65);
+
+  --media-info: 335px;
+
+  --post-separator: 239, 239, 239;
 
   --web-always-black: 0, 0, 0;
+  --web-always-white: 255, 255, 255;
+
+  --grey-7: 85, 85, 85;
 
   --font-weight-system-semibold: 600;
   --font-weight-system-regular: 400;
@@ -41,6 +52,7 @@
   --revamp-nav-bottom-toolbar-height: 50px;
   --revamp-feed-card-dense-padding: 16px;
   --revamp-feed-card-media-min-width: 390px;
+  --revamp-feed-item-spacing: 20px;
 
   --feed-sidebar-width: 319px;
 
