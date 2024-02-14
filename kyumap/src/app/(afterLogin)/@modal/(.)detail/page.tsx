@@ -7,6 +7,7 @@ import Image from "next/image";
 import chi from "../../../../../public/chi.png";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
+import { useRouter } from "next/navigation";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 dayjs.locale("ko");
@@ -17,7 +18,7 @@ export default function Detail() {
   const [CommentText, setComment] = useState("");
   const [saveIconClicked, setSaveClicked] = useState(false);
 
-  console.log("pageDetail");
+  const router = useRouter();
 
   const onChangeTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setComment(e.target.value);
@@ -50,6 +51,10 @@ export default function Detail() {
     setSaveClicked((prev) => !prev);
   }, [saveIconClicked]);
 
+  const onClickXbox = useCallback(() => {
+    router.back();
+  }, []);
+
   return (
     <div className={styles.rootModalDiv}>
       <div className={styles.rootDivStyle2}>
@@ -61,6 +66,7 @@ export default function Detail() {
                 <svg
                   aria-label="닫기"
                   className={styles.XboxSvg}
+                  onClick={onClickXbox}
                   fill="currentColor"
                   height="18"
                   role="img"

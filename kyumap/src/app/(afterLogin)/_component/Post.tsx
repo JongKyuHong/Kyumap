@@ -6,7 +6,6 @@ import Link from "next/link";
 import Image from "next/image";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { useRouter } from "next/navigation";
 import "dayjs/locale/ko";
 
 dayjs.locale("ko");
@@ -23,6 +22,7 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
   const [isClicked, setClicked] = useState(false);
 
   const dummyData = {
+    postId: 1,
     User: {
       id: "jongkyu",
       image: "/chi3.png",
@@ -223,24 +223,26 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
                   <span>
                     <div className={styles.iconDiv} role="button" tabIndex={0}>
                       <div className={styles.iconInnerDiv}>
-                        <svg
-                          aria-label="댓글 달기"
-                          className={styles.iconSvg}
-                          fill="currentColor"
-                          height="24"
-                          role="img"
-                          viewBox="0 0 24 24"
-                          width="24"
-                        >
-                          <title>댓글 달기</title>
-                          <path
-                            d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                          ></path>
-                        </svg>
+                        <Link href="/detail">
+                          <svg
+                            aria-label="댓글 달기"
+                            className={styles.iconSvg}
+                            fill="currentColor"
+                            height="24"
+                            role="img"
+                            viewBox="0 0 24 24"
+                            width="24"
+                          >
+                            <title>댓글 달기</title>
+                            <path
+                              d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                            ></path>
+                          </svg>
+                        </Link>
                       </div>
                     </div>
                   </span>
@@ -336,7 +338,7 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
               </div>
               <div className={styles.postComment}>
                 <Link
-                  href="#"
+                  href="/detail"
                   className={styles.commentLink}
                   role="link"
                   tabIndex={0}
@@ -383,21 +385,17 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
                             </div>
                           </div>
                         </div>
-                        <Link
-                          href="/detail"
+
+                        <textarea
+                          aria-label="댓글 달기..."
                           className={styles.formInputTextArea}
-                        >
-                          <textarea
-                            aria-label="댓글 달기..."
-                            className={styles.formInputTextArea}
-                            placeholder="댓글 달기..."
-                            autoComplete="off"
-                            autoCorrect="off"
-                            style={{
-                              height: "18px !important",
-                            }}
-                          ></textarea>
-                        </Link>
+                          placeholder="댓글 달기..."
+                          autoComplete="off"
+                          autoCorrect="off"
+                          style={{
+                            height: "18px !important",
+                          }}
+                        ></textarea>
                       </div>
                     </form>
                   </div>
