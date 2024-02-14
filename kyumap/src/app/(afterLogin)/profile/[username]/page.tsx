@@ -5,7 +5,7 @@ import Link from "next/link";
 import chi from "../../../../../public/chi.png";
 
 export default function Page() {
-  const dummyData = [
+  const dummyData2 = [
     {
       username: "jongkyu",
       User: {
@@ -117,6 +117,14 @@ export default function Page() {
       Images: "/chi.png",
     },
   ];
+
+  const chunkSize = 3;
+  const dummyData = [];
+
+  for (let i = 0; i < dummyData2.length; i += chunkSize) {
+    dummyData.push(dummyData2.slice(i, i + chunkSize));
+  }
+
   return (
     <div>
       <section className={styles.MainSection}>
@@ -229,7 +237,92 @@ export default function Page() {
                     </div>
                   </div>
                 </div>
-                <div></div>
+                <div className={styles.HeaderSectionBlank}>
+                  <div></div>
+                </div>
+                <ul className={styles.ProfileInfo}>
+                  <li className={styles.InfoLi}>
+                    {"게시글 "}
+                    <span className={styles.InfoSpan}>
+                      <span className={styles.InfoInnerSpan}>{"508"}</span>
+                    </span>
+                  </li>
+                  <li className={styles.InfoLi}>
+                    {"팔로워 "}
+                    <span className={styles.InfoSpan}>
+                      <span className={styles.InfoInnerSpan}>{"6.8만"}</span>
+                    </span>
+                  </li>
+                  <li className={styles.InfoLi}>
+                    {"팔로우 "}
+                    <span className={styles.InfoSpan}>
+                      <span className={styles.InfoInnerSpan}>{"508"}</span>
+                    </span>
+                  </li>
+                </ul>
+                <div className={styles.ProfileContent}>
+                  <div className={styles.ProfileContentId}>
+                    <span className={styles.ProfileContentIdSpan}>
+                      {"사용자 명"}
+                    </span>
+                  </div>
+                  <div className={styles.ProfileContentType}>
+                    <div className={styles.ProfileContentType2} dir="auto">
+                      {"교육"}
+                    </div>
+                  </div>
+                  <h1 className={styles.ProfileContentInfo} dir="auto">
+                    {"자기가 쓴 소개 ~~"}
+                    <br />
+                    <Link
+                      href="#"
+                      className={styles.InfoLink}
+                      tabIndex={0}
+                      role="link"
+                    >
+                      {"자기가 태그한 사람~~~"}
+                    </Link>
+                  </h1>
+                  <button className={styles.ProfileContentBtn} type="button">
+                    <div className={styles.ProfileBtnLink}>
+                      <span className={styles.LinkSvgSpan}>
+                        <svg
+                          aria-label="링크 아이콘"
+                          className={styles.LinkSvg}
+                          fill="currentColor"
+                          height="12"
+                          role="img"
+                          viewBox="0 0 24 24"
+                          width="12"
+                        >
+                          <title>링크 아이콘</title>
+                          <path
+                            d="m9.726 5.123 1.228-1.228a6.47 6.47 0 0 1 9.15 9.152l-1.227 1.227m-4.603 4.603-1.228 1.228a6.47 6.47 0 0 1-9.15-9.152l1.227-1.227"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                          ></path>
+                          <line
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            x1="8.471"
+                            x2="15.529"
+                            y1="15.529"
+                            y2="8.471"
+                          ></line>
+                        </svg>
+                      </span>
+                      <div className={styles.ProfileLinkDiv} dir="auto">
+                        {"링크 명"}
+                      </div>
+                    </div>
+                  </button>
+                </div>
               </section>
             </header>
             {/* <div className={styles.}></div>  인스타로 치면 스토리 부분 일단 보류*/}
@@ -376,53 +469,62 @@ export default function Page() {
                 </div>
               </Link>
             </div>
-          </div>
-          <div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                paddingBottom: "1200px",
-                paddingTop: "0px",
-                position: "relative",
-              }}
-            >
-              <div className={styles.PostDivList}>
-                {dummyData.map((data, index) => (
-                  <div className={styles.PostDiv}>
-                    <Link
-                      href="/detail"
-                      className={styles.PostDivInnerLink}
-                      role="link"
-                      tabIndex={0}
-                    >
-                      <div className={styles.LinkDiv}>
-                        <div className={styles.LinkDiv2}>
-                          <Image
-                            alt={`${data.content}`}
-                            src={`${data.Images}`}
-                            width={309}
-                            height={309}
-                            className={styles.ImageLink}
-                            style={{
-                              objectFit: "contain",
-                              height: "auto",
-                              transform:
-                                "scale(1) translateX(0%) translateY(-25.7556%)",
-                            }}
-                            crossOrigin="anonymous"
-                          ></Image>
-                        </div>
-                        <div className={styles.LinkDiv3}></div>
+            <div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  paddingBottom: "0px",
+                  paddingTop: "0px",
+                  position: "relative",
+                }}
+              >
+                {dummyData.map((rowData, rowIndex) => (
+                  <div key={rowIndex} className={styles.PostDivList}>
+                    {rowData.map((data, index) => (
+                      <div key={index} className={styles.PostDiv}>
+                        <Link
+                          href="/detail"
+                          className={styles.PostDivInnerLink}
+                          role="link"
+                          tabIndex={0}
+                        >
+                          <div className={styles.LinkDiv}>
+                            <div className={styles.LinkDiv2}>
+                              <Image
+                                style={{
+                                  objectFit: "contain",
+                                  height: "auto",
+                                }}
+                                alt={`${data.content}`}
+                                src={`${data.Images}`}
+                                className={styles.ImageLink}
+                                width={309}
+                                height={309}
+                                crossOrigin="anonymous"
+                              ></Image>
+                            </div>
+                            <div className={styles.LinkDiv3}></div>
+                          </div>
+                        </Link>
                       </div>
-                    </Link>
+                    ))}
+                    {rowData.length < 3 && (
+                      <>
+                        {[...Array(3 - rowData.length)].map((_, index) => (
+                          <div
+                            key={`empty-${index}`}
+                            className={styles.PostDiv}
+                          ></div>
+                        ))}
+                      </>
+                    )}
                   </div>
                 ))}
               </div>
             </div>
           </div>
         </main>
-        <div style={{ order: "5" }}></div>
       </section>
     </div>
   );

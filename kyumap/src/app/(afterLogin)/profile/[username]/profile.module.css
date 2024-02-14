@@ -47,6 +47,10 @@
     flex-grow: 2;
     flex-basis: 30px;
   }
+
+  .HeaderSectionBlank {
+    margin-bottom: 20px;
+  }
 }
 
 .MainDiv {
@@ -260,16 +264,14 @@
   text-align: inherit;
   margin-right: 0;
   list-style: none;
-  text-decoration: none;
   outline: none;
   color: rgb(var(--ig-link));
-  text-decoration: none;
 }
 
 .LinkDiv {
   background-color: rgb(var(--ig-highlight-background));
   display: block;
-  width: 100%;
+  width: auto;
   position: relative;
 }
 
@@ -464,6 +466,21 @@
 }
 
 .HeaderSectionFollowBtn2 {
+  padding-bottom: 8px;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 8px;
+  border-bottom-style: none;
+  border-bottom-width: 0;
+  padding-left: 8px;
+  display: inline;
+  border-left-width: 0;
+  justify-content: center;
+  border-top-right-radius: 8px;
+  touch-action: manipulation;
+  border-right-style: none;
+  border-right-width: 0;
+  border-bottom-left-radius: 8px;
   box-sizing: border-box;
   border-top-width: 0;
   align-items: center;
@@ -492,6 +509,251 @@
 
 .FollowSvg {
   color: rgb(var(--ig-primary-text));
+  position: relative;
+  display: block;
+}
+
+.HeaderSectionBlank {
+}
+
+.ProfileInfo {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+
+.InfoLi {
+  font-size: var(--system-16-font-size);
+  margin-right: 40px;
+}
+
+.InfoLi:first-child {
+  margin-left: 0;
+}
+
+.InfoLi:last-child {
+  margin-right: 0;
+}
+
+.InfoSpan {
+  color: rgb(var(--ig-primary-text));
+  font-weight: 600;
+}
+
+.InfoInnerSpan {
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+  word-wrap: break-word;
+  margin-left: 0;
+  text-align: inherit;
+  margin-right: 0;
+  text-decoration: none;
+}
+
+.ProfileContent {
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  border-left-width: 0;
+  padding-left: 0;
+  flex-direction: column;
+  border-right-width: 0;
+  box-sizing: border-box;
+  border-top-width: 0;
+  align-items: start;
+  display: flex;
+  padding-right: 0;
+  flex-shrink: 0;
+  position: relative;
+  margin-left: 0;
+  vertical-align: baseline;
+  margin-right: 0;
+}
+
+.ProfileContentId {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  justify-content: center;
+  background-color: transparent;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  position: static;
+  flex-direction: row;
+  align-self: auto;
+  flex-grow: 0;
+  row-gap: 10px;
+  column-gap: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ProfileContentType {
+  overflow-y: visible;
+  overflow-x: visible;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ProfileContentInfo {
+  display: block;
+  color: rgb(var(--ig-primary-text));
+  font-weight: var(--font-weight-system-regular);
+  margin: 0;
+  font-size: var(--system-14-font-size);
+  line-height: var(--system-14-line-height);
+  font-family: var(--font-family-system);
+}
+
+.ProfileContentBtn {
+  border: 0;
+  color: rgb(var(--ig-primary-button));
+  display: inline-block;
+  padding: 0 !important;
+  position: relative;
+  text-align: center;
+  font-family: var(--font-family-system);
+  -webkit-appearance: none;
+  background: none;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: var(--font-weight-system-semibold);
+  pointer-events: auto;
+  text-overflow: ellipsis;
+  text-transform: inherit;
+  -webkit-user-select: none;
+  width: auto;
+  line-height: var(--system-14-line-height);
+  margin: 0;
+}
+
+.ProfileContentIdSpan {
+  line-height: var(--base-line-clamp-line-height);
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-size: var(--system-14-font-size);
+  color: rgb(var(--ig-primary-text));
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  font-weight: 600;
+  position: relative;
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  margin-left: 0 !important;
+  word-break: break-word;
+}
+
+.ProfileContentIdSpan::before {
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.ProfileContentIdSpan::after {
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.ProfileContentType2 {
+  display: block;
+  color: rgb(var(--ig-secondary-text));
+  font-weight: var(--font-weight-system-regular);
+  margin: 0;
+  font-size: var(--system-14-font-size);
+  line-height: var(--system-14-line-height);
+  font-family: var(--font-family-system);
+}
+
+.InfoLink {
+  text-decoration: none;
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-bottom-style: none;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  display: inline;
+  border-left-width: 0;
+  padding-left: 0;
+  background-color: transparent;
+  touch-action: manipulation;
+  border-right-style: none;
+  border-right-width: 0;
+  box-sizing: border-box;
+  border-top-width: 0;
+  padding-right: 0;
+  cursor: pointer;
+  margin-left: 0;
+  -webkit-tap-highlight-color: transparent;
+  border-top-style: none;
+  border-left-style: none;
+  text-align: inherit;
+  margin-right: 0;
+  list-style: none;
+  outline: none;
+  color: rgb(var(--ig-link));
+}
+
+.ProfileBtnLink {
+  display: inline-flex;
+}
+
+.LinkSvgSpan {
+  padding-top: 3px;
+  margin-right: 7px;
+}
+
+.ProfileLinkDiv {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgb(var(--ig-link));
+  font-weight: var(--font-weight-system-semibold);
+  margin: 0;
+  font-size: var(--system-14-font-size);
+  line-height: var(--system-14-line-height);
+  font-family: var(--font-family-system);
+}
+
+.LinkSvg {
+  color: rgb(var(--ig-link));
   position: relative;
   display: block;
 }
