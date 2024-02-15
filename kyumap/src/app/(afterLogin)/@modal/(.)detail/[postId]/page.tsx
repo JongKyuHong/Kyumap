@@ -4,7 +4,7 @@ import React, { useState, useCallback } from "react";
 import styles from "./detail.module.css";
 import Link from "next/link";
 import Image from "next/image";
-import chi from "../../../../../public/chi.png";
+import chi from "../../../../../../public/chi.png";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import { useRouter } from "next/navigation";
@@ -738,6 +738,7 @@ export default function Detail() {
                                               {CommentData.map(
                                                 (data, index) => (
                                                   <div
+                                                    key={index}
                                                     className={
                                                       styles.CommentDiv
                                                     }

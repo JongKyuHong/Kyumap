@@ -1,6 +1,6 @@
 "use client";
 
-import React, { forwardRef, useState } from "react";
+import React, { ChangeEvent, forwardRef, useState } from "react";
 import styles from "./post.module.css";
 import Link from "next/link";
 import Image from "next/image";
@@ -20,6 +20,12 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
   ref
 ) {
   const [isClicked, setClicked] = useState(false);
+
+  const [textValue, setTextValue] = useState("");
+
+  const handleTextareaChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    setTextValue(event.target.value);
+  };
 
   const dummyData = {
     postId: 1,
@@ -223,7 +229,7 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
                   <span>
                     <div className={styles.iconDiv} role="button" tabIndex={0}>
                       <div className={styles.iconInnerDiv}>
-                        <Link href="/detail">
+                        <Link href="/detail/newPage">
                           <svg
                             aria-label="댓글 달기"
                             className={styles.iconSvg}
@@ -338,7 +344,7 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
               </div>
               <div className={styles.postComment}>
                 <Link
-                  href="/detail"
+                  href="/detail/newPage"
                   className={styles.commentLink}
                   role="link"
                   tabIndex={0}
@@ -392,10 +398,22 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
                           placeholder="댓글 달기..."
                           autoComplete="off"
                           autoCorrect="off"
+                          onChange={handleTextareaChange}
                           style={{
                             height: "18px !important",
                           }}
                         ></textarea>
+                        {textValue ? (
+                          <div className={styles.EnterBtn}>
+                            <div
+                              className={styles.EnterDiv}
+                              role="button"
+                              tabIndex={0}
+                            >
+                              게시
+                            </div>
+                          </div>
+                        ) : null}
                       </div>
                     </form>
                   </div>
