@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import styles from "./navmenu.module.css";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
@@ -6,6 +7,7 @@ import { useSelectedLayoutSegment } from "next/navigation";
 }
 export default function NavMenu() {
   const segment = useSelectedLayoutSegment();
+
   return (
     <div className={styles.nav}>
       <div>
@@ -198,7 +200,7 @@ export default function NavMenu() {
         <div className={styles.navDiv}>
           <span className={styles.navSpan}>
             <div className={styles.navSpanDiv}>
-              <Link className={styles.navLink} href="#">
+              <Link className={styles.navLink} href="/AddPost">
                 <div className={styles.LinkDiv}>
                   <div>
                     <div className={styles.navIconWrapper}>
