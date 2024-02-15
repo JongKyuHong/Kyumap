@@ -17,6 +17,10 @@ export default function LoginModal() {
 
   const onSubmit = () => {};
 
+  const onChangeId = () => {};
+
+  const onChangePassword = () => {};
+
   return (
     <div className={styles.modalBackground}>
       <div className={styles.modal}>
@@ -47,6 +51,7 @@ export default function LoginModal() {
                 value={id}
                 type="text"
                 placeholder=""
+                onChange={onChangeId}
               />
             </div>
             <div className={styles.inputDiv}>
@@ -59,6 +64,7 @@ export default function LoginModal() {
                 value={password}
                 type="password"
                 placeholder=""
+                onChange={onChangePassword}
               />
             </div>
           </div>
