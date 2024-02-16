@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useCallback } from "react";
+import React, { useCallback, useRef } from "react";
 import styles from "./newpost.module.css";
 import { useRouter } from "next/navigation";
 
 export default function NewPost() {
   const router = useRouter();
+  const imgRef = useRef<HTMLInputElement>(null);
 
   const onClickXbox = useCallback(() => {
     router.back();
@@ -158,12 +159,14 @@ export default function NewPost() {
                                 className={styles.ModalBodyForm}
                                 method="POST"
                                 role="presentation"
+                                encType="multipart/form-data"
                               >
                                 <input
                                   className={styles.FormInput}
                                   accept="image/jpeg,image/png,image/heic,image/heif,video/mp4,video/quicktime"
                                   multiple
                                   type="file"
+                                  ref={imgRef}
                                 ></input>
                               </form>
                             </div>
