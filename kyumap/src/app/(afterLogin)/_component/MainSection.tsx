@@ -25,6 +25,7 @@ export default function MainSection() {
         setEmotionMenu(!clickedEmotionMenu);
       }
     },
+
     [clickedEmotionMenu]
   );
 
@@ -239,6 +240,53 @@ export default function MainSection() {
                           transform="rotate(240, 50, 50)"
                         ></rect>
                       </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className={styles.FollowList}>
+            <div className={styles.FollowListDiv}>
+              <div className={styles.MyAccount}>
+                <div className={styles.MyAccountDiv} style={{ width: "100%" }}>
+                  <div className={styles.MyAccountInnerDiv}>
+                    <div className={styles.MyAccountInnerDiv2}>
+                      <div className={styles.MyAccountInnerDiv3}>
+                        <div className={styles.MyAccountInnerDiv4}>
+                          <div className={styles.MyAccountImage}>
+                            <div className={styles.MyAccountImage2}>
+                              <div
+                                className={styles.MyAccountImage3}
+                                aria-disabled="true"
+                                role="button"
+                                tabIndex={-1}
+                              >
+                                <canvas
+                                  style={{
+                                    left: "-5px",
+                                    position: "absolute",
+                                    top: "-5px",
+                                    height: "54px",
+                                    width: "54px",
+                                  }}
+                                ></canvas>
+                                <Link
+                                  href="#"
+                                  className={styles.ImageLink}
+                                  style={{ height: "44px", width: "44px" }}
+                                  tabIndex={0}
+                                  role="link"
+                                >
+                                  <Image
+                                    className={styles.ProfileImage}
+                                  ></Image>
+                                </Link>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
