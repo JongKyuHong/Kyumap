@@ -32,6 +32,8 @@ export default function MainSection() {
 
   const EmoticonClick = () => {};
 
+  const onClickTransform = () => {};
+
   return (
     <section className={styles.rootSection}>
       <main className={styles.rootMain}>
@@ -323,7 +325,7 @@ export default function MainSection() {
                                 role="button"
                                 tabIndex={0}
                               >
-                                전환
+                                <Link href="/NewLogin">전환</Link>
                               </div>
                             </div>
                           </div>

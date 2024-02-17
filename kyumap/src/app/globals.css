@@ -23,7 +23,9 @@
   --ig-badge: 255, 48, 64;
   --ig-secondary-button-background: 239, 239, 239;
   --ig-elevated-background: 255, 255, 255;
+  --ig-stroke: 219, 219, 219;
   --grey-2: 219, 219, 219;
+  --ig-toggle-outline-prism: 219, 223, 228;
 
   --overlay-alpha-80: rgba(0, 0, 0, 0.65);
 
