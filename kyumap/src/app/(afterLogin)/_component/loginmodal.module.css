@@ -1,0 +1,876 @@
+.LoginMain {
+  z-index: 3;
+  /* position: relative; */
+  width: 100vw;
+  height: 100%;
+  justify-content: center;
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.LoginMain2 {
+  box-sizing: border-box;
+  position: relative;
+  z-index: 0;
+}
+
+.LoginMain3 {
+  min-height: 100vh;
+  flex-direction: column;
+  display: flex;
+  position: relative;
+}
+
+.LoginMain4 {
+  bottom: 0;
+  top: 0;
+  position: fixed;
+  right: 0;
+  background-color: var(--overlay-alpha-80);
+  left: 0;
+}
+
+.LoginMain5 {
+  max-height: inherit;
+  min-width: inherit;
+  height: inherit;
+  min-height: inherit;
+  width: inherit;
+  max-width: inherit;
+  justify-content: inherit;
+  flex-grow: inherit;
+  align-content: inherit;
+  position: relative;
+  display: inherit;
+  align-items: inherit;
+  flex-direction: inherit;
+  flex-shrink: inherit;
+}
+
+.LoginMain6 {
+  justify-content: center;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  align-items: stretch;
+  flex-grow: 1;
+}
+
+.ModalContainer {
+  min-width: 0;
+  min-height: 0;
+  justify-content: center;
+  box-sizing: border-box;
+  display: flex;
+  pointer-events: none;
+  align-items: flex-start;
+}
+
+.ModalContainer2 {
+  overflow-x: hidden;
+  overflow-y: hidden;
+  justify-content: center;
+  flex-direction: column;
+  display: flex;
+  pointer-events: all;
+  align-items: center;
+  position: relative;
+  z-index: 0;
+  box-sizing: content-box;
+  outline: none;
+}
+
+.ModalContainer3 {
+  margin-bottom: 20px;
+  margin-top: 20px;
+  max-height: calc(100% - 40px);
+  flex-shrink: 1;
+  margin-left: 20px;
+  position: relative;
+  margin-right: 20px;
+}
+
+@media (max-width: 736px) {
+  .ModalContainer3 {
+    width: 260px;
+  }
+}
+
+@media (min-width: 736px) {
+  .ModalContainer3 {
+    width: 400px;
+  }
+}
+
+.ModalContainer4 {
+  overflow-x: auto;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  border-bottom-left-radius: var(--modal-border-radius);
+  border-top-left-radius: var(--modal-border-radius);
+  border-bottom-right-radius: var(--modal-border-radius);
+  background-color: rgb(var(--ig-elevated-background));
+  border-top-right-radius: var(--modal-border-radius);
+}
+
+.ModalContainer5 {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  position: static;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ModalHeader {
+  overflow-y: visible;
+  overflow-x: visible;
+  margin-top: 12px;
+  align-items: flex-end;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  padding-right: 12px;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  padding-left: 12px;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ModalXbox {
+  padding-bottom: 8px;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 8px;
+  border-bottom-style: none;
+  border-bottom-width: 0;
+  padding-left: 8px;
+  border-left-width: 0;
+  justify-content: center;
+  background-color: transparent;
+  touch-action: manipulation;
+  border-right-style: none;
+  border-right-width: 0;
+  box-sizing: border-box;
+  border-top-width: 0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding-right: 8px;
+  margin-left: 0;
+  -webkit-tap-highlight-color: transparent;
+  border-top-style: none;
+  border-left-style: none;
+  text-align: inherit;
+  margin-right: 0;
+  list-style: none;
+  text-decoration: none;
+  outline: none;
+}
+
+.ModalXbox2 {
+  justify-content: center;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+}
+
+.ModalXboxSvg {
+  color: rgb(var(--ig-primary-text));
+  position: relative;
+  display: block;
+}
+
+.ModalBody {
+  overflow-x: auto;
+  overflow-y: auto;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ModalBody2 {
+  margin: 0;
+  max-width: unset;
+  width: 100%;
+  color: rgb(var(--ig-primary-text));
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: center;
+}
+
+.ModalBody3 {
+  margin-bottom: 0;
+  border: none;
+  background-color: rgb(var(--ig-elevated-background));
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  align-items: center;
+  border-radius: 1px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  font: inherit;
+  font-size: 100%;
+  position: relative;
+  vertical-align: baseline;
+}
+
+.ModalBodyLogo {
+  margin-top: 36px;
+  overflow-y: visible;
+  margin-bottom: 12px;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ModalBodyMain {
+  margin-bottom: 10px;
+  max-width: 350px;
+  width: 100%;
+}
+
+.LoginForm {
+  border: 0;
+  display: flex;
+  flex-direction: column;
+  font: inherit;
+  font-size: 100%;
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
+
+.LoginFormDiv {
+  overflow-y: visible;
+  margin-top: 24px;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.Emailform {
+  margin: 0 40px 6px;
+}
+
+.Emailform2 {
+  border-bottom-width: 1px;
+  width: 100%;
+  border-bottom-color: rgb(var(--ig-stroke));
+  border-bottom-style: solid;
+  border-left-width: 1px;
+  font-size: var(--system-14-font-size);
+  border-right-style: solid;
+  background-color: rgb(var(--ig-secondary-background));
+  border-right-width: 1px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  color: rgb(var(--ig-primary-text));
+  border-left-style: solid;
+  flex-direction: row;
+  border-top-left-radius: 3px;
+  border-right-color: rgb(var(--ig-stroke));
+  position: relative;
+  border-left-color: rgb(var(--ig-stroke));
+  border-bottom-right-radius: 3px;
+  border-top-right-radius: 3px;
+  border-top-color: rgb(var(--ig-stroke));
+  border-bottom-left-radius: 3px;
+  border-top-width: 1px;
+  border-top-style: solid;
+}
+
+.EmailLabel {
+  border: 0;
+  display: flex;
+  flex: 1 0 0px;
+  font: inherit;
+  font-size: 100%;
+  height: 36px;
+  margin: 0;
+  min-width: 0;
+  padding: 0;
+  position: relative;
+  vertical-align: baseline;
+  color: rgb(var(--ig-primary-text));
+  cursor: default;
+}
+
+.PasswordSpan {
+  transform: scale(calc(10 / 12)) translateY(-10px);
+  border: 0;
+  color: rgb(var(--ig-secondary-text));
+  font: inherit;
+  font-size: var(--system-12-font-size);
+  height: 36px;
+  left: 8px;
+  line-height: 36px;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  text-overflow: ellipsis;
+  transform-origin: left;
+  transition: transform ease-out 0.1s;
+  -webkit-user-select: none;
+  vertical-align: baseline;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.PasswordInput {
+  box-shadow: 0 0 0 30px rgb(var(--ig-secondary-background)) inset;
+  -webkit-text-fill-color: rgb(var(--ig-primary-text));
+  font-size: var(--system-12-font-size);
+  padding: 14px 0 2px 8px !important;
+  font-family: var(--font-family-system);
+  -webkit-appearance: none;
+  text-align: left;
+  background: rgb(var(--ig-secondary-background));
+  border: 0;
+  flex: 1 0 auto;
+  margin: 0;
+  outline: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: normal;
+  line-height: var(--system-14-line-height);
+}
+
+.ViewPassword {
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  height: 100%;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  vertical-align: middle;
+  border-left-width: 0;
+  padding-left: 0;
+  font-size: 100%;
+  flex-basis: auto;
+  border-right-width: 0;
+  box-sizing: border-box;
+  border-top-width: 0;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding-right: 8px;
+  flex-direction: row;
+  position: relative;
+  margin-left: 0;
+  flex-grow: 0;
+  margin-right: 0;
+}
+
+.ViewPassword2 {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  margin-left: 8px;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.PBtn {
+  color: rgb(var(--ig-secondary-button));
+  background-color: transparent;
+  border: 0;
+  display: inline-block;
+  padding: 0 !important;
+  position: relative;
+  text-align: center;
+  font-family: var(--font-family-system);
+  -webkit-appearance: none;
+  background: none;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: var(--font-weight-system-semibold);
+  pointer-events: auto;
+  text-overflow: ellipsis;
+  text-transform: inherit;
+  -webkit-user-select: none;
+  width: auto;
+  line-height: var(--system-14-line-height);
+  margin: 0;
+}
+
+.EmailDiv {
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  height: 100%;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  vertical-align: middle;
+  border-left-width: 0;
+  padding-left: 0;
+  font-size: 100%;
+  flex-basis: auto;
+  border-right-width: 0;
+  box-sizing: border-box;
+  border-top-width: 0;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding-right: 8px;
+  flex-direction: row;
+  position: relative;
+  margin-left: 0;
+  flex-grow: 0;
+  margin-right: 0;
+}
+
+.EmailSpan {
+  transform: scale(calc(10 / 12)) translateY(-10px);
+  border: 0;
+  color: rgb(var(--ig-secondary-text));
+  font: inherit;
+  font-size: var(--system-12-font-size);
+  height: 36px;
+  left: 8px;
+  line-height: 36px;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  text-overflow: ellipsis;
+  transform-origin: left;
+  transition: transform ease-out 0.1s;
+  -webkit-user-select: none;
+  vertical-align: baseline;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.EmailInput {
+  box-shadow: 0 0 0 30px rgb(var(--ig-secondary-background)) inset;
+  -webkit-text-fill-color: rgb(var(--ig-primary-text));
+  font-size: var(--system-12-font-size);
+  padding: 14px 0 2px 8px !important;
+  font-family: var(--font-family-system);
+  -webkit-appearance: none;
+  text-align: left;
+  background: rgb(var(--ig-secondary-background));
+  border: 0;
+  flex: 1 0 auto;
+  margin: 0;
+  outline: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: normal;
+  line-height: var(--system-14-line-height);
+  unicode-bidi: isolate;
+}
+
+.Passwordform {
+  margin: 0 40px 6px;
+}
+
+.InfoInnerDiv {
+  overflow-y: visible;
+  margin-bottom: 12px;
+  overflow-x: visible;
+  margin-top: 12px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  margin-left: 40px;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  margin-right: 8px;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.InfoLabel {
+  touch-action: manipulation;
+  display: flex;
+  align-items: center;
+  position: relative;
+  color: rgb(var(--ig-primary-text));
+  font-family: var(--font-family-system);
+  font-size: 12px;
+  cursor: default;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+.CheckBoxDiv {
+  box-sizing: border-box;
+  display: flex;
+  position: relative;
+  z-index: 0;
+  outline: none;
+}
+
+.CheckBoxInnerDiv {
+  border-bottom-color: rgb(var(--ig-toggle-outline-prism));
+  border-bottom-width: 1px;
+  height: 16px;
+  border-bottom-style: solid;
+  width: 16px;
+  border-left-width: 1px;
+  border-left-color: rgb(var(--ig-toggle-outline-prism));
+  border-right-style: solid;
+  border-right-width: 1px;
+  border-top-left-radius: 2px;
+  justify-content: center;
+  border-top-color: rgb(var(--ig-toggle-outline-prism));
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-left-style: solid;
+  border-top-right-radius: 2px;
+  border-right-color: rgb(var(--ig-toggle-outline-prism));
+  border-top-width: 1px;
+  border-bottom-left-radius: 2px;
+  border-top-style: solid;
+  border-bottom-right-radius: 2px;
+}
+
+.CheckBox {
+  font-weight: normal;
+  color: rgb(var(--ig-primary-text));
+  font-family: var(--font-family-system);
+  font-size: var(--system-14-font-size);
+  line-height: var(--system-14-line-height);
+  background-color: #fff;
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.CheckBoxMent {
+  border-bottom-color: var(--always-dark-overlay);
+  padding-top: 0;
+  min-width: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  min-height: 0;
+  border-bottom-width: 0;
+  border-bottom-style: solid;
+  padding-bottom: 0;
+  border-right-style: solid;
+  border-left-width: 0;
+  padding-left: 0;
+  border-top-color: var(--always-dark-overlay);
+  background-color: transparent;
+  touch-action: manipulation;
+  border-right-width: 0;
+  border-right-color: var(--always-dark-overlay);
+  box-sizing: border-box;
+  border-top-width: 0;
+  user-select: none;
+  padding-right: 0;
+  border-top-right-radius: inherit;
+  display: inline-flex;
+  flex-shrink: 0;
+  border-left-color: var(--always-dark-overlay);
+  border-left-style: solid;
+  cursor: pointer;
+  outline-style: none;
+  flex-basis: 0;
+  align-items: stretch;
+  flex-direction: row;
+  border-top-left-radius: inherit;
+  position: relative;
+  z-index: 0;
+  flex-grow: 1;
+  margin-left: 8px;
+  -webkit-tap-highlight-color: transparent;
+  border-bottom-right-radius: inherit;
+  text-align: inherit;
+  border-bottom-left-radius: inherit;
+  border-top-style: solid;
+  margin-right: 0;
+  list-style: none;
+  text-decoration: none;
+  outline: none;
+}
+
+.CheckBoxSpan {
+  line-height: 16px;
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-weight: 400;
+  color: rgb(var(--ig-primary-text));
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  position: relative;
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  font-size: var(--system-12-font-size);
+  margin-left: 0 !important;
+  word-break: break-word;
+  unicode-bidi: isolate;
+}
+
+.CheckBoxSpan::before {
+  margin-top: -2px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.CheckBoxSpan::after {
+  margin-top: -3px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.LoginBtn {
+  overflow-y: visible;
+  margin-top: 8px;
+  overflow-x: visible;
+  margin-bottom: 8px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  margin-left: 40px;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  margin-right: 40px;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.LoginBtn2 {
+  background-color: rgb(var(--ig-primary-button)) !important;
+  border: none;
+  border-radius: 8px;
+  color: rgb(var(--web-always-white));
+  position: relative;
+  text-align: center;
+  font-family: var(--font-family-system);
+  -webkit-appearance: none;
+  background: none;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: block;
+  font-size: 14px;
+  font-weight: var(--font-weight-system-semibold);
+  padding: 7px 16px !important;
+  pointer-events: auto;
+  text-overflow: ellipsis;
+  text-transform: inherit;
+  -webkit-user-select: none;
+  width: auto;
+  line-height: var(--system-14-line-height);
+  margin: 0;
+}
+
+.LoginBtnDiv {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.FindPassword {
+  text-decoration: none;
+  color: rgb(var(--ig-link));
+  font-size: var(--system-12-font-size);
+  line-height: var(--system-12-line-height);
+  margin-top: 12px !important;
+  text-align: center !important;
+  padding-top: 0;
+  margin-bottom: 0;
+  border-bottom-style: none;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  display: inline;
+  border-left-width: 0;
+  padding-left: 0;
+  background-color: transparent;
+  touch-action: manipulation;
+  border-right-style: none;
+  border-right-width: 0;
+  box-sizing: border-box;
+  border-top-width: 0;
+  padding-right: 0;
+  cursor: pointer;
+  margin-left: 0;
+  -webkit-tap-highlight-color: transparent;
+  border-top-style: none;
+  border-left-style: none;
+  margin-right: 0;
+  list-style: none;
+  outline: none;
+}
+
+.FindPasswordSpan {
+  line-height: 16px;
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-weight: 400;
+  color: rgb(var(--ig-link));
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  position: relative;
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  font-size: var(--system-12-font-size);
+  margin-left: 0 !important;
+  word-break: break-word;
+  unicode-bidi: isolate;
+  text-align: center !important;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  list-style: none;
+}
+
+.FindPasswordSpan::before {
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.FindPasswordSpan::after {
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.Blank {
+  overflow-y: visible;
+  overflow-x: visible;
+  margin-bottom: 24px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
