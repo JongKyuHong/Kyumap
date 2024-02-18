@@ -1,12 +1,13 @@
 "use client";
 
-import React, { ChangeEvent, forwardRef, useState } from "react";
+import React, { ChangeEvent, forwardRef, useState, useEffect } from "react";
 import styles from "./post.module.css";
 import Link from "next/link";
 import Image from "next/image";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/ko";
+import chi from "../../../../public/chi.png";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -20,8 +21,9 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
   ref
 ) {
   const [isClicked, setClicked] = useState(false);
-
   const [textValue, setTextValue] = useState("");
+  const [isMultiImg, setMultiImg] = useState(false);
+  const [currentNumber, setNumber] = useState(0);
 
   const handleTextareaChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setTextValue(event.target.value);
@@ -35,7 +37,34 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
     },
     content: "치이카와 너무 귀여워",
     createdAt: new Date(),
-    Images: "/chi2.png",
+    Images: ["/chi3.png", "/chi.png", "/chi3.png", "/chi.png"],
+  };
+
+  const imgArticle = [];
+
+  for (let i = 0; i < dummyData.Images.length; i++) {
+    imgArticle.push(
+      <div
+        style={{ opacity: currentNumber == i ? 1 : "" }}
+        className={styles.selectImg}
+      ></div>
+    );
+  }
+
+  useEffect(() => {
+    if (dummyData.Images.length > 1) {
+      setMultiImg(true);
+    } else {
+      setMultiImg(false);
+    }
+  }, []);
+
+  const onClickNextBtn = () => {
+    setNumber(currentNumber + 1);
+  };
+
+  const onClickPrevBtn = () => {
+    setNumber(currentNumber - 1);
   };
 
   return (
@@ -162,24 +191,175 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
             tabIndex={0}
           >
             <div className={styles.bodyInnerDiv}>
-              <div className={styles.bodyInnerDiv2}>
-                <div>
-                  <div className={styles.bodyInnerDiv3}>
-                    <div className={styles.bodyInnerDiv4}>
-                      <Image
-                        alt="게시글"
-                        crossOrigin="anonymous"
-                        src="/chi3.png"
-                        width={500}
-                        height={500}
-                        className={styles.postImage}
-                        style={{ objectFit: "cover" }}
-                      ></Image>
+              {isMultiImg ? (
+                <div className={styles.bodyInnerDiv2M}>
+                  <div className={styles.bodyInnerDiv3M}>
+                    <div className={styles.bodyInnerDiv4M}>
+                      <div
+                        className={styles.bodyInnerDiv5M}
+                        style={{ paddingBottom: "125.115%" }}
+                      ></div>
+                      <div className={styles.bodyInnerDiv6M}>
+                        <div className={styles.bodyInnerDiv7M}>
+                          <div
+                            className={styles.bodyInnerDiv8M}
+                            role="presentation"
+                          >
+                            <div className={styles.bodyInnerDiv9M}>
+                              <ul className={styles.Imgul}>
+                                <li
+                                  style={{
+                                    transform: "translateX(1871px)",
+                                    width: "1px",
+                                  }}
+                                ></li>
+                                <li
+                                  className={styles.Imgli}
+                                  style={{ transform: "translateX(0px)" }}
+                                  tabIndex={-1}
+                                >
+                                  <div style={{ width: "468px" }}>
+                                    <div className={styles.liDiv}>
+                                      <div>
+                                        <div className={styles.InnerDivM}>
+                                          <div
+                                            className={styles.InnerDivM2}
+                                            style={{ paddingBottom: "125%" }}
+                                          >
+                                            <Image
+                                              src={chi}
+                                              alt="사용자님의 사진"
+                                              crossOrigin="anonymous"
+                                              style={{ objectFit: "cover" }}
+                                              className={styles.ImgM}
+                                            ></Image>
+                                          </div>
+                                          <div
+                                            className={styles.InnerDivM3}
+                                          ></div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                          {currentNumber === 0 ? (
+                            <button
+                              aria-label="다음"
+                              style={{ right: 0 }}
+                              className={styles.BtnM}
+                              tabIndex={-1}
+                              onClick={onClickNextBtn}
+                            >
+                              <div className={styles.nextBtn}>
+                                <svg
+                                  className={styles.arrow}
+                                  viewBox="0 0 24 24"
+                                  focusable="false"
+                                  height="18"
+                                  width="18"
+                                >
+                                  <path d="M0 0h24v24H0z" fill="none"></path>
+                                  <path d="M7.59 18.41L9 20l8-8-8-8-1.41 1.41L14.17 12"></path>
+                                </svg>
+                              </div>
+                            </button>
+                          ) : currentNumber === imgArticle.length - 1 ? (
+                            <button
+                              aria-label="돌아가기"
+                              style={{ left: 0 }}
+                              className={styles.BtnM}
+                              tabIndex={-1}
+                              onClick={onClickPrevBtn}
+                            >
+                              <div className={styles.prevBtn}>
+                                <svg
+                                  className={styles.arrow}
+                                  viewBox="0 0 24 24"
+                                  focusable="false"
+                                  height="18"
+                                  width="18"
+                                >
+                                  <path d="M0 0h24v24H0z" fill="none"></path>
+                                  <path d="M16.41 5.41L15 4l-8 8 8 8 1.41-1.41L9.83 12"></path>
+                                </svg>
+                              </div>
+                            </button>
+                          ) : (
+                            <>
+                              <button
+                                aria-label="돌아가기"
+                                style={{ left: 0 }}
+                                className={styles.BtnM}
+                                tabIndex={-1}
+                                onClick={onClickPrevBtn}
+                              >
+                                <div className={styles.prevBtn}>
+                                  <svg
+                                    className={styles.arrow}
+                                    viewBox="0 0 24 24"
+                                    focusable="false"
+                                    height="18"
+                                    width="18"
+                                  >
+                                    <path d="M0 0h24v24H0z" fill="none"></path>
+                                    <path d="M16.41 5.41L15 4l-8 8 8 8 1.41-1.41L9.83 12"></path>
+                                  </svg>
+                                </div>
+                              </button>
+                              <button
+                                aria-label="다음"
+                                style={{ right: 0 }}
+                                className={styles.BtnM}
+                                tabIndex={-1}
+                                onClick={onClickNextBtn}
+                              >
+                                <div className={styles.nextBtn}>
+                                  <svg
+                                    className={styles.arrow}
+                                    viewBox="0 0 24 24"
+                                    focusable="false"
+                                    height="18"
+                                    width="18"
+                                  >
+                                    <path d="M0 0h24v24H0z" fill="none"></path>
+                                    <path d="M7.59 18.41L9 20l8-8-8-8-1.41 1.41L14.17 12"></path>
+                                  </svg>
+                                </div>
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                    <div className={styles.bodyInnerDiv4Outer}></div>
+                    <div className={styles.NumberOfA}>{imgArticle}</div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div className={styles.bodyInnerDiv2}>
+                  <div className={styles.bodyInnerDivDiv}>
+                    <div className={styles.bodyInnerDiv3}>
+                      <div
+                        className={styles.bodyInnerDiv4}
+                        style={{ paddingBottom: "125.04%" }}
+                      >
+                        <Image
+                          alt="게시글"
+                          crossOrigin="anonymous"
+                          src="/chi3.png"
+                          width={500}
+                          height={500}
+                          className={styles.postImage}
+                          style={{ objectFit: "cover" }}
+                        ></Image>
+                      </div>
+                      <div className={styles.bodyInnerDiv4Outer}></div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
           <div className={styles.articleBodyFooter}></div>
