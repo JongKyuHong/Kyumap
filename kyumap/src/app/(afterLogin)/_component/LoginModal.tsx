@@ -5,12 +5,18 @@ import styles from "./loginmodal.module.css";
 import smallLogo from "../../../../public/smallLogo.png";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function LoginModal() {
   const [viewPassword, setViewPassword] = useState(false);
+  const router = useRouter();
 
   const onClickPBtn = () => {
     setViewPassword(!viewPassword);
+  };
+
+  const onClickXbox = () => {
+    router.back();
   };
   return (
     <div className={styles.LoginMain}>
@@ -37,7 +43,10 @@ export default function LoginModal() {
                           style={{ height: "100%" }}
                         >
                           <div className={styles.ModalHeader}>
-                            <div className={styles.ModalXbox}>
+                            <div
+                              className={styles.ModalXbox}
+                              onClick={onClickXbox}
+                            >
                               <div className={styles.ModalXbox2}>
                                 <svg
                                   aria-label="닫기"
