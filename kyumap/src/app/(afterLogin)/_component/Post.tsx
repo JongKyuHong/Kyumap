@@ -8,6 +8,9 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/ko";
 import chi from "../../../../public/chi.png";
+import chi2 from "../../../../public/chi2.png";
+import chi3 from "../../../../public/chi3.png";
+import chi4 from "../../../../public/chi4.png";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -37,7 +40,7 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
     },
     content: "치이카와 너무 귀여워",
     createdAt: new Date(),
-    Images: ["/chi3.png", "/chi.png", "/chi3.png", "/chi.png"],
+    Images: [chi, chi2, chi3, chi4],
   };
 
   const imgArticle = [];
@@ -45,6 +48,7 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
   for (let i = 0; i < dummyData.Images.length; i++) {
     imgArticle.push(
       <div
+        key={i}
         style={{ opacity: currentNumber == i ? 1 : "" }}
         className={styles.selectImg}
       ></div>
@@ -224,10 +228,14 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
                                         <div className={styles.InnerDivM}>
                                           <div
                                             className={styles.InnerDivM2}
-                                            style={{ paddingBottom: "125%" }}
+                                            style={{
+                                              paddingBottom: "125%",
+                                            }}
                                           >
                                             <Image
-                                              src={chi}
+                                              src={
+                                                dummyData.Images[currentNumber]
+                                              }
                                               alt="사용자님의 사진"
                                               crossOrigin="anonymous"
                                               style={{ objectFit: "cover" }}
@@ -245,97 +253,71 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
                               </ul>
                             </div>
                           </div>
-                          {currentNumber === 0 ? (
-                            <button
-                              aria-label="다음"
-                              style={{ right: 0 }}
-                              className={styles.BtnM}
-                              tabIndex={-1}
-                              onClick={onClickNextBtn}
-                            >
-                              <div className={styles.nextBtn}>
-                                <svg
-                                  className={styles.arrow}
-                                  viewBox="0 0 24 24"
-                                  focusable="false"
-                                  height="18"
-                                  width="18"
-                                >
-                                  <path d="M0 0h24v24H0z" fill="none"></path>
-                                  <path d="M7.59 18.41L9 20l8-8-8-8-1.41 1.41L14.17 12"></path>
-                                </svg>
-                              </div>
-                            </button>
-                          ) : currentNumber === imgArticle.length - 1 ? (
-                            <button
-                              aria-label="돌아가기"
-                              style={{ left: 0 }}
-                              className={styles.BtnM}
-                              tabIndex={-1}
+                          <button
+                            aria-label="돌아가기"
+                            style={{
+                              left: 0,
+                              visibility:
+                                currentNumber === 0 ? "hidden" : "visible",
+                              pointerEvents:
+                                currentNumber === 0 ? "none" : "auto",
+                            }}
+                            className={styles.BtnM}
+                            tabIndex={-1}
+                          >
+                            <div
+                              className={styles.prevBtn}
                               onClick={onClickPrevBtn}
                             >
-                              <div className={styles.prevBtn}>
-                                <svg
-                                  className={styles.arrow}
-                                  viewBox="0 0 24 24"
-                                  focusable="false"
-                                  height="18"
-                                  width="18"
-                                >
-                                  <path d="M0 0h24v24H0z" fill="none"></path>
-                                  <path d="M16.41 5.41L15 4l-8 8 8 8 1.41-1.41L9.83 12"></path>
-                                </svg>
-                              </div>
-                            </button>
-                          ) : (
-                            <>
-                              <button
-                                aria-label="돌아가기"
-                                style={{ left: 0 }}
-                                className={styles.BtnM}
-                                tabIndex={-1}
-                                onClick={onClickPrevBtn}
+                              <svg
+                                className={styles.arrow}
+                                viewBox="0 0 24 24"
+                                focusable="false"
+                                height="18"
+                                width="18"
                               >
-                                <div className={styles.prevBtn}>
-                                  <svg
-                                    className={styles.arrow}
-                                    viewBox="0 0 24 24"
-                                    focusable="false"
-                                    height="18"
-                                    width="18"
-                                  >
-                                    <path d="M0 0h24v24H0z" fill="none"></path>
-                                    <path d="M16.41 5.41L15 4l-8 8 8 8 1.41-1.41L9.83 12"></path>
-                                  </svg>
-                                </div>
-                              </button>
-                              <button
-                                aria-label="다음"
-                                style={{ right: 0 }}
-                                className={styles.BtnM}
-                                tabIndex={-1}
-                                onClick={onClickNextBtn}
+                                <path d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M16.41 5.41L15 4l-8 8 8 8 1.41-1.41L9.83 12"></path>
+                              </svg>
+                            </div>
+                          </button>
+                          <button
+                            aria-label="다음"
+                            style={{
+                              right: 0,
+                              visibility:
+                                currentNumber === imgArticle.length - 1
+                                  ? "hidden"
+                                  : "visible",
+                              pointerEvents:
+                                currentNumber === imgArticle.length - 1
+                                  ? "none"
+                                  : "auto",
+                            }}
+                            className={styles.BtnM}
+                            tabIndex={-1}
+                          >
+                            <div
+                              className={styles.nextBtn}
+                              onClick={onClickNextBtn}
+                            >
+                              <svg
+                                className={styles.arrow}
+                                viewBox="0 0 24 24"
+                                focusable="false"
+                                height="18"
+                                width="18"
                               >
-                                <div className={styles.nextBtn}>
-                                  <svg
-                                    className={styles.arrow}
-                                    viewBox="0 0 24 24"
-                                    focusable="false"
-                                    height="18"
-                                    width="18"
-                                  >
-                                    <path d="M0 0h24v24H0z" fill="none"></path>
-                                    <path d="M7.59 18.41L9 20l8-8-8-8-1.41 1.41L14.17 12"></path>
-                                  </svg>
-                                </div>
-                              </button>
-                            </>
-                          )}
+                                <path d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M7.59 18.41L9 20l8-8-8-8-1.41 1.41L14.17 12"></path>
+                              </svg>
+                            </div>
+                          </button>
                         </div>
                       </div>
                     </div>
-                    <div className={styles.NumberOfA}>{imgArticle}</div>
                   </div>
+                  <div className={styles.NumberOfA}>{imgArticle}</div>
                 </div>
               ) : (
                 <div className={styles.bodyInnerDiv2}>
@@ -348,9 +330,7 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
                         <Image
                           alt="게시글"
                           crossOrigin="anonymous"
-                          src="/chi3.png"
-                          width={500}
-                          height={500}
+                          src={chi3}
                           className={styles.postImage}
                           style={{ objectFit: "cover" }}
                         ></Image>
