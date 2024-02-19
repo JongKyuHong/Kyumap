@@ -1,14 +1,17 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import styles from "./detail.module.css";
 import Link from "next/link";
 import Image from "next/image";
-import chi from "../../../../../../public/chi.png";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import { useRouter } from "next/navigation";
 import relativeTime from "dayjs/plugin/relativeTime";
+import chi from "../../../../../../public/chi.png";
+import chi2 from "../../../../../../public/chi2.png";
+import chi3 from "../../../../../../public/chi3.png";
+import chi4 from "../../../../../../public/chi4.png";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -17,6 +20,8 @@ export default function Detail() {
   const [isClicked, setClicked] = useState(false);
   const [CommentText, setComment] = useState("");
   const [saveIconClicked, setSaveClicked] = useState(false);
+  const [isMultiImg, setMultiImg] = useState(false);
+  const [currentNumber, setNumber] = useState(0);
 
   const router = useRouter();
 
@@ -31,8 +36,16 @@ export default function Detail() {
     },
     content: "치이카와 너무 귀여워",
     createdAt: new Date(),
-    Images: "/chi2.png",
+    Images: [chi, chi2, chi3, chi4],
   };
+
+  useEffect(() => {
+    if (dummyData.Images.length > 1) {
+      setMultiImg(true);
+    } else {
+      setMultiImg(false);
+    }
+  }, []);
 
   const CommentData = [
     {
@@ -54,6 +67,14 @@ export default function Detail() {
   const onClickXbox = useCallback(() => {
     router.back();
   }, []);
+
+  const onClickNextBtn = () => {
+    setNumber(currentNumber + 1);
+  };
+
+  const onClickPrevBtn = () => {
+    setNumber(currentNumber - 1);
+  };
 
   return (
     <div className={styles.rootModalDiv}>
@@ -202,7 +223,11 @@ export default function Detail() {
                                                           objectFit="cover"
                                                           crossOrigin="anonymous"
                                                           decoding="auto"
-                                                          src={chi}
+                                                          src={
+                                                            dummyData.Images[
+                                                              currentNumber
+                                                            ]
+                                                          }
                                                         ></Image>
                                                       </div>
                                                     </div>
@@ -216,14 +241,76 @@ export default function Detail() {
                                       {/* 이전 이미지가 존재하면 */}
                                       <button
                                         aria-label="돌아가기"
-                                        className={styles.prevBtn}
+                                        className={styles.BtnM}
                                         tabIndex={-1}
-                                      ></button>
+                                        style={{
+                                          left: 0,
+                                          visibility:
+                                            currentNumber === 0
+                                              ? "hidden"
+                                              : "visible",
+                                          pointerEvents:
+                                            currentNumber === 0
+                                              ? "none"
+                                              : "auto",
+                                        }}
+                                      >
+                                        <div
+                                          className={styles.prevBtn}
+                                          onClick={onClickPrevBtn}
+                                        >
+                                          <svg
+                                            className={styles.arrow}
+                                            viewBox="0 0 24 24"
+                                            focusable="false"
+                                            height="18"
+                                            width="18"
+                                          >
+                                            <path
+                                              d="M0 0h24v24H0z"
+                                              fill="none"
+                                            ></path>
+                                            <path d="M16.41 5.41L15 4l-8 8 8 8 1.41-1.41L9.83 12"></path>
+                                          </svg>
+                                        </div>
+                                      </button>
                                       <button
                                         aria-label="다음"
-                                        className={styles.nextBtn}
+                                        style={{
+                                          right: 0,
+                                          visibility:
+                                            currentNumber ===
+                                            dummyData.Images.length - 1
+                                              ? "hidden"
+                                              : "visible",
+                                          pointerEvents:
+                                            currentNumber ===
+                                            dummyData.Images.length - 1
+                                              ? "none"
+                                              : "auto",
+                                        }}
+                                        className={styles.BtnM}
                                         tabIndex={-1}
-                                      ></button>
+                                      >
+                                        <div
+                                          className={styles.nextBtn}
+                                          onClick={onClickNextBtn}
+                                        >
+                                          <svg
+                                            className={styles.arrow}
+                                            viewBox="0 0 24 24"
+                                            focusable="false"
+                                            height="18"
+                                            width="18"
+                                          >
+                                            <path
+                                              d="M0 0h24v24H0z"
+                                              fill="none"
+                                            ></path>
+                                            <path d="M7.59 18.41L9 20l8-8-8-8-1.41 1.41L14.17 12"></path>
+                                          </svg>
+                                        </div>
+                                      </button>
                                     </div>
                                   </div>
                                 </div>

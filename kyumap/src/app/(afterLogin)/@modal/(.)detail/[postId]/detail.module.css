@@ -608,8 +608,25 @@
   vertical-align: baseline;
 }
 
-.prevBtn {
+/* .prevBtn {
   left: 0;
+  cursor: pointer;
+  padding: 16px 8px;
+  background: transparent;
+  border: none;
+  justify-self: center;
+  outline: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgb(var(--ig-primary-text));
+  font-family: var(--font-family-system);
+  font-size: var(--system-14-font-size);
+  line-height: var(--system-14-line-height);
+  margin: 0;
+} */
+
+.BtnM {
   cursor: pointer;
   padding: 16px 8px;
   background: transparent;
@@ -626,7 +643,7 @@
   margin: 0;
 }
 
-.nextBtn {
+/* .nextBtn {
   right: 0;
   cursor: pointer;
   padding: 16px 8px;
@@ -642,6 +659,20 @@
   font-size: var(--system-14-font-size);
   line-height: var(--system-14-line-height);
   margin: 0;
+} */
+
+.prevBtn {
+  background-repeat: no-repeat;
+  background-position: -130px -98px;
+  height: 30px;
+  width: 30px;
+}
+
+.nextBtn {
+  background-repeat: no-repeat;
+  background-position: -162px -98px;
+  height: 30px;
+  width: 30px;
 }
 
 .DetailModalComment {
