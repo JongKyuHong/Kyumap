@@ -1,0 +1,610 @@
+.ModalMainDiv {
+  /* z-index: 3;
+  position: relative; */
+  z-index: 3;
+  position: absolute;
+  width: 100vw;
+  top: 0;
+  left: 0;
+}
+
+.ModalInnerDiv {
+  box-sizing: border-box;
+  position: relative;
+  z-index: 0;
+}
+
+.ModalInnerDiv2 {
+  min-height: 100vh;
+  flex-direction: column;
+  display: flex;
+  position: relative;
+}
+
+.ModalInnerDiv3 {
+  bottom: 0;
+  top: 0;
+  position: fixed;
+  right: 0;
+  background-color: var(--overlay-alpha-80);
+  left: 0;
+}
+
+.ModalXbox {
+  top: 10px;
+  z-index: 1;
+  right: 10px;
+  position: absolute;
+}
+
+.ModalXboxInner {
+  padding-bottom: 8px;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 8px;
+  border-bottom-style: none;
+  border-bottom-width: 0;
+  padding-left: 8px;
+  border-left-width: 0;
+  justify-content: center;
+  background-color: transparent;
+  touch-action: manipulation;
+  border-right-style: none;
+  border-right-width: 0;
+  box-sizing: border-box;
+  border-top-width: 0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding-right: 8px;
+  margin-left: 0;
+  -webkit-tap-highlight-color: transparent;
+  border-top-style: none;
+  border-left-style: none;
+  text-align: inherit;
+  margin-right: 0;
+  list-style: none;
+  text-decoration: none;
+  outline: none;
+}
+
+.ModalXboxDiv {
+  justify-content: center;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+}
+
+.XboxSvg {
+  color: rgb(var(--web-always-white));
+  position: relative;
+  display: block;
+}
+
+.ModalInnerDiv4 {
+  max-height: inherit;
+  min-width: inherit;
+  height: inherit;
+  min-height: inherit;
+  width: inherit;
+  max-width: inherit;
+  justify-content: inherit;
+  flex-grow: inherit;
+  align-content: inherit;
+  position: relative;
+  display: inherit;
+  align-items: inherit;
+  flex-direction: inherit;
+  flex-shrink: inherit;
+}
+
+.ModalInnerDiv5 {
+  justify-content: center;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  align-items: stretch;
+  flex-grow: 1;
+}
+
+.ModalInnerDiv6 {
+  min-width: 0;
+  min-height: 0;
+  justify-content: center;
+  box-sizing: border-box;
+  display: flex;
+  pointer-events: none;
+  align-items: flex-start;
+}
+
+.ModalInnerDiv7 {
+  overflow-x: hidden;
+  overflow-y: hidden;
+  justify-content: center;
+  flex-direction: column;
+  display: flex;
+  pointer-events: all;
+  align-items: center;
+  position: relative;
+  z-index: 0;
+  box-sizing: content-box;
+  outline: none;
+}
+
+.ModalInnerDiv8 {
+  margin-bottom: 20px;
+  margin-top: 20px;
+  max-height: calc(100% - 40px);
+  flex-shrink: 1;
+  margin-left: 20px;
+  position: relative;
+  margin-right: 20px;
+}
+
+.ModalInnerDiv9 {
+  overflow-x: auto;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  border-bottom-left-radius: var(--modal-border-radius);
+  border-top-left-radius: var(--modal-border-radius);
+  border-bottom-right-radius: var(--modal-border-radius);
+  background-color: rgb(var(--ig-elevated-background));
+  border-top-right-radius: var(--modal-border-radius);
+}
+
+.test {
+  max-height: 898px;
+  max-width: 855px;
+  min-height: 391px;
+  min-width: 348px;
+  width: 692px;
+  height: 692px;
+}
+
+.ModalInnerDiv10 {
+  min-width: 0;
+  overflow-x: hidden;
+  min-height: 0;
+  overflow-y: hidden;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 1;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ModalInnerDiv11 {
+  outline: none;
+}
+
+.ModalHeader {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  outline: none;
+}
+
+.ModalHeader2 {
+  flex-direction: column;
+  display: flex;
+  align-items: stretch;
+  outline: none;
+}
+
+.ModalHeader3 {
+  align-items: center;
+  border-bottom: 1px solid rgb(var(--ig-elevated-separator));
+  box-sizing: border-box;
+  display: inline-block;
+  height: calc(var(--scrollable-content-header-height) - 1px);
+  position: relative;
+  width: 100%;
+  outline: none;
+}
+
+.ModalHeader4 {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  justify-content: center;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-self: auto;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  position: absolute;
+  outline: none;
+}
+
+.HeaderH1 {
+  align-items: center;
+  border: 0;
+  color: rgb(var(--ig-primary-text));
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  font: inherit;
+  font-size: var(--system-16-font-size);
+  font-weight: var(--font-weight-system-semibold);
+  justify-content: center;
+  line-height: var(--system-16-line-height);
+  margin: 0;
+  min-width: 0;
+  padding: 0;
+  text-align: center;
+  vertical-align: baseline;
+  outline: none;
+}
+
+.HeaderDiv {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  outline: none;
+}
+
+.Underleft {
+  float: left;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  position: relative;
+  outline: none;
+}
+
+.Underright {
+  float: right;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  position: relative;
+  outline: none;
+}
+
+/* .ModalBody {
+  min-width: 0;
+  overflow-x: hidden;
+  min-height: 0;
+  overflow-y: hidden;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 1;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+} */
+
+.ModalBody {
+  max-width: min(
+    calc(
+      100vw - var(--creation-min-padding-x) - var(--creation-settings-width)
+    ),
+    calc(var(--creation-modal-max-height) - var(--creation-header-height))
+  );
+  min-height: calc(
+    var(--creation-modal-min-height) - var(--creation-header-height)
+  );
+  max-height: min(
+    calc(
+      100vw - var(--creation-min-padding-x) - var(--creation-settings-width)
+    ),
+    calc(var(--creation-modal-max-height) - var(--creation-header-height))
+  );
+  min-width: calc(
+    var(--creation-modal-min-height) - var(--creation-header-height)
+  );
+  height: calc(
+    100vmin - var(--creation-padding-y) - var(--creation-header-height) -
+      var(--creation-padding-x)
+  );
+  flex-shrink: 1;
+  flex-basis: auto;
+  flex-grow: 1;
+}
+
+.ModalBodyDiv {
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.ModalBodyInnerDiv {
+  overflow-y: visible;
+  overflow-x: visible;
+  border-bottom-left-radius: 0;
+  justify-content: center;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-self: auto;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ModalBodyInnerDiv2 {
+  padding-bottom: 24px;
+  overflow-y: visible;
+  overflow-x: visible;
+  padding-top: 24px;
+  padding-right: 24px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  justify-content: center;
+  background-color: transparent;
+  flex-direction: column;
+  padding-left: 24px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-self: auto;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ModalBodySvg {
+  color: rgb(var(--ig-primary-text));
+  position: relative;
+  display: block;
+  fill: currentcolor;
+  height: 77;
+  width: 96;
+}
+
+.ModalBodyInnerDiv3 {
+  margin-top: 16px;
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ModalBodyInnerSpan {
+  line-height: "25px";
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-weight: 400;
+  color: rgb(var(--ig-primary-text));
+  text-align: center;
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  position: relative;
+  font-size: var(--system-20-font-size);
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  margin-left: 0 !important;
+  word-break: break-word;
+}
+
+.ModalBodyInnerSpan::before {
+  margin-top: -4px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.ModalBodyInnerSpan::after {
+  margin-top: -4px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.ModalBodyInnerDiv4 {
+  overflow-y: visible;
+  margin-top: 24px;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  flex-direction: row;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ModalBodyInnerDiv5 {
+  overflow-y: visible;
+  padding-bottom: 4px;
+  overflow-x: visible;
+  padding-top: 4px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  padding-left: 4px;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  padding-right: 4px;
+  border-top-right-radius: 0;
+}
+
+.ModalBodyInnerBtn {
+  background-color: rgb(var(--ig-primary-button)) !important;
+  border: none;
+  border-radius: 8px;
+  color: rgb(var(--web-always-white));
+  position: relative;
+  text-align: center;
+  font-family: var(--font-family-system);
+  -webkit-appearance: none;
+  background: none;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: block;
+  font-size: 14px;
+  font-weight: var(--font-weight-system-semibold);
+  padding: 7px 16px !important;
+  pointer-events: auto;
+  text-overflow: ellipsis;
+  text-transform: inherit;
+  -webkit-user-select: none;
+  width: auto;
+  line-height: var(--system-14-line-height);
+  margin: 0;
+}
+
+.ModalBodyForm {
+  margin: 0;
+  padding: 0;
+}
+
+.FormInput {
+  display: none !important;
+  color: rgb(var(--ig-primary-text));
+  font-family: var(--font-family-system);
+  font-size: var(--system-14-font-size);
+  line-height: var(--system-14-line-height);
+  background-color: #fff;
+}
+
+.ModalBodyUnderDiv {
+  width: var(--creation-settings-width);
+  border-left-width: 1px;
+  border-left-color: rgb(var(--ig-elevated-separator));
+  box-sizing: border-box;
+  display: flex;
+  border-left-style: solid;
+  position: relative;
+}
+
+.ModalBodyUnderDiv2 {
+  overflow-y: visible;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 1;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ModalBodyUnderDiv3 {
+  max-height: 100%;
+  min-height: 99%;
+  overflow-y: scroll;
+}
+
+/* .ModalBodyOuterSvg {
+  padding-bottom: 24px;
+  overflow-y: visible;
+  overflow-x: visible;
+  padding-top: 24px;
+  padding-right: 24px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  justify-content: center;
+  background-color: transparent;
+  flex-direction: column;
+  padding-left: 24px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-self: auto;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+} */

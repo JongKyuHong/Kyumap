@@ -2,7 +2,7 @@
 
 import styles from "./signup.module.css";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, ChangeEventHandler } from "react";
 
 export default function SignupModal() {
   const [id, setId] = useState("");
@@ -15,6 +15,20 @@ export default function SignupModal() {
   const onClickClose = () => {
     router.back();
     // TODO: 뒤로가기가 /home이 아니면 /home으로 보내기
+  };
+
+  const onChangeId: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setId(e.target.value);
+  };
+
+  const onChangePassword: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setPassword(e.target.value);
+  };
+  const onChangeNickname: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setNickname(e.target.value);
+  };
+  const onChangeImageFile: ChangeEventHandler<HTMLInputElement> = (e) => {
+    e.target.files && setImageFile(e.target.files[0]);
   };
 
   return (
@@ -48,6 +62,7 @@ export default function SignupModal() {
                   type="text"
                   placeholder=""
                   value={id}
+                  onChange={onChangeId}
                 />
               </div>
               <div className={styles.inputDiv}>
@@ -60,6 +75,7 @@ export default function SignupModal() {
                   type="text"
                   placeholder=""
                   value={nickname}
+                  onChange={onChangeNickname}
                 />
               </div>
               <div className={styles.inputDiv}>
@@ -72,6 +88,7 @@ export default function SignupModal() {
                   type="password"
                   placeholder=""
                   value={password}
+                  onChange={onChangePassword}
                 />
               </div>
               <div className={styles.inputDiv}>
@@ -83,6 +100,7 @@ export default function SignupModal() {
                   className={styles.input}
                   type="file"
                   accept="image/*"
+                  onChange={onChangeImageFile}
                 />
               </div>
             </div>
