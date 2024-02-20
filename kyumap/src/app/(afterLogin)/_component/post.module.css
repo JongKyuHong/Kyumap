@@ -591,6 +591,23 @@
   width: calc(min(470px, 100vw) - 2px);
 }
 
+.bodyInnerDivDiv {
+  align-items: stretch;
+  border: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  font: inherit;
+  font-size: 100%;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  top: 0;
+  vertical-align: baseline;
+}
+
 .bodyInnerDiv2 {
   -webkit-tap-highlight-color: transparent;
 }
@@ -603,7 +620,6 @@
 }
 
 .bodyInnerDiv4 {
-  padding-bottom: 125.04%;
   display: block;
   overflow: hidden;
   padding-bottom: 100%;
@@ -1249,4 +1265,293 @@
   -webkit-appearance: none;
   border-radius: 0;
   margin: 0;
+}
+
+.EnterBtn {
+  margin: 0 8px;
+}
+
+.EnterDiv {
+  height: auto;
+  border-bottom-color: var(--always-dark-overlay);
+  padding-top: 0;
+  min-width: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  min-height: 0;
+  border-bottom-style: none;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  width: auto;
+  font-weight: var(--font-weight-system-semibold);
+  display: inline;
+  border-top-left-radius: 2px;
+  border-left-width: 0;
+  text-overflow: ellipsis;
+  justify-content: center;
+  padding-left: 0;
+  appearance: none;
+  border-top-color: var(--always-dark-overlay);
+  background-color: transparent;
+  touch-action: manipulation;
+  flex-basis: auto;
+  border-right-style: none;
+  border-right-width: 0;
+  border-right-color: var(--always-dark-overlay);
+  box-sizing: border-box;
+  border-top-width: 0;
+  user-select: none;
+  align-items: center;
+  padding-right: 0;
+  flex-shrink: 0;
+  border-left-color: var(--always-dark-overlay);
+  text-align: center;
+  cursor: pointer;
+  border-top-right-radius: 2px;
+  outline-style: none;
+  flex-direction: row;
+  position: relative;
+  margin-left: 0;
+  z-index: 0;
+  -webkit-tap-highlight-color: transparent;
+  font-family: var(--font-family-system);
+  font-size: 0.875rem;
+  border-top-style: none;
+  line-height: var(--system-14-line-height);
+  border-left-style: none;
+  color: rgb(var(--ig-primary-button));
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  margin-right: 0;
+  list-style: none;
+  text-decoration: none;
+  outline: none;
+}
+
+.bodyInnerDiv2M {
+  flex-grow: 1;
+}
+
+.bodyInnerDiv3M {
+  align-items: stretch;
+  border: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  font: inherit;
+  font-size: 100%;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  top: 0;
+  vertical-align: baseline;
+}
+
+.bodyInnerDiv4M {
+  display: block;
+  position: relative;
+}
+
+.bodyInnerDiv5M {
+  align-items: stretch;
+  border: 0;
+  box-sizing: border-box;
+  display: block;
+  flex-direction: column;
+  flex-shrink: 0;
+  font: inherit;
+  font-size: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+.bodyInnerDiv6M {
+  overflow-y: visible;
+  overflow-x: visible;
+  bottom: 0;
+  top: 0;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  right: 0;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  flex-grow: 0;
+  left: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  position: absolute;
+}
+
+.bodyInnerDiv7M {
+  align-items: stretch;
+  border: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  font: inherit;
+  font-size: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  vertical-align: baseline;
+  width: 100%;
+}
+
+.bodyInnerDiv8M {
+  align-items: stretch;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+
+.bodyInnerDiv9M {
+  align-items: stretch;
+  border: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+  font: inherit;
+  font-size: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+.Imgul {
+  border: 0;
+  display: flex;
+  flex-direction: row;
+  font: inherit;
+  font-size: 100%;
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline;
+  list-style-type: none;
+}
+
+.Imgli {
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  vertical-align: baseline;
+  height: 100%;
+}
+
+.liDiv {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.InnerDivM {
+  background-color: rgb(var(--ig-highlight-background));
+  display: block;
+  width: 100%;
+  position: relative;
+}
+
+.InnerDivM2 {
+  display: block;
+  overflow: hidden;
+  position: relative;
+}
+
+.InnerDivM3 {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.ImgM {
+  left: 0;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  user-select: none;
+  position: absolute;
+  border: 0;
+}
+
+.NumberOfA {
+  flex-direction: row;
+  display: flex;
+  align-items: center;
+  bottom: 15px;
+  justify-content: center;
+  left: 6px;
+  pointer-events: none;
+  position: absolute;
+  right: 6px;
+}
+
+.selectImg {
+  background: rgb(var(--web-always-white));
+  opacity: 0.4;
+  margin-right: 4px;
+  border-radius: 50%;
+  height: 6px;
+  transition: all 0.2s ease-in-out;
+  width: 6px;
+}
+
+.BtnM {
+  cursor: pointer;
+  padding: 16px 8px;
+  background: transparent;
+  border: none;
+  justify-self: center;
+  outline: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgb(var(--ig-primary-text));
+  font-family: var(--font-family-system);
+  font-size: var(--system-14-font-size);
+  line-height: var(--system-14-line-height);
+  margin: 0;
+}
+
+.prevBtn {
+  background-repeat: no-repeat;
+  background-position: -130px -98px;
+  height: 30px;
+  width: 30px;
+}
+
+.nextBtn {
+  background-repeat: no-repeat;
+  background-position: -162px -98px;
+  height: 30px;
+  width: 30px;
+}
+
+.arrow {
+  fill: rgb(32, 33, 36);
+  margin-left: -4px;
+  margin-right: 5px;
+  flex: none;
+  -webkit-tap-highlight-color: transparent;
 }
