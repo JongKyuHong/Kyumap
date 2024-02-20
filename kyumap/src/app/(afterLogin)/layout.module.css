@@ -53,6 +53,7 @@
 .rootBody {
   box-sizing: border-box;
   position: relative;
+  overflow-y: hidden;
   z-index: 0;
 }
 
