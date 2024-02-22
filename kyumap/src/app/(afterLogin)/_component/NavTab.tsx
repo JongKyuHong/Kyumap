@@ -1,16 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./navtab.module.css";
 import Image from "next/image";
 import smallLogo from "../../../../public/smallLogo.png";
+import smallLogo2 from "../../../../public/smallLogo2.png";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
 import MenuDetail from "./MenuDetail";
+import chi from "../../../../public/chi.png";
 
 export default function NavTab() {
   const [isEx, setEx] = useState(false);
   const [clickedMenu, setMenu] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const segment = useSelectedLayoutSegment();
 
   const onClickEx = () => {
@@ -20,6 +23,20 @@ export default function NavTab() {
   const onClickMenu = () => {
     setMenu(!clickedMenu);
   };
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const handleResize = () => {
+        setWindowWidth(window.innerWidth);
+      };
+
+      window.addEventListener("resize", handleResize);
+
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    }
+  }, []);
 
   return (
     <div
@@ -32,50 +49,95 @@ export default function NavTab() {
       >
         <div className={styles.logoOuter}>
           <div className={styles.logoInner}>
-            <div style={{ opacity: 1 }}>
-              <Link
-                className={styles.logoDetail}
-                href="/home"
-                role="link"
-                tabIndex={0}
-              >
-                <div className={styles.logoImageOuter}>
-                  <div className={styles.logoImageInner}>
-                    <picture>
-                      <source
-                        srcSet="/smallLogo2.png"
-                        width="24px"
-                        height="24px"
-                        media="(max-width: 1263px)"
-                      />
-                      <Image
-                        className={styles.logo}
-                        src={smallLogo}
-                        alt="logo"
-                        width={103}
-                        height={29}
-                      />
-                    </picture>
+            {isEx || windowWidth < 1264 ? (
+              <div style={{ transform: "scale(1)" }}>
+                <span className={styles.spanS} aria-describedby=":r19:">
+                  <div className={styles.divS}>
+                    <Link
+                      className={styles.logoDetail}
+                      href="/home"
+                      role="link"
+                      tabIndex={0}
+                    >
+                      <div className={styles.logoImageOuter}>
+                        <div className={styles.logoImageInner}>
+                          <picture>
+                            <source
+                              srcSet={"/smallLogo2.png"}
+                              width="24px"
+                              height="24px"
+                              media="(max-width: 1263px)"
+                            />
+                            <Image
+                              className={styles.logo}
+                              src={smallLogo2}
+                              alt="logo"
+                              width={103}
+                              height={29}
+                            />
+                          </picture>
+                        </div>
+                      </div>
+                    </Link>
                   </div>
-                </div>
-              </Link>
-            </div>
+                </span>
+              </div>
+            ) : (
+              <div style={{ opacity: 1 }}>
+                <Link
+                  className={styles.logoDetail}
+                  href="/home"
+                  role="link"
+                  tabIndex={0}
+                >
+                  <div className={styles.logoImageOuter}>
+                    <div className={styles.logoImageInner}>
+                      <picture>
+                        <source
+                          srcSet={"/smallLogo.png"}
+                          width="24px"
+                          height="24px"
+                          media="(max-width: 1263px)"
+                        />
+                        <Image
+                          className={styles.logo}
+                          src={smallLogo}
+                          alt="logo"
+                          width={103}
+                          height={29}
+                        />
+                      </picture>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
         <div className={styles.nav}>
           <div>
-            <div className={styles.navDiv}>
-              <span className={styles.navSpan}>
-                <div className={isEx ? styles.navSpanDivEx : styles.navSpanDiv}>
+            <div
+              className={windowWidth > 1264 ? styles.navDiv : styles.navDivW}
+            >
+              <span aria-describedby=":r2:" className={styles.navSpan}>
+                <div
+                  className={
+                    isEx || windowWidth < 1264
+                      ? styles.navSpanDivEx
+                      : styles.navSpanDiv
+                  }
+                >
                   <Link
-                    className={isEx ? styles.navLinkEx : styles.navLink}
+                    className={styles.navLink}
                     href="/home"
                     role="link"
                     tabIndex={0}
                   >
                     <div
                       className={
-                        isEx ? styles.LinkDivExHome : styles.LinkDivHome
+                        isEx || windowWidth < 1264
+                          ? styles.LinkDivExHome
+                          : styles.LinkDivHome
                       }
                     >
                       <div>
@@ -96,8 +158,11 @@ export default function NavTab() {
                           </div>
                         </div>
                       </div>
-                      {isEx ? null : (
-                        <div className={styles.navTitle}>
+                      {isEx || windowWidth < 1263 ? null : (
+                        <div
+                          style={{ opacity: "1" }}
+                          className={styles.navTitle}
+                        >
                           <div className={styles.titleOuter}>
                             <span
                               className={styles.titleInner}
@@ -115,73 +180,104 @@ export default function NavTab() {
             </div>
           </div>
           <div>
-            <span
-              aria-describedby=":r3:"
-              className={styles.navSpan}
-              onClick={onClickEx}
+            <div
+              className={windowWidth < 1264 ? styles.navDivW : styles.navDiv}
             >
-              <div className={isEx ? styles.navSpanDivEx : styles.navSpanDiv}>
-                <Link
-                  href="#"
-                  className={styles.SpanInnerLink}
-                  role="link"
-                  tabIndex={0}
+              <span
+                aria-describedby=":r3:"
+                className={styles.navSpan}
+                onClick={onClickEx}
+              >
+                <div
+                  className={
+                    isEx || windowWidth < 1264
+                      ? styles.navSpanDivEx
+                      : styles.navSpanDiv
+                  }
                 >
-                  <div className={isEx ? styles.LinkDivEx : styles.LinkDivHome}>
-                    <div>
-                      <div className={styles.navIconWrapper}>
-                        <div className={styles.navIcon}>
-                          <svg
-                            aria-label="검색"
-                            className={styles.Icon}
-                            fill="currentColor"
-                            height="24"
-                            role="img"
-                            viewBox="0 0 24 24"
-                            width="24"
-                          >
-                            <title>검색</title>
-                            <path
-                              d="M19 10.5A8.5 8.5 0 1 1 10.5 2a8.5 8.5 0 0 1 8.5 8.5Z"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                            ></path>
-                            <line
-                              fill="none"
-                              stroke="currentColor"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              x1="16.511"
-                              x2="22"
-                              y1="16.511"
-                              y2="22"
-                            ></line>
-                          </svg>
+                  <Link
+                    href="#"
+                    className={styles.navLink}
+                    role="link"
+                    tabIndex={0}
+                  >
+                    <div
+                      className={
+                        isEx || windowWidth < 1264
+                          ? styles.LinkDivExHome
+                          : styles.LinkDivHome
+                      }
+                    >
+                      <div>
+                        <div className={styles.navIconWrapper}>
+                          <div className={styles.navIcon}>
+                            <svg
+                              aria-label="검색"
+                              className={styles.Icon}
+                              fill="currentColor"
+                              height="24"
+                              role="img"
+                              viewBox="0 0 24 24"
+                              width="24"
+                            >
+                              <title>검색</title>
+                              <path
+                                d="M19 10.5A8.5 8.5 0 1 1 10.5 2a8.5 8.5 0 0 1 8.5 8.5Z"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                              ></path>
+                              <line
+                                fill="none"
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                x1="16.511"
+                                x2="22"
+                                y1="16.511"
+                                y2="22"
+                              ></line>
+                            </svg>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className={styles.navTitle}>
-                      <div style={{ width: "100%" }}>
-                        <div style={{ width: "100%" }}>
-                          <span className={styles.titleInner}>
-                            <span className={styles.titleSpan}>검색</span>
-                          </span>
+                      {isEx || windowWidth < 1263 ? null : (
+                        <div
+                          className={styles.navTitle}
+                          style={{
+                            display: windowWidth > 1263 ? "" : "none ",
+                          }}
+                        >
+                          <div style={{ width: "100%" }}>
+                            <div style={{ width: "100%" }}>
+                              <span className={styles.titleInner}>
+                                <span className={styles.titleSpan}>검색</span>
+                              </span>
+                            </div>
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </div>
-                  </div>
-                </Link>
-              </div>
-            </span>
+                  </Link>
+                </div>
+              </span>
+            </div>
           </div>
           <div>
-            <div className={styles.navDiv}>
+            <div
+              className={windowWidth < 1264 ? styles.navDivW : styles.navDiv}
+            >
               <span className={styles.navSpan} aria-describedby=":r8:">
-                <div className={isEx ? styles.navSpanDivEx : styles.navSpanDiv}>
+                <div
+                  className={
+                    isEx || windowWidth < 1264
+                      ? styles.navSpanDivEx
+                      : styles.navSpanDiv
+                  }
+                >
                   <Link
                     className={isEx ? styles.navLinkEx : styles.navLink}
                     href="/AddPost"
@@ -190,7 +286,9 @@ export default function NavTab() {
                   >
                     <div
                       className={
-                        isEx ? styles.LinkDivExHome : styles.LinkDivHome
+                        isEx || windowWidth < 1264
+                          ? styles.LinkDivExHome
+                          : styles.LinkDivHome
                       }
                     >
                       <div>
@@ -240,15 +338,77 @@ export default function NavTab() {
                           </div>
                         </div>
                       </div>
-                      <div className={styles.navTitle}>
-                        <div className={styles.titleOuter}>
-                          <span className={styles.titleInner}>
-                            <span className={styles.titleSpan}>
-                              새로운 게시물
+                      {isEx || windowWidth < 1264 ? null : (
+                        <div className={styles.navTitle}>
+                          <div className={styles.titleOuter}>
+                            <span className={styles.titleInner}>
+                              <span className={styles.titleSpan}>
+                                새로운 게시물
+                              </span>
                             </span>
-                          </span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                </div>
+              </span>
+            </div>
+          </div>
+          <div>
+            <div
+              className={windowWidth > 1264 ? styles.navDiv : styles.navDivW}
+            >
+              <span aria-describedby=":r2:" className={styles.navSpan}>
+                <div
+                  className={
+                    isEx || windowWidth < 1264
+                      ? styles.navSpanDivEx
+                      : styles.navSpanDiv
+                  }
+                >
+                  <Link
+                    className={styles.navLink}
+                    href="/home"
+                    role="link"
+                    tabIndex={0}
+                  >
+                    <div
+                      className={
+                        isEx || windowWidth < 1264
+                          ? styles.LinkDivExHome
+                          : styles.LinkDivHome
+                      }
+                    >
+                      <div>
+                        <div className={styles.navIconWrapper}>
+                          <div className={styles.navIcon}>
+                            <span
+                              className={styles.profileImageSpan}
+                              style={{ width: "24px", height: "24px" }}
+                              tabIndex={-1}
+                              role="link"
+                            >
+                              <Image
+                                src={chi}
+                                alt="프로필"
+                                crossOrigin="anonymous"
+                                draggable="false"
+                                className={styles.ProfileImageImage}
+                              ></Image>
+                            </span>
+                          </div>
                         </div>
                       </div>
+                      {isEx || windowWidth < 1263 ? null : (
+                        <div className={styles.navTitle}>
+                          <div className={styles.titleOuter}>
+                            <span className={styles.titleInner}>
+                              <span className={styles.titleSpan}>프로필</span>
+                            </span>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </Link>
                 </div>
@@ -280,7 +440,12 @@ export default function NavTab() {
                         </div>
                       </div>
                     </div>
-                    <div className={styles.menuTitleOuter}>
+                    <div
+                      className={styles.menuTitleOuter}
+                      style={{
+                        display: windowWidth > 1263 ? "" : "none ",
+                      }}
+                    >
                       <div style={{ width: "100%" }}>
                         <div style={{ width: "100%" }}>
                           <span className={styles.menuSpan}>
