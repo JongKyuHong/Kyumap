@@ -14,8 +14,8 @@
 
 @media (max-width: 1264px) {
   .logoInner {
-    width: 48px;
-    padding-bottom: 23px;
+    width: 48px !important;
+    padding-bottom: 23px !important;
     margin-top: 12px;
     display: block;
   }
@@ -26,6 +26,10 @@
 }
 
 @media (min-width: 1264px) {
+  .navTitle {
+    display: flex;
+  }
+
   .menuTitleOuter {
     display: flex;
   }
@@ -96,7 +100,6 @@
 
 .leftDiv2 {
   padding-bottom: 20px;
-
   padding-top: 8px;
   height: 100dvh;
   background-color: rgb(var(--ig-primary-background));
@@ -210,6 +213,13 @@
   position: relative;
 }
 
+.navDivW {
+  display: flex;
+  align-items: center;
+  /* justify-content: center; */
+  position: relative;
+}
+
 .navSpan {
   max-height: inherit;
   min-width: inherit;
@@ -238,65 +248,9 @@
   position: relative;
 }
 
-.navLinkEx {
-  text-decoration: none;
-  color: rgb(var(--ig-link));
-  padding-top: 0;
-  margin-top: 0;
-  margin-bottom: 0;
-  border-bottom-style: none;
-  border-bottom-width: 0;
-  padding-bottom: 0;
-  display: inline;
-  border-left-width: 0;
-  padding-left: 0;
-  background-color: transparent;
-  touch-action: manipulation;
-  border-right-style: none;
-  border-right-width: 0;
-  box-sizing: border-box;
-  border-top-width: 0;
-  padding-right: 0;
-  cursor: pointer;
-  margin-left: 0;
-  -webkit-tap-highlight-color: transparent;
-  border-top-style: none;
-  border-left-style: none;
-  text-align: inherit;
-  margin-right: 0;
-  list-style: none;
-
-  outline: none;
-}
-
 .navLink {
   text-decoration: none;
-  color: rgb(0, 55, 107);
-  padding-top: 0;
-  margin-top: 0;
-  margin-bottom: 0;
-  padding-bottom: 0;
-  display: inline;
-  padding-left: 0;
-  background-color: transparent;
-  touch-action: manipulation;
-  border-left: 0;
-  box-sizing: border-box;
-  padding-right: 0;
-  cursor: pointer;
-  margin-left: 0;
-  -webkit-tap-highlight-color: transparent;
-  border-right: 0;
-  text-align: inherit;
-  margin-right: 0;
-  list-style: none;
-  border-bottom: 0;
-  border-top: 0;
-  outline: none;
-}
-
-.SpanInnerLink {
-  text-decoration: none;
+  color: rgb(var(--ig-link));
   padding-top: 0;
   margin-top: 0;
   margin-bottom: 0;
@@ -322,7 +276,6 @@
   margin-right: 0;
   list-style: none;
   outline: none;
-  color: rgb(var(--ig-link));
 }
 
 .LinkDivHome {
@@ -331,6 +284,19 @@
   box-sizing: border-box;
   display: inline-flex;
   border-bottom-right-radius: 8px;
+  border-top-left-radius: 8px;
+}
+
+.LinkDivExHome {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-right: 12px;
+  border-top-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+  box-sizing: border-box;
+  display: inline-flex;
+  border-bottom-right-radius: 8px;
+  padding-left: 12px;
   border-top-left-radius: 8px;
 }
 
@@ -370,7 +336,6 @@
 }
 
 .navTitle {
-  opacity: 1;
   height: 24px;
   width: fit-content;
   overflow-x: hidden;
@@ -449,19 +414,6 @@
   border-top-left-radius: 8px;
   border-top-width: 1px;
   border-top-style: solid;
-}
-
-.LinkDivExHome {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  padding-right: 12px;
-  border-top-right-radius: 8px;
-  border-bottom-left-radius: 8px;
-  box-sizing: border-box;
-  display: inline-flex;
-  border-bottom-right-radius: 8px;
-  padding-left: 12px;
-  border-top-left-radius: 8px;
 }
 
 .nav2 {
@@ -652,4 +604,94 @@
   height: 0;
   display: block;
   content: "";
+}
+
+.spanS {
+  max-height: inherit;
+  min-width: inherit;
+  height: inherit;
+  min-height: inherit;
+  width: inherit;
+  max-width: inherit;
+  flex-basis: inherit;
+  justify-content: inherit;
+  flex-grow: inherit;
+  align-content: inherit;
+  display: inherit;
+  align-self: inherit;
+  align-items: inherit;
+  flex-direction: inherit;
+  flex-shrink: inherit;
+}
+
+.divS {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.linkS {
+  text-decoration: none;
+  color: rgb(var(--ig-link));
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-bottom-style: none;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  display: inline;
+  border-left-width: 0;
+  padding-left: 0;
+  background-color: transparent;
+  touch-action: manipulation;
+  border-right-style: none;
+  border-right-width: 0;
+  box-sizing: border-box;
+  border-top-width: 0;
+  padding-right: 0;
+  cursor: pointer;
+  margin-left: 0;
+  -webkit-tap-highlight-color: transparent;
+  border-top-style: none;
+  border-left-style: none;
+  text-align: inherit;
+  margin-right: 0;
+  list-style: none;
+  outline: none;
+}
+
+.profileImageSpan {
+  overflow-x: hidden;
+  overflow-y: hidden;
+  border-bottom-left-radius: 50%;
+  border-top-right-radius: 50%;
+  background-color: rgb(var(--ig-secondary-background));
+  box-sizing: border-box;
+  flex-shrink: 0;
+  position: relative;
+  display: block;
+  border-bottom-right-radius: 50%;
+  border-top-left-radius: 50%;
+}
+
+.ProfileImageImage {
+  width: 100%;
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  height: 100%;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  -webkit-touch-callout: none;
+  border-left-width: 0;
+  object-fit: cover;
+  padding-left: 0;
+  font-size: 100%;
+  border-right-width: 0;
+  border-top-width: 0;
+  padding-right: 0;
+  margin-left: 0;
+  vertical-align: baseline;
+  margin-right: 0;
+  border: 0;
 }
