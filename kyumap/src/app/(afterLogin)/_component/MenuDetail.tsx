@@ -4,10 +4,15 @@ import Link from "next/link";
 import styles from "./menudetail.module.css";
 import { useCallback, useState } from "react";
 import DarkMode from "./DarkMode";
+import { useRouter } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
 
 export default function MenuDetail() {
   const [clicked, setClicked] = useState(false);
   const [darkMode, setDark] = useState(false);
+
+  const router = useRouter();
+  const { data } = useSession();
 
   const onClickDark = useCallback(() => {
     setDark((darkMode) => !darkMode);
@@ -18,6 +23,12 @@ export default function MenuDetail() {
     setClicked((clicked) => !clicked);
     console.log(clicked, "click");
   }, [clicked]);
+
+  const onClickLogOut = () => {
+    signOut({ redirect: false }).then(() => {
+      router.replace("/");
+    });
+  };
 
   // const CalculateXY = useCallback(() => {
   //   if (document.documentElement.clientWidth > 1264) {
@@ -246,7 +257,11 @@ export default function MenuDetail() {
                                 </div>
                               </div>
                               <div className={styles.underline}></div>
-                              <div className={styles.linkDiv}>
+                              <div
+                                className={styles.linkDiv}
+                                style={{ cursor: "pointer" }}
+                                onClick={onClickLogOut}
+                              >
                                 <div className={styles.linkInnerDiv}>
                                   <div className={styles.iconTitle}>
                                     <div className={styles.titleInner}>

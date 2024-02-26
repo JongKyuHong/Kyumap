@@ -5,6 +5,8 @@ import "./globals.css";
 // const inter = Inter({ subsets: ["latin"] });
 // className={inter.className}
 import styles from "./layout.module.css";
+import { MSWComponent } from "./_component/MSWComponent";
+import AuthSession from "./_component/AuthSession";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -17,7 +19,10 @@ type Props = {
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="ko">
-      <body className={styles.MainBody}>{children}</body>
+      <body className={styles.MainBody}>
+        <MSWComponent />
+        <AuthSession>{children}</AuthSession>
+      </body>
     </html>
   );
 }
