@@ -44,21 +44,22 @@ export const handlers = [
       },
     });
   }),
-  http.get("/api/postRecommends", ({ request }) => {
-    const url = new URL(request.url);
-    const cursor = parseInt(url.searchParams.get("cursor") as string) || 0;
+  http.get("/api/postRecommends", () => {
+    // { request }
+    //const url = new URL(request.url);
+    // const cursor = parseInt(url.searchParams.get("cursor") as string) || 0;
     return HttpResponse.json([
       {
-        postId: cursor + 1,
+        postId: 1,
         User: User[0],
-        content: `${cursor + 1} Z.com is so marvelous. I'm gonna buy that.`,
+        content: `${1} Z.com is so marvelous. I'm gonna buy that.`,
         Images: [{ imageId: 1, link: faker.image.urlLoremFlickr() }],
         createdAt: generateDate(),
       },
       {
-        postId: cursor + 2,
+        postId: 2,
         User: User[0],
-        content: `${cursor + 2} Z.com is so marvelous. I'm gonna buy that.`,
+        content: `${2} Z.com is so marvelous. I'm gonna buy that.`,
         Images: [
           { imageId: 1, link: faker.image.urlLoremFlickr() },
           { imageId: 2, link: faker.image.urlLoremFlickr() },
@@ -66,16 +67,16 @@ export const handlers = [
         createdAt: generateDate(),
       },
       {
-        postId: cursor + 3,
+        postId: 3,
         User: User[0],
-        content: `${cursor + 3} Z.com is so marvelous. I'm gonna buy that.`,
-        Images: [],
+        content: `${3} Z.com is so marvelous. I'm gonna buy that.`,
+        Images: [{ imageId: 1, link: faker.image.urlLoremFlickr() }],
         createdAt: generateDate(),
       },
       {
-        postId: cursor + 4,
+        postId: 4,
         User: User[0],
-        content: `${cursor + 4} Z.com is so marvelous. I'm gonna buy that.`,
+        content: `${4} Z.com is so marvelous. I'm gonna buy that.`,
         Images: [
           { imageId: 1, link: faker.image.urlLoremFlickr() },
           { imageId: 2, link: faker.image.urlLoremFlickr() },
@@ -85,9 +86,9 @@ export const handlers = [
         createdAt: generateDate(),
       },
       {
-        postId: cursor + 5,
+        postId: 5,
         User: User[0],
-        content: `${cursor + 5} Z.com is so marvelous. I'm gonna buy that.`,
+        content: `${5} Z.com is so marvelous. I'm gonna buy that.`,
         Images: [
           { imageId: 1, link: faker.image.urlLoremFlickr() },
           { imageId: 2, link: faker.image.urlLoremFlickr() },

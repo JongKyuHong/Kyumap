@@ -22,6 +22,11 @@
 
   .leftDiv2 {
     width: var(--nav-narrow-width);
+    transform: translateX((172px));
+  }
+
+  .leftSection {
+    transform: translateX((-172px));
   }
 }
 
@@ -73,7 +78,7 @@
     margin-bottom: 4px;
   }
 
-  .LinkDivEx {
+  .LinkDivExHome {
     margin-top: 4px;
     margin-bottom: 4px;
   }
@@ -85,7 +90,7 @@
     margin-bottom: 8px;
   }
 
-  .LinkDivEx {
+  .LinkDivExHome {
     margin-top: 8px;
     margin-bottom: 8px;
   }
@@ -116,6 +121,15 @@
   height: 92px;
   flex-shrink: 0;
   position: relative;
+}
+
+@keyframes transanime {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
 .logoInner {
@@ -287,6 +301,11 @@
   border-top-left-radius: 8px;
 }
 
+.LinkDivHome:hover {
+  background-color: rgba(var(--ig-hover-overlay));
+  transition: background-color 0.3s;
+}
+
 .LinkDivExHome {
   padding-top: 12px;
   padding-bottom: 12px;
@@ -298,6 +317,11 @@
   border-bottom-right-radius: 8px;
   padding-left: 12px;
   border-top-left-radius: 8px;
+}
+
+.LinkDivExHome:hover {
+  background-color: rgba(var(--ig-hover-overlay));
+  transition: background-color 0.3s;
 }
 
 .navIconWrapper {

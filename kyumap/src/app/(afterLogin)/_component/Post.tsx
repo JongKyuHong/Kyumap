@@ -11,18 +11,16 @@ import chi from "../../../../public/chi.png";
 import chi2 from "../../../../public/chi2.png";
 import chi3 from "../../../../public/chi3.png";
 import chi4 from "../../../../public/chi4.png";
+import { Post as IPost } from "@/model/Post";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
 
 interface Props {
-  onClickProps: () => void;
+  post: IPost;
 }
 
-const Post = forwardRef<SVGSVGElement, Props>(function Post(
-  { onClickProps },
-  ref
-) {
+export default function Post({ post }: Props) {
   const [isClicked, setClicked] = useState(false);
   const [textValue, setTextValue] = useState("");
   const [isMultiImg, setMultiImg] = useState(false);
@@ -32,20 +30,24 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
     setTextValue(event.target.value);
   };
 
-  const dummyData = {
-    postId: 1,
-    User: {
-      id: "jongkyu",
-      image: "/chi3.png",
-    },
-    content: "치이카와 너무 귀여워",
-    createdAt: new Date(),
-    Images: [chi, chi2, chi3, chi4],
-  };
+  // post?.Images.push({imageId: 1, link faker})
+
+  // const dummyData = {
+  //   postId: 1,
+  //   User: {
+  //     id: "jongkyu",
+  //     image: "/chi3.png",
+  //   },
+  //   content: "치이카와 너무 귀여워",
+  //   createdAt: new Date(),
+  //   Images: [chi, chi2, chi3, chi4],
+  // };
+
+  console.log(post, "post들어옴");
 
   const imgArticle = [];
 
-  for (let i = 0; i < dummyData.Images.length; i++) {
+  for (let i = 0; i < post.Images.length; i++) {
     imgArticle.push(
       <div
         key={i}
@@ -56,7 +58,7 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
   }
 
   useEffect(() => {
-    if (dummyData.Images.length > 1) {
+    if (post.Images.length > 1) {
       setMultiImg(true);
     } else {
       setMultiImg(false);
@@ -96,13 +98,13 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
                       }}
                     ></canvas>
                     <span className={styles.articleUserSpan}>
-                      <Image
+                      <img
                         alt="프로필 사진"
-                        src={`${dummyData.User.image}`}
+                        src={`${post.User.image}`}
                         width={1}
                         height={1}
                         className={styles.articleUserProfileImage}
-                      ></Image>
+                      />
                     </span>
                   </div>
                 </div>
@@ -126,7 +128,7 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
                                 <div className={styles.linkInnerDiv}>
                                   <div className={styles.linkInnerDiv2}>
                                     <span className={styles.linkInnerSpan}>
-                                      {dummyData.User.id}
+                                      {post.User.id}
                                     </span>
                                   </div>
                                 </div>
@@ -147,7 +149,7 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
                       <Link href="#" className={styles.articleDayLink}>
                         <span className={styles.articleDayLinkSpan}>
                           <time className={styles.articleDayTime}>
-                            {dayjs(dummyData.createdAt).fromNow(true)}
+                            {dayjs(post.createdAt).fromNow(true)}
                           </time>
                         </span>
                       </Link>
@@ -232,15 +234,15 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
                                               paddingBottom: "125%",
                                             }}
                                           >
-                                            <Image
+                                            <img
                                               src={
-                                                dummyData.Images[currentNumber]
+                                                post.Images[currentNumber].link
                                               }
                                               alt="사용자님의 사진"
                                               crossOrigin="anonymous"
                                               style={{ objectFit: "cover" }}
                                               className={styles.ImgM}
-                                            ></Image>
+                                            />
                                           </div>
                                           <div
                                             className={styles.InnerDivM3}
@@ -327,13 +329,13 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
                         className={styles.bodyInnerDiv4}
                         style={{ paddingBottom: "125.04%" }}
                       >
-                        <Image
+                        <img
                           alt="게시글"
                           crossOrigin="anonymous"
-                          src={chi3}
+                          src={post.Images[0].link}
                           className={styles.postImage}
                           style={{ objectFit: "cover" }}
-                        ></Image>
+                        />
                       </div>
                       <div className={styles.bodyInnerDiv4Outer}></div>
                     </div>
@@ -486,14 +488,14 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
                         role="link"
                         tabIndex={0}
                       >
-                        {"#유저 이름#"}
+                        {post.User.nickname}
                       </Link>
                     </div>
                   </span>
                 </div>
                 <span className={styles.postContentSpan} dir="auto">
                   <span className={styles.postContentSpan} dir="auto">
-                    {"#포스트 컨텐츠 내용#"}
+                    {post.content}
                     <br />
                     <br />
                     <Link href="#" className={styles.hashTag}>
@@ -542,8 +544,6 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
                                 role="img"
                                 viewBox="0 0 24 24"
                                 width="13"
-                                onClick={onClickProps}
-                                ref={ref}
                               >
                                 <title>이모티콘</title>
                                 <path d="M15.83 10.997a1.167 1.167 0 1 0 1.167 1.167 1.167 1.167 0 0 0-1.167-1.167Zm-6.5 1.167a1.167 1.167 0 1 0-1.166 1.167 1.167 1.167 0 0 0 1.166-1.167Zm5.163 3.24a3.406 3.406 0 0 1-4.982.007 1 1 0 1 0-1.557 1.256 5.397 5.397 0 0 0 8.09 0 1 1 0 0 0-1.55-1.263ZM12 .503a11.5 11.5 0 1 0 11.5 11.5A11.513 11.513 0 0 0 12 .503Zm0 21a9.5 9.5 0 1 1 9.5-9.5 9.51 9.51 0 0 1-9.5 9.5Z"></path>
@@ -585,6 +585,4 @@ const Post = forwardRef<SVGSVGElement, Props>(function Post(
       </div>
     </article>
   );
-});
-
-export default Post;
+}

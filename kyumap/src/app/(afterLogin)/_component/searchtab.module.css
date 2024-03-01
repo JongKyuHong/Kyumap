@@ -214,10 +214,8 @@
   top: 50%;
   transform: translateY(-50%);
   z-index: 3;
-  background-repeat: no-repeat;
-  background-position: -318px -333px;
-  height: 20px;
-  width: 20px;
+  height: 16px;
+  width: 16px;
 }
 
 .searchBarHr {
@@ -308,6 +306,18 @@
   margin-left: 0 !important;
   word-break: break-word;
   unicode-bidi: isolate;
+}
+
+.searchBarDivSpan::before {
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.searchBarDivSpan::after {
+  height: 0;
+  display: block;
+  content: "";
 }
 
 .allClear {
@@ -415,6 +425,11 @@
   margin-right: 0;
   list-style: none;
   outline: none;
+}
+
+.recentLink:hover {
+  background-color: rgba(var(--ig-hover-overlay));
+  transition: background-color 0.3s;
 }
 
 .linkInnerDiv {
