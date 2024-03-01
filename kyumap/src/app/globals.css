@@ -79,6 +79,7 @@
   --creation-padding-y: 112px;
   --creation-padding-x: 64px;
 
+  --ig-hover-overlay: 0, 0, 0, 0.05;
   --fds-animation-expand-collapse-in: cubic-bezier(0.17, 0.17, 0, 1);
   --fds-animation-fade-out: cubic-bezier(0, 0, 1, 1);
 

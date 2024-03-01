@@ -41,7 +41,39 @@ export default function SearchTab() {
                         aria-label="검색란 지우기"
                         role="button"
                         tabIndex={0}
-                      ></div>
+                      >
+                        <svg
+                          // onClick={onInputRemove}
+                          aria-label="닫기"
+                          className={styles.XboxSvg}
+                          fill="currentColor"
+                          height="16"
+                          width="16"
+                          role="img"
+                          viewBox="0 0 24 24"
+                        >
+                          <title>닫기</title>
+                          <polyline
+                            fill="none"
+                            points="20.643 3.357 12 12 3.353 20.647"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="3"
+                          ></polyline>
+                          <line
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="3"
+                            x1="20.649"
+                            x2="3.354"
+                            y1="20.649"
+                            y2="3.354"
+                          ></line>
+                        </svg>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -54,12 +86,16 @@ export default function SearchTab() {
                           style={{ lineHeight: "20px" }}
                           dir="auto"
                           className={styles.searchBarDivSpan}
-                        ></span>
+                        >
+                          {"최근 검색 항목"}
+                        </span>
                         <div
                           className={styles.allClear}
                           role="button"
                           tabIndex={0}
-                        ></div>
+                        >
+                          모두 지우기
+                        </div>
                       </div>
                       <ul className={styles.searchBarUl}>
                         <Link
