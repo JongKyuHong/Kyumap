@@ -10,11 +10,13 @@ function generateDate() {
   });
 }
 const User = [
-  { id: "test1", nickname: "test1", image: "/chi3.png" },
+  { id: "test1", nickname: "test1", image: "/chi.png" },
   { id: "test2", nickname: "test2", image: "/chi2.png" },
   { id: "test3", nickname: "test3", image: faker.image.avatar() },
 ];
 const Posts = [];
+
+const HashTag = [{ tagId: 1, title: "고기", count: 311 }];
 
 export const handlers = [
   http.post("/api/login", () => {
@@ -141,39 +143,13 @@ export const handlers = [
     const { tag } = params;
     return HttpResponse.json([
       {
-        postId: 1,
         User: User[0],
-        content: `${1} 검색결과 ${tag}`,
-        Images: [{ imageId: 1, link: faker.image.urlLoremFlickr() }],
-        createdAt: generateDate(),
       },
       {
-        postId: 2,
-        User: User[0],
-        content: `${2} 검색결과 ${tag}`,
-        Images: [{ imageId: 1, link: faker.image.urlLoremFlickr() }],
-        createdAt: generateDate(),
+        User: User[1],
       },
       {
-        postId: 3,
-        User: User[0],
-        content: `${3} 검색결과 ${tag}`,
-        Images: [{ imageId: 1, link: faker.image.urlLoremFlickr() }],
-        createdAt: generateDate(),
-      },
-      {
-        postId: 4,
-        User: User[0],
-        content: `${4} 검색결과 ${tag}`,
-        Images: [{ imageId: 1, link: faker.image.urlLoremFlickr() }],
-        createdAt: generateDate(),
-      },
-      {
-        postId: 5,
-        User: User[0],
-        content: `${5} 검색결과 ${tag}`,
-        Images: [{ imageId: 1, link: faker.image.urlLoremFlickr() }],
-        createdAt: generateDate(),
+        User: User[2],
       },
     ]);
   }),
