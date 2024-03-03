@@ -1,0 +1,447 @@
+.recentLink {
+  color: rgb(var(--ig-link));
+  text-decoration: none;
+  border-bottom-color: var(--always-dark-overlay);
+  width: 100%;
+  padding-top: 0;
+  min-width: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  min-height: 0;
+  border-bottom-width: 0;
+  border-bottom-style: solid;
+  max-width: 100%;
+  padding-bottom: 0;
+  border-right-style: solid;
+  border-left-width: 0;
+  padding-left: 0;
+  border-top-color: var(--always-dark-overlay);
+  background-color: transparent;
+  border-bottom-right-radius: unset;
+  touch-action: manipulation;
+  flex-basis: auto;
+  border-right-width: 0;
+  border-right-color: var(--always-dark-overlay);
+  box-sizing: border-box;
+  border-top-width: 0;
+  user-select: none;
+  padding-right: 0;
+  flex-shrink: 0;
+  border-left-color: var(--always-dark-overlay);
+  border-left-style: solid;
+  border-bottom-left-radius: unset;
+  cursor: pointer;
+  outline-style: none;
+  align-items: stretch;
+  flex-direction: row;
+  position: relative;
+  margin-left: 0;
+  display: block;
+  z-index: 0;
+  -webkit-tap-highlight-color: transparent;
+  border-top-left-radius: unset;
+  text-align: inherit;
+  border-top-right-radius: unset;
+  border-top-style: solid;
+  margin-right: 0;
+  list-style: none;
+  outline: none;
+}
+
+.recentLink:hover {
+  background-color: rgba(var(--ig-hover-overlay));
+  transition: background-color 0.3s;
+}
+
+.linkInnerDiv {
+  padding-bottom: 8px;
+  overflow-y: visible;
+  padding-top: 8px;
+  overflow-x: visible;
+  padding-right: 24px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  padding-left: 24px;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  position: static;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.linkInnerDiv2 {
+  opacity: 0;
+  pointer-events: none;
+  border-top-right-radius: inherit;
+  border-top-left-radius: inherit;
+  transition-duration: var(--fds-duration-extra-extra-short-out);
+  border-bottom-right-radius: inherit;
+  transition-timing-function: var(--fds-animation-fade-out);
+  transition-property: opacity;
+  border-bottom-left-radius: inherit;
+  position: absolute;
+}
+
+.linkInnerDiv3 {
+  min-width: 0;
+  justify-content: center;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  align-items: stretch;
+  position: relative;
+  z-index: 0;
+  flex-grow: 1;
+}
+
+.linkInnerDiv4 {
+  flex-wrap: nowrap;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  justify-content: space-between;
+  flex-direction: row;
+  position: relative;
+  z-index: 0;
+}
+
+.profileImage {
+  min-width: 0;
+  max-width: 100%;
+  flex-direction: column;
+  align-self: center;
+  box-sizing: border-box;
+  display: flex;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 0;
+}
+
+.profileImage2 {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  margin-right: 12px;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  position: static;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.profileImage3 {
+  justify-content: center;
+  align-self: center;
+  align-items: center;
+  position: relative;
+  display: block;
+}
+
+.profileLink {
+  text-decoration: none;
+  color: rgb(var(--ig-link));
+  border-bottom-color: var(--always-dark-overlay);
+  padding-top: 0;
+  min-width: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  overflow-x: hidden;
+  min-height: 0;
+  border-bottom-width: 0;
+  border-bottom-style: solid;
+  padding-bottom: 0;
+  overflow-y: hidden;
+  border-bottom-left-radius: 50%;
+  border-top-right-radius: 50%;
+  border-right-style: solid;
+  background-color: rgb(var(--ig-secondary-background));
+  border-left-width: 0;
+  padding-left: 0;
+  border-top-color: var(--always-dark-overlay);
+  touch-action: manipulation;
+  flex-direction: column;
+  flex-basis: auto;
+  border-right-width: 0;
+  border-right-color: var(--always-dark-overlay);
+  box-sizing: border-box;
+  border-top-width: 0;
+  display: flex;
+  padding-right: 0;
+  flex-shrink: 0;
+  border-left-color: var(--always-dark-overlay);
+  border-left-style: solid;
+  cursor: pointer;
+  outline-style: none;
+  align-items: stretch;
+  position: relative;
+  margin-left: 0;
+  z-index: 0;
+  -webkit-tap-highlight-color: transparent;
+  border-bottom-right-radius: 50%;
+  text-align: inherit;
+  border-top-left-radius: 50%;
+  border-top-style: solid;
+  margin-right: 0;
+  list-style: none;
+}
+
+.profileLinkImage {
+  width: 100%;
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  height: 100%;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  -webkit-touch-callout: none;
+  border-left-width: 0;
+  object-fit: cover;
+  padding-left: 0;
+  font-size: 100%;
+  border-right-width: 0;
+  border-top-width: 0;
+  padding-right: 0;
+  margin-left: 0;
+  vertical-align: baseline;
+  margin-right: 0;
+  border: 0;
+  -webkit-user-drag: none;
+}
+
+.profileBody2 {
+  min-width: 0;
+  max-width: 100%;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 0;
+  flex-grow: 1;
+}
+
+.profileBody3 {
+  overflow-y: visible;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  position: static;
+  align-self: auto;
+  justify-content: flex-start;
+  flex-grow: 1;
+  align-items: flex-start;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.profileBody4 {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  position: static;
+  flex-direction: row;
+  align-self: auto;
+  justify-content: flex-start;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.profileId {
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-size: var(--system-14-font-size);
+  color: rgb(var(--ig-primary-text));
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  font-weight: 600;
+  position: relative;
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  margin-left: 0 !important;
+  word-break: break-word;
+  unicode-bidi: isolate;
+}
+
+.profileId::before {
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.profileId::after {
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.profileBody {
+  min-width: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+  position: relative;
+  z-index: 0;
+  flex-grow: 1;
+  flex-wrap: wrap;
+}
+
+.profileBodySpan {
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-size: var(--system-14-font-size);
+  font-weight: 400;
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  color: rgb(var(--ig-secondary-text));
+  position: relative;
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  margin-left: 0 !important;
+  word-break: break-word;
+  unicode-bidi: isolate;
+}
+
+.profileBodySpan::before {
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.profileBodySpan::after {
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.profileBodySpan2 {
+  overflow-x: hidden;
+  max-width: 100%;
+  overflow-y: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.profileXbox {
+  min-width: 0;
+  max-width: 100%;
+  flex-direction: column;
+  align-self: center;
+  box-sizing: border-box;
+  display: flex;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 0;
+}
+
+.profileXbox2 {
+  overflow-y: visible;
+  overflow-x: visible;
+  flex-shrink: 1;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  position: static;
+  align-items: stretch;
+  flex-direction: row;
+  align-self: auto;
+  justify-content: flex-start;
+  flex-grow: 0;
+  margin-left: 12px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.profileXbox3 {
+  padding-bottom: 8px;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 8px;
+  border-bottom-style: none;
+  border-bottom-width: 0;
+  padding-left: 8px;
+  border-left-width: 0;
+  justify-content: center;
+  background-color: transparent;
+  touch-action: manipulation;
+  border-right-style: none;
+  border-right-width: 0;
+  box-sizing: border-box;
+  border-top-width: 0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding-right: 8px;
+  margin-left: 0;
+  -webkit-tap-highlight-color: transparent;
+  border-top-style: none;
+  border-left-style: none;
+  text-align: inherit;
+  margin-right: 0;
+  list-style: none;
+  text-decoration: none;
+  outline: none;
+}
+
+.profileXbox4 {
+  justify-content: center;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+}
+
+.XboxSvg {
+  color: rgb(var(--ig-secondary-text));
+  position: relative;
+  display: block;
+}
