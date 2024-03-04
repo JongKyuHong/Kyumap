@@ -13,8 +13,6 @@ export default function PostRecommends() {
     gcTime: 300 * 1000, // garbage collection 메모리에 저장된 값이 너무 많으면 삭제 5분기준
   });
 
-  console.log(data, typeof data, "data");
-
   return (
     <>
       {data?.map((post) => (

@@ -18,6 +18,14 @@ export default function NavTab() {
   const segment = useSelectedLayoutSegment();
 
   const onClickEx = () => {
+    // if (isEx) {
+    //   const slideAnime = setTimeout(() => {
+    //     setEx(false);
+    //   }, 500);
+    //   return () => clearTimeout(slideAnime);
+    // } else {
+    //   setEx(true);
+    // }
     setEx(!isEx);
   };
 
@@ -38,6 +46,15 @@ export default function NavTab() {
       };
     }
   }, []);
+
+  useEffect(() => {
+    if (!isEx) {
+      const Anime = setTimeout(() => {}, 500);
+      return () => {
+        clearTimeout(Anime);
+      };
+    }
+  }, [isEx]);
 
   return (
     <>
@@ -459,7 +476,13 @@ export default function NavTab() {
           {clickedMenu ? <MenuDetail /> : <div></div>}
         </div>
       </div>
-      {isEx && <SearchTab />}
+
+      <div
+        style={{ transform: "translateX(0%)" }}
+        className={`${styles.containerOpen} ${!isEx && styles.containerClose}`}
+      >
+        <SearchTab />
+      </div>
     </>
   );
 }
