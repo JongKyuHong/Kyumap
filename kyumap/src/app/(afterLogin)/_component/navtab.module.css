@@ -96,6 +96,24 @@
   }
 }
 
+@keyframes slideranime {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes slideranime2 {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
 .leftSection {
   border-right-style: solid;
   border-right-color: var(--ig-separator);
@@ -718,4 +736,15 @@
   vertical-align: baseline;
   margin-right: 0;
   border: 0;
+}
+
+.containerOpen {
+  left: 73px;
+  z-index: 0;
+  position: absolute;
+  animation: slideranime 0.5s ease-in-out 0s 1 normal forwards;
+}
+
+.containerClose {
+  animation: slideranime2 0.5s ease-in-out 0s 1 normal forwards;
 }

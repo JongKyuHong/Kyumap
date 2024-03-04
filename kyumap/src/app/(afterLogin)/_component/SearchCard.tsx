@@ -1,4 +1,4 @@
-import styles from "./searchcard.module.css";
+import styles from "./searchtab.module.css";
 import Link from "next/link";
 import Image from "next/image";
 import { User as IUser } from "@/model/User";
@@ -9,6 +9,8 @@ type Props = {
 
 export default function SearchCard({ userData }: Props) {
   const userdata = userData;
+
+  console.log(userdata, "userdata");
   return (
     <Link
       href={`/profile/${userdata.User.id}`}

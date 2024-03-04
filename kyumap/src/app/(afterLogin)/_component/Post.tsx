@@ -43,8 +43,6 @@ export default function Post({ post }: Props) {
   //   Images: [chi, chi2, chi3, chi4],
   // };
 
-  console.log(post, "post들어옴");
-
   const imgArticle = [];
 
   for (let i = 0; i < post.Images.length; i++) {
