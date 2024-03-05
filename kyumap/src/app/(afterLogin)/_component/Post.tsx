@@ -7,10 +7,6 @@ import Image from "next/image";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/ko";
-import chi from "../../../../public/chi.png";
-import chi2 from "../../../../public/chi2.png";
-import chi3 from "../../../../public/chi3.png";
-import chi4 from "../../../../public/chi4.png";
 import { Post as IPost } from "@/model/Post";
 
 dayjs.locale("ko");
@@ -29,19 +25,6 @@ export default function Post({ post }: Props) {
   const handleTextareaChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setTextValue(event.target.value);
   };
-
-  // post?.Images.push({imageId: 1, link faker})
-
-  // const dummyData = {
-  //   postId: 1,
-  //   User: {
-  //     id: "jongkyu",
-  //     image: "/chi3.png",
-  //   },
-  //   content: "치이카와 너무 귀여워",
-  //   createdAt: new Date(),
-  //   Images: [chi, chi2, chi3, chi4],
-  // };
 
   const imgArticle = [];
 
@@ -95,7 +78,11 @@ export default function Post({ post }: Props) {
                         width: "42px",
                       }}
                     ></canvas>
-                    <span className={styles.articleUserSpan}>
+                    <Link
+                      href={`/profile/${post.User.nickname}`}
+                      style={{ height: "32px", width: "32px" }}
+                      className={styles.articleUserSpan}
+                    >
                       <img
                         alt="프로필 사진"
                         src={`${post.User.image}`}
@@ -103,7 +90,7 @@ export default function Post({ post }: Props) {
                         height={1}
                         className={styles.articleUserProfileImage}
                       />
-                    </span>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -122,7 +109,10 @@ export default function Post({ post }: Props) {
                         <span className={styles.nameInnerSpan}>
                           <span className={styles.nameInnerSpan2}>
                             <div>
-                              <Link href="#" className={styles.nameLink}>
+                              <Link
+                                href={`/profile/${post.User.nickname}`}
+                                className={styles.nameLink}
+                              >
                                 <div className={styles.linkInnerDiv}>
                                   <div className={styles.linkInnerDiv2}>
                                     <span className={styles.linkInnerSpan}>
@@ -389,26 +379,24 @@ export default function Post({ post }: Props) {
                   <span>
                     <div className={styles.iconDiv} role="button" tabIndex={0}>
                       <div className={styles.iconInnerDiv}>
-                        <Link href="/detail/newPage">
-                          <svg
-                            aria-label="댓글 달기"
-                            className={styles.iconSvg}
-                            fill="currentColor"
-                            height="24"
-                            role="img"
-                            viewBox="0 0 24 24"
-                            width="24"
-                          >
-                            <title>댓글 달기</title>
-                            <path
-                              d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                            ></path>
-                          </svg>
-                        </Link>
+                        <svg
+                          aria-label="댓글 달기"
+                          className={styles.iconSvg}
+                          fill="currentColor"
+                          height="24"
+                          role="img"
+                          viewBox="0 0 24 24"
+                          width="24"
+                        >
+                          <title>댓글 달기</title>
+                          <path
+                            d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                          ></path>
+                        </svg>
                       </div>
                     </div>
                   </span>
@@ -481,7 +469,7 @@ export default function Post({ post }: Props) {
                   <span className={styles.postUserNameSpan}>
                     <div>
                       <Link
-                        href="#"
+                        href={`/profile/${post.User.nickname}`}
                         className={styles.postUserProfile}
                         role="link"
                         tabIndex={0}
@@ -496,15 +484,26 @@ export default function Post({ post }: Props) {
                     {post.content}
                     <br />
                     <br />
-                    <Link href="#" className={styles.hashTag}>
-                      {"#해시태그 내용#"}
+                    {/* {post.hashTag.map((hash, index) => (
+                      <Link
+                        href={`/explore/tags/${post.hash}`}
+                        className={styles.hashTag}
+                      >
+                        {"#해시태그 내용#누르면 해시태그 검색 창으로"}
+                      </Link>
+                    ))} */}
+                    <Link
+                      href={`/explore/tags/${post.hashTag}`}
+                      className={styles.hashTag}
+                    >
+                      {"#해시태그 내용#누르면 해시태그 검색 창으로"}
                     </Link>
                   </span>
                 </span>
               </div>
               <div className={styles.postComment}>
                 <Link
-                  href="/detail/newPage"
+                  href={`/detail/${post.postId}`}
                   className={styles.commentLink}
                   role="link"
                   tabIndex={0}
@@ -549,7 +548,6 @@ export default function Post({ post }: Props) {
                             </div>
                           </div>
                         </div>
-
                         <textarea
                           aria-label="댓글 달기..."
                           className={styles.formInputTextArea}
@@ -557,9 +555,9 @@ export default function Post({ post }: Props) {
                           autoComplete="off"
                           autoCorrect="off"
                           onChange={handleTextareaChange}
-                          style={{
-                            height: "18px !important",
-                          }}
+                          // style={{
+                          //   height: "18px!important",
+                          // }}
                         ></textarea>
                         {textValue ? (
                           <div className={styles.EnterBtn}>
