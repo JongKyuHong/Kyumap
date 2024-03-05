@@ -1,0 +1,71 @@
+.MSection2 {
+  overflow-x: hidden;
+  min-height: 100dvh;
+  flex-direction: column;
+  display: flex;
+  flex-grow: 1;
+}
+
+.Mmain {
+  background-color: rgb(var(--ig-primary-background));
+  flex-direction: column;
+  display: flex;
+  position: relative;
+  flex-grow: 1;
+  order: 4;
+}
+
+.MDiv {
+  height: var(--revamp-nav-bottom-toolbar-height);
+  width: 100%;
+  background-color: rgb(var(--ig-primary-background));
+  position: relative;
+  order: 5;
+}
+
+.MDiv2 {
+  width: 100%;
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+}
+
+.MDiv3 {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  position: static;
+  align-self: auto;
+  justify-content: flex-start;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.MDiv4 {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  position: static;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}

@@ -8,7 +8,7 @@ export default function NewPost() {
   const router = useRouter();
   const imgRef = useRef<HTMLInputElement>(null);
 
-  const onClickXbox = useCallback(() => {
+  const onClickBackBtn = useCallback(() => {
     router.back();
   }, []);
 
@@ -16,8 +16,8 @@ export default function NewPost() {
     <div className={styles.ModalMainDiv}>
       <div className={styles.ModalInnerDiv}>
         <div className={styles.ModalInnerDiv2}>
-          <div className={styles.ModalInnerDiv3}></div>
-          <div className={styles.ModalXbox} onClick={onClickXbox}>
+          <div className={styles.ModalInnerDiv3} onClick={onClickBackBtn}></div>
+          <div className={styles.ModalXbox}>
             <div className={styles.ModalXboxInner} role="button" tabIndex={0}>
               <div className={styles.ModalXboxDiv}>
                 <svg
