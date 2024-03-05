@@ -44,8 +44,6 @@
 }
 
 .articleUserSpan {
-  height: 32px;
-  width: 32px;
   overflow: hidden;
   border-bottom-left-radius: 50%;
   border-bottom-right-radius: 50%;
@@ -1244,6 +1242,7 @@
 .formInputTextArea {
   width: 0;
   max-height: 80px;
+  height: 18px !important;
   padding-top: 0;
   border-bottom-style: none;
   padding-bottom: 0;

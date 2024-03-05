@@ -10,9 +10,9 @@ function generateDate() {
   });
 }
 const User = [
-  { id: "test1", nickname: "test1", image: "/chi.png" },
-  { id: "test2", nickname: "test2", image: "/chi2.png" },
-  { id: "test3", nickname: "test3", image: faker.image.avatar() },
+  { id: "test1", nickname: "test1nick", image: faker.image.avatar() },
+  { id: "test2", nickname: "test2nick", image: faker.image.avatar() },
+  { id: "test3", nickname: "test3nick", image: faker.image.avatar() },
 ];
 const Posts = [];
 
@@ -226,43 +226,39 @@ export const handlers = [
         { imageId: 3, link: faker.image.urlLoremFlickr() },
       ],
       createdAt: generateDate(),
+      hashTag: ["#테스트"],
     });
   }),
   http.get("/api/posts/:postId/comments", ({ request, params }) => {
     const { postId } = params;
     return HttpResponse.json([
       {
-        postId: 1,
         User: User[0],
-        content: `${1} 게시글 ${postId}의 답글`,
+        content: `${1} 게시글 ${postId}의 댓글`,
         Images: [{ imageId: 1, link: faker.image.urlLoremFlickr() }],
         createdAt: generateDate(),
       },
       {
-        postId: 2,
         User: User[0],
-        content: `${2} 게시글 ${postId}의 답글`,
+        content: `${2} 게시글 ${postId}의 댓글`,
         Images: [{ imageId: 1, link: faker.image.urlLoremFlickr() }],
         createdAt: generateDate(),
       },
       {
-        postId: 3,
         User: User[0],
-        content: `${3} 게시글 ${postId}의 답글`,
+        content: `${3} 게시글 ${postId}의 댓글`,
         Images: [{ imageId: 1, link: faker.image.urlLoremFlickr() }],
         createdAt: generateDate(),
       },
       {
-        postId: 4,
         User: User[0],
-        content: `${4} 게시글 ${postId}의 답글`,
+        content: `${4} 게시글 ${postId}의 댓글`,
         Images: [{ imageId: 1, link: faker.image.urlLoremFlickr() }],
         createdAt: generateDate(),
       },
       {
-        postId: 5,
         User: User[0],
-        content: `${5} 게시글 ${postId}의 답글`,
+        content: `${5} 게시글 ${postId}의 댓글`,
         Images: [{ imageId: 1, link: faker.image.urlLoremFlickr() }],
         createdAt: generateDate(),
       },

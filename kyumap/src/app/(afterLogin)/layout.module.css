@@ -1,3 +1,60 @@
+@keyframes opacityAnime {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 736px) {
+  .rootDiv {
+    animation-name: opacityAnime;
+  }
+
+  .rootDivInner {
+    animation-delay: 0.3s;
+  }
+
+  .rootDivInner2 {
+    animation-delay: 0.3s;
+  }
+
+  .container {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 767px) {
+  .rightSectionWrapper {
+    max-height: calc(100% - var(--revamp-nav-bottom-toolbar-height));
+    flex-grow: 1;
+    width: 100%;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1263px) {
+  .rightSectionWrapper {
+    width: calc(100% - var(--nav-narrow-width));
+  }
+}
+
+@media (min-width: 1264px) and (max-width: 1919px) {
+  .rightSectionWrapper {
+    width: calc(100% - var(--nav-medium-width));
+  }
+}
+
+@media (min-width: 1920px) {
+  .rightSectionWrapper {
+    width: calc(100% - var(--nav-wide-width));
+  }
+}
+
+.rightSectionWrapper {
+  margin-left: auto;
+}
+
 .rootDiv {
   top: 0;
   position: fixed;
@@ -37,17 +94,26 @@
   left: 0;
 }
 
+@keyframes rootDivInner2Anime {
+  0% {
+    transform: translateX(0) scaleX(6);
+  }
+  100% {
+    transform: translateX(500%) scaleX(6);
+  }
+}
+
 .rootDivInner2 {
   height: 3px;
   width: 100%;
   transform-origin: right;
   animation-iteration-count: infinite;
   will-change: transform;
+  animation-name: rootDivInner2Anime;
   animation-timing-function: ease-out;
   animation-delay: 0s;
   animation-timing-function: linear;
   animation-duration: 2s;
-  left: 0;
 }
 
 .rootBody {
@@ -62,6 +128,12 @@
   display: flex;
   position: relative;
   z-index: 0;
+}
+
+@media (min-height: 100dvh) {
+  .leafParent {
+    min-height: calc(100dvh - var(--header-height));
+  }
 }
 
 .leafParent {
@@ -101,55 +173,6 @@
   border-top-left-radius: 0;
 }
 
-.leftSectionWrapper {
-  overflow-y: visible;
-  width: fit-content;
-  overflow-x: visible;
-  height: 100vh;
-  top: 0;
-  align-content: stretch;
-  border-bottom-left-radius: 0;
-  background-color: transparent;
-  position: fixed;
-  flex-direction: column;
-  box-sizing: border-box;
-  display: flex;
-  border-bottom-right-radius: 0;
-  flex-shrink: 0;
-  align-items: stretch;
-  align-self: auto;
-  justify-content: flex-start;
-  z-index: 10;
-  flex-grow: 0;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
-
-.leftSectionOuter {
-  max-height: inherit;
-  min-width: inherit;
-  height: inherit;
-  min-height: inherit;
-  width: inherit;
-  max-width: inherit;
-  justify-content: inherit;
-  flex-grow: inherit;
-  align-content: inherit;
-  position: relative;
-  display: inherit;
-  align-items: inherit;
-  flex-direction: inherit;
-  flex-shrink: inherit;
-}
-
-.leftSectionInner {
-  height: 100dvh;
-  display: flex;
-  justify-content: space-between;
-  flex-direction: row;
-  position: relative;
-}
-
 .postButton {
   margin: 16px 0;
   display: flex;
@@ -170,36 +193,6 @@
 }
 .postButton span {
   display: inline-block;
-}
-
-.rightSectionWrapper {
-  width: 100%;
-  margin-left: auto;
-}
-
-@media (max-width: 767px) {
-  .rightSectionWrapper {
-    max-height: calc(100% - var(--revamp-nav-bottom-toolbar-height));
-    flex-grow: 1;
-  }
-}
-
-@media (min-width: 768px) and (max-width: 1263px) {
-  .rightSectionWrapper {
-    width: calc(100% - var(--nav-narrow-width));
-  }
-}
-
-@media (min-width: 1264px) and (max-width: 1919px) {
-  .rightSectionWrapper {
-    width: calc(100% - var(--nav-medium-width));
-  }
-}
-
-@media (min-width: 1920px) {
-  .rightSectionWrapper {
-    width: calc(100% - var(--nav-wide-width));
-  }
 }
 
 .rightSectionInner {

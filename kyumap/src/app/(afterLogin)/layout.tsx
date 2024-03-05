@@ -19,13 +19,7 @@ export default function RootLayout({ children, modal }: Props) {
               <div className={styles.leafChild}>
                 <RQProvider>
                   <div className={styles.container} style={{ height: "100%" }}>
-                    <div className={styles.leftSectionWrapper}>
-                      <div className={styles.leftSectionOuter} tabIndex={-1}>
-                        <div className={styles.leftSectionInner}>
-                          <NavTab />
-                        </div>
-                      </div>
-                    </div>
+                    <NavTab />
                     <div className={styles.rightSectionWrapper}>{children}</div>
                   </div>
                 </RQProvider>
