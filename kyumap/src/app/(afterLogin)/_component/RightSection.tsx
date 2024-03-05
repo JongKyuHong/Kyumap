@@ -1,3 +1,5 @@
+"use client";
+
 import styles from "./rightsection.module.css";
 import Link from "next/link";
 import Image from "next/image";

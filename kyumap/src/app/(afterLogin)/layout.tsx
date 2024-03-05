@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
 import styles from "./layout.module.css";
 import NavTab from "./_component/NavTab";
+import RQProvider from "./_component/RQProvider";
 type Props = { children: ReactNode; modal: ReactNode };
 
 export default function RootLayout({ children, modal }: Props) {
@@ -16,16 +17,12 @@ export default function RootLayout({ children, modal }: Props) {
           <div className={styles.rootChild}>
             <div className={styles.leafParent}>
               <div className={styles.leafChild}>
-                <div className={styles.container} style={{ height: "100%" }}>
-                  <div className={styles.leftSectionWrapper}>
-                    <div className={styles.leftSectionOuter} tabIndex={-1}>
-                      <div className={styles.leftSectionInner}>
-                        <NavTab />
-                      </div>
-                    </div>
+                <RQProvider>
+                  <div className={styles.container} style={{ height: "100%" }}>
+                    <NavTab />
+                    <div className={styles.rightSectionWrapper}>{children}</div>
                   </div>
-                  <div className={styles.rightSectionWrapper}>{children}</div>
-                </div>
+                </RQProvider>
               </div>
             </div>
             <div>
