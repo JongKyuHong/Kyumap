@@ -4,14 +4,20 @@ import { useRouter } from "next/navigation";
 import Home from "../../home/page";
 import Detail from "../../@modal/(.)detail/[postId]/page";
 
-export default function Page() {
+type Props = {
+  params: {
+    postId: string;
+  };
+};
+
+export default function Page({ params }: Props) {
   // console.log("Detail");
   // const router = useRouter();
   // router.replace("/detail/newPage");
   return (
     <>
       <Home />
-      <Detail />
+      <Detail params={params} />
     </>
   );
 }
