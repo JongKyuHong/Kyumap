@@ -49,6 +49,7 @@ export default function DetailPage({ postId }: Props) {
     gcTime: 300 * 1000,
   });
 
+  console.log(post, "postdata");
   const router = useRouter();
 
   useEffect(() => {

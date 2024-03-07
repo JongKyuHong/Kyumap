@@ -79,7 +79,7 @@ export default function Post({ post }: Props) {
                       }}
                     ></canvas>
                     <Link
-                      href={`/profile/${post.User.nickname}`}
+                      href={`/profile/${post.User.id}`}
                       style={{ height: "32px", width: "32px" }}
                       className={styles.articleUserSpan}
                     >
