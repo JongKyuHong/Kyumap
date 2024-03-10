@@ -1,4 +1,5 @@
 "use client";
+import React, { useEffect } from "react";
 import styles from "./mainsection.module.css";
 import style from "./msection.module.css";
 import PostRecommends from "./PostRecommends";
