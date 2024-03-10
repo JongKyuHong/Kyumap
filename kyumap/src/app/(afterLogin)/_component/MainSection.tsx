@@ -12,9 +12,10 @@ export default async function MainSection() {
   // const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
 
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery({
+  await queryClient.prefetchInfiniteQuery({
     queryKey: ["posts", "recommends"],
     queryFn: getPostRecommends,
+    initialPageParam: 0,
   });
   const dehydrateState = dehydrate(queryClient);
   // const svgRef = useRef(
