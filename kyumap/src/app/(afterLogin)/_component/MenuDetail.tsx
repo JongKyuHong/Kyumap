@@ -3,7 +3,7 @@
 import Link from "next/link";
 import styles from "./menudetail.module.css";
 import { useCallback, useState } from "react";
-import DarkMode from "./DarkMode";
+// import DarkMode from "./DarkMode";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 
@@ -29,24 +29,6 @@ export default function MenuDetail() {
       router.replace("/");
     });
   };
-
-  // const CalculateXY = useCallback(() => {
-  //   if (document.documentElement.clientWidth > 1264) {
-  //     console.log("얼마나 호출되나 보자1");
-  //     return {
-  //       tansform: `translate(12px ${
-  //         document.documentElement.clientHeight - 76
-  //       }px) translate(0px, -100%)`,
-  //     };
-  //   } else {
-  //     console.log("얼마나 호출되나 보자2");
-  //     return {
-  //       transform: `translate(12px ${
-  //         document.documentElement.clientHeight - 20
-  //       }px) translate(0px, -100%)`,
-  //     };
-  //   }
-  // }, [document.documentElement.clientHeight]);
 
   return (
     <div>
