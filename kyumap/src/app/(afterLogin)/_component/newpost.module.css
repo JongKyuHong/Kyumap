@@ -286,6 +286,78 @@
   outline: none;
 }
 
+.backarrowbtn {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  margin-left: 8px;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  outline: none;
+}
+
+.backarrowbtn2 {
+  padding-bottom: 8px;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 8px;
+  border-bottom-style: none;
+  border-bottom-width: 0;
+  padding-left: 8px;
+  border-left-width: 0;
+  justify-content: center;
+  background-color: transparent;
+  touch-action: manipulation;
+  border-right-style: none;
+  border-right-width: 0;
+  box-sizing: border-box;
+  border-top-width: 0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding-right: 8px;
+  margin-left: 0;
+  -webkit-tap-highlight-color: transparent;
+  border-top-style: none;
+  border-left-style: none;
+  text-align: inherit;
+  margin-right: 0;
+  list-style: none;
+  text-decoration: none;
+  outline: none;
+}
+
+.backarrowbtn3 {
+  justify-content: center;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  outline: none;
+}
+
+.backarrowbtn4 {
+  outline: none;
+}
+
+.backarrowbtnSvg {
+  color: rgb(var(--ig-primary-text));
+  position: relative;
+  display: block;
+  outline: none;
+}
+
 .Underright {
   float: right;
   align-items: center;
@@ -294,6 +366,88 @@
   height: 100%;
   justify-content: center;
   position: relative;
+  outline: none;
+}
+
+.NextBtn {
+  padding-top: 16px;
+  overflow-y: visible;
+  overflow-x: visible;
+  padding-bottom: 16px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  padding-left: 16px;
+  align-items: stretch;
+  padding-right: 16px;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  outline: none;
+}
+
+.NextBtn2 {
+  height: auto;
+  border-bottom-color: var(--always-dark-overlay);
+  padding-top: 0;
+  min-width: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  min-height: 0;
+  border-bottom-style: none;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  width: auto;
+  font-weight: var(--font-weight-system-semibold);
+  display: inline;
+  border-top-left-radius: 2px;
+  border-left-width: 0;
+  text-overflow: ellipsis;
+  justify-content: center;
+  padding-left: 0;
+  appearance: none;
+  border-top-color: var(--always-dark-overlay);
+  background-color: transparent;
+  touch-action: manipulation;
+  flex-basis: auto;
+  border-right-style: none;
+  border-right-width: 0;
+  border-right-color: var(--always-dark-overlay);
+  box-sizing: border-box;
+  border-top-width: 0;
+  user-select: none;
+  align-items: center;
+  padding-right: 0;
+  flex-shrink: 0;
+  border-left-color: var(--always-dark-overlay);
+  text-align: center;
+  cursor: pointer;
+  border-top-right-radius: 2px;
+  outline-style: none;
+  flex-direction: row;
+  position: relative;
+  margin-left: 0;
+  z-index: 0;
+  -webkit-tap-highlight-color: transparent;
+  font-family: var(--font-family-system);
+  font-size: 0.875rem;
+  border-top-style: none;
+  line-height: var(--system-14-line-height);
+  border-left-style: none;
+  color: rgb(var(--ig-primary-button));
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  margin-right: 0;
+  list-style: none;
+  text-decoration: none;
   outline: none;
 }
 
@@ -608,3 +762,481 @@
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 } */
+
+.ImageUploadDiv {
+  align-items: center;
+  border: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  font: inherit;
+  font-size: 100%;
+  height: 100%;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  vertical-align: baseline;
+  width: 100%;
+}
+
+.ImageUploadDiv2 {
+  align-items: center;
+  background-color: rgb(var(--ig-secondary-background));
+  border: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  font: inherit;
+  font-size: 100%;
+  height: 100%;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  vertical-align: baseline;
+  width: 100%;
+}
+
+.ImageUploadDiv3 {
+  align-items: center;
+  border: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  font: inherit;
+  font-size: 100%;
+  height: 100%;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  vertical-align: baseline;
+  width: 100%;
+}
+
+.ImageRatio {
+  overflow-y: visible;
+  margin-top: 8px;
+  overflow-x: visible;
+  bottom: 0;
+  margin-bottom: 8px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  margin-left: 8px;
+  margin-right: 8px;
+  flex-grow: 0;
+  left: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  position: absolute;
+}
+
+.ImageRatio2 {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  align-items: flex-start;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ImageRatio3 {
+  padding-bottom: 8px;
+  overflow-y: visible;
+  padding-top: 8px;
+  overflow-x: visible;
+  padding-left: 8px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  padding-right: 8px;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ImageRatio4 {
+  margin: 8px;
+  background: rgba(26, 26, 26, 0.8);
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  opacity: 1;
+  position: relative;
+  transition-duration: 0.2s;
+  transition-property: opacity;
+  z-index: 3;
+}
+
+.ImageRatioBtn {
+  border: 0;
+  color: rgb(var(--ig-primary-button));
+  display: inline-block;
+  padding: 0 !important;
+  position: relative;
+  text-align: center;
+  font-family: var(--font-family-system);
+  -webkit-appearance: none;
+  background: none;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: var(--font-weight-system-semibold);
+  pointer-events: auto;
+  text-overflow: ellipsis;
+  text-transform: inherit;
+  -webkit-user-select: none;
+  width: auto;
+  margin: 0;
+}
+
+.ImageRatio5 {
+  padding-bottom: 8px;
+  overflow-y: visible;
+  padding-top: 8px;
+  overflow-x: visible;
+  padding-left: 8px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  justify-content: center;
+  background-color: transparent;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  padding-right: 8px;
+  flex-direction: row;
+  align-self: auto;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ImageRatioSvg {
+  color: rgb(var(--web-always-white));
+  position: relative;
+  display: block;
+}
+
+.ImageZoom {
+  padding-bottom: 8px;
+  overflow-y: visible;
+  padding-top: 8px;
+  overflow-x: visible;
+  bottom: 0;
+  padding-left: 8px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  margin-left: 44px;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  padding-right: 8px;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  flex-grow: 0;
+  left: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  position: absolute;
+}
+
+.MultiImage {
+  padding-bottom: 8px;
+  overflow-y: visible;
+  padding-top: 8px;
+  overflow-x: visible;
+  bottom: 0;
+  padding-left: 8px;
+  align-items: flex-end;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  right: 0;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  padding-right: 8px;
+  align-self: auto;
+  justify-content: flex-start;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  position: absolute;
+}
+
+.MultiImage2 {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-items: flex-end;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.MultiImage3 {
+  padding-bottom: 8px;
+  overflow-y: visible;
+  padding-top: 8px;
+  overflow-x: visible;
+  padding-left: 8px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  padding-right: 8px;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ImageDiv {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 461px;
+  overflow: hidden;
+  width: 692px;
+  transform: none;
+}
+
+.hiddenDiv {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 180ms linear, transform 90ms ease-out;
+  background: rgba(26, 26, 26, 0.8);
+  border-radius: 8px;
+  z-index: 3;
+}
+
+.NormalRatio {
+  border-bottom-color: var(--always-dark-overlay);
+  padding-top: 0;
+  min-width: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  min-height: 0;
+  border-bottom-width: 0;
+  border-bottom-style: solid;
+  padding-bottom: 0;
+  border-right-style: solid;
+  border-left-width: 0;
+  padding-left: 0;
+  border-top-color: var(--always-dark-overlay);
+  background-color: transparent;
+  touch-action: manipulation;
+  flex-basis: auto;
+  border-right-width: 0;
+  border-right-color: var(--always-dark-overlay);
+  box-sizing: border-box;
+  border-top-width: 0;
+  user-select: none;
+  padding-right: 0;
+  border-top-right-radius: inherit;
+  display: inline-flex;
+  flex-shrink: 0;
+  border-left-color: var(--always-dark-overlay);
+  border-left-style: solid;
+  cursor: pointer;
+  outline-style: none;
+  align-items: stretch;
+  flex-direction: row;
+  border-top-left-radius: inherit;
+  position: relative;
+  margin-left: 0;
+  z-index: 0;
+  -webkit-tap-highlight-color: transparent;
+  border-bottom-right-radius: inherit;
+  text-align: inherit;
+  border-bottom-left-radius: inherit;
+  border-top-style: solid;
+  margin-right: 0;
+  list-style: none;
+  text-decoration: none;
+  outline: none;
+}
+
+.NormalRatio2 {
+  overflow-y: visible;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-direction: row;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 1;
+  padding-left: 4px;
+  margin-left: 12px;
+  border-top-left-radius: 0;
+  padding-right: 4px;
+  border-top-right-radius: 0;
+}
+
+.NormalRatiotext {
+  overflow-y: visible;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 1;
+  align-items: flex-start;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.NormalRatioSpan {
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-size: var(--system-14-font-size);
+  /* color: rgb(var(--web-always-white)); */
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  font-weight: 600;
+  position: relative;
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  margin-left: 0 !important;
+  word-break: break-word;
+}
+
+.NormalRatioSpan::before {
+  margin-top: -3px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.NormalRatioSpan::after {
+  margin-top: -4px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.NormalRatioSvg {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  padding-right: 12px;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  padding-left: 12px;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.NormalRatioSvg2 {
+  /* color: rgb(var(--web-always-white)); */
+  position: relative;
+  display: block;
+}
+
+.DivHr {
+  height: 1px;
+  width: 100%;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-bottom-width: 0;
+  border-left-width: 0;
+  border-right-width: 0;
+  border-top-width: 0;
+  margin-left: 0;
+  background-color: rgb(var(--ig-separator));
+  margin-right: 0;
+  background: #dadde1;
+  color: #dadde1;
+}
