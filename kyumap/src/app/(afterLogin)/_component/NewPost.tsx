@@ -12,14 +12,17 @@ import styles from "./newpost.module.css";
 import { useRouter } from "next/navigation";
 import Cropper from "react-easy-crop";
 import cx from "classnames";
+import useDeviceSize from "./useDeviceSize";
 
 export default function NewPost() {
   const [isActive, setActive] = useState(false);
   const [preview, setPreview] = useState<Array<string | null>>([]);
   const [onClickRatio, setRatio] = useState(false);
   const [ratioIndex, setRatioIndex] = useState(0);
+  const [ratioWidth, setWidth] = useState<number>(0);
   const router = useRouter();
   const imgRef = useRef<HTMLInputElement>(null);
+  const { isDesktop, isTablet, isMobile } = useDeviceSize();
 
   const onClickBackBtn = useCallback(() => {
     router.back();
@@ -59,12 +62,57 @@ export default function NewPost() {
   };
 
   useEffect(() => {
-    console.log(preview);
-  }, [preview]);
+    if (isDesktop) {
+      setWidth(692);
+    } else if (isTablet) {
+      setWidth(558);
+    } else if (isMobile) {
+      setWidth(378);
+    }
+  }, [isDesktop, isTablet, isMobile, ratioIndex]);
 
   const onClickRatioBtn = () => {
     setRatio(!onClickRatio);
     console.log(onClickRatio, "asdf");
+  };
+
+  const calculateSize = () => {
+    if (isMobile) {
+      return {
+        maxHeight: "421px",
+        maxWidth: "378px",
+        minHeight: "391px",
+        minWidth: "348px",
+        width: "531px",
+      };
+    } else if (isTablet) {
+      return {
+        maxHeight: "601px",
+        maxWidth: "558px",
+        minHeight: "391px",
+        minWidth: "348px",
+        width: "692px",
+      };
+    } else if (isDesktop) {
+      return {
+        maxHeight: "898px",
+        maxWidth: "855px",
+        minHeight: "391px",
+        minWidth: "348px",
+        width: "692px",
+      };
+    }
+  };
+
+  const calWidthHeight = () => {
+    if (ratioIndex === 2) {
+      let widthv = ratioWidth * 0.8;
+      return { height: ratioWidth, width: widthv };
+    } else if (ratioIndex === 3) {
+      return { height: ratioWidth * 0.5625, width: ratioWidth };
+    } else {
+      return { height: ratioWidth, width: ratioWidth };
+    }
   };
 
   return (
@@ -120,11 +168,7 @@ export default function NewPost() {
                     <div className={styles.ModalInnerDiv9} role="dialog">
                       <div
                         style={{
-                          maxHeight: "898px",
-                          maxWidth: "855px",
-                          minHeight: "391px",
-                          minWidth: "348px",
-                          width: "692px",
+                          ...calculateSize(),
                         }}
                       >
                         <div
@@ -153,7 +197,7 @@ export default function NewPost() {
                                       style={{
                                         width: preview.length
                                           ? "calc(100% - 120px)"
-                                          : "calc(100% + 0px);",
+                                          : "calc(100% + 0px)",
                                       }}
                                     >
                                       <div className={styles.HeaderDiv}>
@@ -662,8 +706,7 @@ export default function NewPost() {
                                       <div role="presentation">
                                         <div
                                           style={{
-                                            height: "692px",
-                                            width: "692px",
+                                            ...calWidthHeight(),
                                             alignItems: "center",
                                             display: "flex",
                                             flexDirection: "column",
@@ -673,10 +716,10 @@ export default function NewPost() {
                                         >
                                           <img
                                             className={styles.ImageDiv}
-                                            // style={{
-                                            //   backgroundImage: `${preview[0].dataUrl}`,
-                                            // }}
                                             src={`${preview[0]}`}
+                                            style={{
+                                              ...calWidthHeight(),
+                                            }}
                                           ></img>
                                         </div>
                                       </div>

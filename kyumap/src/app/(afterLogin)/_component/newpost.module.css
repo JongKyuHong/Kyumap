@@ -1054,9 +1054,9 @@
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
-  height: 461px;
+  /* height: 461px;
+  width: 692px; */
   overflow: hidden;
-  width: 692px;
   transform: none;
 }
 
