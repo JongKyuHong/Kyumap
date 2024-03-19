@@ -19,6 +19,9 @@ export default function NavTab() {
   // const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   // const [isMobileScreen, setScreen] = useState(false);
   // const segment = useSelectedLayoutSegment();
+  // const [isDesktop2, setDesktop] = useState(false);
+  // const [isTablet2, setTablet] = useState(false);
+  // const [isMobile2, setMobile] = useState(false);
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
 
   const onClickEx = () => {
@@ -43,6 +46,10 @@ export default function NavTab() {
     //   };
     // }
     setMounted(true);
+    // const { isDesktop, isTablet, isMobile } = useDeviceSize();
+    // setDesktop(isDesktop);
+    // setTablet(isTablet);
+    // setMobile(isMobile);
   }, []);
 
   useEffect(() => {
