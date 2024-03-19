@@ -13,7 +13,7 @@ export default function RootLayout({ children, modal }: Props) {
             <div className={styles.rootDivInner2}></div>
           </div>
         </div>
-        <div className={styles.rootBody}>
+        <div className={styles.rootBody} style={{ left: "0px" }}>
           <div className={styles.rootChild}>
             <div className={styles.leafParent}>
               <div className={styles.leafChild}>
