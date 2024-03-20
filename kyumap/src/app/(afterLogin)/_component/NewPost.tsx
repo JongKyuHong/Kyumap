@@ -7,6 +7,7 @@ import React, {
   useRef,
   useState,
   useEffect,
+  EventHandler,
 } from "react";
 import styles from "./newpost.module.css";
 import { useRouter } from "next/navigation";
@@ -22,23 +23,21 @@ export default function NewPost() {
   const [ratioWidth, setWidth] = useState<number>(0);
   const [isMultiImg, setMultiImg] = useState(false);
   const [currentNumber, setNumber] = useState(0);
+  const [isClickedEmo, setEmo] = useState(false);
+  const [isClickedExitBtn, setExitBtn] = useState(false);
+  const [isAccExpand, setAccExpand] = useState(false);
+  const [isSettingExpand, setSettingExpand] = useState(false);
+  const [isArticleInfoHide, setArticleInfoHide] = useState(false);
+  const [isCommentHide, setCommentHide] = useState(false);
+
   const router = useRouter();
   const imgRef = useRef<HTMLInputElement>(null);
+  const divRef = useRef<HTMLDivElement>(null);
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
 
   const onClickBackBtn = useCallback(() => {
     router.back();
   }, []);
-
-  // const handleDragEnter = (event: React.DragEvent<HTMLDivElement>) => {
-  //   event.preventDefault();
-  //   setActive(true);
-  // };
-
-  // const handleDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
-  //   event.preventDefault();
-  //   setActive(false);
-  // };
 
   const handleFileSelect = () => {
     if (imgRef.current) {
@@ -139,6 +138,7 @@ export default function NewPost() {
 
   const onRemovePreview = () => {
     setPreview([]);
+    router.back();
   };
 
   const stopPropa = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -151,11 +151,8 @@ export default function NewPost() {
     } else {
       setMultiImg(false);
     }
-  }, []);
-
-  useEffect(() => {
-    console.log(preview, "prev");
-  }, [preview]);
+    console.log(isMultiImg, preview.length, "ismulti");
+  }, [isMultiImg, preview]);
 
   useEffect(() => {
     if (isMobile) {
@@ -176,9 +173,48 @@ export default function NewPost() {
     setNumber(currentNumber - 1);
   };
 
+  const onTextChange = (e: React.FormEvent<HTMLTextAreaElement>) => {
+    const newText = e.currentTarget.value || ""; // 입력된 텍스트 가져오기
+    setTextValue(newText); // 텍스트 상태 업데이트
+  };
+
+  const onClickEmoticon = () => {
+    setEmo(!isClickedEmo);
+  };
+
+  const onClickExitBtn = () => {
+    setExitBtn(!isClickedExitBtn);
+  };
+
+  const addEmoticon = (e: React.MouseEvent<HTMLDivElement>) => {
+    const innerText = e.currentTarget.innerText || "";
+    console.log(innerText, "asdfasdfas");
+    setTextValue((prevText) => prevText + innerText);
+  };
+
+  const onClickAccExpand = () => {
+    setAccExpand(!isAccExpand);
+  };
+
+  const onClickSettingExpand = () => {
+    setSettingExpand(!isSettingExpand);
+  };
+
+  const onClickArticleInfoHide = () => {
+    setArticleInfoHide(!isArticleInfoHide);
+  };
+
+  const onClickCommentHide = () => {
+    setCommentHide(!isCommentHide);
+  };
+
   return (
     <div className={styles.ModalMainDiv}>
-      <div className={styles.ModalInnerDiv}>
+      <div
+        className={
+          isClickedExitBtn ? styles.ModalInnerDivExitBtn : styles.ModalInnerDiv
+        }
+      >
         <div className={styles.ModalInnerDiv2}>
           <div className={styles.ModalInnerDiv3} onClick={onClickBackBtn}></div>
           <div className={styles.ModalXbox} onClick={onClickBackBtn}>
@@ -235,8 +271,6 @@ export default function NewPost() {
                       >
                         <div
                           className={styles.ModalInnerDiv10}
-                          // onDragEnter={handleDragEnter}
-                          // onDragLeave={handleDragLeave}
                           onDragOver={(e) => e.preventDefault()}
                         >
                           <div className={styles.ModalInnerDiv11}>
@@ -270,10 +304,11 @@ export default function NewPost() {
                                     </h1>
                                   </div>
                                   <div className={styles.Underleft}>
-                                    {preview.length ? (
+                                    {preview && (
                                       <div
                                         className={styles.backarrowbtn}
-                                        onClick={onRemovePreview}
+                                        // onClick={onRemovePreview}
+                                        onClick={onClickExitBtn}
                                       >
                                         <div
                                           className={styles.backarrowbtn2}
@@ -305,7 +340,7 @@ export default function NewPost() {
                                                   stroke="currentColor"
                                                   stroke-linecap="round"
                                                   stroke-linejoin="round"
-                                                  stroke-width="2"
+                                                  strokeWidth="2"
                                                   x1="2.909"
                                                   x2="22.001"
                                                   y1="12.004"
@@ -317,17 +352,17 @@ export default function NewPost() {
                                                   stroke="currentColor"
                                                   stroke-linecap="round"
                                                   stroke-linejoin="round"
-                                                  stroke-width="2"
+                                                  strokeWidth="2"
                                                 ></polyline>
                                               </svg>
                                             </span>
                                           </div>
                                         </div>
                                       </div>
-                                    ) : null}
+                                    )}
                                   </div>
                                   <div className={styles.Underright}>
-                                    {preview.length ? (
+                                    {preview && (
                                       <div className={styles.NextBtn}>
                                         <div
                                           className={styles.NextBtn2}
@@ -336,7 +371,7 @@ export default function NewPost() {
                                           공유하기
                                         </div>
                                       </div>
-                                    ) : null}
+                                    )}
                                   </div>
                                 </div>
                               </div>
@@ -489,6 +524,55 @@ export default function NewPost() {
                                               className={styles.imgTab3}
                                             ></div>
                                           </div>
+                                          <div
+                                            className={styles.MultiImage}
+                                            style={{ width: "100%" }}
+                                          >
+                                            <div className={styles.MultiImage2}>
+                                              <div
+                                                className={styles.MultiImage3}
+                                                style={{ maxWidth: "100%" }}
+                                              ></div>
+                                              <div
+                                                className={styles.ImageRatio4}
+                                                role="button"
+                                              >
+                                                <button
+                                                  className={
+                                                    styles.ImageRatioBtn
+                                                  }
+                                                  type="button"
+                                                  onClick={handleFileSelect}
+                                                >
+                                                  <div
+                                                    className={
+                                                      styles.ImageRatio5
+                                                    }
+                                                  >
+                                                    <svg
+                                                      aria-label="미디어 갤러리 열기"
+                                                      className={
+                                                        styles.ImageRatioSvg
+                                                      }
+                                                      fill="currentColor"
+                                                      height="16"
+                                                      role="img"
+                                                      viewBox="0 0 24 24"
+                                                      width="16"
+                                                    >
+                                                      <title>
+                                                        미디어 갤러리 열기
+                                                      </title>
+                                                      <path
+                                                        d="M19 15V5a4.004 4.004 0 0 0-4-4H5a4.004 4.004 0 0 0-4 4v10a4.004 4.004 0 0 0 4 4h10a4.004 4.004 0 0 0 4-4ZM3 15V5a2.002 2.002 0 0 1 2-2h10a2.002 2.002 0 0 1 2 2v10a2.002 2.002 0 0 1-2 2H5a2.002 2.002 0 0 1-2-2Zm18.862-8.773A.501.501 0 0 0 21 6.57v8.431a6 6 0 0 1-6 6H6.58a.504.504 0 0 0-.35.863A3.944 3.944 0 0 0 9 23h6a8 8 0 0 0 8-8V9a3.95 3.95 0 0 0-1.138-2.773Z"
+                                                        fill-rule="evenodd"
+                                                      ></path>
+                                                    </svg>
+                                                  </div>
+                                                </button>
+                                              </div>
+                                            </div>
+                                          </div>
                                         </>
                                       ) : (
                                         <>
@@ -544,7 +628,6 @@ export default function NewPost() {
                                           <div role="presentation">
                                             <div
                                               style={{
-                                                // ...calWidthHeight(),
                                                 ...calculateImgSize(),
                                                 alignItems: "center",
                                                 display: "flex",
@@ -557,7 +640,6 @@ export default function NewPost() {
                                                 className={styles.ImageDiv}
                                                 src={`${preview[0]}`}
                                                 style={{
-                                                  // ...calWidthHeight(),
                                                   ...calculateImgSize(),
                                                 }}
                                               ></img>
@@ -571,17 +653,7 @@ export default function NewPost() {
                               ) : (
                                 <>
                                   <div className={styles.ModalBodyInnerDiv}>
-                                    <div
-                                      className={styles.ModalBodyInnerDiv2}
-                                      // onDragOver={(e) => {
-                                      //   e.preventDefault();
-                                      //   handleDragEnter(e);
-                                      // }}
-                                      // onDragLeave={(e) => {
-                                      //   e.preventDefault();
-                                      //   handleDragLeave(e);
-                                      // }}
-                                    >
+                                    <div className={styles.ModalBodyInnerDiv2}>
                                       <svg
                                         aria-label="이미지나 동영상과 같은 미디어를 나타내는 아이콘"
                                         className={styles.ModalBodySvg}
@@ -677,42 +749,113 @@ export default function NewPost() {
                                 <div className={styles.rightBody3}>
                                   <div>
                                     <div className={styles.bodyInnerText}>
-                                      <div className={styles.profileArea}></div>
+                                      <div className={styles.profileArea}>
+                                        <div className={styles.profileArea2}>
+                                          <div className={styles.profileArea3}>
+                                            <div
+                                              className={styles.profileArea4}
+                                            >
+                                              <div
+                                                className={styles.profileArea5}
+                                              >
+                                                <div
+                                                  className={
+                                                    styles.profileArea6
+                                                  }
+                                                >
+                                                  <div
+                                                    className={
+                                                      styles.profileImgArea
+                                                    }
+                                                  >
+                                                    <div
+                                                      className={
+                                                        styles.profileImgArea2
+                                                      }
+                                                    >
+                                                      <span
+                                                        className={
+                                                          styles.profileImgArea3
+                                                        }
+                                                        style={{
+                                                          height: "28px",
+                                                          width: "28px",
+                                                        }}
+                                                        role="link"
+                                                        tabIndex={-1}
+                                                      >
+                                                        <img
+                                                          className={
+                                                            styles.profileImgArea4
+                                                          }
+                                                          // alt={`${my.name}님의 프로필사진`}
+                                                          // src={`${my.profile.link}`}
+                                                          crossOrigin="anonymous"
+                                                          draggable="false"
+                                                          src={"/chi.png"}
+                                                        ></img>
+                                                      </span>
+                                                    </div>
+                                                  </div>
+                                                  <div
+                                                    className={
+                                                      styles.profileIdArea
+                                                    }
+                                                  >
+                                                    <div
+                                                      className={
+                                                        styles.profileIdArea2
+                                                      }
+                                                    >
+                                                      <div
+                                                        className={
+                                                          styles.profileIdArea3
+                                                        }
+                                                      >
+                                                        <span
+                                                          dir="auto"
+                                                          style={{
+                                                            lineHeight: "18px",
+                                                          }}
+                                                          className={
+                                                            styles.profileIdArea4
+                                                          }
+                                                        >
+                                                          <span
+                                                            className={
+                                                              styles.profileIdArea5
+                                                            }
+                                                          >
+                                                            {"testboy123"}
+                                                          </span>
+                                                        </span>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
                                       <div>
                                         <div className={styles.InnerTextArea}>
                                           <div className={styles.textHeader}>
-                                            <div
+                                            <textarea
                                               aria-label="문구를 입력하세요..."
                                               className={styles.textHeader2}
-                                              contentEditable="true"
-                                              suppressContentEditableWarning={
-                                                true
-                                              }
-                                              role="textbox"
-                                              spellCheck="true"
                                               tabIndex={0}
-                                              style={{
-                                                userSelect: "text",
-                                                whiteSpace: "pre-wrap",
-                                                wordBreak: "break-word",
-                                              }}
-                                            >
-                                              <p className={styles.textP}>
-                                                {textValue ? (
-                                                  <span>{textValue}</span>
-                                                ) : (
-                                                  <br />
-                                                )}
-                                              </p>
-                                            </div>
-                                            <div className={styles.textHeader3}>
-                                              {"문구를 입력하세요..."}
-                                            </div>
+                                              onInput={onTextChange}
+                                              value={textValue}
+                                              placeholder="문구를 입력하세요..."
+                                              maxLength={2200}
+                                            />
                                           </div>
                                           <div className={styles.textBody}>
                                             <div className={styles.textEmo}>
                                               <button
                                                 className={styles.EmoBtn}
+                                                onClick={onClickEmoticon}
                                                 type="button"
                                               >
                                                 <div className={styles.EmoBtn2}>
@@ -733,9 +876,388 @@ export default function NewPost() {
                                               <div
                                                 style={{
                                                   top: "5px",
-                                                  right: "5px",
+                                                  right: "0px",
                                                 }}
-                                              ></div>
+                                              >
+                                                {isClickedEmo && (
+                                                  <div
+                                                    aria-hidden="false"
+                                                    className={styles.EmoDiv}
+                                                  >
+                                                    <div
+                                                      className={styles.EmoDiv1}
+                                                      style={{ left: "10px" }}
+                                                    ></div>
+                                                    <div
+                                                      className={styles.EmoDiv2}
+                                                    >
+                                                      <div
+                                                        className={
+                                                          styles.EmoDiv3
+                                                        }
+                                                        style={{
+                                                          width: "265px",
+                                                          height: "140px",
+                                                        }}
+                                                      >
+                                                        <div
+                                                          className={
+                                                            styles.EmoDiv4
+                                                          }
+                                                        >
+                                                          <div
+                                                            className={
+                                                              styles.EmoDiv5
+                                                            }
+                                                            style={{
+                                                              width: "100%",
+                                                            }}
+                                                          >
+                                                            <span
+                                                              className={
+                                                                styles.EmoDiv6
+                                                              }
+                                                              style={{
+                                                                lineHeight:
+                                                                  "18px",
+                                                              }}
+                                                            >
+                                                              {
+                                                                "최고 인기 이모티콘"
+                                                              }
+                                                            </span>
+                                                          </div>
+                                                          <button
+                                                            className={
+                                                              styles.EmoButton
+                                                            }
+                                                          >
+                                                            <div
+                                                              className={
+                                                                styles.EmoButton2
+                                                              }
+                                                              style={{
+                                                                fontSize:
+                                                                  "18px",
+                                                                height: "18px",
+                                                                margin: "8px",
+                                                                width: "25px",
+                                                              }}
+                                                              onClick={
+                                                                addEmoticon
+                                                              }
+                                                            >
+                                                              😂
+                                                            </div>
+                                                          </button>
+                                                          <button
+                                                            className={
+                                                              styles.EmoButton
+                                                            }
+                                                          >
+                                                            <div
+                                                              className={
+                                                                styles.EmoButton2
+                                                              }
+                                                              style={{
+                                                                fontSize:
+                                                                  "18px",
+                                                                height: "18px",
+                                                                margin: "8px",
+                                                                width: "25px",
+                                                              }}
+                                                              onClick={
+                                                                addEmoticon
+                                                              }
+                                                            >
+                                                              😮
+                                                            </div>
+                                                          </button>
+                                                          <button
+                                                            className={
+                                                              styles.EmoButton
+                                                            }
+                                                          >
+                                                            <div
+                                                              className={
+                                                                styles.EmoButton2
+                                                              }
+                                                              style={{
+                                                                fontSize:
+                                                                  "18px",
+                                                                height: "18px",
+                                                                margin: "8px",
+                                                                width: "25px",
+                                                              }}
+                                                              onClick={
+                                                                addEmoticon
+                                                              }
+                                                            >
+                                                              😍
+                                                            </div>
+                                                          </button>
+                                                          <button
+                                                            className={
+                                                              styles.EmoButton
+                                                            }
+                                                          >
+                                                            <div
+                                                              className={
+                                                                styles.EmoButton2
+                                                              }
+                                                              style={{
+                                                                fontSize:
+                                                                  "18px",
+                                                                height: "18px",
+                                                                margin: "8px",
+                                                                width: "25px",
+                                                              }}
+                                                              onClick={
+                                                                addEmoticon
+                                                              }
+                                                            >
+                                                              😢
+                                                            </div>
+                                                          </button>
+                                                          <button
+                                                            className={
+                                                              styles.EmoButton
+                                                            }
+                                                          >
+                                                            <div
+                                                              className={
+                                                                styles.EmoButton2
+                                                              }
+                                                              style={{
+                                                                fontSize:
+                                                                  "18px",
+                                                                height: "18px",
+                                                                margin: "8px",
+                                                                width: "25px",
+                                                              }}
+                                                              onClick={
+                                                                addEmoticon
+                                                              }
+                                                            >
+                                                              👏
+                                                            </div>
+                                                          </button>
+                                                          <button
+                                                            className={
+                                                              styles.EmoButton
+                                                            }
+                                                          >
+                                                            <div
+                                                              className={
+                                                                styles.EmoButton2
+                                                              }
+                                                              style={{
+                                                                fontSize:
+                                                                  "18px",
+                                                                height: "18px",
+                                                                margin: "8px",
+                                                                width: "25px",
+                                                              }}
+                                                              onClick={
+                                                                addEmoticon
+                                                              }
+                                                            >
+                                                              🔥
+                                                            </div>
+                                                          </button>
+                                                          <button
+                                                            className={
+                                                              styles.EmoButton
+                                                            }
+                                                          >
+                                                            <div
+                                                              className={
+                                                                styles.EmoButton2
+                                                              }
+                                                              style={{
+                                                                fontSize:
+                                                                  "18px",
+                                                                height: "18px",
+                                                                margin: "8px",
+                                                                width: "25px",
+                                                              }}
+                                                              onClick={
+                                                                addEmoticon
+                                                              }
+                                                            >
+                                                              🎉
+                                                            </div>
+                                                          </button>
+                                                          <button
+                                                            className={
+                                                              styles.EmoButton
+                                                            }
+                                                          >
+                                                            <div
+                                                              className={
+                                                                styles.EmoButton2
+                                                              }
+                                                              style={{
+                                                                fontSize:
+                                                                  "18px",
+                                                                height: "18px",
+                                                                margin: "8px",
+                                                                width: "25px",
+                                                              }}
+                                                              onClick={
+                                                                addEmoticon
+                                                              }
+                                                            >
+                                                              💯
+                                                            </div>
+                                                          </button>
+                                                          <button
+                                                            className={
+                                                              styles.EmoButton
+                                                            }
+                                                          >
+                                                            <div
+                                                              className={
+                                                                styles.EmoButton2
+                                                              }
+                                                              style={{
+                                                                fontSize:
+                                                                  "18px",
+                                                                height: "18px",
+                                                                margin: "8px",
+                                                                width: "25px",
+                                                              }}
+                                                              onClick={
+                                                                addEmoticon
+                                                              }
+                                                            >
+                                                              ❤️
+                                                            </div>
+                                                          </button>
+                                                          <button
+                                                            className={
+                                                              styles.EmoButton
+                                                            }
+                                                          >
+                                                            <div
+                                                              className={
+                                                                styles.EmoButton2
+                                                              }
+                                                              style={{
+                                                                fontSize:
+                                                                  "18px",
+                                                                height: "18px",
+                                                                margin: "8px",
+                                                                width: "25px",
+                                                              }}
+                                                              onClick={
+                                                                addEmoticon
+                                                              }
+                                                            >
+                                                              🤣
+                                                            </div>
+                                                          </button>
+                                                          <button
+                                                            className={
+                                                              styles.EmoButton
+                                                            }
+                                                          >
+                                                            <div
+                                                              className={
+                                                                styles.EmoButton2
+                                                              }
+                                                              style={{
+                                                                fontSize:
+                                                                  "18px",
+                                                                height: "18px",
+                                                                margin: "8px",
+                                                                width: "25px",
+                                                              }}
+                                                              onClick={
+                                                                addEmoticon
+                                                              }
+                                                            >
+                                                              🥰
+                                                            </div>
+                                                          </button>
+                                                          <button
+                                                            className={
+                                                              styles.EmoButton
+                                                            }
+                                                          >
+                                                            <div
+                                                              className={
+                                                                styles.EmoButton2
+                                                              }
+                                                              style={{
+                                                                fontSize:
+                                                                  "18px",
+                                                                height: "18px",
+                                                                margin: "8px",
+                                                                width: "25px",
+                                                              }}
+                                                              onClick={
+                                                                addEmoticon
+                                                              }
+                                                            >
+                                                              😘
+                                                            </div>
+                                                          </button>
+                                                          <button
+                                                            className={
+                                                              styles.EmoButton
+                                                            }
+                                                          >
+                                                            <div
+                                                              className={
+                                                                styles.EmoButton2
+                                                              }
+                                                              style={{
+                                                                fontSize:
+                                                                  "18px",
+                                                                height: "18px",
+                                                                margin: "8px",
+                                                                width: "25px",
+                                                              }}
+                                                              onClick={
+                                                                addEmoticon
+                                                              }
+                                                            >
+                                                              😭
+                                                            </div>
+                                                          </button>
+                                                          <button
+                                                            className={
+                                                              styles.EmoButton
+                                                            }
+                                                          >
+                                                            <div
+                                                              className={
+                                                                styles.EmoButton2
+                                                              }
+                                                              style={{
+                                                                fontSize:
+                                                                  "18px",
+                                                                height: "18px",
+                                                                margin: "8px",
+                                                                width: "25px",
+                                                              }}
+                                                              onClick={
+                                                                addEmoticon
+                                                              }
+                                                            >
+                                                              😊
+                                                            </div>
+                                                          </button>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      className={styles.EmoDiv7}
+                                                    ></div>
+                                                  </div>
+                                                )}
+                                              </div>
                                             </div>
                                             <div className={styles.textEnter}>
                                               <span
@@ -758,7 +1280,7 @@ export default function NewPost() {
                                                         styles.textEnterSpan3
                                                       }
                                                     >
-                                                      0
+                                                      {textValue.length}
                                                     </span>
                                                     /
                                                     <span
@@ -775,21 +1297,461 @@ export default function NewPost() {
                                           </div>
                                         </div>
                                       </div>
+                                      <div className={styles.locationDiv}>
+                                        <div className={styles.locationDiv2}>
+                                          <label
+                                            className={styles.locationDiv3}
+                                            style={{ height: "44px" }}
+                                          >
+                                            <input
+                                              autoComplete="off"
+                                              spellCheck="true"
+                                              type="text"
+                                              name="creation-location-input"
+                                              placeholder="위치 추가"
+                                              className={styles.locationInput}
+                                            ></input>
+                                            <div
+                                              className={styles.locationSvgDiv}
+                                            >
+                                              <svg
+                                                aria-label="위치 추가"
+                                                className={styles.locationSvg}
+                                                fill="currentColor"
+                                                height="16"
+                                                role="img"
+                                                viewBox="0 0 24 24"
+                                                width="16"
+                                              >
+                                                <title>위치 추가</title>
+                                                <path d="M12.053 8.105a1.604 1.604 0 1 0 1.604 1.604 1.604 1.604 0 0 0-1.604-1.604Zm0-7.105a8.684 8.684 0 0 0-8.708 8.66c0 5.699 6.14 11.495 8.108 13.123a.939.939 0 0 0 1.2 0c1.969-1.628 8.109-7.424 8.109-13.123A8.684 8.684 0 0 0 12.053 1Zm0 19.662C9.29 18.198 5.345 13.645 5.345 9.66a6.709 6.709 0 0 1 13.417 0c0 3.985-3.944 8.538-6.709 11.002Z"></path>
+                                              </svg>
+                                            </div>
+                                          </label>
+                                        </div>
+                                      </div>
+                                      <div className={styles.AccessibilityDiv}>
+                                        <div
+                                          className={styles.AccessibilityDiv2}
+                                          tabIndex={0}
+                                          aria-disabled="false"
+                                          role="button"
+                                          style={{ cursor: "pointer" }}
+                                          onClick={onClickAccExpand}
+                                        >
+                                          <span
+                                            className={styles.AccessibilitySpan}
+                                            style={{
+                                              lineHeight: "20px",
+                                            }}
+                                          >
+                                            {"접근성"}
+                                          </span>
+                                          <span
+                                            style={{
+                                              display: "inline",
+                                              transform: isAccExpand
+                                                ? "rotate(0deg)"
+                                                : "rotate(180deg)",
+                                            }}
+                                          >
+                                            <svg
+                                              aria-label={
+                                                isAccExpand
+                                                  ? "위쪽 V자형 아이콘"
+                                                  : "아래쪽 V자형 아이콘"
+                                              }
+                                              className={
+                                                styles.AccessibilitySvg
+                                              }
+                                              fill="currentColor"
+                                              height="16"
+                                              role="img"
+                                              viewBox="0 0 24 24"
+                                              width="16"
+                                            >
+                                              <title>
+                                                {isAccExpand
+                                                  ? "위쪽 V자형 아이콘"
+                                                  : "아래쪽 V자형 아이콘"}
+                                              </title>
+                                              <path d="M21 17.502a.997.997 0 0 1-.707-.293L12 8.913l-8.293 8.296a1 1 0 1 1-1.414-1.414l9-9.004a1.03 1.03 0 0 1 1.414 0l9 9.004A1 1 0 0 1 21 17.502Z"></path>
+                                            </svg>
+                                          </span>
+                                        </div>
+                                        {isAccExpand && (
+                                          <div className={styles.AccExpandDiv}>
+                                            <span
+                                              className={styles.AccExpandSpan}
+                                              style={{ lineHeight: "16px" }}
+                                            >
+                                              {
+                                                "대체 텍스트는 시각적으로 사진을 보기 어려운 사람들에게 사진 내용을 설명하는 텍스트입니다. 대체 텍스트는 회원님의 사진에 대해 자동으로 생성되며, 직접 입력할 수도 있습니다."
+                                              }
+                                            </span>
+                                            <div
+                                              className={styles.AccExpandDiv2}
+                                            >
+                                              {preview.map((pdata, index) => (
+                                                <>
+                                                  <div
+                                                    className={
+                                                      styles.AccExpandDiv3
+                                                    }
+                                                  >
+                                                    <div
+                                                      className={
+                                                        styles.AccExpandDiv4
+                                                      }
+                                                      style={{
+                                                        width: "44px",
+                                                        height: "44px",
+                                                      }}
+                                                    >
+                                                      <div
+                                                        className={
+                                                          styles.AccExpandDiv5
+                                                        }
+                                                        style={{
+                                                          width: "100%",
+                                                          height: "100%",
+                                                        }}
+                                                      >
+                                                        <img
+                                                          src={`${preview[index]}`}
+                                                          className={
+                                                            styles.AccExpandImg
+                                                          }
+                                                          style={{
+                                                            height: "44px",
+                                                            transform:
+                                                              "translateX(0px) translateY(0px) scale(1)",
+                                                            transition:
+                                                              "none 0s ease 0s",
+                                                            width: "66.7586px",
+                                                          }}
+                                                        ></img>
+                                                      </div>
+                                                    </div>
+                                                    <div
+                                                      className={
+                                                        styles.AccExpandDiv6
+                                                      }
+                                                    >
+                                                      <input
+                                                        className={
+                                                          styles.AccExpandInput
+                                                        }
+                                                        placeholder="대체 텍스트 입력..."
+                                                        type="text"
+                                                        spellCheck="true"
+                                                        name="alt-text"
+                                                      ></input>
+                                                    </div>
+                                                  </div>
+                                                </>
+                                              ))}
+                                            </div>
+                                          </div>
+                                        )}
+                                      </div>
+                                      <div className={styles.AccessibilityDiv}>
+                                        <div
+                                          className={styles.AccessibilityDiv2}
+                                          aria-disabled="false"
+                                          role="button"
+                                          tabIndex={0}
+                                          style={{ cursor: "pointer" }}
+                                          onClick={onClickSettingExpand}
+                                        >
+                                          <span
+                                            className={styles.AccessibilitySpan}
+                                            style={{
+                                              lineHeight: "20px",
+                                            }}
+                                          >
+                                            {"고급 설정"}
+                                          </span>
+                                          <span
+                                            style={{
+                                              display: "inline",
+                                              transform: isSettingExpand
+                                                ? "rotate(0deg)"
+                                                : "rotate(180deg)",
+                                            }}
+                                          >
+                                            <svg
+                                              aria-label={
+                                                isSettingExpand
+                                                  ? "위쪽 V자형 아이콘"
+                                                  : "아래쪽 V자형 아이콘"
+                                              }
+                                              className={
+                                                styles.AccessibilitySvg
+                                              }
+                                              fill="currentColor"
+                                              height="16"
+                                              role="img"
+                                              viewBox="0 0 24 24"
+                                              width="16"
+                                            >
+                                              <title>
+                                                {isSettingExpand
+                                                  ? "위쪽 V자형 아이콘"
+                                                  : "아래쪽 V자형 아이콘"}
+                                              </title>
+                                              <path d="M21 17.502a.997.997 0 0 1-.707-.293L12 8.913l-8.293 8.296a1 1 0 1 1-1.414-1.414l9-9.004a1.03 1.03 0 0 1 1.414 0l9 9.004A1 1 0 0 1 21 17.502Z"></path>
+                                            </svg>
+                                          </span>
+                                        </div>
+                                        {isSettingExpand && (
+                                          <div
+                                            className={styles.ExpandSettingDiv}
+                                          >
+                                            <div
+                                              className={
+                                                styles.ExpandSettingDiv2
+                                              }
+                                            >
+                                              <div
+                                                className={
+                                                  styles.ExpandSettingDiv3
+                                                }
+                                              >
+                                                <div
+                                                  className={
+                                                    styles.ExpandSettingDiv5
+                                                  }
+                                                  style={{ width: "100%" }}
+                                                >
+                                                  <div
+                                                    className={
+                                                      styles.ExpandSettingDiv6
+                                                    }
+                                                  >
+                                                    <div
+                                                      className={
+                                                        styles.ExpandSettingDiv7
+                                                      }
+                                                    >
+                                                      <span
+                                                        className={
+                                                          styles.ExpandSettingSpan
+                                                        }
+                                                        style={{
+                                                          lineHeight: "20px",
+                                                        }}
+                                                      >
+                                                        {
+                                                          "이 게시물의 좋아요 수 및 조회수 숨기기"
+                                                        }
+                                                      </span>
+                                                    </div>
+                                                    <div
+                                                      className={
+                                                        styles.ExpandSettingDivBtn
+                                                      }
+                                                    >
+                                                      <div
+                                                        className={
+                                                          styles.ExpandSettingDivBtn2
+                                                        }
+                                                        onClick={
+                                                          onClickArticleInfoHide
+                                                        }
+                                                      >
+                                                        {isArticleInfoHide ? (
+                                                          <>
+                                                            <div
+                                                              className={
+                                                                styles.ExpandSettingDivBtn6
+                                                              }
+                                                            ></div>
+                                                            <div
+                                                              className={
+                                                                styles.ExpandSettingDivBtn7
+                                                              }
+                                                            ></div>
+                                                            <input
+                                                              dir="ltr"
+                                                              aria-checked="false"
+                                                              role="switch"
+                                                              type="checkbox"
+                                                              className={
+                                                                styles.ExpandSettingDivBtn5
+                                                              }
+                                                            ></input>
+                                                          </>
+                                                        ) : (
+                                                          <>
+                                                            <div
+                                                              className={
+                                                                styles.ExpandSettingDivBtn3
+                                                              }
+                                                            ></div>
+                                                            <div
+                                                              className={
+                                                                styles.ExpandSettingDivBtn4
+                                                              }
+                                                            ></div>
+                                                            <input
+                                                              dir="ltr"
+                                                              aria-checked="false"
+                                                              role="switch"
+                                                              type="checkbox"
+                                                              className={
+                                                                styles.ExpandSettingDivBtn5
+                                                              }
+                                                            ></input>
+                                                          </>
+                                                        )}
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                  <div
+                                                    className={
+                                                      styles.ExpandSettingDiv9
+                                                    }
+                                                  >
+                                                    <span
+                                                      className={
+                                                        styles.ExpandSettingDiv10
+                                                      }
+                                                      style={{
+                                                        lineHeight: "16px",
+                                                      }}
+                                                    >
+                                                      {
+                                                        "이 게시물의 총 좋아요 및 조회수는 회원님만 볼 수 있습니다. 나중에 게시물 상단에 있는 ··· 메뉴에서 이 설정을 변경할 수 있습니다. 다른 사람의 게시물에서 좋아요 수를 숨기려면 계정 설정으로 이동하세요."
+                                                      }
+                                                    </span>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div
+                                                className={
+                                                  styles.ExpandCommentDiv
+                                                }
+                                                style={{ width: "100%" }}
+                                              >
+                                                <div
+                                                  className={
+                                                    styles.ExpandCommentDiv2
+                                                  }
+                                                >
+                                                  <div
+                                                    className={
+                                                      styles.ExpandCommentText
+                                                    }
+                                                  >
+                                                    <span
+                                                      style={{
+                                                        lineHeight: "20px",
+                                                      }}
+                                                      className={
+                                                        styles.ExpandCommentText2
+                                                      }
+                                                    >
+                                                      {"댓글 기능 해제"}
+                                                    </span>
+                                                  </div>
+                                                  <div
+                                                    className={
+                                                      styles.ExpandCommentSwitch
+                                                    }
+                                                  >
+                                                    <div
+                                                      className={
+                                                        styles.ExpandCommentSwitch2
+                                                      }
+                                                      onClick={
+                                                        onClickCommentHide
+                                                      }
+                                                    >
+                                                      {isCommentHide ? (
+                                                        <>
+                                                          <div
+                                                            className={
+                                                              styles.ExpandCommentSwitch3
+                                                            }
+                                                          ></div>
+                                                          <div
+                                                            className={
+                                                              styles.ExpandCommentSwitch4
+                                                            }
+                                                          ></div>
+                                                          <input
+                                                            dir="ltr"
+                                                            aria-checked="false"
+                                                            role="switch"
+                                                            type="checkbox"
+                                                            className={
+                                                              styles.ExpandCommentSwitch5
+                                                            }
+                                                          ></input>
+                                                        </>
+                                                      ) : (
+                                                        <>
+                                                          <div
+                                                            className={
+                                                              styles.ExpandCommentSwitch6
+                                                            }
+                                                          ></div>
+                                                          <div
+                                                            className={
+                                                              styles.ExpandCommentSwitch7
+                                                            }
+                                                          ></div>
+                                                          <input
+                                                            dir="ltr"
+                                                            aria-checked="false"
+                                                            role="switch"
+                                                            type="checkbox"
+                                                            className={
+                                                              styles.ExpandSettingDivBtn5
+                                                            }
+                                                          ></input>
+                                                        </>
+                                                      )}
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <div
+                                                  className={
+                                                    styles.ExpandCommentDiv3
+                                                  }
+                                                >
+                                                  <span
+                                                    style={{
+                                                      lineHeight: "16px",
+                                                    }}
+                                                    className={
+                                                      styles.ExpandCommentDiv4
+                                                    }
+                                                  >
+                                                    {
+                                                      "나중에 게시물 상단의 메뉴(···)에서 이 설정을 변경할 수 있습니다."
+                                                    }
+                                                  </span>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        )}
+                                      </div>
+                                      {!isSettingExpand && (
+                                        <hr className={styles.UnderHr}></hr>
+                                      )}
+                                    </div>
+                                    <div className={styles.bodyUnder}>
+                                      <span
+                                        className={styles.bodyUnder2}
+                                      ></span>
                                     </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
-                            {/* <div
-                              className={styles.ModalBodyUnderDiv}
-                              style={{ opacity: "1" }}
-                            >
-                              <div className={styles.ModalBodyUnderDiv2}>
-                                <div
-                                  className={styles.ModalBodyUnderDiv3}
-                                ></div>
-                              </div>
-                            </div> */}
                           </div>
                         </div>
                       </div>
@@ -801,6 +1763,77 @@ export default function NewPost() {
           </div>
         </div>
       </div>
+      {isClickedExitBtn && (
+        <div>
+          <div>
+            <div className={styles.ExitBtn}>
+              <div className={styles.ExitBtn2}>
+                <div className={styles.ExitBtn3}>
+                  <div className={styles.ExitBtn4}></div>
+                  <div className={styles.ExitBtn5} tabIndex={-1}>
+                    <div className={styles.ExitBtn6}>
+                      <div className={styles.ExitBtn7}>
+                        <div className={styles.ExitBtn8} role="dialog">
+                          <div className={styles.ExitBtn9}>
+                            <div className={styles.ExitBtnModal} role="dialog">
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  height: "100%",
+                                  maxWidth: "100%",
+                                }}
+                              >
+                                <div className={styles.ExitBtnModal2}>
+                                  <div className={styles.ExitBtnModalHeader}>
+                                    <span
+                                      className={styles.ExitBtnModalHeader2}
+                                      dir="auto"
+                                      style={{ lineHeight: "25px" }}
+                                    >
+                                      {"게시물을 삭제하시겠어요?"}
+                                    </span>
+                                    <span
+                                      className={styles.ExitBtnModalHeader3}
+                                      dir="auto"
+                                      style={{ lineHeight: "25px" }}
+                                    >
+                                      {
+                                        "지금 나가면 수정 내용이 저장되지 않습니다."
+                                      }
+                                    </span>
+                                  </div>
+                                  <div
+                                    className={styles.ExitBtnModalBody}
+                                    style={{ lineHeight: "18px" }}
+                                  >
+                                    <button
+                                      className={styles.ExitBtnBtn}
+                                      onClick={onRemovePreview}
+                                    >
+                                      삭제
+                                    </button>
+                                    <button
+                                      className={styles.ExitBtnBtn2}
+                                      onClick={onClickExitBtn}
+                                    >
+                                      취소
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

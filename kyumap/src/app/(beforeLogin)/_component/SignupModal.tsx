@@ -53,12 +53,12 @@ export default function SignupModal() {
                 />
               </div>
               <div className={styles.inputDiv}>
-                <label className={styles.inputLabel} htmlFor="nickname">
+                <label className={styles.inputLabel} htmlFor="name">
                   닉네임
                 </label>
                 <input
-                  id="nickname"
-                  name="nickname"
+                  id="name"
+                  name="name"
                   className={styles.input}
                   type="text"
                   placeholder=""

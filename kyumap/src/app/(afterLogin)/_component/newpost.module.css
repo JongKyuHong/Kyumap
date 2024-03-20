@@ -14,6 +14,20 @@
   z-index: 0;
 }
 
+.ModalInnerDivExitBtn {
+  left: 0px;
+  overflow-x: auto;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  top: 0;
+  position: fixed;
+  box-sizing: border-box;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  z-index: 0;
+}
+
 .ModalInnerDiv2 {
   min-height: 100vh;
   flex-direction: column;
@@ -1239,6 +1253,66 @@
   vertical-align: baseline;
 }
 
+.bodyUnder {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  margin-right: 16px;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  position: static;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  margin-left: 16px;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.bodyUnder2 {
+  line-height: 12px;
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-weight: 400;
+  font-size: var(--system-10-font-size);
+  text-align: left;
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  color: rgb(var(--ig-secondary-text));
+  position: relative;
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  margin-left: 0 !important;
+  word-break: break-word;
+}
+
+.bodyUnder2::before {
+  margin-top: -2px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.bodyUnder2::after {
+  margin-top: -3px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
 .profileArea {
   overflow-y: visible;
   overflow-x: visible;
@@ -1259,6 +1333,265 @@
   flex-grow: 0;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+}
+
+.profileArea2 {
+  align-items: stretch;
+  border: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  font: inherit;
+  font-size: 100%;
+  margin: 0;
+  margin-bottom: 14px;
+  margin-top: 18px;
+  padding: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+.profileArea3 {
+  width: 100%;
+  max-width: 100%;
+  border-bottom-right-radius: unset;
+  border-bottom-left-radius: unset;
+  display: block;
+  border-top-left-radius: unset;
+  border-top-right-radius: unset;
+}
+
+.profileArea4 {
+  overflow-y: visible;
+  padding-top: 0;
+  overflow-x: visible;
+  padding-bottom: 0;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  padding-left: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  padding-right: 0;
+  flex-shrink: 0;
+  position: static;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.profileArea5 {
+  min-width: 0;
+  justify-content: center;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  align-items: stretch;
+  position: relative;
+  z-index: 0;
+  flex-grow: 1;
+}
+
+.profileArea6 {
+  flex-wrap: nowrap;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  justify-content: space-between;
+  flex-direction: row;
+  position: relative;
+  z-index: 0;
+}
+
+.profileImgArea {
+  min-width: 0;
+  max-width: 100%;
+  flex-direction: column;
+  align-self: center;
+  box-sizing: border-box;
+  display: flex;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 0;
+}
+
+.profileImgArea2 {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  margin-right: 12px;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  position: static;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.profileImgArea3 {
+  overflow-x: hidden;
+  overflow-y: hidden;
+  border-bottom-left-radius: 50%;
+  border-top-right-radius: 50%;
+  background-color: rgb(var(--ig-secondary-background));
+  box-sizing: border-box;
+  flex-shrink: 0;
+  position: relative;
+  display: block;
+  border-bottom-right-radius: 50%;
+  border-top-left-radius: 50%;
+}
+
+.profileImgArea3::after {
+  bottom: 0;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  top: 0;
+  border-bottom-color: rgba(var(--web-always-black), 0.0975);
+  border-top-color: rgba(var(--web-always-black), 0.0975);
+  border-top-style: solid;
+  border-bottom-left-radius: 50%;
+  border-top-width: 1px;
+  border-right-style: solid;
+  border-bottom-right-radius: 50%;
+  border-right-color: rgba(var(--web-always-black), 0.0975);
+  border-left-color: rgba(var(--web-always-black), 0.0975);
+  pointer-events: none;
+  border-top-right-radius: 50%;
+  content: "";
+  right: 0;
+  position: absolute;
+  border-left-style: solid;
+  border-top-left-radius: 50%;
+  left: 0;
+  border-right-width: 1px;
+  border-left-width: 1px;
+}
+
+.profileImgArea4 {
+  width: 100%;
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  height: 100%;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  -webkit-touch-callout: none;
+  border-left-width: 0;
+  object-fit: cover;
+  padding-left: 0;
+  font-size: 100%;
+  border-right-width: 0;
+  border-top-width: 0;
+  padding-right: 0;
+  margin-left: 0;
+  vertical-align: baseline;
+  margin-right: 0;
+  border: 0;
+}
+
+.profileIdArea {
+  min-width: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+  position: relative;
+  z-index: 0;
+  flex-grow: 1;
+  flex-wrap: wrap;
+}
+
+.profileIdArea2 {
+  min-width: 0;
+  max-width: 100%;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 0;
+  flex-grow: 1;
+}
+
+.profileIdArea3 {
+  overflow-y: visible;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  position: static;
+  align-self: auto;
+  justify-content: flex-start;
+  flex-grow: 1;
+  align-items: flex-start;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.profileIdArea4 {
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-size: var(--system-14-font-size);
+  color: rgb(var(--ig-primary-text));
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  font-weight: 600;
+  position: relative;
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  margin-left: 0 !important;
+  word-break: break-word;
+}
+
+.profileIdArea4::before {
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.profileIdArea4::after {
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.profileIdArea5 {
+  overflow-x: hidden;
+  max-width: 100%;
+  overflow-y: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
 }
 
 .InnerTextArea {
@@ -1291,10 +1624,8 @@
 .textHeader2 {
   overflow-x: auto;
   width: 100%;
-  min-height: 168px;
   margin-top: 0;
   margin-bottom: 0;
-  max-height: 168px;
   overflow-y: auto;
   font-size: var(--system-16-font-size);
   color: rgb(var(--ig-primary-text));
@@ -1305,6 +1636,11 @@
   margin-left: 0;
   tab-size: 1;
   margin-right: 0;
+  min-height: 168px;
+  max-height: 168px;
+  border: none;
+  outline: none;
+  resize: none;
 }
 
 .textHeader3 {
@@ -1782,4 +2118,1607 @@
   height: 6px;
   transition: all 0.2s ease-in-out;
   width: 6px;
+}
+
+.EmoDiv {
+  z-index: 3;
+  transform: translateY(0);
+  border-top-left-radius: 6px;
+  background-color: rgb(var(--ig-banner-background));
+  border-top-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+  filter: drop-shadow(0 0 5px rgba(var(--web-always-black), 0.0975));
+  border-bottom-right-radius: 6px;
+  opacity: 1;
+  transform-origin: top center;
+  position: absolute;
+  transition: opacity 0.075s linear, transform 0.038s ease-out;
+}
+
+.EmoDiv1 {
+  border-bottom-width: 1px;
+  bottom: -10px;
+  border-bottom-color: rgb(var(--ig-elevated-background));
+  height: 20px;
+  border-bottom-style: solid;
+  top: -10px;
+  width: 15px;
+  border-left-width: 1px;
+  border-right-style: solid;
+  border-right-width: 1px;
+  background-color: rgb(var(--ig-banner-background));
+  clip-path: path(
+    "M8 0C8 4 9.32406e-08 7.819 1.25211e-07 10.5C1.57188e-07 13.1815 8 17.0005 8 21L8 0Z"
+  );
+  border-left-style: solid;
+  border-right-color: rgb(var(--ig-elevated-background));
+  border-left-color: rgb(var(--ig-elevated-background));
+  border-top-color: rgb(var(--ig-elevated-background));
+  transform: rotate(90deg);
+  border-top-width: 1px;
+  border-top-style: solid;
+  position: absolute;
+}
+
+.EmoDiv2 {
+  width: 100%;
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  overflow-x: hidden;
+  height: 100%;
+  border-bottom-width: 0;
+  overflow-y: auto;
+  padding-bottom: 0;
+  border-left-width: 0;
+  padding-left: 0;
+  font-size: 100%;
+  border-top-left-radius: 6px;
+  background-color: rgb(var(--ig-banner-background));
+  flex-direction: column;
+  border-right-width: 0;
+  box-sizing: border-box;
+  border-top-width: 0;
+  display: flex;
+  padding-right: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  border-top-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+  position: relative;
+  margin-left: 0;
+  border-bottom-right-radius: 6px;
+  vertical-align: baseline;
+  margin-right: 0;
+}
+
+.EmoDiv3 {
+  overflow-y: visible;
+  margin-top: 8px;
+  overflow-x: visible;
+  margin-bottom: 8px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  margin-left: 8px;
+  margin-right: 8px;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.EmoDiv4 {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  flex-direction: row;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  flex-wrap: wrap;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.EmoDiv5 {
+  overflow-y: visible;
+  margin-top: 8px;
+  overflow-x: visible;
+  margin-bottom: 8px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  margin-left: 8px;
+  margin-right: 8px;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.EmoDiv6 {
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-size: var(--system-14-font-size);
+  text-align: left;
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  font-weight: 600;
+  color: rgb(var(--ig-secondary-text));
+  position: relative;
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  margin-left: 0 !important;
+  word-break: break-word;
+}
+
+.EmoDiv6::before {
+  margin-top: -3px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.EmoDiv6::after {
+  margin-top: -4px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.EmoDiv7 {
+  width: 100%;
+  padding-top: 0;
+  height: 8px;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-bottom-width: 0;
+  bottom: 0;
+  padding-bottom: 0;
+  border-top-right-radius: 20px;
+  border-left-width: 0;
+  padding-left: 0;
+  font-size: 100%;
+  flex-direction: column;
+  border-right-width: 0;
+  box-sizing: border-box;
+  border-top-width: 0;
+  display: flex;
+  padding-right: 0;
+  flex-shrink: 0;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  align-items: stretch;
+  margin-left: 0;
+  background-color: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0) 0,
+    rgb(var(--ig-elevated-background)) 100%
+  );
+  left: 0;
+  vertical-align: baseline;
+  margin-right: 0;
+  position: absolute;
+  border-top-left-radius: 20px;
+}
+
+.EmoButton {
+  border: 0;
+  color: rgb(var(--ig-primary-button));
+  display: inline-block;
+  padding: 0 !important;
+  position: relative;
+  text-align: center;
+  font-family: var(--font-family-system);
+  -webkit-appearance: none;
+  background: none;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: var(--font-weight-system-semibold);
+  pointer-events: auto;
+  text-overflow: ellipsis;
+  text-transform: inherit;
+  -webkit-user-select: none;
+  width: auto;
+  line-height: var(--system-14-line-height);
+  margin: 0;
+}
+
+.EmoButton2 {
+  align-items: center;
+  border: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  font: inherit;
+  font-size: 100%;
+  font-weight: normal;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+.ExitBtn {
+  z-index: 3;
+  position: relative;
+}
+
+.ExitBtn2 {
+  box-sizing: border-box;
+  position: relative;
+  z-index: 0;
+}
+
+.ExitBtn3 {
+  min-height: 100vh;
+  flex-direction: column;
+  display: flex;
+  position: relative;
+}
+
+.ExitBtn4 {
+  bottom: 0;
+  top: 0;
+  position: fixed;
+  right: 0;
+  background-color: var(--overlay-alpha-80);
+  left: 0;
+}
+
+.ExitBtn5 {
+  max-height: inherit;
+  min-width: inherit;
+  height: inherit;
+  min-height: inherit;
+  width: inherit;
+  max-width: inherit;
+  justify-content: inherit;
+  flex-grow: inherit;
+  align-content: inherit;
+  position: relative;
+  display: inherit;
+  align-items: inherit;
+  flex-direction: inherit;
+  flex-shrink: inherit;
+}
+
+.ExitBtn6 {
+  justify-content: center;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  align-items: stretch;
+  flex-grow: 1;
+}
+
+.ExitBtn7 {
+  min-width: 0;
+  min-height: 0;
+  justify-content: center;
+  box-sizing: border-box;
+  display: flex;
+  pointer-events: none;
+  align-items: flex-start;
+}
+
+.ExitBtn8 {
+  overflow-x: hidden;
+  overflow-y: hidden;
+  justify-content: center;
+  flex-direction: column;
+  display: flex;
+  pointer-events: all;
+  align-items: center;
+  position: relative;
+  z-index: 0;
+  box-sizing: content-box;
+  outline: none;
+}
+
+.ExitBtn9 {
+  margin-bottom: 20px;
+  margin-top: 20px;
+  max-height: calc(100% - 40px);
+  width: 260px;
+  animation-duration: 0.1s;
+  flex-shrink: 1;
+  margin-left: 20px;
+  animation-name: x1saec3i-B;
+  animation-timing-function: ease-out;
+  animation-iteration-count: 1;
+  position: relative;
+  margin-right: 20px;
+}
+
+@media (min-width: 736px) {
+  .ExitBtn9 {
+    width: 400px;
+  }
+}
+
+.ExitBtnModal {
+  overflow-x: auto;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  border-bottom-left-radius: var(--modal-border-radius);
+  border-top-left-radius: var(--modal-border-radius);
+  border-bottom-right-radius: var(--modal-border-radius);
+  background-color: rgb(var(--ig-elevated-background));
+  border-top-right-radius: var(--modal-border-radius);
+}
+
+.ExitBtnModal2 {
+  align-items: stretch;
+  border: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  font: inherit;
+  font-size: 100%;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+.ExitBtnModalHeader {
+  margin-top: calc(2 * var(--modal-padding));
+  align-items: stretch;
+  border: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  font: inherit;
+  font-size: 100%;
+  margin: calc(2 * var(--modal-padding)) calc(2 * var(--modal-padding))
+    var(--modal-padding) calc(2 * var(--modal-padding));
+  word-wrap: anywhere;
+  padding: 0;
+  position: relative;
+  text-align: center;
+  vertical-align: baseline;
+}
+
+.ExitBtnModalBody {
+  align-items: stretch;
+  border: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  font: inherit;
+  font-size: 100%;
+  margin: 0;
+  margin-top: var(--modal-padding);
+  padding: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+.ExitBtnModalHeader2 {
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-weight: 400;
+  color: rgb(var(--ig-primary-text));
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  position: relative;
+  font-size: var(--system-20-font-size);
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  margin-left: 0 !important;
+  word-break: break-word;
+}
+
+.ExitBtnModalHeader2::before {
+  margin-top: -4px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.ExitBtnModalHeader2::after {
+  margin-top: -6px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.ExitBtnModalHeader3 {
+  padding-top: 16px;
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-size: var(--system-14-font-size);
+  font-weight: 400;
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  color: rgb(var(--ig-secondary-text));
+  position: relative;
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  margin-left: 0 !important;
+  word-break: break-word;
+}
+
+.ExitBtnModalHeader3::before {
+  margin-top: -3px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.ExitBtnModalHeader3::after {
+  margin-top: -4px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.ExitBtnBtn {
+  color: rgb(var(--ig-error-or-destructive));
+  font-weight: var(--font-weight-system-bold);
+  font-family: var(--font-family-system);
+  background-color: transparent;
+  border-bottom: 0;
+  border-left: 0;
+  border-right: 0;
+  border-top: 1px solid rgb(var(--ig-elevated-separator));
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+  min-height: 48px;
+  padding: 4px 8px;
+  text-align: center;
+  -webkit-user-select: none;
+  vertical-align: middle;
+}
+
+.ExitBtnBtn2 {
+  border-bottom-left-radius: var(--modal-border-radius);
+  border-bottom-right-radius: var(--modal-border-radius);
+  color: rgb(var(--ig-primary-text));
+  font-family: var(--font-family-system);
+  background-color: transparent;
+  border-bottom: 0;
+  border-left: 0;
+  border-right: 0;
+  border-top: 1px solid rgb(var(--ig-elevated-separator));
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+  min-height: 48px;
+  padding: 4px 8px;
+  text-align: center;
+  -webkit-user-select: none;
+  vertical-align: middle;
+}
+
+.locationDiv {
+  border-top: 1px solid rgb(var(--ig-separator));
+  justify-content: center;
+  padding: 0 8px;
+}
+
+.locationDiv2 {
+  overflow-y: visible;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  position: static;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  flex-grow: 1;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.locationDiv3 {
+  background-color: transparent !important;
+  border: none;
+  color: rgb(var(--ig-primary-text)) !important;
+  fill: rgb(var(--ig-primary-text)) !important;
+  font-size: var(--system-16-font-size);
+  -webkit-text-fill-color: rgb(var(--ig-primary-text));
+  border-bottom-left-radius: var(--input-border-radius);
+  display: flex;
+  align-items: center;
+  padding-right: 8px;
+  border-top-right-radius: var(--input-border-radius);
+  justify-content: space-between;
+  position: relative;
+  border-top-left-radius: var(--input-border-radius);
+  flex-grow: 1;
+  border-bottom-right-radius: var(--input-border-radius);
+  outline: none !important;
+  cursor: default;
+  font-weight: 600;
+  vertical-align: middle;
+  font-family: var(--font-family-system);
+}
+
+.locationInput {
+  background-color: transparent !important;
+  border: none;
+  color: rgb(var(--ig-primary-text)) !important;
+  fill: rgb(var(--ig-primary-text)) !important;
+  font-size: var(--system-16-font-size);
+  -webkit-text-fill-color: rgb(var(--ig-primary-text));
+  overflow-y: visible;
+  padding-bottom: 4px;
+  width: 100%;
+  margin-top: 0;
+  margin-bottom: 0;
+  overflow-x: visible;
+  padding-top: 4px;
+  padding-right: 9px;
+  padding-left: 9px;
+  line-height: 30px;
+  border-bottom-left-radius: var(--input-border-radius);
+  border-top-right-radius: var(--input-border-radius);
+  margin-left: 0;
+  border-top-left-radius: var(--input-border-radius);
+  flex-grow: 1;
+  border-bottom-right-radius: var(--input-border-radius);
+  margin-right: 0;
+  outline: none !important;
+  font-weight: normal;
+  font-family: var(--font-family-system);
+}
+
+.locationSvgDiv {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  margin-left: 8px;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.locationSvg {
+  background-color: transparent !important;
+  border: none;
+  color: rgb(var(--ig-primary-text)) !important;
+  fill: rgb(var(--ig-primary-text)) !important;
+  font-size: var(--system-16-font-size);
+  -webkit-text-fill-color: rgb(var(--ig-primary-text));
+  position: relative;
+  display: block;
+}
+
+.AccessibilityDiv {
+  align-items: stretch;
+  border: 0;
+  border-top: 1px solid rgb(var(--ig-separator));
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  font: inherit;
+  font-size: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+.AccessibilityDiv2 {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 14px 16px;
+  -webkit-user-select: none;
+}
+
+.AccessibilitySpan {
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-weight: 400;
+  font-size: var(--system-16-font-size);
+  color: rgb(var(--ig-primary-text));
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  position: relative;
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  margin-left: 0 !important;
+  word-break: break-word;
+}
+
+.AccessibilitySpan::before {
+  margin-top: -3px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.AccessibilitySpan::after {
+  margin-top: -4px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.AccessibilitySvg {
+  color: rgb(var(--ig-primary-text));
+  position: relative;
+  display: block;
+}
+
+.SettingsDiv {
+  align-items: stretch;
+  border: 0;
+  border-top: 1px solid rgb(var(--ig-separator));
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  font: inherit;
+  font-size: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+.SettingsDiv2 {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 14px 16px;
+  -webkit-user-select: none;
+}
+
+.UnderHr {
+  height: 1px;
+  width: 100%;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-bottom-width: 0;
+  border-left-width: 0;
+  border-right-width: 0;
+  border-top-width: 0;
+  margin-left: 0;
+  background-color: rgb(var(--ig-separator));
+  margin-right: 0;
+  background-color: #dadde1;
+  color: #dadde1;
+}
+
+.AccExpandDiv {
+  overflow-y: visible;
+  padding-bottom: 4px;
+  overflow-x: visible;
+  padding-top: 4px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  padding-left: 16px;
+  align-items: stretch;
+  padding-right: 16px;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.AccExpandSpan {
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-weight: 400;
+  text-align: left;
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  color: rgb(var(--ig-secondary-text));
+  position: relative;
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  font-size: var(--system-12-font-size);
+  margin-left: 0 !important;
+  word-break: break-word;
+}
+
+.AccExpandSpan::before {
+  margin-top: -2px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.AccExpandSpan::after {
+  margin-top: -3px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.AccExpandDiv2 {
+  overflow-y: visible;
+  overflow-x: visible;
+  margin-bottom: 4px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.AccExpandDiv3 {
+  overflow-y: visible;
+  margin-bottom: 12px;
+  overflow-x: visible;
+  margin-top: 12px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  flex-direction: row;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.AccExpandDiv4 {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.AccExpandDiv5 {
+  overflow-x: hidden;
+  overflow-y: hidden;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  justify-content: center;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-self: auto;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.AccExpandImg {
+  align-items: stretch;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  font: inherit;
+  font-size: 100%;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+.AccExpandDiv6 {
+  overflow-y: visible;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 1;
+  margin-left: 8px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.AccExpandInput {
+  background: transparent;
+  border: 1px solid rgb(var(--ig-separator));
+  border-radius: var(--input-border-radius);
+  color: rgb(var(--ig-primary-text));
+  flex-grow: 1;
+  font-size: var(--system-14-font-size);
+  line-height: 30px;
+  margin: 0;
+  overflow: visible;
+  padding: 4px 12px;
+  text-align: left;
+}
+
+.ExpandSettingDiv {
+  overflow-y: visible;
+  padding-bottom: 4px;
+  overflow-x: visible;
+  padding-top: 4px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  padding-left: 16px;
+  align-items: stretch;
+  padding-right: 16px;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ExpandSettingDiv2 {
+  overflow-y: visible;
+  overflow-x: visible;
+  margin-bottom: 4px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ExpandSettingDiv3 {
+  overflow-y: visible;
+  overflow-x: visible;
+  margin-bottom: 8px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ExpandSettingDiv5 {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ExpandSettingDiv6 {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  justify-content: space-between;
+  flex-direction: row;
+  align-self: auto;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ExpandSettingDiv7 {
+  overflow-y: visible;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  position: static;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  flex-grow: 1;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ExpandSettingSpan {
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-weight: 400;
+  font-size: var(--system-16-font-size);
+  color: rgb(var(--ig-primary-text));
+  text-align: left;
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  position: relative;
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  margin-left: 0 !important;
+  word-break: break-word;
+}
+
+.ExpandSettingSpan::before {
+  margin-top: -3px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.ExpandSettingSpan::after {
+  margin-bottom: -4px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.ExpandSettingDivBtn {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  position: static;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ExpandSettingDivBtn2 {
+  height: 24px;
+  padding-top: 0;
+  overflow-x: hidden;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  overflow-y: hidden;
+  width: 40px;
+  border-top-right-radius: 16px;
+  border-left-width: 0;
+  padding-left: 0;
+  border-top-left-radius: 16px;
+  border-right-width: 0;
+  box-sizing: border-box;
+  border-top-width: 0;
+  padding-right: 0;
+  display: inline-block;
+  position: relative;
+  z-index: 0;
+  opacity: 1;
+  transition-duration: var(--fds-duration-extra-short-out);
+  transition-timing-function: var(--fds-animation-move-out);
+  background-color: rgb(var(--ig-toggle-background-off-prism));
+  transition-property: opacity;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  outline: none;
+}
+
+.ExpandSettingDivBtn3 {
+  bottom: 0;
+  top: 0;
+  opacity: 0;
+  right: 0;
+  box-sizing: border-box;
+  pointer-events: none;
+  z-index: 0;
+  transition-duration: var(--fds-duration-extra-short-out);
+  transition-timing-function: var(--fds-animation-move-out);
+  transition-property: opacity;
+  left: 0;
+  background-color: rgb(var(--ig-toggle-background-on-prism));
+  position: absolute;
+}
+
+.ExpandSettingDivBtn4 {
+  width: 20px;
+  top: 2px;
+  height: 20px;
+  border-top-right-radius: 14px;
+  background-color: rgb(var(--ig-stroke-prism));
+  border-top-left-radius: 14px;
+  border-bottom-left-radius: 14px;
+  left: 2px;
+  box-sizing: border-box;
+  border-bottom-right-radius: 14px;
+  pointer-events: none;
+  z-index: 0;
+  transition-duration: var(--fds-duration-extra-short-out);
+  transition-timing-function: var(--fds-animation-move-out);
+  transition-property: transform;
+  position: absolute;
+}
+
+.ExpandSettingDivBtn5 {
+  width: 100%;
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  height: 100%;
+  padding-bottom: 0;
+  top: 0;
+  padding-left: 0;
+  touch-action: manipulation;
+  box-sizing: border-box;
+  padding-right: 0;
+  cursor: pointer;
+  opacity: 0.001;
+  margin-left: 0;
+  -webkit-tap-highlight-color: transparent;
+  left: 0;
+  margin-right: 0;
+  position: absolute;
+  outline: none;
+  color: rgb(var(--ig-primary-text));
+  font-family: var(--font-family-system);
+  font-size: var(--system-14-font-size);
+  line-height: var(--system-14-line-height);
+  background-color: #fff;
+}
+
+.ExpandSettingDivBtn6 {
+  bottom: 0;
+  top: 0;
+  transition-duration: var(--fds-duration-extra-short-in);
+  right: 0;
+  box-sizing: border-box;
+  pointer-events: none;
+  transition-timing-function: var(--fds-animation-move-in);
+  z-index: 0;
+  opacity: 1;
+  transition-property: opacity;
+  left: 0;
+  background-color: rgb(var(--ig-toggle-background-on-prism));
+  position: absolute;
+}
+
+.ExpandSettingDivBtn7 {
+  width: 20px;
+  top: 2px;
+  height: 20px;
+  border-top-right-radius: 14px;
+  background-color: rgb(var(--ig-stroke-prism));
+  transition-duration: var(--fds-duration-extra-short-in);
+  border-top-left-radius: 14px;
+  border-bottom-left-radius: 14px;
+  left: 2px;
+  box-sizing: border-box;
+  border-bottom-right-radius: 14px;
+  pointer-events: none;
+  transition-timing-function: var(--fds-animation-move-in);
+  transform: translateX(16px);
+  z-index: 0;
+  transition-property: transform;
+  position: absolute;
+}
+
+.ExpandSettingDivBtn9 {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ExpandSettingDiv10 {
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-weight: 400;
+  text-align: left;
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  color: rgb(var(--ig-secondary-text));
+  position: relative;
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  font-size: var(--system-12-font-size);
+  margin-left: 0 !important;
+  word-break: break-word;
+}
+
+.ExpandSettingDiv10::before {
+  margin-top: -2px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.ExpandSettingDiv10::after {
+  margin-bottom: -3px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.ExpandCommentDiv {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ExpandCommentDiv2 {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  justify-content: space-between;
+  flex-direction: row;
+  align-self: auto;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ExpandCommentText {
+  overflow-y: visible;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  position: static;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  flex-grow: 1;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ExpandCommentText2 {
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-weight: 400;
+  font-size: var(--system-16-font-size);
+  color: rgb(var(--ig-primary-text));
+  text-align: left;
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  position: relative;
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  margin-left: 0 !important;
+  word-break: break-word;
+}
+
+.ExpandCommentText2::before {
+  margin-top: -3px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.ExpandCommentText2::after {
+  margin-top: -4px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.ExpandCommentSwitch {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  position: static;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ExpandCommentSwitch2 {
+  height: 24px;
+  padding-top: 0;
+  overflow-x: hidden;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  overflow-y: hidden;
+  width: 40px;
+  border-top-right-radius: 16px;
+  border-left-width: 0;
+  padding-left: 0;
+  border-top-left-radius: 16px;
+  border-right-width: 0;
+  box-sizing: border-box;
+  border-top-width: 0;
+  padding-right: 0;
+  display: inline-block;
+  position: relative;
+  z-index: 0;
+  opacity: 1;
+  transition-duration: var(--fds-duration-extra-short-out);
+  transition-timing-function: var(--fds-animation-move-out);
+  background-color: rgb(var(--ig-toggle-background-off-prism));
+  transition-property: opacity;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  outline: none;
+}
+
+.ExpandCommentSwitch3 {
+  bottom: 0;
+  top: 0;
+  opacity: 0;
+  right: 0;
+  box-sizing: border-box;
+  pointer-events: none;
+  z-index: 0;
+  transition-duration: var(--fds-duration-extra-short-out);
+  transition-timing-function: var(--fds-animation-move-out);
+  transition-property: opacity;
+  left: 0;
+  background-color: rgb(var(--ig-toggle-background-on-prism));
+  position: absolute;
+}
+
+.ExpandCommentSwitch4 {
+  width: 20px;
+  top: 2px;
+  height: 20px;
+  border-top-right-radius: 14px;
+  background-color: rgb(var(--ig-stroke-prism));
+  border-top-left-radius: 14px;
+  border-bottom-left-radius: 14px;
+  left: 2px;
+  box-sizing: border-box;
+  border-bottom-right-radius: 14px;
+  pointer-events: none;
+  z-index: 0;
+  transition-duration: var(--fds-duration-extra-short-out);
+  transition-timing-function: var(--fds-animation-move-out);
+  transition-property: transform;
+  position: absolute;
+}
+
+.ExpandCommentSwitch5 {
+  width: 100%;
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  height: 100%;
+  padding-bottom: 0;
+  top: 0;
+  padding-left: 0;
+  touch-action: manipulation;
+  box-sizing: border-box;
+  padding-right: 0;
+  cursor: pointer;
+  opacity: 0.001;
+  margin-left: 0;
+  -webkit-tap-highlight-color: transparent;
+  left: 0;
+  margin-right: 0;
+  position: absolute;
+  outline: none;
+  color: rgb(var(--ig-primary-text));
+  font-family: var(--font-family-system);
+  font-size: var(--system-14-font-size);
+  line-height: var(--system-14-line-height);
+}
+
+.ExpandCommentSwitch6 {
+  bottom: 0;
+  top: 0;
+  transition-duration: var(--fds-duration-extra-short-in);
+  right: 0;
+  box-sizing: border-box;
+  pointer-events: none;
+  transition-timing-function: var(--fds-animation-move-in);
+  z-index: 0;
+  opacity: 1;
+  transition-property: opacity;
+  left: 0;
+  background-color: rgb(var(--ig-toggle-background-on-prism));
+  position: absolute;
+}
+
+.ExpandCommentSwitch7 {
+  width: 20px;
+  top: 2px;
+  height: 20px;
+  border-top-right-radius: 14px;
+  background-color: rgb(var(--ig-stroke-prism));
+  transition-duration: var(--fds-duration-extra-short-in);
+  border-top-left-radius: 14px;
+  border-bottom-left-radius: 14px;
+  left: 2px;
+  box-sizing: border-box;
+  border-bottom-right-radius: 14px;
+  pointer-events: none;
+  transition-timing-function: var(--fds-animation-move-in);
+  transform: translateX(16px);
+  z-index: 0;
+  transition-property: transform;
+  position: absolute;
+}
+
+.ExpandCommentDiv3 {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ExpandCommentDiv4 {
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-weight: 400;
+  text-align: left;
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  color: rgb(var(--ig-secondary-text));
+  position: relative;
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  font-size: var(--system-12-font-size);
+  margin-left: 0 !important;
+  word-break: break-word;
+}
+
+.ExpandCommentDiv4::before {
+  margin-top: -2px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.ExpandCommentDiv4::after {
+  margin-top: -3px;
+  height: 0;
+  display: block;
+  content: "";
 }
