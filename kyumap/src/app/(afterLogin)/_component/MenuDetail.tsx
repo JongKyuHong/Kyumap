@@ -6,8 +6,10 @@ import { useCallback, useState } from "react";
 // import DarkMode from "./DarkMode";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function MenuDetail() {
+  const queryClient = useQueryClient();
   const [clicked, setClicked] = useState(false);
   const [darkMode, setDark] = useState(false);
 
@@ -25,7 +27,17 @@ export default function MenuDetail() {
   }, [clicked]);
 
   const onClickLogOut = () => {
+    queryClient.invalidateQueries({
+      queryKey: ["posts"],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["users"],
+    });
     signOut({ redirect: false }).then(() => {
+      fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/logout`, {
+        method: "post",
+        credentials: "include",
+      });
       router.replace("/");
     });
   };

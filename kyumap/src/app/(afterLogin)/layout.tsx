@@ -7,31 +7,31 @@ type Props = { children: ReactNode; modal: ReactNode };
 export default function RootLayout({ children, modal }: Props) {
   return (
     <div>
-      <div>
-        <div className={styles.rootDiv}>
-          <div className={styles.rootDivInner}>
-            <div className={styles.rootDivInner2}></div>
+      <RQProvider>
+        <div>
+          <div className={styles.rootDiv}>
+            <div className={styles.rootDivInner}>
+              <div className={styles.rootDivInner2}></div>
+            </div>
           </div>
-        </div>
-        <div className={styles.rootBody}>
-          <div className={styles.rootChild}>
-            <div className={styles.leafParent}>
-              <div className={styles.leafChild}>
-                <RQProvider>
+          <div className={styles.rootBody} style={{ left: "0px" }}>
+            <div className={styles.rootChild}>
+              <div className={styles.leafParent}>
+                <div className={styles.leafChild}>
                   <div className={styles.container} style={{ height: "100%" }}>
                     <NavTab />
                     <div className={styles.rightSectionWrapper}>{children}</div>
                   </div>
-                </RQProvider>
+                </div>
               </div>
-            </div>
-            <div>
-              <div></div>
+              <div>
+                <div></div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      {modal}
+        {modal}
+      </RQProvider>
     </div>
   );
 }
