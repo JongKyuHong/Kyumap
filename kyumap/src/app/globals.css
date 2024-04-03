@@ -25,7 +25,12 @@
   --ig-elevated-background: 255, 255, 255;
   --ig-stroke: 219, 219, 219;
   --grey-2: 219, 219, 219;
+  --ig-tertiary-text: 199, 199, 199;
   --ig-toggle-outline-prism: 219, 223, 228;
+  --ig-error-or-destructive: 237, 73, 86;
+  --ig-toggle-background-on-prism: 15, 20, 25;
+  --ig-stroke-prism: 255, 255, 255;
+  --ig-toggle-background-off-prism: 219, 223, 228;
 
   --overlay-alpha-80: rgba(0, 0, 0, 0.65);
 
@@ -38,6 +43,7 @@
 
   --grey-7: 85, 85, 85;
 
+  --font-weight-system-bold: 700;
   --font-weight-system-semibold: 600;
   --font-weight-system-regular: 400;
 
@@ -47,6 +53,8 @@
   --system-24-font-size: 24px;
   --search-box-height: 40px;
   --mobile-nav-height: 45px;
+  --modal-padding: 16px;
+  --input-border-radius: 6px;
 
   --modal-border-radius: 12px;
   --system-14-font-size: 14px;
@@ -82,9 +90,12 @@
 
   --ig-hover-overlay: 0, 0, 0, 0.05;
   --fds-animation-expand-collapse-in: cubic-bezier(0.17, 0.17, 0, 1);
+  --fds-animation-move-in: cubic-bezier(0.17, 0.17, 0, 1);
+  --fds-animation-move-out: cubic-bezier(0.17, 0.17, 0, 1);
   --fds-animation-fade-out: cubic-bezier(0, 0, 1, 1);
 
   --fds-duration-extra-short-in: 200ms;
+  --fds-duration-extra-short-out: 150ms;
   --fds-duration-extra-extra-short-out: 100ms;
 
   --font-family-system: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
