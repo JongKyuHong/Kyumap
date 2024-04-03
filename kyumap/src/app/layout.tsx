@@ -19,7 +19,7 @@ type Props = {
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="ko">
-      <body suppressHydrationWarning={true} className={styles.MainBody}>
+      <body className={styles.MainBody}>
         <MSWComponent />
         <AuthSession>{children}</AuthSession>
       </body>

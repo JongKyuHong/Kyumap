@@ -78,9 +78,6 @@ export default function ProfileSection({ userId }: Props) {
     }
   }
 
-  console.log(UserPosts, "userposts");
-  console.log(UserPosts[0][0].Images, "userposts");
-
   return (
     <section className={styles.MainSection}>
       <main className={styles.Main} role="main">
