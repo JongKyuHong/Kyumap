@@ -1,4 +1,4 @@
-import NextAuth from "next-auth";
+import NextAuth, { CredentialsSignin } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
@@ -14,10 +14,13 @@ export const {
     newUser: "i/flow/signup",
   },
   callbacks: {
-    async authorized({ request, auth }) {
-      if (!auth) {
-        return NextResponse.redirect(`http://localhost:3000/i/flow/login`);
-      }
+    jwt({ token }) {
+      console.log("auth.ts jwt", token);
+      return token;
+    },
+    session({ session, newSession, user }) {
+      console.log("auth.ts session", session, newSession, user);
+      return session;
     },
   },
   providers: [
@@ -45,7 +48,13 @@ export const {
         }
 
         if (!authResponse.ok) {
-          return null;
+          const credentialsSignin = new CredentialsSignin();
+          if (authResponse.status === 404) {
+            credentialsSignin.code = "no_user";
+          } else if (authResponse.status === 401) {
+            credentialsSignin.code = "wrong_password";
+          }
+          throw credentialsSignin;
         }
 
         const user = await authResponse.json();

@@ -19,10 +19,9 @@ export default function PostRecommends() {
     queryFn: getPostRecommends,
     initialPageParam: 0,
     getNextPageParam: (lastPage) => lastPage.at(-1)?.postId,
-    staleTime: 60 * 1000, // fresh -> stale, 메모리에 데이터를 얼마나 간직할까, gcTime이 더 길어야함 staleTime보다
-    gcTime: 300 * 1000, // garbage collection 메모리에 저장된 값이 너무 많으면 삭제 5분기준
+    staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
+    gcTime: 300 * 1000,
   });
-
   const { ref, inView } = useInView({
     threshold: 0,
     delay: 0,

@@ -3,23 +3,33 @@
 import React, {
   ChangeEventHandler,
   ReactEventHandler,
+  FormEventHandler,
   useCallback,
   useRef,
   useState,
   useEffect,
-  EventHandler,
+  FormEvent,
 } from "react";
 import styles from "./newpost.module.css";
 import { useRouter } from "next/navigation";
-import cx from "classnames";
-import useDeviceSize from "./useDeviceSize";
+import {
+  useMutation,
+  useQueryClient,
+  InfiniteData,
+} from "@tanstack/react-query";
+import useDeviceSize from "../../_component/useDeviceSize";
+import { Post } from "@/model/Post";
+import { useSession } from "next-auth/react";
 
 export default function NewPost() {
-  const [textValue, setTextValue] = useState("");
+  const [content, setContent] = useState("");
   const [isActive, setActive] = useState(false);
-  const [preview, setPreview] = useState<Array<string | null>>([]);
-  const [onClickRatio, setRatio] = useState(false);
-  const [ratioIndex, setRatioIndex] = useState(0);
+  const [preview, setPreview] = useState<
+    Array<{
+      dataUrl: string;
+      file: File;
+    } | null>
+  >([]);
   const [ratioWidth, setWidth] = useState<number>(0);
   const [isMultiImg, setMultiImg] = useState(false);
   const [currentNumber, setNumber] = useState(0);
@@ -30,9 +40,10 @@ export default function NewPost() {
   const [isArticleInfoHide, setArticleInfoHide] = useState(false);
   const [isCommentHide, setCommentHide] = useState(false);
 
+  const { data: session } = useSession();
   const router = useRouter();
   const imgRef = useRef<HTMLInputElement>(null);
-  const divRef = useRef<HTMLDivElement>(null);
+  const queryClient = useQueryClient();
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
 
   const onClickBackBtn = useCallback(() => {
@@ -45,13 +56,53 @@ export default function NewPost() {
     }
   };
 
+  const mutation = useMutation({
+    mutationFn: async (e: FormEvent) => {
+      e.preventDefault();
+      const formData = new FormData();
+      formData.append("content", content);
+      preview.forEach((p) => {
+        p && formData.append("images", p.file);
+      });
+      return fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posts`, {
+        method: "post",
+        credentials: "include",
+        body: formData,
+      });
+    },
+    async onSuccess(response, variable) {
+      const newPost = await response.json();
+      setContent("");
+      setPreview([]);
+      if (queryClient.getQueryData(["posts", "recommends"])) {
+        queryClient.setQueryData(
+          ["posts", "recommends"],
+          (prevData: { pages: Post[][] }) => {
+            const shallow = {
+              ...prevData,
+              pages: [...prevData.pages],
+            };
+            shallow.pages[0] = [...shallow.pages[0]];
+            shallow.pages[0].unshift(newPost);
+            return shallow;
+          }
+        );
+      }
+    },
+    onError(error) {
+      console.error(error);
+      alert("업로드 중 에러가 발생했습니다.");
+    },
+    onSettled() {
+      router.back();
+    },
+  });
+
   // const [preview, setPreview] = useState<Array<string | null>>([]);
   const onUpload: ChangeEventHandler<HTMLInputElement> = (e) => {
     e.preventDefault();
     if (e.target.files && e.target.files.length > 0) {
-      const newPreviews: (string | null)[] = Array.from(e.target.files).map(
-        () => null
-      ); // 새로운 파일 수만큼 null로 초기화된 배열 생성
+      const newPreviews: Array<{ dataUrl: string; file: File } | null> = [];
 
       // 이전 미리보기 데이터를 새 배열에 복사
       for (let i = 0; i < preview.length; i++) {
@@ -63,7 +114,7 @@ export default function NewPost() {
         reader.onloadend = () => {
           setPreview((prevPreview) => {
             const prev = [...prevPreview];
-            prev[preview.length + index] = reader.result as string; // 이전 데이터 길이를 더해 새로운 데이터를 추가
+            prev.push({ dataUrl: reader.result as string, file }); // 이전 데이터 끝에 새로운 데이터를 추가
             return prev;
           });
         };
@@ -71,7 +122,12 @@ export default function NewPost() {
       });
 
       setPreview(newPreviews); // 새로운 미리보기 배열로 업데이트
+      console.log(preview, "preview");
     }
+  };
+
+  const onSubmit = (e: FormEvent) => {
+    mutation.mutate(e);
   };
 
   const calculateSize = () => {
@@ -175,7 +231,7 @@ export default function NewPost() {
 
   const onTextChange = (e: React.FormEvent<HTMLTextAreaElement>) => {
     const newText = e.currentTarget.value || ""; // 입력된 텍스트 가져오기
-    setTextValue(newText); // 텍스트 상태 업데이트
+    setContent(newText); // 텍스트 상태 업데이트
   };
 
   const onClickEmoticon = () => {
@@ -189,7 +245,7 @@ export default function NewPost() {
   const addEmoticon = (e: React.MouseEvent<HTMLDivElement>) => {
     const innerText = e.currentTarget.innerText || "";
     console.log(innerText, "asdfasdfas");
-    setTextValue((prevText) => prevText + innerText);
+    setContent((prevText) => prevText + innerText);
   };
 
   const onClickAccExpand = () => {
@@ -206,6 +262,14 @@ export default function NewPost() {
 
   const onClickCommentHide = () => {
     setCommentHide(!isCommentHide);
+  };
+
+  const onRemoveImage = (index: number) => () => {
+    setPreview((prevPreview) => {
+      const prev = [...prevPreview];
+      prev[index] = null;
+      return prev;
+    });
   };
 
   return (
@@ -338,8 +402,8 @@ export default function NewPost() {
                                                 <line
                                                   fill="none"
                                                   stroke="currentColor"
-                                                  stroke-linecap="round"
-                                                  stroke-linejoin="round"
+                                                  strokeLinecap="round"
+                                                  strokeLinejoin="round"
                                                   strokeWidth="2"
                                                   x1="2.909"
                                                   x2="22.001"
@@ -350,8 +414,8 @@ export default function NewPost() {
                                                   fill="none"
                                                   points="9.276 4.726 2.001 12.004 9.276 19.274"
                                                   stroke="currentColor"
-                                                  stroke-linecap="round"
-                                                  stroke-linejoin="round"
+                                                  strokeLinecap="round"
+                                                  strokeLinejoin="round"
                                                   strokeWidth="2"
                                                 ></polyline>
                                               </svg>
@@ -362,11 +426,11 @@ export default function NewPost() {
                                     )}
                                   </div>
                                   <div className={styles.Underright}>
-                                    {preview && (
+                                    {preview.length > 0 && (
                                       <div className={styles.NextBtn}>
                                         <div
                                           className={styles.NextBtn2}
-                                          onClick={() => {}}
+                                          onClick={onSubmit}
                                         >
                                           공유하기
                                         </div>
@@ -443,9 +507,9 @@ export default function NewPost() {
                                                         fill="none"
                                                         points="16.502 3 7.498 12 16.502 21"
                                                         stroke="currentColor"
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
-                                                        stroke-width="2"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth="2"
                                                       ></polyline>
                                                     </svg>
                                                   </div>
@@ -489,9 +553,9 @@ export default function NewPost() {
                                                         fill="none"
                                                         points="8 3 17.004 12 8 21"
                                                         stroke="currentColor"
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
-                                                        stroke-width="2"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth="2"
                                                       ></polyline>
                                                     </svg>
                                                   </div>
@@ -516,9 +580,11 @@ export default function NewPost() {
                                           </span>
                                           <div className={styles.ImgTab}>
                                             <img
-                                              src={`${preview[currentNumber]}`}
+                                              src={`${preview[currentNumber]?.dataUrl}`}
                                               className={styles.ImgTab2}
-                                              style={{ ...calculateImgSize() }}
+                                              style={{
+                                                ...calculateImgSize(),
+                                              }}
                                             ></img>
                                             <div
                                               className={styles.imgTab3}
@@ -565,7 +631,7 @@ export default function NewPost() {
                                                       </title>
                                                       <path
                                                         d="M19 15V5a4.004 4.004 0 0 0-4-4H5a4.004 4.004 0 0 0-4 4v10a4.004 4.004 0 0 0 4 4h10a4.004 4.004 0 0 0 4-4ZM3 15V5a2.002 2.002 0 0 1 2-2h10a2.002 2.002 0 0 1 2 2v10a2.002 2.002 0 0 1-2 2H5a2.002 2.002 0 0 1-2-2Zm18.862-8.773A.501.501 0 0 0 21 6.57v8.431a6 6 0 0 1-6 6H6.58a.504.504 0 0 0-.35.863A3.944 3.944 0 0 0 9 23h6a8 8 0 0 0 8-8V9a3.95 3.95 0 0 0-1.138-2.773Z"
-                                                        fill-rule="evenodd"
+                                                        fillRule="evenodd"
                                                       ></path>
                                                     </svg>
                                                   </div>
@@ -617,7 +683,7 @@ export default function NewPost() {
                                                       </title>
                                                       <path
                                                         d="M19 15V5a4.004 4.004 0 0 0-4-4H5a4.004 4.004 0 0 0-4 4v10a4.004 4.004 0 0 0 4 4h10a4.004 4.004 0 0 0 4-4ZM3 15V5a2.002 2.002 0 0 1 2-2h10a2.002 2.002 0 0 1 2 2v10a2.002 2.002 0 0 1-2 2H5a2.002 2.002 0 0 1-2-2Zm18.862-8.773A.501.501 0 0 0 21 6.57v8.431a6 6 0 0 1-6 6H6.58a.504.504 0 0 0-.35.863A3.944 3.944 0 0 0 9 23h6a8 8 0 0 0 8-8V9a3.95 3.95 0 0 0-1.138-2.773Z"
-                                                        fill-rule="evenodd"
+                                                        fillRule="evenodd"
                                                       ></path>
                                                     </svg>
                                                   </div>
@@ -638,7 +704,7 @@ export default function NewPost() {
                                             >
                                               <img
                                                 className={styles.ImageDiv}
-                                                src={`${preview[0]}`}
+                                                src={`${preview[0]?.dataUrl}`}
                                                 style={{
                                                   ...calculateImgSize(),
                                                 }}
@@ -726,6 +792,7 @@ export default function NewPost() {
                                 </>
                               )}
                               <form
+                                id="PostForm"
                                 className={styles.ModalBodyForm}
                                 method="POST"
                                 role="presentation"
@@ -846,7 +913,7 @@ export default function NewPost() {
                                               className={styles.textHeader2}
                                               tabIndex={0}
                                               onInput={onTextChange}
-                                              value={textValue}
+                                              value={content}
                                               placeholder="문구를 입력하세요..."
                                               maxLength={2200}
                                             />
@@ -1280,7 +1347,7 @@ export default function NewPost() {
                                                         styles.textEnterSpan3
                                                       }
                                                     >
-                                                      {textValue.length}
+                                                      {content.length}
                                                     </span>
                                                     /
                                                     <span
@@ -1418,7 +1485,7 @@ export default function NewPost() {
                                                         }}
                                                       >
                                                         <img
-                                                          src={`${preview[index]}`}
+                                                          src={`${preview[index]?.dataUrl}`}
                                                           className={
                                                             styles.AccExpandImg
                                                           }
@@ -1672,28 +1739,6 @@ export default function NewPost() {
                                                         <>
                                                           <div
                                                             className={
-                                                              styles.ExpandCommentSwitch3
-                                                            }
-                                                          ></div>
-                                                          <div
-                                                            className={
-                                                              styles.ExpandCommentSwitch4
-                                                            }
-                                                          ></div>
-                                                          <input
-                                                            dir="ltr"
-                                                            aria-checked="false"
-                                                            role="switch"
-                                                            type="checkbox"
-                                                            className={
-                                                              styles.ExpandCommentSwitch5
-                                                            }
-                                                          ></input>
-                                                        </>
-                                                      ) : (
-                                                        <>
-                                                          <div
-                                                            className={
                                                               styles.ExpandCommentSwitch6
                                                             }
                                                           ></div>
@@ -1709,6 +1754,28 @@ export default function NewPost() {
                                                             type="checkbox"
                                                             className={
                                                               styles.ExpandSettingDivBtn5
+                                                            }
+                                                          ></input>
+                                                        </>
+                                                      ) : (
+                                                        <>
+                                                          <div
+                                                            className={
+                                                              styles.ExpandCommentSwitch3
+                                                            }
+                                                          ></div>
+                                                          <div
+                                                            className={
+                                                              styles.ExpandCommentSwitch4
+                                                            }
+                                                          ></div>
+                                                          <input
+                                                            dir="ltr"
+                                                            aria-checked="false"
+                                                            role="switch"
+                                                            type="checkbox"
+                                                            className={
+                                                              styles.ExpandCommentSwitch5
                                                             }
                                                           ></input>
                                                         </>

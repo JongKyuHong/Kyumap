@@ -3214,7 +3214,7 @@
 }
 
 .ExpandSettingSpan::after {
-  margin-bottom: -4px;
+  margin-bottom: 4px;
   height: 0;
   display: block;
   content: "";
