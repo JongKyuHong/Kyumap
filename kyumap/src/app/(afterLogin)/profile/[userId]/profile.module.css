@@ -424,26 +424,6 @@
   border-top-right-radius: 0;
 }
 
-.HeaderSectionEmo2 {
-  overflow-y: visible;
-  overflow-x: visible;
-  align-content: stretch;
-  border-bottom-left-radius: 0;
-  background-color: transparent;
-  box-sizing: border-box;
-  display: flex;
-  border-bottom-right-radius: 0;
-  flex-shrink: 0;
-  align-items: stretch;
-  flex-direction: row;
-  align-self: auto;
-  justify-content: flex-start;
-  position: relative;
-  flex-grow: 0;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
-
 .HeaderSectionFollowBtn {
   overflow-y: visible;
   overflow-x: visible;
@@ -466,38 +446,25 @@
 }
 
 .HeaderSectionFollowBtn2 {
-  padding-bottom: 8px;
-  margin-top: 0;
-  margin-bottom: 0;
-  padding-top: 8px;
-  border-bottom-style: none;
-  border-bottom-width: 0;
-  padding-left: 8px;
-  display: inline;
-  border-left-width: 0;
-  justify-content: center;
-  border-top-right-radius: 8px;
-  touch-action: manipulation;
-  border-right-style: none;
-  border-right-width: 0;
-  border-bottom-left-radius: 8px;
+  overflow-y: visible;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
   box-sizing: border-box;
-  border-top-width: 0;
-  align-items: center;
-  border-bottom-right-radius: 8px;
-  cursor: pointer;
-  padding-right: 8px;
-  margin-left: 0;
-  border-top-left-radius: 8px;
-  -webkit-tap-highlight-color: transparent;
-  background-color: rgb(var(--ig-secondary-button-background));
-  border-top-style: none;
-  border-left-style: none;
-  text-align: inherit;
-  margin-right: 0;
-  list-style: none;
-  text-decoration: none;
-  outline: none;
+  display: flex;
+  border-bottom-right-radius: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 1;
+  margin-left: 8px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 
 .HeaderSectionFollowBtn3 {
@@ -507,13 +474,66 @@
   align-items: center;
 }
 
+.HeaderSectionFollowBtn4 {
+  /* background-color: rgb(var(--ig-primary-button)) !important; */
+  border: none;
+  border-radius: 8px;
+  /* color: rgb(var(--web-always-white)); */
+  position: relative;
+  text-align: center;
+  -webkit-appearance: none;
+  background: none;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: block;
+  font-size: 14px;
+  font-weight: var(--font-weight-system-semibold);
+  padding: 7px 16px !important;
+  pointer-events: auto;
+  text-overflow: ellipsis;
+  text-transform: inherit;
+  -webkit-user-select: none;
+  width: auto;
+  line-height: var(--system-14-line-height);
+  font-family: var(--font-family-system);
+  margin: 0;
+}
+
+.HeaderSectionFollowBtn5 {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  justify-content: center;
+  background-color: transparent;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  flex-direction: row;
+  align-self: auto;
+  position: relative;
+  padding-left: 4px;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  padding-right: 4px;
+  border-top-right-radius: 0;
+}
+
+.HeaderSectionFollowBtn6 {
+  display: block;
+  font-weight: var(--font-weight-system-semibold);
+  margin: 0;
+  font-size: var(--system-14-font-size);
+  line-height: var(--system-14-line-height);
+  font-family: var(--font-family-system);
+}
+
 .FollowSvg {
   color: rgb(var(--ig-primary-text));
   position: relative;
   display: block;
-}
-
-.HeaderSectionBlank {
 }
 
 .ProfileInfo {
@@ -573,7 +593,7 @@
   border-right-width: 0;
   box-sizing: border-box;
   border-top-width: 0;
-  align-items: start;
+  align-items: flex-start;
   display: flex;
   padding-right: 0;
   flex-shrink: 0;

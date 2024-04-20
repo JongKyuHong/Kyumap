@@ -20,7 +20,6 @@ interface Props {
 export default function Post({ post }: Props) {
   const [isMultiImg, setMultiImg] = useState(false);
   const [currentNumber, setNumber] = useState(0);
-
   const imgArticle = [];
 
   for (let i = 0; i < post.Images.length; i++) {
@@ -39,7 +38,7 @@ export default function Post({ post }: Props) {
     } else {
       setMultiImg(false);
     }
-  }, []);
+  }, [post.Images.length]);
 
   const onClickNextBtn = () => {
     setNumber(currentNumber + 1);
@@ -78,11 +77,11 @@ export default function Post({ post }: Props) {
                       style={{ height: "32px", width: "32px" }}
                       className={styles.articleUserSpan}
                     >
-                      <img
+                      <Image
                         alt="프로필 사진"
                         src={`${post.User.image}`}
-                        width={1}
-                        height={1}
+                        width={32}
+                        height={32}
                         className={styles.articleUserProfileImage}
                       />
                     </Link>
@@ -105,7 +104,7 @@ export default function Post({ post }: Props) {
                           <span className={styles.nameInnerSpan2}>
                             <div>
                               <Link
-                                href={`/profile/${post.User.nickname}`}
+                                href={`/profile/${post.User.id}`}
                                 className={styles.nameLink}
                               >
                                 <div className={styles.linkInnerDiv}>
@@ -217,7 +216,10 @@ export default function Post({ post }: Props) {
                                               paddingBottom: "125%",
                                             }}
                                           >
-                                            <img
+                                            <Image
+                                              width={0}
+                                              height={0}
+                                              sizes="100vw"
                                               src={
                                                 post.Images[currentNumber].link
                                               }
@@ -312,7 +314,10 @@ export default function Post({ post }: Props) {
                         className={styles.bodyInnerDiv4}
                         style={{ paddingBottom: "125.04%" }}
                       >
-                        <img
+                        <Image
+                          width={0}
+                          height={0}
+                          sizes="100vw"
                           alt="게시글"
                           crossOrigin="anonymous"
                           src={post.Images[0].link}

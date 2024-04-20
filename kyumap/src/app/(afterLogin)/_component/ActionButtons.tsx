@@ -20,15 +20,9 @@ export default function ActionButtons({ post }: Props) {
   const { data: session } = useSession();
   const [textValue, setTextValue] = useState("");
 
-  // console.log(post, post.Hearts, "hearts");
-
   const liked = !!post.Hearts?.find((v) => {
-    console.log(v, session, v.userId === session?.user?.email, post);
     return v.userId === session?.user?.email;
   });
-
-  // console.log(liked, "liked");
-  // console.log(post, "post");
 
   const { postId } = post;
 

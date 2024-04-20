@@ -17,7 +17,7 @@ export default function Emoticon({ top, left }: propsType) {
       width: left,
       height: top,
     });
-  }, []);
+  }, [left, top]);
 
   const translateValue = `${modalPosition.width}px, ${modalPosition.height}px`;
   console.log(translateValue, "tra");
@@ -48,7 +48,7 @@ export default function Emoticon({ top, left }: propsType) {
                         style={{ width: "100%" }}
                       >
                         <span className={styles.EmoticonSpan} dir="auto">
-                          "최고 인기 이모티콘"
+                          {"최고 인기 이모티콘"}
                         </span>
                       </div>
                       <div>
