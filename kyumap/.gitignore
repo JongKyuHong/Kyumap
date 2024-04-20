@@ -13,7 +13,6 @@
 /.next/
 /out/
 
-/public
 # production
 /build
 
