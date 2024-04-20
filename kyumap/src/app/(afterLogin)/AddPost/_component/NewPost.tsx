@@ -19,9 +19,11 @@ import {
 } from "@tanstack/react-query";
 import useDeviceSize from "../../_component/useDeviceSize";
 import { Post } from "@/model/Post";
+import Image from "next/image";
 import { useSession } from "next-auth/react";
 
 export default function NewPost() {
+  const { data: session } = useSession();
   const [content, setContent] = useState("");
   const [isActive, setActive] = useState(false);
   const [preview, setPreview] = useState<
@@ -40,7 +42,6 @@ export default function NewPost() {
   const [isArticleInfoHide, setArticleInfoHide] = useState(false);
   const [isCommentHide, setCommentHide] = useState(false);
 
-  const { data: session } = useSession();
   const router = useRouter();
   const imgRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
@@ -48,7 +49,7 @@ export default function NewPost() {
 
   const onClickBackBtn = useCallback(() => {
     router.back();
-  }, []);
+  }, [router]);
 
   const handleFileSelect = () => {
     if (imgRef.current) {
@@ -566,6 +567,7 @@ export default function NewPost() {
                                               <div className={styles.slider2}>
                                                 {preview.map((pimg, index) => (
                                                   <div
+                                                    key={index}
                                                     className={styles.sliderDiv}
                                                     style={{
                                                       background:
@@ -579,13 +581,17 @@ export default function NewPost() {
                                             </div>
                                           </span>
                                           <div className={styles.ImgTab}>
-                                            <img
+                                            <Image
                                               src={`${preview[currentNumber]?.dataUrl}`}
                                               className={styles.ImgTab2}
                                               style={{
                                                 ...calculateImgSize(),
                                               }}
-                                            ></img>
+                                              width={0}
+                                              height={0}
+                                              alt={"postImage"}
+                                              sizes="100vw"
+                                            />
                                             <div
                                               className={styles.imgTab3}
                                             ></div>
@@ -702,13 +708,17 @@ export default function NewPost() {
                                                 overflow: "hidden",
                                               }}
                                             >
-                                              <img
+                                              <Image
                                                 className={styles.ImageDiv}
                                                 src={`${preview[0]?.dataUrl}`}
                                                 style={{
                                                   ...calculateImgSize(),
                                                 }}
-                                              ></img>
+                                                alt={"postImage"}
+                                                width={0}
+                                                height={0}
+                                                sizes="100vw"
+                                              />
                                             </div>
                                           </div>
                                         </>
@@ -851,16 +861,19 @@ export default function NewPost() {
                                                         role="link"
                                                         tabIndex={-1}
                                                       >
-                                                        <img
+                                                        <Image
                                                           className={
                                                             styles.profileImgArea4
                                                           }
-                                                          // alt={`${my.name}님의 프로필사진`}
-                                                          // src={`${my.profile.link}`}
+                                                          alt={`${session?.user?.name}님의 프로필사진`}
+                                                          src={`${session?.user?.image}`}
+                                                          width={0}
+                                                          height={0}
+                                                          sizes="100vw"
                                                           crossOrigin="anonymous"
                                                           draggable="false"
-                                                          src={"/chi.png"}
-                                                        ></img>
+                                                          // src={"/chi.png"}
+                                                        />
                                                       </span>
                                                     </div>
                                                   </div>
@@ -893,7 +906,7 @@ export default function NewPost() {
                                                               styles.profileIdArea5
                                                             }
                                                           >
-                                                            {"testboy123"}
+                                                            {`${session?.user?.name}`}
                                                           </span>
                                                         </span>
                                                       </div>
@@ -1484,20 +1497,23 @@ export default function NewPost() {
                                                           height: "100%",
                                                         }}
                                                       >
-                                                        <img
+                                                        <Image
+                                                          height={44}
+                                                          width={67}
                                                           src={`${preview[index]?.dataUrl}`}
+                                                          alt={"postImage"}
                                                           className={
                                                             styles.AccExpandImg
                                                           }
                                                           style={{
-                                                            height: "44px",
+                                                            // height: "44px",
+                                                            // width: "66.7586px",
                                                             transform:
                                                               "translateX(0px) translateY(0px) scale(1)",
                                                             transition:
                                                               "none 0s ease 0s",
-                                                            width: "66.7586px",
                                                           }}
-                                                        ></img>
+                                                        />
                                                       </div>
                                                     </div>
                                                     <div

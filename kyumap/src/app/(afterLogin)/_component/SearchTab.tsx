@@ -133,7 +133,10 @@ export default function SearchTab() {
                                             }}
                                             className={styles.profileLink}
                                           >
-                                            <img
+                                            <Image
+                                              width={0}
+                                              height={0}
+                                              sizes="100vw"
                                               src={recentHistory.User.image}
                                               alt="profile이미지"
                                               draggable="false"

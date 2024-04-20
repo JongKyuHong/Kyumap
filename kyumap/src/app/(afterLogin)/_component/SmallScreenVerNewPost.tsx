@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState, ChangeEvent } from "react";
 import styles from "./smallscreenvernewpost.module.css";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function SmallScreenVerNewPost() {
   const [fileOpen, setFileOpen] = useState(false);
@@ -28,7 +29,7 @@ export default function SmallScreenVerNewPost() {
     // return () => {
     //   window.removeEventListener("click", BackHome);
     // };
-  }, []);
+  }, [fileOpen]);
 
   const onClickBackBtn = () => {
     router.back();
@@ -111,20 +112,24 @@ export default function SmallScreenVerNewPost() {
                           <div className={styles.body3}>
                             <div className={styles.body4}>
                               <div className={styles.body5}>
-                                <img
+                                <Image
                                   src={preview!}
+                                  alt={"previewImage"}
+                                  height={0}
+                                  width={0}
+                                  sizes="100vw"
                                   style={{
-                                    height: "100%",
+                                    // height: "100%",
+                                    // width: "150%",
                                     left: "-25%",
                                     position: "absolute",
                                     top: "0%",
                                     transform: "rotate(0deg)",
                                     transformOrigin: "50% 50%",
                                     transition: "all 0.2s ease 0s",
-                                    width: "150%",
                                   }}
                                   className={styles.bodyImg}
-                                ></img>
+                                />
                               </div>
                               <div className={styles.body6}>
                                 <textarea
