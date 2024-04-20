@@ -3,11 +3,18 @@
 import Link from "next/link";
 import styles from "./menudetail.module.css";
 import { useCallback, useState } from "react";
-import DarkMode from "./DarkMode";
+// import DarkMode from "./DarkMode";
+import { useRouter } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function MenuDetail() {
+  const queryClient = useQueryClient();
   const [clicked, setClicked] = useState(false);
   const [darkMode, setDark] = useState(false);
+
+  const router = useRouter();
+  const { data } = useSession();
 
   const onClickDark = useCallback(() => {
     setDark((darkMode) => !darkMode);
@@ -19,23 +26,21 @@ export default function MenuDetail() {
     console.log(clicked, "click");
   }, [clicked]);
 
-  // const CalculateXY = useCallback(() => {
-  //   if (document.documentElement.clientWidth > 1264) {
-  //     console.log("얼마나 호출되나 보자1");
-  //     return {
-  //       tansform: `translate(12px ${
-  //         document.documentElement.clientHeight - 76
-  //       }px) translate(0px, -100%)`,
-  //     };
-  //   } else {
-  //     console.log("얼마나 호출되나 보자2");
-  //     return {
-  //       transform: `translate(12px ${
-  //         document.documentElement.clientHeight - 20
-  //       }px) translate(0px, -100%)`,
-  //     };
-  //   }
-  // }, [document.documentElement.clientHeight]);
+  const onClickLogOut = () => {
+    queryClient.invalidateQueries({
+      queryKey: ["posts"],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["users"],
+    });
+    signOut({ redirect: false }).then(() => {
+      fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/logout`, {
+        method: "post",
+        credentials: "include",
+      });
+      router.replace("/");
+    });
+  };
 
   return (
     <div>
@@ -246,7 +251,11 @@ export default function MenuDetail() {
                                 </div>
                               </div>
                               <div className={styles.underline}></div>
-                              <div className={styles.linkDiv}>
+                              <div
+                                className={styles.linkDiv}
+                                style={{ cursor: "pointer" }}
+                                onClick={onClickLogOut}
+                              >
                                 <div className={styles.linkInnerDiv}>
                                   <div className={styles.iconTitle}>
                                     <div className={styles.titleInner}>
@@ -343,7 +352,7 @@ export default function MenuDetail() {
                                   </div>
                                 </div>
                               </div>
-                              <DarkMode />
+                              {/* <DarkMode /> */}
                             </div>
                           </div>
                         </div>

@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
+// className={inter.className}
+import styles from "./layout.module.css";
+import { MSWComponent } from "./_component/MSWComponent";
+import AuthSession from "./_component/AuthSession";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,7 +19,10 @@ type Props = {
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="ko">
-      <body className={inter.className}>{children}</body>
+      <body className={styles.MainBody}>
+        <MSWComponent />
+        <AuthSession>{children}</AuthSession>
+      </body>
     </html>
   );
 }

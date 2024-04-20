@@ -1,0 +1,246 @@
+.container {
+  box-sizing: border-box;
+  position: relative;
+  z-index: 0;
+}
+
+.container2 {
+  flex-direction: column;
+  display: flex;
+  position: relative;
+  z-index: 0;
+}
+
+@supports (min-height: 100dvh) {
+  .container3 {
+    min-height: calc(100dvh - var(--header-height));
+  }
+}
+
+.container3 {
+  top: var(--header-height);
+  min-height: calc(100vh - var(--header-height));
+  flex-direction: column;
+  display: flex;
+  position: relative;
+}
+
+.container4 {
+  min-height: inherit;
+  margin-bottom: calc(-100vh + var(--header-height));
+  flex-direction: column;
+  display: flex;
+  position: relative;
+  z-index: 0;
+}
+
+.header2 {
+  overflow-x: visible;
+  flex-direction: column;
+  display: flex;
+  flex-grow: 1;
+}
+
+.header3 {
+  position: relative;
+}
+
+.header4 {
+  background-color: rgb(var(--ig-primary-background));
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  font-size: 16px;
+  font-weight: 600;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 1;
+}
+
+.header4::before {
+  background-color: rgb(var(--ig-elevated-separator));
+  bottom: -1px;
+  content: "";
+  height: 1px;
+  left: 0;
+  position: absolute;
+  right: 0;
+}
+
+.header5 {
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  height: calc(var(--mobile-nav-height) - 1px);
+  justify-content: space-between;
+  padding: 0 16px;
+  width: 100%;
+}
+
+.xbox {
+  align-items: center;
+  display: flex;
+  flex-basis: 32px;
+  flex-direction: row;
+}
+
+.headerH1 {
+  align-items: center;
+  border: 0;
+  color: rgb(var(--ig-primary-text));
+  display: block;
+  flex-basis: 0px;
+  flex-grow: 1;
+  flex-shrink: 1;
+  font: inherit;
+  font-size: 100%;
+  justify-content: center;
+  margin: 0;
+  min-width: 0;
+  overflow: visible;
+  padding: 0;
+  text-align: center;
+  text-overflow: ellipsis;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+
+.xboxBtn {
+  background: transparent;
+  border: 0;
+  display: flex;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  padding: 0;
+  color: rgb(var(--ig-primary-text));
+  font-family: var(--font-family-system);
+  font-size: var(--system-14-font-size);
+  line-height: var(--system-14-line-height);
+}
+
+.XboxSvg {
+  color: rgb(var(--ig-primary-text));
+  position: relative;
+  display: block;
+}
+
+.nextBtn {
+  justify-content: flex-end;
+  align-items: center;
+  display: flex;
+  flex-basis: 32px;
+  flex-direction: row;
+}
+
+.nextBtn2 {
+  color: rgb(var(--ig-primary-button));
+  background: transparent;
+  border: 0;
+  display: flex;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family-system);
+  line-height: var(--system-14-line-height);
+}
+
+.body {
+  /* margin-top: var(--mobile-nav-height); */
+  position: relative;
+}
+
+.body2 {
+  left: 0;
+  padding-bottom: var(--mobile-nav-height);
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.body3 {
+  position: relative;
+  /* align-items: stretch;
+  border: 0;
+  box-sizing: border-box;
+  display: block;
+  flex-direction: column;
+  flex-shrink: 0;
+  font: inherit;
+  font-size: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  touch-action: none;
+  vertical-align: baseline; */
+}
+
+.body4 {
+  border-bottom: 1px solid rgb(var(--ig-separator));
+  box-sizing: border-box;
+  padding-bottom: 50%;
+  -webkit-user-select: none;
+}
+
+.body5 {
+  /* align-items: stretch;
+  background-color: rgb(var(--ig-primary-background));
+  background-repeat: no-repeat;
+  border: 0;
+  bottom: 0;
+  box-sizing: border-box;
+  display: block;
+  flex-direction: column;
+  flex-shrink: 0;
+  font: inherit;
+  font-size: 100%;
+  left: 0;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  vertical-align: baseline; */
+  position: relative;
+  width: 100%;
+  height: 350px;
+}
+
+.bodyImg {
+  align-items: stretch;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  font: inherit;
+  font-size: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  vertical-align: baseline;
+  will-change: height, left, top, width, transform;
+}
+
+.body6 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin-bottom: 0;
+  padding-bottom: 20px;
+}
+
+.textarea {
+  width: 100%;
+  height: 100px;
+  resize: none;
+}

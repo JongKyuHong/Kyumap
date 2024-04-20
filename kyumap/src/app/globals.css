@@ -1,4 +1,108 @@
-:root :root[color-theme="light"] {
+:root {
+  --gradient-purple: 118, 56, 25;
+  --gradient-yellow: 255, 214, 0;
+  --gradient-orange: 255, 255, 0;
+  --gradient-pink: 255, 1, 105;
+  --gradient-lavender: 211, 0, 197;
+  --gradient-purple: 118, 56, 25;
+
+  --ig-link: 0, 55, 107;
+  --ig-primary-background: 255, 255, 255;
+  --ig-separator: 219, 219, 219;
+  --ig-primary-text: 0, 0, 0;
+  --ig-primary-button: 0, 149, 246;
+  --ig-elevated-separator: 219, 219, 219;
+  --always-dark-overlay: rgba(0, 0, 0, 0.4);
+  --ig-secondary-button: 38, 38, 38;
+  --ig-secondary-background: 250, 250, 250;
+  --ig-highlight-background: 239, 239, 239;
+  --ig-primary-icon: 38, 38, 38;
+  --ig-secondary-text: 115, 115, 115;
+  --ig-banner-background: 255, 255, 255;
+  --ig-secondary-icon: 142, 142, 142;
+  --ig-badge: 255, 48, 64;
+  --ig-secondary-button-background: 239, 239, 239;
+  --ig-elevated-background: 255, 255, 255;
+  --ig-stroke: 219, 219, 219;
+  --grey-2: 219, 219, 219;
+  --ig-tertiary-text: 199, 199, 199;
+  --ig-toggle-outline-prism: 219, 223, 228;
+  --ig-error-or-destructive: 237, 73, 86;
+  --ig-toggle-background-on-prism: 15, 20, 25;
+  --ig-stroke-prism: 255, 255, 255;
+  --ig-toggle-background-off-prism: 219, 223, 228;
+
+  --overlay-alpha-80: rgba(0, 0, 0, 0.65);
+
+  --media-info: 335px;
+
+  --post-separator: 239, 239, 239;
+
+  --web-always-black: 0, 0, 0;
+  --web-always-white: 255, 255, 255;
+
+  --grey-7: 85, 85, 85;
+
+  --font-weight-system-bold: 700;
+  --font-weight-system-semibold: 600;
+  --font-weight-system-regular: 400;
+
+  --search-modal-top-offset: 12px;
+  --system-12-line-height: 16px;
+  --system-16-font-size: 16px;
+  --system-24-font-size: 24px;
+  --search-box-height: 40px;
+  --mobile-nav-height: 45px;
+  --modal-padding: 16px;
+  --input-border-radius: 6px;
+
+  --modal-border-radius: 12px;
+  --system-14-font-size: 14px;
+  --system-14-line-height: 18px;
+  --system-12-font-size: 12px;
+  --system-32-font-size: 32px;
+  --scrollable-content-header-height: 44px;
+  --system-16-line-height: 24px;
+  --system-20-font-size: 20px;
+
+  --base-line-clamp-line-height: 18px;
+
+  --header-height: 0px;
+  --desktop-story-tray-bottom-margin-denser: 24px;
+  --nav-wide-width: 335px;
+  --creation-settings-width: 340px;
+  --nav-medium-width: 244px;
+  --nav-narrow-width: 72px;
+
+  --revamp-nav-bottom-toolbar-height: 50px;
+  --revamp-feed-card-dense-padding: 16px;
+  --revamp-feed-card-media-min-width: 390px;
+  --revamp-feed-item-spacing: 20px;
+
+  --feed-sidebar-width: 319px;
+
+  --creation-min-padding-x: 32px;
+  --creation-modal-max-height: 898px;
+  --creation-header-height: 43px;
+  --creation-modal-min-height: 391px;
+  --creation-padding-y: 112px;
+  --creation-padding-x: 64px;
+
+  --ig-hover-overlay: 0, 0, 0, 0.05;
+  --fds-animation-expand-collapse-in: cubic-bezier(0.17, 0.17, 0, 1);
+  --fds-animation-move-in: cubic-bezier(0.17, 0.17, 0, 1);
+  --fds-animation-move-out: cubic-bezier(0.17, 0.17, 0, 1);
+  --fds-animation-fade-out: cubic-bezier(0, 0, 1, 1);
+
+  --fds-duration-extra-short-in: 200ms;
+  --fds-duration-extra-short-out: 150ms;
+  --fds-duration-extra-extra-short-out: 100ms;
+
+  --font-family-system: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+}
+
+:root[color-theme="light"] {
   --max-width: 1100px;
   --border-radius: 12px;
   --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
