@@ -1,6 +1,3 @@
-"use client";
-
-import { useRouter } from "next/navigation";
 import Home from "../../home/page";
 import Detail from "../../@modal/(.)detail/[postId]/page";
 

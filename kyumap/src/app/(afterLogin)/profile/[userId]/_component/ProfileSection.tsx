@@ -1,29 +1,230 @@
 "use client";
 
 import styles from "../profile.module.css";
-import Image from "next/image";
+import { useEffect } from "react";
 import Link from "next/link";
 import { User } from "@/model/User";
 import { Post } from "@/model/Post";
 import { useQuery } from "@tanstack/react-query";
 import { getUser } from "@/app/(afterLogin)/_lib/getUser";
 import { getUserPosts } from "@/app/(afterLogin)/_lib/getUserPosts";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+import { MouseEventHandler } from "react";
+import UserPosts from "./UserPosts";
+import Image from "next/image";
 
 type Props = {
   userId: string;
 };
 
 export default function ProfileSection({ userId }: Props) {
+  const { data: session } = useSession();
+
   const {
     data: userData,
     error: userError,
     isLoading: userLoading,
   } = useQuery<User, Object, User, [string, string]>({
-    queryKey: ["user", userId],
+    queryKey: ["users", userId],
     queryFn: getUser,
     staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
     gcTime: 300 * 1000,
   });
+
+  const followed = !!userData?.Followers?.find(
+    (v) => v.id === session?.user?.email
+  );
+
+  const queryClient = useQueryClient();
+
+  const follow = useMutation({
+    mutationFn: (userId: string) => {
+      return fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${userId}/follow`,
+        {
+          credentials: "include",
+          method: "post",
+        }
+      );
+    },
+    onMutate(userId: string) {
+      const value: User[] | undefined = queryClient.getQueryData([
+        "users",
+        "followRecommends",
+      ]);
+      if (value) {
+        const index = value.findIndex((v) => v.id === userId);
+        const shallow = [...value];
+        console.log(shallow, "ssh");
+        shallow[index] = {
+          ...shallow[index],
+          Followers: [{ id: session?.user?.email as string }],
+          _count: {
+            ...shallow[index]._count,
+            Followers: shallow[index]._count?.Followers + 1,
+          },
+        };
+        queryClient.setQueryData(["users", "followRecommends"], shallow);
+      }
+      const value2: User | undefined = queryClient.getQueryData([
+        "users",
+        userId,
+      ]);
+      if (value2) {
+        const shallow = {
+          ...value2,
+          Followers: [{ id: session?.user?.email as string }],
+          _count: {
+            ...value2._count,
+            Followers: value2._count?.Followers + 1,
+          },
+        };
+        queryClient.setQueryData(["users", userId], shallow);
+      }
+    },
+    onError(error, userId: string) {
+      const value: User[] | undefined = queryClient.getQueryData([
+        "users",
+        "followRecommends",
+      ]);
+      if (value) {
+        const index = value.findIndex((v) => v.id === userId);
+        const shallow = [...value];
+        shallow[index] = {
+          ...shallow[index],
+          Followers: shallow[index].Followers.filter(
+            (v) => v.id !== session?.user?.email
+          ),
+          _count: {
+            ...shallow[index]._count,
+            Followers: shallow[index]._count?.Followers - 1,
+          },
+        };
+        queryClient.setQueryData(["users", "followRecommends"], shallow);
+        const value2: User | undefined = queryClient.getQueryData([
+          "users",
+          userId,
+        ]);
+        if (value2) {
+          const shallow = {
+            ...value2,
+            Followers: value2.Followers.filter(
+              (v) => v.id !== session?.user?.email
+            ),
+            _count: {
+              ...value2._count,
+              Followers: value2._count?.Followers - 1,
+            },
+          };
+          queryClient.setQueryData(["users", userId], shallow);
+        }
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user", userId] });
+    },
+  });
+
+  const unfollow = useMutation({
+    mutationFn: (userId: string) => {
+      console.log("unfollow", userId);
+      return fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${userId}/follow`,
+        {
+          credentials: "include",
+          method: "delete",
+        }
+      );
+    },
+    onMutate(userId: string) {
+      const value: User[] | undefined = queryClient.getQueryData([
+        "users",
+        "followRecommends",
+      ]);
+      if (value) {
+        const index = value.findIndex((v) => v.id === userId);
+        const shallow = [...value];
+        shallow[index] = {
+          ...shallow[index],
+          Followers: shallow[index].Followers.filter(
+            (v) => v.id !== session?.user?.email
+          ),
+          _count: {
+            ...shallow[index]._count,
+            Followers: shallow[index]._count?.Followers - 1,
+          },
+        };
+        queryClient.setQueryData(["users", "followRecommends"], shallow);
+        const value2: User | undefined = queryClient.getQueryData([
+          "users",
+          userId,
+        ]);
+        if (value2) {
+          const shallow = {
+            ...value2,
+            Followers: value2.Followers.filter(
+              (v) => v.id !== session?.user?.email
+            ),
+            _count: {
+              ...value2._count,
+              Followers: value2._count?.Followers - 1,
+            },
+          };
+          queryClient.setQueryData(["users", userId], shallow);
+        }
+      }
+    },
+    onError(error, userId: string) {
+      const value: User[] | undefined = queryClient.getQueryData([
+        "users",
+        "followRecommends",
+      ]);
+      if (value) {
+        const index = value.findIndex((v) => v.id === userId);
+        console.log(value, userId, index);
+        const shallow = [...value];
+        shallow[index] = {
+          ...shallow[index],
+          Followers: [{ id: session?.user?.email as string }],
+          _count: {
+            ...shallow[index]._count,
+            Followers: shallow[index]._count?.Followers + 1,
+          },
+        };
+        queryClient.setQueryData(["users", "followRecommends"], shallow);
+      }
+      const value2: User | undefined = queryClient.getQueryData([
+        "users",
+        userId,
+      ]);
+      if (value2) {
+        const shallow = {
+          ...value2,
+          Followers: [{ id: session?.user?.email as string }],
+          _count: {
+            ...value2._count,
+            Followers: value2._count?.Followers + 1,
+          },
+        };
+        queryClient.setQueryData(["users", userId], shallow);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user", userId] });
+    },
+  });
+  const onFollow: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (followed) {
+      console.log(followed, userId, "fol");
+      unfollow.mutate(userId);
+    } else {
+      console.log(followed, userId, "fol2");
+      follow.mutate(userId);
+    }
+  };
 
   if (userError) {
     return (
@@ -57,26 +258,27 @@ export default function ProfileSection({ userId }: Props) {
     );
   }
 
-  const {
-    data: postData,
-    error,
-    isLoading,
-  } = useQuery<Post[], Object, Post[], [string, string, string]>({
-    queryKey: ["user", userId, "posts"],
-    queryFn: getUserPosts,
-    staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
-    gcTime: 300 * 1000,
-  });
+  // const chunkSize = 3;
+  // const UserPosts = [];
 
-  const chunkSize = 3;
-  const UserPosts = [];
+  // const {
+  //   data: postData,
+  //   error: postError,
+  //   isLoading,
+  // } = useQuery<Post[], Object, Post[], [string, string, string]>({
+  //   queryKey: ["posts", "user", userData?.id],
+  //   queryFn: getUserPosts,
+  //   staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
+  //   gcTime: 300 * 1000,
+  //   retry: true,
+  // });
 
-  console.log(postData, "postData");
-  if (postData) {
-    for (let i = 0; i < postData!.length; i += chunkSize) {
-      UserPosts.push(postData!.slice(i, i + chunkSize));
-    }
-  }
+  // if (postData) {
+  //   console.log(postData, "data");
+  //   for (let i = 0; i < postData!.length; i += chunkSize) {
+  //     UserPosts.push(postData!.slice(i, i + chunkSize));
+  //   }
+  // }
 
   return (
     <section className={styles.MainSection}>
@@ -106,9 +308,12 @@ export default function ProfileSection({ userId }: Props) {
                   tabIndex={-1}
                   style={{ height: "150px", width: "150px" }}
                 >
-                  <img
-                    src={`${userData!.image}`}
-                    alt={`누구의 프로필 사진`}
+                  <Image
+                    width={0}
+                    height={0}
+                    sizes="100vw"
+                    src={`${userData?.image}`}
+                    alt={`${userData?.nickname}의 프로필 사진 `}
                     crossOrigin="anonymous"
                     draggable="false"
                     className={styles.ProfileImage}
@@ -120,71 +325,38 @@ export default function ProfileSection({ userId }: Props) {
               <div className={styles.HeaderSectionNameDiv}>
                 <Link href="#" role="link" tabIndex={0}>
                   <h2 className={styles.NameH2} dir="auto" tabIndex={-1}>
-                    {"닉네임"}
+                    {`${userData?.id}`}
                   </h2>
                 </Link>
                 <div className={styles.HeaderSectionEmo}>
-                  <div className={styles.HeaderSectionEmo2}>
+                  <div className={styles.HeaderSectionFollowBtn}>
                     <div
-                      className={styles.HeaderSectionFollowBtn}
-                      style={{ width: "34px" }}
+                      className={styles.HeaderSectionFollowBtn2}
+                      tabIndex={0}
                     >
-                      <div
-                        className={styles.HeaderSectionFollowBtn2}
-                        role="button"
-                        tabIndex={0}
+                      <button
+                        className={styles.HeaderSectionFollowBtn4}
+                        style={{
+                          backgroundColor: followed
+                            ? "rgb(239, 239, 239)"
+                            : "rgb(0, 149, 246)",
+                          color: followed ? "rgb(0,0,0)" : "rgb(255,255,255)",
+                        }}
+                        type="button"
+                        onClick={onFollow}
                       >
-                        <div className={styles.HeaderSectionFollowBtn3}>
-                          <svg
-                            aria-label="비슷한 계정"
-                            className={styles.FollowSvg}
-                            fill="currentColor"
-                            height="16"
-                            role="img"
-                            viewBox="0 0 24 24"
-                            width="16"
+                        <div
+                          className={styles.HeaderSectionFollowBtn5}
+                          style={{ height: "100%" }}
+                        >
+                          <div
+                            className={styles.HeaderSectionFollowBtn6}
+                            dir="auto"
                           >
-                            <title>비슷한 계정</title>
-                            <path
-                              d="M19.006 8.252a3.5 3.5 0 1 1-3.499-3.5 3.5 3.5 0 0 1 3.5 3.5Z"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeMiterlimit="10"
-                              strokeWidth="2"
-                            ></path>
-                            <path
-                              d="M22 19.5v-.447a4.05 4.05 0 0 0-4.05-4.049h-4.906a4.05 4.05 0 0 0-4.049 4.049v.447"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                            ></path>
-                            <line
-                              fill="none"
-                              stroke="currentColor"
-                              strokeLinecap="round"
-                              strokeMiterlimit="10"
-                              strokeWidth="2"
-                              x1="5.001"
-                              x2="5.001"
-                              y1="7.998"
-                              y2="14.003"
-                            ></line>
-                            <line
-                              fill="none"
-                              stroke="currentColor"
-                              strokeLinecap="round"
-                              strokeMiterlimit="10"
-                              strokeWidth="2"
-                              x1="8.004"
-                              x2="2.003"
-                              y1="11"
-                              y2="11"
-                            ></line>
-                          </svg>
+                            {followed ? "팔로잉" : "팔로우"}
+                          </div>
                         </div>
-                      </div>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -202,20 +374,24 @@ export default function ProfileSection({ userId }: Props) {
                 <li className={styles.InfoLi}>
                   {"팔로워 "}
                   <span className={styles.InfoSpan}>
-                    <span className={styles.InfoInnerSpan}>{"6.8만"}</span>
+                    <span
+                      className={styles.InfoInnerSpan}
+                    >{`${userData?._count.Followers}`}</span>
                   </span>
                 </li>
                 <li className={styles.InfoLi}>
                   {"팔로우 "}
                   <span className={styles.InfoSpan}>
-                    <span className={styles.InfoInnerSpan}>{"508"}</span>
+                    <span
+                      className={styles.InfoInnerSpan}
+                    >{`${userData?._count.Followings}`}</span>
                   </span>
                 </li>
               </ul>
               <div className={styles.ProfileContent}>
                 <div className={styles.ProfileContentId}>
                   <span className={styles.ProfileContentIdSpan}>
-                    {"사용자 명"}
+                    {`${userData?.nickname}`}
                   </span>
                 </div>
                 <div className={styles.ProfileContentType}>
@@ -416,7 +592,8 @@ export default function ProfileSection({ userId }: Props) {
               </div>
             </Link>
           </div>
-          {UserPosts ? (
+          <UserPosts userId={userId} />
+          {/* {UserPosts ? (
             <div>
               <div
                 style={{
@@ -502,7 +679,7 @@ export default function ProfileSection({ userId }: Props) {
                 </div>
               </div>
             </div>
-          )}
+          )} */}
         </div>
       </main>
     </section>

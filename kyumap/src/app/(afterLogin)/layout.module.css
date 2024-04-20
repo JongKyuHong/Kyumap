@@ -129,6 +129,29 @@
   z-index: 0;
 }
 
+.rootSection {
+  min-height: 100vh;
+  overflow-x: hidden;
+  flex-direction: column;
+  display: flex;
+  flex-grow: 1;
+}
+
+.rootMain {
+  background-color: rgb(var(--ig-primary-background));
+  flex-direction: column;
+  display: flex;
+  flex-grow: 1;
+  order: 4;
+}
+
+.mainrootDiv {
+  width: 100%;
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+}
+
 .rootChild {
   flex-direction: column;
   display: flex;
