@@ -10,7 +10,7 @@ export const getUser: QueryFunction<
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${userId}`,
     {
       next: {
-        tags: ["user", userId],
+        tags: ["users", userId],
       },
       credentials: "include",
       cache: "no-store",

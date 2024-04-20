@@ -8,12 +8,9 @@ type Props = {
 };
 
 export default function SearchCard({ userData }: Props) {
-  const userdata = userData;
-
-  console.log(userdata, "userdata");
   return (
     <Link
-      href={`/profile/${userdata.User.id}`}
+      href={`/profile/${userData.id}`}
       className={styles.recentLink}
       role="link"
       tabIndex={0}
@@ -26,7 +23,7 @@ export default function SearchCard({ userData }: Props) {
                 <div className={styles.profileImage3}>
                   <object type="nested/pressable">
                     <Link
-                      href={`/profile/${userdata.User.id}`}
+                      href={`/profile/${userData.id}`}
                       role="link"
                       style={{
                         height: "44px",
@@ -34,8 +31,11 @@ export default function SearchCard({ userData }: Props) {
                       }}
                       className={styles.profileLink}
                     >
-                      <img
-                        src={userdata.User.image}
+                      <Image
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                        src={userData.image}
                         alt="profile이미지"
                         draggable="false"
                         crossOrigin="anonymous"
@@ -54,7 +54,7 @@ export default function SearchCard({ userData }: Props) {
                       style={{ lineHeight: "18px" }}
                       className={styles.profileId}
                     >
-                      {userdata.User.id}
+                      {userData.id}
                     </span>
                   </div>
                   <span
@@ -62,7 +62,7 @@ export default function SearchCard({ userData }: Props) {
                     className={styles.profileBodySpan}
                   >
                     <span className={styles.profileBodySpan2}>
-                      {userdata.User.nickname}
+                      {userData.nickname}
                     </span>
                   </span>
                 </div>

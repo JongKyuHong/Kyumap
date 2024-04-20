@@ -49,7 +49,6 @@ export default function DetailPage({ postId }: Props) {
     gcTime: 300 * 1000,
   });
 
-  console.log(post, "postdata");
   const router = useRouter();
 
   useEffect(() => {
@@ -74,15 +73,15 @@ export default function DetailPage({ postId }: Props) {
     } else {
       setMultiImg(false);
     }
-  }, []);
+  }, [post]);
 
   const saveIconClick = useCallback(() => {
     setSaveClicked((prev) => !prev);
-  }, [saveIconClicked]);
+  }, []);
 
   const onClickXbox = useCallback(() => {
     router.back();
-  }, []);
+  }, [router]);
 
   const onClickNextBtn = () => {
     setNumber(currentNumber + 1);
@@ -195,9 +194,9 @@ export default function DetailPage({ postId }: Props) {
                                                 width: "32px",
                                               }}
                                             >
-                                              <img
-                                                // width={32}
-                                                // height={32}
+                                              <Image
+                                                width={32}
+                                                height={32}
                                                 alt={`${
                                                   post!.User.nickname
                                                 }님이 올린 사진`}
@@ -265,7 +264,9 @@ export default function DetailPage({ postId }: Props) {
                                                         paddingBottom: "75%",
                                                       }}
                                                     >
-                                                      <img
+                                                      <Image
+                                                        width={32}
+                                                        height={32}
                                                         alt="Photo by"
                                                         className={
                                                           styles.ArticleImage
@@ -278,7 +279,7 @@ export default function DetailPage({ postId }: Props) {
                                                             currentNumber
                                                           ].link
                                                         }
-                                                      ></img>
+                                                      />
                                                     </div>
                                                   </div>
                                                 </div>
@@ -669,8 +670,10 @@ export default function DetailPage({ postId }: Props) {
                                                         paddingBottom: "75%",
                                                       }}
                                                     >
-                                                      <img
+                                                      <Image
                                                         alt="Photo by"
+                                                        width={32}
+                                                        height={32}
                                                         className={
                                                           styles.ArticleImage
                                                         }
@@ -682,7 +685,7 @@ export default function DetailPage({ postId }: Props) {
                                                             currentNumber
                                                           ].link
                                                         }
-                                                      ></img>
+                                                      />
                                                     </div>
                                                   </div>
                                                 </div>
@@ -817,9 +820,9 @@ export default function DetailPage({ postId }: Props) {
                                                       width: "32px",
                                                     }}
                                                   >
-                                                    <img
-                                                      // height={32}
-                                                      // width={32}
+                                                    <Image
+                                                      height={32}
+                                                      width={32}
                                                       src={`${
                                                         post!.User.image
                                                       }`}
@@ -1188,7 +1191,9 @@ export default function DetailPage({ postId }: Props) {
                                                             height: "32px",
                                                           }}
                                                         >
-                                                          <img
+                                                          <Image
+                                                            width={32}
+                                                            height={32}
                                                             src={
                                                               post!.User.image
                                                             }
@@ -1201,7 +1206,7 @@ export default function DetailPage({ postId }: Props) {
                                                             }
                                                             crossOrigin="anonymous"
                                                             draggable="false"
-                                                          ></img>
+                                                          />
                                                         </Link>
                                                       </div>
                                                     </div>
@@ -1381,7 +1386,7 @@ export default function DetailPage({ postId }: Props) {
                                                                             styles.CommentUserProfileLink
                                                                           }
                                                                         >
-                                                                          <img
+                                                                          <Image
                                                                             alt={`${commentData.User.id}님의 프로필 사진`}
                                                                             src={`${commentData.User.image}`}
                                                                             width={
@@ -1395,7 +1400,7 @@ export default function DetailPage({ postId }: Props) {
                                                                             }
                                                                             crossOrigin="anonymous"
                                                                             draggable="false"
-                                                                          ></img>
+                                                                          />
                                                                         </Link>
                                                                       </div>
                                                                     </div>

@@ -9,29 +9,6 @@
   }
 }
 
-.rootSection {
-  min-height: 100vh;
-  overflow-x: hidden;
-  flex-direction: column;
-  display: flex;
-  flex-grow: 1;
-}
-
-.rootMain {
-  background-color: rgb(var(--ig-primary-background));
-  flex-direction: column;
-  display: flex;
-  flex-grow: 1;
-  order: 4;
-}
-
-.mainrootDiv {
-  width: 100%;
-  justify-content: center;
-  display: flex;
-  flex-direction: row;
-}
-
 .rootDivInner {
   margin-top: 16px;
 }
@@ -1411,9 +1388,16 @@
   border-top-right-radius: 0;
 }
 
+.PrimaryColor {
+  color: rgb(var(--ig-primary-button));
+}
+
+.DarkColor {
+  color: rgb(var(--ig-primary-text));
+}
+
 .FBtn {
   border: 0;
-  color: rgb(var(--ig-primary-button));
   display: inline-block;
   padding: 0 !important;
   position: relative;
