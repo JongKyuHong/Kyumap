@@ -19,8 +19,6 @@ export default function SearchResult({ searchParams }: Props) {
     gcTime: 300 * 1000,
   });
 
-  console.log(data, "searchresult data");
-
   return data?.map((userData, index) => (
     <SearchCard key={index} userData={userData} />
   ));

@@ -50,7 +50,7 @@ export default function MainSection() {
           <div className={styles.rootDivInner}>
             <div className={styles.rootDivInner2}>
               <div>
-                <div className={styles.rootDivInner3}>
+                {/* <div className={styles.rootDivInner3}>
                   <div className={styles.rootDivInner4}>
                     <div className={styles.rootDivInner5}>
                       <div className={styles.rootDivInner6}>
@@ -81,7 +81,7 @@ export default function MainSection() {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
             <div className={styles.postDiv}>

@@ -591,6 +591,7 @@ export default function NewPost() {
                                               height={0}
                                               alt={"postImage"}
                                               sizes="100vw"
+                                              priority={true}
                                             />
                                             <div
                                               className={styles.imgTab3}
@@ -718,6 +719,7 @@ export default function NewPost() {
                                                 width={0}
                                                 height={0}
                                                 sizes="100vw"
+                                                priority={true}
                                               />
                                             </div>
                                           </div>
@@ -872,6 +874,7 @@ export default function NewPost() {
                                                           sizes="100vw"
                                                           crossOrigin="anonymous"
                                                           draggable="false"
+                                                          priority={true}
                                                           // src={"/chi.png"}
                                                         />
                                                       </span>
@@ -1501,6 +1504,7 @@ export default function NewPost() {
                                                           height={44}
                                                           width={67}
                                                           src={`${preview[index]?.dataUrl}`}
+                                                          priority={true}
                                                           alt={"postImage"}
                                                           className={
                                                             styles.AccExpandImg

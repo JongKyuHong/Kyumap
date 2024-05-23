@@ -1,12 +1,12 @@
 import { QueryFunction } from "@tanstack/query-core";
-import { User } from "@/model/User";
+import { IUser } from "@/model/User";
 
 export const getSearchResult: QueryFunction<
-  User[],
+  IUser[],
   [_1: string, searchParams: string]
 > = async ({ queryKey }) => {
   const [_1, searchParams] = queryKey;
-  const res = await fetch(`http://localhost:9090/api/search/${searchParams}`, {
+  const res = await fetch(`/api/search/${searchParams}`, {
     next: {
       tags: ["search", searchParams],
     },

@@ -26,19 +26,16 @@ export const {
   providers: [
     CredentialsProvider({
       async authorize(credentials) {
-        const authResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/login`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              id: credentials.username,
-              password: credentials.password,
-            }),
-          }
-        );
+        const authResponse = await fetch(`http://localhost:3000/api/login`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: credentials.username,
+            password: credentials.password,
+          }),
+        });
 
         let setCookie = authResponse.headers.get("Set-Cookie");
         console.log("set-cookie", setCookie);

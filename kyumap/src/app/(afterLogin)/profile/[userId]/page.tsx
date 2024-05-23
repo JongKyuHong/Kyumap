@@ -30,6 +30,8 @@ export default async function page({ params }: Props) {
 
   const dehydrateState = dehydrate(queryClient);
 
+  console.log(userId, "userId");
+
   return (
     <div>
       <HydrationBoundary state={dehydrateState}>

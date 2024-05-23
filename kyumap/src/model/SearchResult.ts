@@ -1,7 +1,7 @@
-import { User } from "./User";
+import { IUser } from "./User";
 import { HashTag } from "./HashTag";
 
 export interface SearchResult {
-  User: User;
+  User: IUser;
   HashTag: HashTag;
 }

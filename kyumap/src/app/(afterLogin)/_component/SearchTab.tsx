@@ -137,6 +137,7 @@ export default function SearchTab() {
                                               width={0}
                                               height={0}
                                               sizes="100vw"
+                                              priority={true}
                                               src={recentHistory.User.image}
                                               alt="profile이미지"
                                               draggable="false"

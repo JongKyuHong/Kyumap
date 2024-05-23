@@ -195,8 +195,9 @@ export default function DetailPage({ postId }: Props) {
                                               }}
                                             >
                                               <Image
-                                                width={32}
-                                                height={32}
+                                                width={0}
+                                                height={0}
+                                                sizes="100vw"
                                                 alt={`${
                                                   post!.User.nickname
                                                 }님이 올린 사진`}
@@ -265,8 +266,9 @@ export default function DetailPage({ postId }: Props) {
                                                       }}
                                                     >
                                                       <Image
-                                                        width={32}
-                                                        height={32}
+                                                        width={0}
+                                                        height={0}
+                                                        sizes="100vw"
                                                         alt="Photo by"
                                                         className={
                                                           styles.ArticleImage
@@ -672,8 +674,9 @@ export default function DetailPage({ postId }: Props) {
                                                     >
                                                       <Image
                                                         alt="Photo by"
-                                                        width={32}
-                                                        height={32}
+                                                        width={0}
+                                                        height={0}
+                                                        sizes="100vw"
                                                         className={
                                                           styles.ArticleImage
                                                         }
@@ -821,8 +824,9 @@ export default function DetailPage({ postId }: Props) {
                                                     }}
                                                   >
                                                     <Image
-                                                      height={32}
-                                                      width={32}
+                                                      height={0}
+                                                      width={0}
+                                                      sizes="100vw"
                                                       src={`${
                                                         post!.User.image
                                                       }`}
@@ -1192,8 +1196,9 @@ export default function DetailPage({ postId }: Props) {
                                                           }}
                                                         >
                                                           <Image
-                                                            width={32}
-                                                            height={32}
+                                                            width={0}
+                                                            height={0}
+                                                            sizes="100vw"
                                                             src={
                                                               post!.User.image
                                                             }
@@ -1380,7 +1385,7 @@ export default function DetailPage({ postId }: Props) {
                                                                             height:
                                                                               "32px",
                                                                             width:
-                                                                              "32px",
+                                                                      0        "32px",
                                                                           }}
                                                                           className={
                                                                             styles.CommentUserProfileLink
@@ -1390,11 +1395,12 @@ export default function DetailPage({ postId }: Props) {
                                                                             alt={`${commentData.User.id}님의 프로필 사진`}
                                                                             src={`${commentData.User.image}`}
                                                                             width={
-                                                                              32
+                                                                              0
                                                                             }
                                                                             height={
-                                                                              32
+                                                                              0
                                                                             }
+                                                                            sizes="100vw"
                                                                             className={
                                                                               styles.CommentUserProfileImage
                                                                             }

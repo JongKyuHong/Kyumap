@@ -2,8 +2,9 @@
 
 import { redirect } from "next/navigation";
 import { signIn } from "@/auth";
+import fs from "fs";
 
-export default async (prevState: any, formData: FormData) => {
+const signup = async (prevState: any, formData: FormData) => {
   if (!formData.get("id") || !(formData.get("id") as string)?.trim()) {
     return { message: "no_id" };
   }
@@ -30,11 +31,11 @@ export default async (prevState: any, formData: FormData) => {
         credentials: "include",
       }
     );
-    console.log(response.status);
+    console.log(response.status, "status");
     if (response.status === 403) {
       return { message: "user_exists" };
     }
-    console.log(await response.json());
+    console.log(await response.json(), "resjson");
     shouldRedirect = true;
     await signIn("credentials", {
       username: formData.get("id"),
@@ -51,3 +52,5 @@ export default async (prevState: any, formData: FormData) => {
   }
   return { message: null };
 };
+
+export default signup;
