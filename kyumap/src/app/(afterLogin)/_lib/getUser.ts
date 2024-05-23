@@ -1,21 +1,18 @@
 import { QueryFunction } from "@tanstack/query-core";
-import { User } from "@/model/User";
+import { IUser } from "@/model/User";
 
 export const getUser: QueryFunction<
-  User,
+  IUser,
   [_1: string, userId: string]
 > = async ({ queryKey }) => {
   const [_1, userId] = queryKey;
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${userId}`,
-    {
-      next: {
-        tags: ["users", userId],
-      },
-      credentials: "include",
-      cache: "no-store",
-    }
-  );
+  const res = await fetch(`/api/users/${userId}`, {
+    next: {
+      tags: ["users", userId],
+    },
+    credentials: "include",
+    cache: "no-store",
+  });
   if (!res.ok) {
     throw new Error("Failed to fetch data");
   }

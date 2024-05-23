@@ -130,9 +130,10 @@
 }
 
 .leftSection {
-  border-right-style: solid;
-  border-right-color: var(--ig-separator);
-  border-right-width: 1px;
+  border-right-style: solid !important;
+  border-right-color: var(--ig-separator) !important;
+  border-right-width: 1px !important;
+  /* border-right: 1px solid var(--ig-separator); */
   z-index: 1;
 }
 
@@ -1017,12 +1018,12 @@
   position: relative;
 }
 
-@supports (padding: env(safe-area-inset-bottom, 0)) {
+/* @supports (padding: env(safe-area-inset-bottom, 0)) {
   .leftSectionWrapper {
     padding-bottom: env(safe-area-inset-bottom);
     background-color: rgb(var(--ig-primary-background));
   }
-}
+} */
 
 .MleftSectionWrapper {
   overflow-y: visible;

@@ -35,7 +35,8 @@ export default function SearchCard({ userData }: Props) {
                         width={0}
                         height={0}
                         sizes="100vw"
-                        src={userData.image}
+                        // src={userData.image}
+                        src={"/chi.png"}
                         alt="profile이미지"
                         draggable="false"
                         crossOrigin="anonymous"

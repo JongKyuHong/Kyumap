@@ -36,6 +36,8 @@ export default function ProfileSection({ userId }: Props) {
     (v) => v.id === session?.user?.email
   );
 
+  console.log(userId, userData, userError, userLoading, "userData");
+
   const queryClient = useQueryClient();
 
   const follow = useMutation({
@@ -226,6 +228,28 @@ export default function ProfileSection({ userId }: Props) {
     }
   };
 
+  // const chunkSize = 3;
+  // const UserPosts = [];
+
+  // const {
+  //   data: postData,
+  //   error: postError,
+  //   isLoading,
+  // } = useQuery<Post[], Object, Post[], [string, string, string]>({
+  //   queryKey: ["posts", "user", userData?.id],
+  //   queryFn: getUserPosts,
+  //   staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
+  //   gcTime: 300 * 1000,
+  //   retry: true,
+  // });
+
+  // if (postData) {
+  //   console.log(postData, "data");
+  //   for (let i = 0; i < postData!.length; i += chunkSize) {
+  //     UserPosts.push(postData!.slice(i, i + chunkSize));
+  //   }
+  // }
+
   if (userError) {
     return (
       <section className={styles.MainSection}>
@@ -257,28 +281,6 @@ export default function ProfileSection({ userId }: Props) {
       </section>
     );
   }
-
-  // const chunkSize = 3;
-  // const UserPosts = [];
-
-  // const {
-  //   data: postData,
-  //   error: postError,
-  //   isLoading,
-  // } = useQuery<Post[], Object, Post[], [string, string, string]>({
-  //   queryKey: ["posts", "user", userData?.id],
-  //   queryFn: getUserPosts,
-  //   staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
-  //   gcTime: 300 * 1000,
-  //   retry: true,
-  // });
-
-  // if (postData) {
-  //   console.log(postData, "data");
-  //   for (let i = 0; i < postData!.length; i += chunkSize) {
-  //     UserPosts.push(postData!.slice(i, i + chunkSize));
-  //   }
-  // }
 
   return (
     <section className={styles.MainSection}>

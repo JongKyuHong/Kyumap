@@ -11,11 +11,11 @@ import Image from "next/image";
 import { Session } from "@auth/core/types";
 import { useSession } from "next-auth/react";
 
-type Props = {
-  me: Session | null;
-};
+// type Props = {
+//   me: Session | null;
+// };
 
-export default function FollowRecommendSection({ me }: Props) {
+export default function FollowRecommendSection() {
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
   const { data: session } = useSession();
   const { data } = useQuery<User[]>({
@@ -24,6 +24,8 @@ export default function FollowRecommendSection({ me }: Props) {
     staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
     gcTime: 300 * 1000,
   });
+
+  console.log(session, "me and session");
 
   return (
     <>
@@ -54,7 +56,7 @@ export default function FollowRecommendSection({ me }: Props) {
                                 }}
                               ></canvas>
                               <Link
-                                href={`/profile/${me?.user?.email}`}
+                                href={`/profile/${session?.user?.email}`}
                                 className={styles.ImageLink}
                                 style={{ height: "44px", width: "44px" }}
                                 tabIndex={0}
@@ -66,8 +68,8 @@ export default function FollowRecommendSection({ me }: Props) {
                                   draggable="false"
                                   width={44}
                                   height={44}
-                                  alt={`${me?.user?.name}님의 프로필`}
-                                  src={`${me?.user?.image}`}
+                                  alt={`${session?.user?.name}님의 프로필`}
+                                  src={`${session?.user?.image}`}
                                 ></Image>
                               </Link>
                             </div>
@@ -78,7 +80,7 @@ export default function FollowRecommendSection({ me }: Props) {
                             <div className={styles.MyAccountInfoInnerDiv}>
                               <div className={styles.MyAccountInfoId}>
                                 <Link
-                                  href={`/profile/${me?.user?.email}`}
+                                  href={`/profile/${session?.user?.email}`}
                                   className={styles.IdLink}
                                   tabIndex={0}
                                   role="link"
@@ -91,7 +93,7 @@ export default function FollowRecommendSection({ me }: Props) {
                                       className={styles.NameSpan}
                                       style={{ lineHeight: "18px" }}
                                     >
-                                      {`${me?.user?.name}`}
+                                      {`${session?.user?.name}`}
                                     </span>
                                   </div>
                                 </span>
