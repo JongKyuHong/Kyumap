@@ -4,17 +4,17 @@ interface UserID {
   id: string;
 }
 
-interface Image {
-  size: number;
-  type: string;
-  name: string;
-  lastModified: number;
-}
+// interface Image {
+//   size: number;
+//   type: string;
+//   name: string;
+//   lastModified: number;
+// }
 
 export interface IUser extends Document {
   id: string;
   nickname: string;
-  image: Image;
+  image: string;
   Followers: UserID[];
   _count: {
     Followers: number;
@@ -32,11 +32,15 @@ export const userSchema: Schema = new mongoose.Schema({
     required: true,
   },
   image: {
-    size: { type: Number },
-    Imgtype: { type: String },
-    name: { type: String },
-    lastModified: { type: Number },
+    type: String,
+    required: true,
   },
+  // image: {
+  //   size: { type: Number },
+  //   Imgtype: { type: String },
+  //   name: { type: String },
+  //   lastModified: { type: Number },
+  // },
   Followers: [
     {
       userId: String,
