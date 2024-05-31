@@ -9,10 +9,10 @@ import {
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import styles from "./post.module.css";
-import { Post } from "@/model/Post";
+import { IPost } from "@/model/Post";
 
 interface Props {
-  post: Post;
+  post: IPost;
 }
 
 export default function ActionButtons({ post }: Props) {
@@ -21,8 +21,10 @@ export default function ActionButtons({ post }: Props) {
   const [textValue, setTextValue] = useState("");
 
   const liked = !!post.Hearts?.find((v) => {
-    return v.userId === session?.user?.email;
+    return v.email === session?.user?.email;
   });
+
+  console.log(post, "post");
 
   const { postId } = post;
 
@@ -33,6 +35,7 @@ export default function ActionButtons({ post }: Props) {
         {
           method: "post",
           credentials: "include",
+          body: JSON.stringify(session),
         }
       );
     },
@@ -42,7 +45,7 @@ export default function ActionButtons({ post }: Props) {
       console.log("queryKeys", queryKeys);
       queryKeys.forEach((queryKey) => {
         if (queryKey[0] === "posts") {
-          const value: Post | InfiniteData<Post[]> | undefined =
+          const value: IPost | InfiniteData<IPost[]> | undefined =
             queryClient.getQueryData(queryKey);
           if (value && "pages" in value) {
             console.log("array", value);
@@ -61,7 +64,7 @@ export default function ActionButtons({ post }: Props) {
               value.pages[pageIndex] = [...value.pages[pageIndex]];
               shallow.pages[pageIndex][index] = {
                 ...shallow.pages[pageIndex][index],
-                Hearts: [{ userId: session?.user?.email as string }],
+                Hearts: [{ email: session?.user?.email as string }],
                 _count: {
                   ...shallow.pages[pageIndex][index]._count,
                   Hearts: shallow.pages[pageIndex][index]._count.Hearts + 1,
@@ -75,7 +78,7 @@ export default function ActionButtons({ post }: Props) {
             if (value.postId === postId) {
               const shallow = {
                 ...value,
-                Hearts: [{ userId: session?.user?.email as string }],
+                Hearts: [{ email: session?.user?.email as string }],
                 _count: {
                   ...value._count,
                   Hearts: value._count.Hearts + 1,
@@ -97,7 +100,7 @@ export default function ActionButtons({ post }: Props) {
       console.log("queryKeys", queryKeys);
       queryKeys.forEach((queryKey) => {
         if (queryKey[0] === "posts") {
-          const value: Post | InfiniteData<Post[]> | undefined =
+          const value: IPost | InfiniteData<IPost[]> | undefined =
             queryClient.getQueryData(queryKey);
           if (value && "pages" in value) {
             console.log("array", value);
@@ -117,7 +120,7 @@ export default function ActionButtons({ post }: Props) {
               shallow.pages[pageIndex][index] = {
                 ...shallow.pages[pageIndex][index],
                 Hearts: shallow.pages[pageIndex][index].Hearts.filter(
-                  (v) => v.userId !== session?.user?.email
+                  (v) => v.email !== session?.user?.email
                 ),
                 _count: {
                   ...shallow.pages[pageIndex][index]._count,
@@ -132,7 +135,7 @@ export default function ActionButtons({ post }: Props) {
               const shallow = {
                 ...value,
                 Hearts: value.Hearts.filter(
-                  (v) => v.userId !== session?.user?.email
+                  (v) => v.email !== session?.user?.email
                 ),
                 _count: {
                   ...value._count,
@@ -155,6 +158,7 @@ export default function ActionButtons({ post }: Props) {
         {
           method: "delete",
           credentials: "include",
+          body: JSON.stringify(session),
         }
       );
     },
@@ -164,7 +168,7 @@ export default function ActionButtons({ post }: Props) {
       console.log("queryKeys", queryKeys);
       queryKeys.forEach((queryKey) => {
         if (queryKey[0] === "posts") {
-          const value: Post | InfiniteData<Post[]> | undefined =
+          const value: IPost | InfiniteData<IPost[]> | undefined =
             queryClient.getQueryData(queryKey);
           if (value && "pages" in value) {
             console.log("array", value);
@@ -184,7 +188,7 @@ export default function ActionButtons({ post }: Props) {
               shallow.pages[pageIndex][index] = {
                 ...shallow.pages[pageIndex][index],
                 Hearts: shallow.pages[pageIndex][index].Hearts.filter(
-                  (v) => v.userId !== session?.user?.email
+                  (v) => v.email !== session?.user?.email
                 ),
                 _count: {
                   ...shallow.pages[pageIndex][index]._count,
@@ -199,7 +203,7 @@ export default function ActionButtons({ post }: Props) {
               const shallow = {
                 ...value,
                 Hearts: value.Hearts.filter(
-                  (v) => v.userId !== session?.user?.email
+                  (v) => v.email !== session?.user?.email
                 ),
                 _count: {
                   ...value._count,
@@ -219,7 +223,7 @@ export default function ActionButtons({ post }: Props) {
       queryKeys.forEach((queryKey) => {
         if (queryKey[0] === "posts") {
           console.log(queryKey[0]);
-          const value: Post | InfiniteData<Post[]> | undefined =
+          const value: IPost | InfiniteData<IPost[]> | undefined =
             queryClient.getQueryData(queryKey);
           if (value && "pages" in value) {
             console.log("array", value);
@@ -238,7 +242,7 @@ export default function ActionButtons({ post }: Props) {
               value.pages[pageIndex] = [...value.pages[pageIndex]];
               shallow.pages[pageIndex][index] = {
                 ...shallow.pages[pageIndex][index],
-                Hearts: [{ userId: session?.user?.email as string }],
+                Hearts: [{ email: session?.user?.email as string }],
                 _count: {
                   ...shallow.pages[pageIndex][index]._count,
                   Hearts: shallow.pages[pageIndex][index]._count.Hearts + 1,
@@ -251,7 +255,7 @@ export default function ActionButtons({ post }: Props) {
             if (value.postId === postId) {
               const shallow = {
                 ...value,
-                Hearts: [{ userId: session?.user?.email as string }],
+                Hearts: [{ email: session?.user?.email as string }],
                 _count: {
                   ...value._count,
                   Hearts: value._count.Hearts + 1,

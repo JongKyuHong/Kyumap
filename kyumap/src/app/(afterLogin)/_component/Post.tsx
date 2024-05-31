@@ -7,7 +7,7 @@ import Image from "next/image";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/ko";
-import { Post as IPost } from "@/model/Post";
+import { IPost } from "@/model/Post";
 import ActionButtons from "./ActionButtons";
 
 dayjs.locale("ko");
@@ -21,6 +21,8 @@ export default function Post({ post }: Props) {
   const [isMultiImg, setMultiImg] = useState(false);
   const [currentNumber, setNumber] = useState(0);
   const imgArticle = [];
+
+  console.log(post, "component post.tsx에서 post출력");
 
   for (let i = 0; i < post.Images.length; i++) {
     imgArticle.push(
@@ -220,9 +222,7 @@ export default function Post({ post }: Props) {
                                               width={0}
                                               height={0}
                                               sizes="100vw"
-                                              src={
-                                                post.Images[currentNumber].link
-                                              }
+                                              src={post.Images[currentNumber]}
                                               alt="사용자님의 사진"
                                               crossOrigin="anonymous"
                                               style={{ objectFit: "cover" }}
@@ -320,7 +320,7 @@ export default function Post({ post }: Props) {
                           sizes="100vw"
                           alt="게시글"
                           crossOrigin="anonymous"
-                          src={post.Images[0].link}
+                          src={post.Images[0]}
                           className={styles.postImage}
                           style={{ objectFit: "cover" }}
                         />

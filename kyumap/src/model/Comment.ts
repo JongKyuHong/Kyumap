@@ -14,7 +14,7 @@ const commentSchema: Schema = new mongoose.Schema({
     required: true,
   },
   User: {
-    userId: Number,
+    email: Number,
     nickname: String,
     image: String,
     Followers: String,

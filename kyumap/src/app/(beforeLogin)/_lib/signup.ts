@@ -26,17 +26,22 @@ const signup = async (prevState: any, formData: FormData) => {
     let filename = encodeURIComponent(file.name);
     // console.log(filename, "filename");
     let result_url = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/image/profileUpload?file=${filename}`
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/image/upload?file=${filename}`
     );
 
     result_url = await result_url.json();
     // console.log(result_url, "result_url");
 
     const ImageFormData = new FormData();
-    Object.entries({ ...result_url.fields, file }).forEach(([key, value]) => {
+    Object.entries({
+      ...(result_url.fields as { fields?: any }),
+      file,
+    }).forEach(([key, value]) => {
       ImageFormData.append(key, value as string);
     });
     // console.log(ImageFormData, "imageFormData");
+    // console.log(result_url.url, "urlurl");
+    console.log(ImageFormData, "signup.ts에서 aws로 보내는 formData");
     let uploadResult = await fetch(result_url.url, {
       method: "POST",
       body: ImageFormData,
@@ -63,7 +68,8 @@ const signup = async (prevState: any, formData: FormData) => {
       // console.log(await response.json(), "resjson");
       shouldRedirect = true;
       await signIn("credentials", {
-        username: formData.get("id"),
+        email: formData.get("id"),
+        nickname: formData.get("name"),
         password: formData.get("password"),
         redirect: false,
       });

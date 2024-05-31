@@ -15,30 +15,35 @@ export const {
   },
   callbacks: {
     jwt({ token }) {
-      console.log("auth.ts jwt", token);
+      // console.log("auth.ts jwt", token);
       return token;
     },
     session({ session, newSession, user }) {
-      console.log("auth.ts session", session, newSession, user);
+      // console.log("auth.ts session", session, newSession, user);
       return session;
     },
   },
   providers: [
     CredentialsProvider({
       async authorize(credentials) {
-        const authResponse = await fetch(`http://localhost:3000/api/login`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id: credentials.username,
-            password: credentials.password,
-          }),
-        });
+        // console.log(credentials, "credentials");
+        const authResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/login`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: credentials.email,
+              nickname: credentials.nickname,
+              password: credentials.password,
+            }),
+          }
+        );
 
         let setCookie = authResponse.headers.get("Set-Cookie");
-        console.log("set-cookie", setCookie);
+        // console.log("set-cookie", setCookie);
         if (setCookie) {
           const parsed = cookie.parse(setCookie);
           cookies().set("connect.sid", parsed["connect.sid"], parsed); // 브라우저에 쿠키를 심어주는 것
@@ -55,9 +60,9 @@ export const {
         }
 
         const user = await authResponse.json();
-        console.log(user, "userloginData");
+        // console.log(user, "userloginData");
         return {
-          email: user.id,
+          email: user.email,
           name: user.nickname,
           image: user.image,
           ...user,

@@ -18,9 +18,10 @@ import {
   InfiniteData,
 } from "@tanstack/react-query";
 import useDeviceSize from "../../_component/useDeviceSize";
-import { Post } from "@/model/Post";
+import { IPost } from "@/model/Post";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
+import { url } from "inspector";
 
 export default function NewPost() {
   const { data: session } = useSession();
@@ -57,18 +58,55 @@ export default function NewPost() {
     }
   };
 
-  const mutation = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: async (e: FormEvent) => {
       e.preventDefault();
-      const formData = new FormData();
-      formData.append("content", content);
-      preview.forEach((p) => {
-        p && formData.append("images", p.file);
-      });
+
+      const urlformLst = [];
+      for (let idx = 0; idx < preview.length; idx++) {
+        let file = preview[idx]!.file;
+        let filename = encodeURIComponent(file.name);
+        // 프리사인 url받기
+        let result_url = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/image/upload?file=${filename}`
+        );
+
+        result_url = await result_url.json();
+
+        const ImageFormData = new FormData();
+        Object.entries({ ...result_url.fields, file }).forEach(
+          ([key, value]) => {
+            ImageFormData.append(key, value as string);
+          }
+        );
+
+        // 업로드
+        let uploadResult = await fetch(result_url.url, {
+          method: "POST",
+          body: ImageFormData,
+        });
+
+        let url = uploadResult.url + "/" + file.name;
+        urlformLst.push(url);
+      }
+
+      const postFormData = new FormData();
+      postFormData.append("images", JSON.stringify(urlformLst));
+
+      // console.log(postFormData, "urlLstPostFormData");
+      // console.log(session, "/addpost session");
+      if (session?.user?.email)
+        postFormData.append("userEmail", session.user.email);
+      if (session?.user?.name)
+        postFormData.append("userName", session.user.name);
+      if (session?.user?.image)
+        postFormData.append("userImage", session.user.image);
+      postFormData.append("content", content);
+
       return fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posts`, {
         method: "post",
         credentials: "include",
-        body: formData,
+        body: postFormData,
       });
     },
     async onSuccess(response, variable) {
@@ -78,7 +116,7 @@ export default function NewPost() {
       if (queryClient.getQueryData(["posts", "recommends"])) {
         queryClient.setQueryData(
           ["posts", "recommends"],
-          (prevData: { pages: Post[][] }) => {
+          (prevData: { pages: IPost[][] }) => {
             const shallow = {
               ...prevData,
               pages: [...prevData.pages],
@@ -98,6 +136,11 @@ export default function NewPost() {
       router.back();
     },
   });
+
+  const onSubmit = (e: FormEvent) => {
+    if (isPending) return;
+    mutate(e);
+  };
 
   // const [preview, setPreview] = useState<Array<string | null>>([]);
   const onUpload: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -123,12 +166,8 @@ export default function NewPost() {
       });
 
       setPreview(newPreviews); // 새로운 미리보기 배열로 업데이트
-      console.log(preview, "preview");
+      // console.log(preview, "preview");
     }
-  };
-
-  const onSubmit = (e: FormEvent) => {
-    mutation.mutate(e);
   };
 
   const calculateSize = () => {

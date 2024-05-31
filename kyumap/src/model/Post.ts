@@ -2,9 +2,11 @@ import mongoose, { Document, Schema } from "mongoose";
 import { userSchema, IUser } from "./User";
 import { PostImage } from "./PostImage";
 import { HashTag } from "./HashTag";
+import Counter from "./Counter";
+import getNextSequenceValue from "./getNextSequenceValue";
 
 interface UserID {
-  userId: string;
+  email: string;
 }
 
 export interface IPost extends Document {
@@ -19,13 +21,13 @@ export interface IPost extends Document {
     Hearts: number;
     Comments: number;
   };
-  hashTag: HashTag[];
 }
 
 const postSchema: Schema = new mongoose.Schema({
   postId: {
     type: Number,
     required: true,
+    unique: true,
   },
   User: {
     type: userSchema,
@@ -37,34 +39,43 @@ const postSchema: Schema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
+    default: Date.now,
   },
   Images: [
     {
-      link: String,
-      imageId: String,
+      type: String,
+      required: true,
     },
   ],
   Hearts: [
     {
-      userId: Number,
+      email: { type: String },
     },
   ],
   Comments: [
     {
-      userId: Number,
+      type: String,
     },
   ],
   _count: {
-    Hearts: Number,
-    Comments: Number,
+    Hearts: { type: Number, default: 0 },
+    Comments: { type: Number, default: 0 },
   },
-  hashTag: [
-    {
-      tagId: Number,
-      title: String,
-      count: Number,
-    },
-  ],
+});
+
+postSchema.pre<IPost>("save", async function (next) {
+  if (this.isNew) {
+    try {
+      this.postId = await getNextSequenceValue("postId");
+    } catch (error) {
+      const castError = error as Error;
+      console.error(castError.message);
+      // `next` 함수에 `castError` 전달
+      next(castError);
+      return;
+    }
+  }
+  next();
 });
 
 const Post = mongoose.models.Post || mongoose.model<IPost>("Post", postSchema);
