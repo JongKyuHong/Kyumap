@@ -1,7 +1,7 @@
 import mongoose, { Document, Schema } from "mongoose";
 
 interface UserID {
-  id: string;
+  email: string;
 }
 
 // interface Image {
@@ -12,7 +12,7 @@ interface UserID {
 // }
 
 export interface IUser extends Document {
-  id: string;
+  email: string;
   nickname: string;
   image: string;
   Followers: UserID[];
@@ -23,7 +23,7 @@ export interface IUser extends Document {
 }
 
 export const userSchema: Schema = new mongoose.Schema({
-  id: {
+  email: {
     type: String,
     required: true,
   },
@@ -35,20 +35,14 @@ export const userSchema: Schema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // image: {
-  //   size: { type: Number },
-  //   Imgtype: { type: String },
-  //   name: { type: String },
-  //   lastModified: { type: Number },
-  // },
   Followers: [
     {
-      userId: String,
+      email: { type: String },
     },
   ],
   _count: {
-    Followers: Number,
-    Followings: Number,
+    Followers: { type: Number },
+    Followings: { type: Number },
   },
 });
 

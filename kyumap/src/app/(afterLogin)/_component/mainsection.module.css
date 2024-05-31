@@ -75,7 +75,7 @@
   flex-direction: column;
   height: 85px;
   outline: none;
-  overflow-y: hidden;
+  /* overflow-y: hidden; */
   position: relative;
 }
 
@@ -103,7 +103,7 @@
   height: 100%;
   position: relative;
   overflow-x: auto;
-  overflow-y: hidden;
+  /* overflow-y: hidden; */
 }
 
 .rootDivInner7 {

@@ -1,9 +1,9 @@
 type Props = { pageParam?: number };
 
 export async function getPostRecommends({ pageParam }: Props) {
+  console.log(pageParam, "getPostRecommends pageParams");
   const res = await fetch(
-    `http://localhost:3000/api/posts`,
-    // ?cursor=${pageParam}
+    `http://localhost:3000/api/posts?cursor=${pageParam}`,
     {
       next: {
         tags: ["posts", "recommends"],
@@ -14,6 +14,7 @@ export async function getPostRecommends({ pageParam }: Props) {
   if (!res.ok) {
     throw new Error("Failed to fetch data");
   }
-
-  return res.json();
+  const data = await res.json();
+  console.log(data, "getPostRecommends res");
+  return data;
 }

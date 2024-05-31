@@ -6,7 +6,7 @@ export default async function Home() {
   return (
     <>
       <MainSection />
-      <FollowRecommendSection />
+      {/* <FollowRecommendSection /> */}
     </>
   );
 }
