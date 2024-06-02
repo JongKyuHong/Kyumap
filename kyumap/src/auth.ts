@@ -36,7 +36,7 @@ export const {
             },
             body: JSON.stringify({
               email: credentials.email,
-              nickname: credentials.nickname,
+              // nickname: credentials.nickname,
               password: credentials.password,
             }),
           }

@@ -40,9 +40,14 @@ export const userSchema: Schema = new mongoose.Schema({
       email: { type: String },
     },
   ],
+  Followings: [
+    {
+      email: { type: String },
+    },
+  ],
   _count: {
-    Followers: { type: Number },
-    Followings: { type: Number },
+    Followers: { type: Number, default: 0 },
+    Followings: { type: Number, default: 0 },
   },
 });
 

@@ -21,7 +21,7 @@ export default function LoginModal() {
     setMessage("");
     try {
       await signIn("credentials", {
-        username: id,
+        email: id,
         password,
         redirect: false,
       });
