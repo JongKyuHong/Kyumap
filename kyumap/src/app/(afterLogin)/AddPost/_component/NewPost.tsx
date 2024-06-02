@@ -48,6 +48,8 @@ export default function NewPost() {
   const queryClient = useQueryClient();
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
 
+  if (!session) return null;
+
   const onClickBackBtn = useCallback(() => {
     router.back();
   }, [router]);

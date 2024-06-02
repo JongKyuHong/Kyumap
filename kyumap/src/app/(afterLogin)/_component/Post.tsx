@@ -75,7 +75,7 @@ export default function Post({ post }: Props) {
                       }}
                     ></canvas>
                     <Link
-                      href={`/profile/${post.User.id}`}
+                      href={`/profile/${post.User.email}`}
                       style={{ height: "32px", width: "32px" }}
                       className={styles.articleUserSpan}
                     >
@@ -106,13 +106,13 @@ export default function Post({ post }: Props) {
                           <span className={styles.nameInnerSpan2}>
                             <div>
                               <Link
-                                href={`/profile/${post.User.id}`}
+                                href={`${process.env.NEXT_PUBLIC_BASE_URL}/profile/${post.User.email}`}
                                 className={styles.nameLink}
                               >
                                 <div className={styles.linkInnerDiv}>
                                   <div className={styles.linkInnerDiv2}>
                                     <span className={styles.linkInnerSpan}>
-                                      {post.User.id}
+                                      {post.User.email}
                                     </span>
                                   </div>
                                 </div>

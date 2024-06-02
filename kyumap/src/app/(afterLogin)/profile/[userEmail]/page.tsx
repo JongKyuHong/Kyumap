@@ -10,32 +10,30 @@ import UserPosts from "./_component/UserPosts";
 
 type Props = {
   params: {
-    userId: string;
+    userEmail: string;
   };
 };
 
 export default async function page({ params }: Props) {
-  const { userId } = params;
-
+  const { userEmail } = params;
+  const decodeEmail = decodeURIComponent(userEmail);
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
-    queryKey: ["user", userId],
+    queryKey: ["users", decodeEmail],
     queryFn: getUser,
   });
 
   await queryClient.prefetchQuery({
-    queryKey: ["user", userId, "posts"],
+    queryKey: ["user", decodeEmail, "posts"],
     queryFn: getUserPosts,
   });
 
   const dehydrateState = dehydrate(queryClient);
 
-  console.log(userId, "userId");
-
   return (
     <div>
       <HydrationBoundary state={dehydrateState}>
-        <ProfileSection userId={userId} />
+        <ProfileSection userEmail={decodeEmail} />
         {/* <UserPosts userId={userId} /> */}
       </HydrationBoundary>
     </div>
