@@ -25,7 +25,9 @@ export default function ProfileSection({ userEmail }: Props) {
   // userData나 session이 변경될 때마다 팔로우 상태를 업데이트
 
   const { data: session } = useSession();
-  console.log(userEmail, "userEmail");
+
+  const queryClient = useQueryClient();
+
   const {
     data: userData,
     error: userError,
@@ -47,8 +49,6 @@ export default function ProfileSection({ userEmail }: Props) {
   // const followed = !!userData?.Followers?.find(
   //   (v) => v.email === session?.user?.email
   // );
-
-  const queryClient = useQueryClient();
 
   const follow = useMutation({
     mutationFn: (userEmail: string) => {
@@ -244,28 +244,6 @@ export default function ProfileSection({ userEmail }: Props) {
 
   if (!userData) return null;
   if (!session) return null;
-
-  // const chunkSize = 3;
-  // const UserPosts = [];
-
-  // const {
-  //   data: postData,
-  //   error: postError,
-  //   isLoading,
-  // } = useQuery<Post[], Object, Post[], [string, string, string]>({
-  //   queryKey: ["posts", "user", userData?.id],
-  //   queryFn: getUserPosts,
-  //   staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
-  //   gcTime: 300 * 1000,
-  //   retry: true,
-  // });
-
-  // if (postData) {
-  //   console.log(postData, "data");
-  //   for (let i = 0; i < postData!.length; i += chunkSize) {
-  //     UserPosts.push(postData!.slice(i, i + chunkSize));
-  //   }
-  // }
 
   if (userError) {
     return (
@@ -617,94 +595,7 @@ export default function ProfileSection({ userEmail }: Props) {
               </div>
             </Link>
           </div>
-          {/* <UserPosts userId={userId} /> */}
-          {/* {UserPosts ? (
-            <div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  paddingBottom: "0px",
-                  paddingTop: "0px",
-                  position: "relative",
-                }}
-              >
-                {UserPosts.map((rowData, rowIndex) => (
-                  <div key={rowIndex} className={styles.PostDivList}>
-                    {rowData.map((data, index) => (
-                      <div key={index} className={styles.PostDiv}>
-                        <Link
-                          href={`/detail/${data.postId}`}
-                          className={styles.PostDivInnerLink}
-                          role="link"
-                          tabIndex={0}
-                        >
-                          <div className={styles.LinkDiv}>
-                            <div className={styles.LinkDiv2}>
-                              <img
-                                style={{
-                                  objectFit: "cover",
-                                }}
-                                alt={`${data.content}`}
-                                src={`${data.Images[0].link}`}
-                                className={styles.ImageLink}
-                                crossOrigin="anonymous"
-                              />
-                            </div>
-                            <div className={styles.LinkDiv3}></div>
-                          </div>
-                        </Link>
-                      </div>
-                    ))}
-                    {rowData.length < 3 && (
-                      <>
-                        {[...Array(3 - rowData.length)].map((_, index) => (
-                          <div
-                            key={`rrddata${index}`}
-                            className={styles.PostDiv}
-                          ></div>
-                        ))}
-                      </>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <div className={styles.PostLinkDiv}>
-              <div style={{ maxWidth: "350px" }} className={styles.NDiv}>
-                <div className={styles.CamDiv} role="button" tabIndex={0}>
-                  <div className={styles.CamDiv2}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      height="24"
-                    >
-                      <path d="M0 0h24v24H0z" fill="none" />
-                      <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm8-6h-3c-.6 0-1 .4-1 1s.4 1 1 1h2.2l-2.5 2.5C13.4 7.5 12.7 8 12 8c-1.7 0-3-1.3-3-3s1.3-3 3-3c.7 0 1.4.3 1.9.8l2.5-2.5V3c0 .6.4 1 1 1s1-.4 1-1zm4 8h-2l-2.3 2.3c-.5.2-1 .4-1.6.4-1.7 0-3-1.3-3-3s1.3-3 3-3c.6 0 1.1.2 1.6.4l2.3-2.3h2c1.1 0 2 .9 2 2v6c0 1.1-.9 2-2 2zm-4-4c-1.7 0-3-1.3-3-3s1.3-3 3-3 3 1.3 3 3-1.3 3-3 3z" />
-                    </svg>
-                  </div>
-                </div>
-                <div className={styles.NDiv2}>
-                  <span style={{ lineHeight: "36px" }} className={styles.NSpan}>
-                    {"사진 공유"}
-                  </span>
-                </div>
-                <div className={styles.NDiv3}>
-                  <span
-                    style={{ lineHeight: "18px" }}
-                    className={styles.Nspan2}
-                  >
-                    {"사진을 공유하면 회원님의 프로필에 표시됩니다."}
-                  </span>
-                </div>
-                <div className={styles.NDiv4} role="button" tabIndex={0}>
-                  {"첫 사진 공유하기"}
-                </div>
-              </div>
-            </div>
-          )} */}
+          <UserPosts userEmail={userEmail} />
         </div>
       </main>
     </section>

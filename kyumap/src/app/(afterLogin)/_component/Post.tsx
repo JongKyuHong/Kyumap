@@ -23,7 +23,7 @@ export default function Post({ post }: Props) {
   const imgArticle = [];
 
   console.log(post, "component post.tsx에서 post출력");
-
+  console.log(post.User, "component post.tsx에서 post.User출력");
   for (let i = 0; i < post.Images.length; i++) {
     imgArticle.push(
       <div
@@ -50,6 +50,8 @@ export default function Post({ post }: Props) {
     setNumber(currentNumber - 1);
   };
 
+  if (!post) return null;
+
   return (
     <article>
       <div className={styles.articleDiv}>
@@ -75,7 +77,7 @@ export default function Post({ post }: Props) {
                       }}
                     ></canvas>
                     <Link
-                      href={`/profile/${post.User.email}`}
+                      href={`/profile/${post?.User?.email}`}
                       style={{ height: "32px", width: "32px" }}
                       className={styles.articleUserSpan}
                     >
@@ -106,7 +108,7 @@ export default function Post({ post }: Props) {
                           <span className={styles.nameInnerSpan2}>
                             <div>
                               <Link
-                                href={`${process.env.NEXT_PUBLIC_BASE_URL}/profile/${post.User.email}`}
+                                href={`/profile/${post?.User?.email}`}
                                 className={styles.nameLink}
                               >
                                 <div className={styles.linkInnerDiv}>

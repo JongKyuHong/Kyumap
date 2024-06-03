@@ -1,8 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
 import { userSchema, IUser } from "./User";
-import { PostImage } from "./PostImage";
-import { HashTag } from "./HashTag";
-import Counter from "./Counter";
 import getNextSequenceValue from "./getNextSequenceValue";
 
 interface UserID {
@@ -14,7 +11,7 @@ export interface IPost extends Document {
   User: IUser;
   content: string;
   createdAt: Date;
-  Images: PostImage[];
+  Images: string[];
   Hearts: UserID[];
   Comments: UserID[];
   _count: {
