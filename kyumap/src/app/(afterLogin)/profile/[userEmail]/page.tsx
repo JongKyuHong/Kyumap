@@ -14,8 +14,10 @@ type Props = {
   };
 };
 
-export default async function page({ params }: Props) {
+export default async function Profile({ params }: Props) {
   const { userEmail } = params;
+  console.log("profile params : ", params);
+  console.log("profile userEmail : ", userEmail);
   const decodeEmail = decodeURIComponent(userEmail);
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
@@ -34,7 +36,7 @@ export default async function page({ params }: Props) {
     <div>
       <HydrationBoundary state={dehydrateState}>
         <ProfileSection userEmail={decodeEmail} />
-        {/* <UserPosts userId={userId} /> */}
+        {/* <UserPosts userEmail={decodeEmail} /> */}
       </HydrationBoundary>
     </div>
   );

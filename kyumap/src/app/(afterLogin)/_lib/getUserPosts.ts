@@ -7,14 +7,13 @@ type Props = {
 };
 export const getUserPosts = async ({ queryKey, pageParam }: Props) => {
   const [_1, userEmail, _2] = queryKey;
+  console.log(userEmail, pageParam, "getUserPosts");
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${userEmail}/posts?cursor=${pageParam}`,
     {
       next: {
         tags: ["user", userEmail, "posts"],
       },
-      credentials: "include",
-      cache: "no-store",
     }
   );
   // The return value is *not* serialized
@@ -25,5 +24,7 @@ export const getUserPosts = async ({ queryKey, pageParam }: Props) => {
     throw new Error("Failed to fetch data");
   }
 
-  return res.json();
+  const data = await res.json();
+  console.log(data, "getUserPosts data");
+  return data;
 };
