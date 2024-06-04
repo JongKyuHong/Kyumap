@@ -9,6 +9,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/ko";
 import { IPost } from "@/model/Post";
 import ActionButtons from "./ActionButtons";
+import { useSession } from "next-auth/react";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -20,10 +21,13 @@ interface Props {
 export default function Post({ post }: Props) {
   const [isMultiImg, setMultiImg] = useState(false);
   const [currentNumber, setNumber] = useState(0);
+
+  const { data: session } = useSession();
   const imgArticle = [];
 
   console.log(post, "component post.tsx에서 post출력");
   console.log(post.User, "component post.tsx에서 post.User출력");
+
   for (let i = 0; i < post.Images.length; i++) {
     imgArticle.push(
       <div

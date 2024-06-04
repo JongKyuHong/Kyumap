@@ -8,9 +8,6 @@ type Props = {
 };
 
 export default function Page({ params }: Props) {
-  // console.log("Detail");
-  // const router = useRouter();
-  // router.replace("/detail/newPage");
   return (
     <>
       <Home />

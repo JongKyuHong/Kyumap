@@ -1,11 +1,13 @@
 export const getPost = async ({ queryKey }: { queryKey: [string, string] }) => {
-  const [_1, id] = queryKey;
+  const [_1, postId] = queryKey;
+  console.log(postId, "getPost");
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${id}`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${postId}`,
     {
       next: {
-        tags: ["posts", id],
+        tags: ["posts", postId],
       },
+      // cache: "no-store",
       credentials: "include",
     }
   );

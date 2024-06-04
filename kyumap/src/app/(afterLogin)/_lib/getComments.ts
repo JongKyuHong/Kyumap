@@ -3,14 +3,14 @@ import { IPost } from "@/model/Post";
 
 export const getComments: QueryFunction<
   IPost[],
-  [_1: string, id: string, _3: string]
+  [_1: string, postId: string, _3: string]
 > = async ({ queryKey }) => {
-  const [_1, id, _2] = queryKey;
+  const [_1, postId, _2] = queryKey;
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${id}/comments`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${postId}/comments`,
     {
       next: {
-        tags: ["posts", id, "comments"],
+        tags: ["posts", postId, "comments"],
       },
       cache: "no-store",
     }
