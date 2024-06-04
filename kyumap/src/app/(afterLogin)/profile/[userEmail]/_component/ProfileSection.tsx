@@ -230,6 +230,7 @@ export default function ProfileSection({ userEmail }: Props) {
       setFollowed(false);
     },
   });
+  
   const onFollow: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
     e.preventDefault();

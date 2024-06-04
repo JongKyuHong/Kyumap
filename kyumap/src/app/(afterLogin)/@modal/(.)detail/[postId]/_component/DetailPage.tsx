@@ -1,6 +1,11 @@
 "use client";
 
-import React, { useState, useCallback, useEffect } from "react";
+import React, {
+  useState,
+  useCallback,
+  useEffect,
+  MouseEventHandler,
+} from "react";
 import styles from "./detail.module.css";
 import Link from "next/link";
 import Image from "next/image";
@@ -8,11 +13,18 @@ import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import { useRouter, usePathname } from "next/navigation";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { Post } from "@/model/Post";
-import { Comment } from "@/model/Comment";
-import { useQuery } from "@tanstack/react-query";
+import { IPost } from "@/model/Post";
+import { IComment } from "@/model/Comment";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  InfiniteData,
+} from "@tanstack/react-query";
 import { getComments } from "@/app/(afterLogin)/_lib/getComments";
 import { getPost } from "@/app/(afterLogin)/_lib/getPost";
+import useDeviceSize from "@/app/(afterLogin)/_component/useDeviceSize";
+import { useSession } from "next-auth/react";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -22,18 +34,21 @@ type Props = {
 };
 
 export default function DetailPage({ postId }: Props) {
-  const [isClicked, setClicked] = useState(false);
+  const [isLiked, setLiked] = useState(false);
   const [CommentText, setComment] = useState("");
   const [saveIconClicked, setSaveClicked] = useState(false);
   const [isMultiImg, setMultiImg] = useState(false);
   const [currentNumber, setNumber] = useState(0);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [isEmoClicked, setEmoClicked] = useState(false);
 
+  const { data: session } = useSession();
+
+  const { isDesktop, isTablet, isMobile } = useDeviceSize();
+
   const { data: comment } = useQuery<
-    Comment[],
+    IComment[],
     Object,
-    Comment[],
+    IComment[],
     [string, string, string]
   >({
     queryKey: ["posts", postId, "comments"],
@@ -42,7 +57,7 @@ export default function DetailPage({ postId }: Props) {
     gcTime: 300 * 1000,
   });
 
-  const { data: post } = useQuery<Post, Object, Post, [string, string]>({
+  const { data: post } = useQuery<IPost, Object, IPost, [string, string]>({
     queryKey: ["posts", postId],
     queryFn: getPost,
     staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
@@ -50,28 +65,272 @@ export default function DetailPage({ postId }: Props) {
   });
 
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
+    const liked = !!post?.Hearts?.find((v) => v.email === session?.user?.email);
+    setLiked(liked);
+  }, [post, session]);
 
-    window.addEventListener("resize", handleResize);
+  const heart = useMutation({
+    mutationFn: () => {
+      return fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${postId}/heart`,
+        {
+          method: "post",
+          credentials: "include",
+          body: JSON.stringify(session),
+        }
+      );
+    },
+    onMutate() {
+      const queryCache = queryClient.getQueryCache();
+      const queryKeys = queryCache.getAll().map((cache) => cache.queryKey);
+      console.log("queryKeys", queryKeys);
 
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+      queryKeys.forEach((queryKey) => {
+        if (queryKey[0] === "posts") {
+          const value: IPost | InfiniteData<IPost[]> | undefined =
+            queryClient.getQueryData(queryKey);
+          if (value && "pages" in value) {
+            console.log("array", value);
+            const obj = value.pages
+              .flat()
+              .find((v) => v.postId === Number(postId));
+            console.log(obj, "obj");
+            if (obj) {
+              // 존재는 하는지
+              const pageIndex = value.pages.findIndex((page) =>
+                page.includes(obj)
+              );
+              const index = value.pages[pageIndex].findIndex(
+                (v) => v.postId === Number(postId)
+              );
+              const shallow = { ...value };
+              value.pages = [...value.pages];
+              value.pages[pageIndex] = [...value.pages[pageIndex]];
+              shallow.pages[pageIndex][index] = {
+                ...shallow.pages[pageIndex][index],
+                Hearts: [{ email: session?.user?.email as string }],
+                _count: {
+                  ...shallow.pages[pageIndex][index]._count,
+                  Hearts: shallow.pages[pageIndex][index]._count.Hearts + 1,
+                },
+              };
+              queryClient.setQueryData(queryKey, shallow);
+              console.log(shallow, "shallow");
+            }
+          } else if (value) {
+            // 싱글 포스트인 경우
+            if (value.postId === Number(postId)) {
+              const shallow = {
+                ...value,
+                Hearts: [{ email: session?.user?.email as string }],
+                _count: {
+                  ...value._count,
+                  Hearts: value._count.Hearts + 1,
+                },
+              };
+              console.log(shallow, "shallow");
+              queryClient.setQueryData(queryKey, shallow);
+            }
+          }
+        }
+      });
+    },
+    onError() {
+      const queryCache = queryClient.getQueryCache();
+      const queryKeys = queryCache.getAll().map((cache) => cache.queryKey);
+      console.log("queryKeys", queryKeys);
+      queryKeys.forEach((queryKey) => {
+        if (queryKey[0] === "posts") {
+          const value: IPost | InfiniteData<IPost[]> | undefined =
+            queryClient.getQueryData(queryKey);
+          if (value && "pages" in value) {
+            console.log("array", value);
+            const obj = value.pages
+              .flat()
+              .find((v) => v.postId === Number(postId));
+            if (obj) {
+              // 존재는 하는지
+              const pageIndex = value.pages.findIndex((page) =>
+                page.includes(obj)
+              );
+              const index = value.pages[pageIndex].findIndex(
+                (v) => v.postId === Number(postId)
+              );
+              console.log("found index", index);
+              const shallow = { ...value };
+              value.pages = { ...value.pages };
+              value.pages[pageIndex] = [...value.pages[pageIndex]];
+              shallow.pages[pageIndex][index] = {
+                ...shallow.pages[pageIndex][index],
+                Hearts: shallow.pages[pageIndex][index].Hearts.filter(
+                  (v) => v.email !== session?.user?.email
+                ),
+                _count: {
+                  ...shallow.pages[pageIndex][index]._count,
+                  Hearts: shallow.pages[pageIndex][index]._count.Hearts - 1,
+                },
+              };
+              queryClient.setQueryData(queryKey, shallow);
+            }
+          } else if (value) {
+            // 싱글 포스트인 경우
+            if (value.postId === Number(postId)) {
+              const shallow = {
+                ...value,
+                Hearts: value.Hearts.filter(
+                  (v) => v.email !== session?.user?.email
+                ),
+                _count: {
+                  ...value._count,
+                  Hearts: value._count.Hearts - 1,
+                },
+              };
+              queryClient.setQueryData(queryKey, shallow);
+            }
+          }
+        }
+      });
+    },
+    onSettled() {},
+  });
+
+  const unheart = useMutation({
+    mutationFn: () => {
+      return fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${postId}/heart`,
+        {
+          method: "delete",
+          credentials: "include",
+          body: JSON.stringify(session),
+        }
+      );
+    },
+    onMutate() {
+      const queryCache = queryClient.getQueryCache();
+      const queryKeys = queryCache.getAll().map((cache) => cache.queryKey);
+      console.log("queryKeys", queryKeys);
+      queryKeys.forEach((queryKey) => {
+        if (queryKey[0] === "posts") {
+          const value: IPost | InfiniteData<IPost[]> | undefined =
+            queryClient.getQueryData(queryKey);
+          if (value && "pages" in value) {
+            console.log("array", value);
+            const obj = value.pages
+              .flat()
+              .find((v) => v.postId === Number(postId));
+            if (obj) {
+              // 존재는 하는지
+              const pageIndex = value.pages.findIndex((page) =>
+                page.includes(obj)
+              );
+              const index = value.pages[pageIndex].findIndex(
+                (v) => v.postId === Number(postId)
+              );
+              console.log("found index", index);
+              const shallow = { ...value };
+              value.pages = [...value.pages];
+              value.pages[pageIndex] = [...value.pages[pageIndex]];
+              shallow.pages[pageIndex][index] = {
+                ...shallow.pages[pageIndex][index],
+                Hearts: shallow.pages[pageIndex][index].Hearts.filter(
+                  (v) => v.email !== session?.user?.email
+                ),
+                _count: {
+                  ...shallow.pages[pageIndex][index]._count,
+                  Hearts: shallow.pages[pageIndex][index]._count.Hearts - 1,
+                },
+              };
+              queryClient.setQueryData(queryKey, shallow);
+            }
+          } else if (value) {
+            // 싱글 포스트인 경우
+            if (value.postId === Number(postId)) {
+              const shallow = {
+                ...value,
+                Hearts: value.Hearts.filter(
+                  (v) => v.email !== session?.user?.email
+                ),
+                _count: {
+                  ...value._count,
+                  Hearts: value._count.Hearts - 1,
+                },
+              };
+              queryClient.setQueryData(queryKey, shallow);
+            }
+          }
+        }
+      });
+    },
+    onError() {
+      const queryCache = queryClient.getQueryCache();
+      const queryKeys = queryCache.getAll().map((cache) => cache.queryKey);
+      console.log("queryKeys", queryKeys);
+      queryKeys.forEach((queryKey) => {
+        if (queryKey[0] === "posts") {
+          console.log(queryKey[0]);
+          const value: IPost | InfiniteData<IPost[]> | undefined =
+            queryClient.getQueryData(queryKey);
+          if (value && "pages" in value) {
+            console.log("array", value);
+            const obj = value.pages
+              .flat()
+              .find((v) => v.postId === Number(postId));
+            if (obj) {
+              // 존재는 하는지
+              const pageIndex = value.pages.findIndex((page) =>
+                page.includes(obj)
+              );
+              const index = value.pages[pageIndex].findIndex(
+                (v) => v.postId === Number(postId)
+              );
+              console.log("found index", index);
+              const shallow = { ...value };
+              value.pages = { ...value.pages };
+              value.pages[pageIndex] = [...value.pages[pageIndex]];
+              shallow.pages[pageIndex][index] = {
+                ...shallow.pages[pageIndex][index],
+                Hearts: [{ email: session?.user?.email as string }],
+                _count: {
+                  ...shallow.pages[pageIndex][index]._count,
+                  Hearts: shallow.pages[pageIndex][index]._count.Hearts + 1,
+                },
+              };
+              queryClient.setQueryData(queryKey, shallow);
+            }
+          } else if (value) {
+            // 싱글 포스트인 경우
+            if (value.postId === Number(postId)) {
+              const shallow = {
+                ...value,
+                Hearts: [{ email: session?.user?.email as string }],
+                _count: {
+                  ...value._count,
+                  Hearts: value._count.Hearts + 1,
+                },
+              };
+              queryClient.setQueryData(queryKey, shallow);
+            }
+          }
+        }
+      });
+    },
+    onSettled() {},
+  });
 
   const onChangeTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setComment(e.target.value);
   };
 
   useEffect(() => {
-    if (post!.Images.length > 1) {
-      setMultiImg(true);
-    } else {
-      setMultiImg(false);
+    if (post) {
+      if (post!.Images.length > 1) {
+        setMultiImg(true);
+      } else {
+        setMultiImg(false);
+      }
     }
   }, [post]);
 
@@ -94,6 +353,84 @@ export default function DetailPage({ postId }: Props) {
   const onEmoClicked = () => {
     setEmoClicked(!isEmoClicked);
   };
+
+  const onClickHeart: MouseEventHandler<HTMLDivElement> = (e) => {
+    e.stopPropagation();
+    if (isLiked) {
+      unheart.mutate();
+    } else {
+      heart.mutate();
+    }
+  };
+
+  const addComment = useMutation({
+    mutationFn: (commentData: {
+      postId: string;
+      CommentText: string;
+      userSession: any;
+    }) => {
+      // commentData는 userEmail과 comment를 포함합니다.
+      return fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${commentData.postId}/comments`,
+        {
+          credentials: "include",
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            comment: commentData.CommentText,
+            User: commentData.userSession,
+          }),
+        }
+      );
+    },
+    onMutate(commentData) {
+      // 댓글을 추가하기 전에 캐시를 업데이트합니다.
+      const previousComments = queryClient.getQueryData<IComment[]>([
+        "posts",
+        commentData.postId,
+        "comments",
+      ]);
+      if (previousComments) {
+        queryClient.setQueryData(
+          ["posts", commentData.postId, "comments"],
+          [
+            ...previousComments,
+            {
+              comment: commentData.CommentText,
+              User: commentData.userSession,
+            }, // 임시 댓글 객체
+          ]
+        );
+      }
+      return { previousComments };
+    },
+    onError(error, commentData, context) {
+      // 에러가 발생하면 이전 댓글 목록으로 롤백합니다.
+      queryClient.setQueryData(
+        ["posts", commentData.postId, "comments"],
+        context?.previousComments
+      );
+    },
+    onSuccess(data, commentData) {
+      // 성공 시 캐시를 무효화하여 최신 댓글 목록을 가져옵니다.
+      queryClient.invalidateQueries({
+        queryKey: ["posts", commentData.postId, "comments"],
+      });
+    },
+  });
+
+  const onSubmitComment = () => {
+    console.log(session, "session");
+    if (!session) {
+      return null;
+    }
+    const userSession = session.user;
+    addComment.mutate({ postId, CommentText, userSession });
+  };
+
+  if (!post) return null;
 
   return (
     <div className={styles.rootModalDiv}>
@@ -156,7 +493,7 @@ export default function DetailPage({ postId }: Props) {
                           maxWidth: "100%",
                         }}
                       >
-                        {windowWidth < 737 ? (
+                        {isMobile ? (
                           <article
                             className={styles.DetailModalRootArticleW}
                             role="presentation"
@@ -220,8 +557,9 @@ export default function DetailPage({ postId }: Props) {
                                     <div
                                       className={styles.DetailImageDivInner3}
                                       style={{
-                                        paddingBottom:
-                                          windowWidth > 736 ? "75%" : "100%",
+                                        paddingBottom: !isMobile
+                                          ? "75%"
+                                          : "100%",
                                       }}
                                     ></div>
                                     <div
@@ -279,7 +617,7 @@ export default function DetailPage({ postId }: Props) {
                                                         src={
                                                           post!.Images[
                                                             currentNumber
-                                                          ].link
+                                                          ]
                                                         }
                                                       />
                                                     </div>
@@ -445,9 +783,9 @@ export default function DetailPage({ postId }: Props) {
                                                     fill="none"
                                                     points="20 21 12 13.44 4 21 4 3 20 3 20 21"
                                                     stroke="currentColor"
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="2"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
                                                   ></polygon>
                                                 </svg>
                                               </div>
@@ -627,8 +965,9 @@ export default function DetailPage({ postId }: Props) {
                                     <div
                                       className={styles.DetailImageDivInner3}
                                       style={{
-                                        paddingBottom:
-                                          windowWidth > 736 ? "75%" : "100%",
+                                        paddingBottom: !isMobile
+                                          ? "75%"
+                                          : "100%",
                                       }}
                                     ></div>
                                     <div
@@ -686,7 +1025,7 @@ export default function DetailPage({ postId }: Props) {
                                                         src={
                                                           post!.Images[
                                                             currentNumber
-                                                          ].link
+                                                          ]
                                                         }
                                                       />
                                                     </div>
@@ -973,13 +1312,11 @@ export default function DetailPage({ postId }: Props) {
                                         <span className={styles.iconSpan}>
                                           <div
                                             className={`${styles.iconDiv} ${
-                                              isClicked ? styles.clicked : ""
+                                              isLiked ? styles.clicked : ""
                                             }`}
                                             role="button"
                                             tabIndex={0}
-                                            onClick={() =>
-                                              setClicked(!isClicked)
-                                            }
+                                            onClick={onClickHeart}
                                           >
                                             <div
                                               className={styles.iconInnerDiv}
@@ -987,12 +1324,12 @@ export default function DetailPage({ postId }: Props) {
                                               <span>
                                                 <svg
                                                   aria-label={
-                                                    isClicked
+                                                    isLiked
                                                       ? "좋아요 취소"
                                                       : "좋아요"
                                                   }
                                                   className={
-                                                    isClicked
+                                                    isLiked
                                                       ? styles.iconSvgClicked
                                                       : styles.iconSvg
                                                   }
@@ -1000,20 +1337,20 @@ export default function DetailPage({ postId }: Props) {
                                                   height="24"
                                                   role="img"
                                                   viewBox={
-                                                    isClicked
+                                                    isLiked
                                                       ? "0 0 48 48"
                                                       : "0 0 24 24"
                                                   }
                                                   width="24"
                                                 >
                                                   <title>
-                                                    {isClicked
+                                                    {isLiked
                                                       ? "좋아요 취소"
                                                       : "좋아요"}
                                                   </title>
                                                   <path
                                                     d={
-                                                      isClicked
+                                                      isLiked
                                                         ? "M34.6 3.1c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5s1.1-.2 1.6-.5c1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z"
                                                         : "M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938m0-2a6.04 6.04 0 0 0-4.797 2.127 6.052 6.052 0 0 0-4.787-2.127A6.985 6.985 0 0 0 .5 9.122c0 3.61 2.55 5.827 5.015 7.97.283.246.569.494.853.747l1.027.918a44.998 44.998 0 0 0 3.518 3.018 2 2 0 0 0 2.174 0 45.263 45.263 0 0 0 3.626-3.115l.922-.824c.293-.26.59-.519.885-.774 2.334-2.025 4.98-4.32 4.98-7.94a6.985 6.985 0 0 0-6.708-7.218Z"
                                                     }
@@ -1137,7 +1474,7 @@ export default function DetailPage({ postId }: Props) {
                                                   <span
                                                     className={styles.LikeCount}
                                                   >
-                                                    {"100"}
+                                                    {post._count.Hearts || 0}
                                                   </span>
                                                   {"개"}
                                                 </span>
@@ -1385,14 +1722,14 @@ export default function DetailPage({ postId }: Props) {
                                                                             height:
                                                                               "32px",
                                                                             width:
-                                                                      0        "32px",
+                                                                              "32px",
                                                                           }}
                                                                           className={
                                                                             styles.CommentUserProfileLink
                                                                           }
                                                                         >
                                                                           <Image
-                                                                            alt={`${commentData.User.id}님의 프로필 사진`}
+                                                                            alt={`${commentData.User.nickname}님의 프로필 사진`}
                                                                             src={`${commentData.User.image}`}
                                                                             width={
                                                                               0
@@ -1441,7 +1778,7 @@ export default function DetailPage({ postId }: Props) {
                                                                               className={
                                                                                 styles.CommentUserNameLink
                                                                               }
-                                                                            >{`${commentData.User.id}`}</Link>
+                                                                            >{`${commentData.User.nickname}`}</Link>
                                                                           </div>
                                                                         </span>
                                                                       </div>
@@ -1670,6 +2007,7 @@ export default function DetailPage({ postId }: Props) {
                                                     }
                                                     role="button"
                                                     tabIndex={0}
+                                                    onClick={onSubmitComment}
                                                   >
                                                     게시
                                                   </div>

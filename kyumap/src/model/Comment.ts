@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { IUser } from "./User";
+import { userSchema, IUser } from "./User";
 
 export interface IComment extends Document {
   postId: number;
@@ -14,15 +14,9 @@ const commentSchema: Schema = new mongoose.Schema({
     required: true,
   },
   User: {
-    email: Number,
-    nickname: String,
-    image: String,
-    Followers: String,
-    _count: {
-      Followers: Number,
-      Followings: Number,
-    },
-    required: true,
+    nickname: { type: String, required: true },
+    email: { type: String, required: true },
+    image: { type: String, required: true },
   },
   content: {
     type: String,
@@ -30,7 +24,7 @@ const commentSchema: Schema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    required: true,
+    default: Date.now,
   },
 });
 
