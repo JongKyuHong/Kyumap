@@ -13,7 +13,6 @@ export interface IPost extends Document {
   createdAt: Date;
   Images: string[];
   Hearts: UserID[];
-  Comments: UserID[];
   _count: {
     Hearts: number;
     Comments: number;
@@ -47,11 +46,6 @@ const postSchema: Schema = new mongoose.Schema({
   Hearts: [
     {
       email: { type: String },
-    },
-  ],
-  Comments: [
-    {
-      type: String,
     },
   ],
   _count: {

@@ -1,5 +1,6 @@
 import dbConnect from "@/app/(afterLogin)/_lib/dbConnect";
 import Comment from "@/model/Comment";
+import Post from "@/model/Post";
 import { NextRequest, NextResponse } from "next/server";
 
 type Props = {
@@ -11,29 +12,42 @@ type Props = {
 export async function GET(req: NextRequest, { params }: Props) {
   await dbConnect();
   const postId = params.postId;
-  console.log(postId, "comment 하기전 postId 정상?");
   const allComments = await Comment.find({ postId: postId });
-  console.log(allComments, "comment 전체  data");
   return NextResponse.json(allComments);
 }
 
 export async function POST(req: NextRequest, { params }: Props) {
-  await dbConnect();
-  const postId = params.postId;
-  const data = await req.json();
-  console.log(data, "comment data");
+  try {
+    await dbConnect();
+    const postId = params.postId;
+    const data = await req.json();
 
-  const inputData = {
-    postId: postId,
-    User: {
-      nickname: data.User.name,
-      email: data.User.email,
-      image: data.User.image,
-    },
-    content: data.comment,
-  };
+    const inputData = {
+      postId: postId,
+      User: {
+        nickname: data.User.name,
+        email: data.User.email,
+        image: data.User.image,
+      },
+      content: data.comment,
+    };
 
-  const comment = await Comment.create(inputData);
+    const comment = await Comment.create(inputData);
 
-  return NextResponse.json(comment);
+    // post에 _count늘려주기
+    const post = await Post.findOneAndUpdate(
+      { postId: postId },
+      { $inc: { "_count.Comments": 1 } },
+      { new: true }
+    );
+
+    return NextResponse.json({ comment, post });
+  } catch (error) {
+    console.error(error);
+
+    return NextResponse.json(
+      { success: false, message: "Failed to fetch data" },
+      { status: 500 }
+    );
+  }
 }

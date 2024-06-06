@@ -7,8 +7,7 @@ import PostRecommends from "./PostRecommends";
 import ResponsiveNav from "./ResponsiveNav";
 import useDeviceSize from "./useDeviceSize";
 
-
-export default async function MainSection() {
+export default function MainSection() {
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
 
   return (

@@ -1,16 +1,15 @@
 import dbConnect from "@/app/(afterLogin)/_lib/dbConnect";
+import User from "@/model/User";
 import { NextRequest, NextResponse } from "next/server";
-import Post from "../../../../model/Post";
 
 type Props = {
   params: {
-    postId: string;
+    userName: string;
   };
 };
 
 export async function GET(req: NextRequest, { params }: Props) {
   await dbConnect();
-  const postId = params.postId;
-  const post = await Post.findOne({ postId: postId });
-  return NextResponse.json(post);
+  const user = await User.findOne({ nickname: params.userName });
+  return NextResponse.json(user);
 }
