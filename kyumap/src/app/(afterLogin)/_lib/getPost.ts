@@ -7,7 +7,7 @@ export const getPost = async ({ queryKey }: { queryKey: [string, string] }) => {
       next: {
         tags: ["posts", postId],
       },
-      // cache: "no-store",
+      cache: "no-store",
       credentials: "include",
     }
   );
@@ -15,5 +15,6 @@ export const getPost = async ({ queryKey }: { queryKey: [string, string] }) => {
   if (!res.ok) {
     throw new Error("Failed to fetch data");
   }
-  return res.json();
+  const data = await res.json();
+  return data;
 };

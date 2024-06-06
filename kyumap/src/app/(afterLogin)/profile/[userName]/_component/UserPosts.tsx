@@ -11,14 +11,14 @@ import {
 import { IPost } from "@/model/Post";
 import { getUserPosts } from "@/app/(afterLogin)/_lib/getUserPosts";
 import { useInView } from "react-intersection-observer";
-import Post from "@/app/(afterLogin)/_component/Post";
+import { useRouter } from "next/navigation";
 
 type Props = {
   userEmail: string;
 };
 
 export default function UserPosts({ userEmail }: Props) {
-  console.log(userEmail, "UserPosts userEmail");
+  const router = useRouter();
   const queryClient = useQueryClient();
 
   const { data, fetchNextPage, hasNextPage, isFetching, error } =
@@ -60,6 +60,10 @@ export default function UserPosts({ userEmail }: Props) {
       UserPost.push(platData.slice(i, i + chunkSize));
     }
   }
+
+  const showPostForm = () => {
+    router.push(`/AddPost`);
+  };
 
   if (!user) return null;
 
@@ -145,7 +149,12 @@ export default function UserPosts({ userEmail }: Props) {
                 {"사진을 공유하면 회원님의 프로필에 표시됩니다."}
               </span>
             </div>
-            <div className={styles.NDiv4} role="button" tabIndex={0}>
+            <div
+              className={styles.NDiv4}
+              role="button"
+              tabIndex={0}
+              onClick={showPostForm}
+            >
               {"첫 사진 공유하기"}
             </div>
           </div>

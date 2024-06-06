@@ -6,7 +6,6 @@ import {
 import { getComments } from "@/app/(afterLogin)/_lib/getComments";
 import { getPost } from "@/app/(afterLogin)/_lib/getPost";
 import DetailPage from "./_component/DetailPage";
-import RQProvider from "@/app/(afterLogin)/_component/RQProvider";
 
 type Props = {
   params: {

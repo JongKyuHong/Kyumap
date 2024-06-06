@@ -296,7 +296,7 @@ export default function NavTab({ me }: Props) {
                         >
                           <div className={styles.MHomeDiv}>
                             <Link
-                              href={`/profile/${me?.user?.email}`} // /profile/myid
+                              href={`/profile/${me?.user?.name}`} // /profile/myid
                               role="link"
                               tabIndex={0}
                               className={styles.MHomeLink}
@@ -689,7 +689,7 @@ export default function NavTab({ me }: Props) {
                           >
                             <Link
                               className={styles.navLink}
-                              href={`/profile/${me?.user?.email}`}
+                              href={`/profile/${me?.user?.name}`}
                               role="link"
                               tabIndex={0}
                             >

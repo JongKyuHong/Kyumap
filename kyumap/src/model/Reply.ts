@@ -1,23 +1,20 @@
 import mongoose, { Document, Schema } from "mongoose";
 import { IUser } from "./User";
-import { IReply, replySchema } from "./Reply";
 
-export interface IComment extends Document {
-  postId: number;
+export interface IReply extends Document {
+  parent: string;
   User: IUser;
   content: string;
   createdAt: Date;
   Hearts: { email: string }[];
   _count: {
     Hearts: number;
-    Comments: number;
   };
-  reply: IReply[];
 }
 
-const commentSchema: Schema = new mongoose.Schema({
-  postId: {
-    type: Number,
+export const replySchema: Schema = new mongoose.Schema({
+  parent: {
+    type: String,
     required: true,
   },
   User: {
@@ -34,15 +31,8 @@ const commentSchema: Schema = new mongoose.Schema({
       email: { type: String },
     },
   ],
-  reply: [
-    {
-      type: replySchema,
-      default: [],
-    },
-  ],
   _count: {
     Hearts: { type: Number, default: 0 },
-    Comments: { type: Number, default: 0 },
   },
   createdAt: {
     type: Date,
@@ -50,7 +40,7 @@ const commentSchema: Schema = new mongoose.Schema({
   },
 });
 
-const Comment =
-  mongoose.models.Comment || mongoose.model<IComment>("Comment", commentSchema);
+const Reply =
+  mongoose.models.Reply || mongoose.model<IReply>("Reply", replySchema);
 
-export default Comment;
+export default Reply;

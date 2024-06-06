@@ -12,16 +12,16 @@ export async function GET(req: NextRequest, { params }: Props) {
   await dbConnect();
   const { userEmail } = params;
   const cursor = req.nextUrl.searchParams.get("cursor");
+  console.log(cursor, userEmail, "api안에서 확인할게요 cursor");
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
   // userEmail이 이메일 형식에 맞지 않을 경우, 에러 메시지와 함께 응답을 반환합니다.
   if (!emailRegex.test(userEmail)) {
-    console.log(userEmail, "여기서 나가");
     return NextResponse.json(
       { success: false, message: "Invalid email format" },
       { status: 400 }
     );
   }
+
   try {
     let query: { [key: string]: any } = { "User.email": userEmail };
 
@@ -29,10 +29,9 @@ export async function GET(req: NextRequest, { params }: Props) {
     if (cursor !== undefined) {
       query["postId"] = { $gt: cursor };
     }
-    console.log(cursor, query, "try안에서 cursor query");
     // limit을 설정하여 한 번에 로드할 게시물 수를 제한합니다.
     const posts = await Post.find(query).limit(21).sort({ postId: 1 });
-    console.log(posts, "/api/users/[userEmail]/posts결과");
+    console.log(posts, "posts api");
     return NextResponse.json(posts);
   } catch (error) {
     console.error(error);

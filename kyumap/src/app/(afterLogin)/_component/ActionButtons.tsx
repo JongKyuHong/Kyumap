@@ -21,16 +21,24 @@ interface Props {
   post: IPost;
 }
 
+interface PostData {
+  _count: {
+    Comments: number;
+  };
+  // 다른 필요한 속성들을 여기에 추가할 수 있습니다.
+}
+
 export default function ActionButtons({ post }: Props) {
   const queryClient = useQueryClient();
   const { data: session } = useSession();
   const [CommentText, setComment] = useState("");
   const [isLiked, setLiked] = useState(false);
+  const [commentCount, setCommentCount] = useState(0);
 
   useEffect(() => {
     const liked = !!post?.Hearts?.find((v) => v.email === session?.user?.email);
     setLiked(liked);
-  }, [post, session]);
+  }, [post, session, queryClient]);
 
   const router = useRouter();
 
@@ -482,7 +490,7 @@ export default function ActionButtons({ post }: Props) {
                 dir="auto"
               >
                 <span className={styles.linkCommentInnerSpan}>{"댓글 "}</span>
-                {`${post._count?.Comments}개 모두 보기`}
+                {`${post._count.Comments}개 모두 보기`}
               </span>
             </Link>
           </div>

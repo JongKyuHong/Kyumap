@@ -1,13 +1,21 @@
-import { QueryFunction } from "@tanstack/query-core";
+import { QueryFunctionContext, QueryFunction } from "@tanstack/query-core";
 import { IPost } from "@/model/Post";
 
-type Props = {
-  queryKey: [_1: string, string, _2: string];
+// type Props = {
+//   queryKey: [_1: string, userEmail: string, _2: string];
+//   pageParam: number;
+// };
+
+type Props = QueryFunctionContext<[string, string, string]> & {
   pageParam?: number;
 };
-export const getUserPosts = async ({ queryKey, pageParam }: Props) => {
+
+export const getUserPosts: QueryFunction<
+  IPost[],
+  [string, string, string],
+  number
+> = async ({ queryKey, pageParam }: Props) => {
   const [_1, userEmail, _2] = queryKey;
-  console.log(userEmail, pageParam, "getUserPosts");
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${userEmail}/posts?cursor=${pageParam}`,
     {
@@ -25,6 +33,5 @@ export const getUserPosts = async ({ queryKey, pageParam }: Props) => {
   }
 
   const data = await res.json();
-  console.log(data, "getUserPosts data");
   return data;
 };
