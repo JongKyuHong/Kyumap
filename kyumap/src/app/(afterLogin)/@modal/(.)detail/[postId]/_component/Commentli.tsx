@@ -49,8 +49,8 @@ export default function Commentli({
     setReply(isitReply);
   }, [comment, session]);
 
-  const onClickReply = () => { 
-    ReplyInfo(comment.User.nickname, parentId); // 지금나의 닉네임, parentId 제일 위 아이
+  const onClickReply = () => {
+    ReplyInfo(comment.User.nickname, parentId, false);
   };
 
   const commentHeart = useMutation({
@@ -228,6 +228,17 @@ export default function Commentli({
     }
   };
 
+  if (!comment) return null;
+  let parts: any[] = [];
+  if (comment && comment.content) {
+    parts = comment.content.split(/(@\w+)/g);
+    // 여기서 parts를 사용하세요.
+    console.log(parts, "asdf");
+  } else {
+    // comment나 comment.content가 undefined일 때의 처리를 여기에 적으세요.
+    console.log("hihi");
+  }
+
   return (
     <div role="button" tabIndex={0} className={styles.CommentUlDiv}>
       <li className={styles.CommentUlDivLi}>
@@ -291,7 +302,20 @@ export default function Commentli({
               </h3>
               <div className={styles.CommentContentInnerDiv}>
                 <span className={styles.CommentContentSpan} dir="auto">
-                  {comment.content}
+                  {/* {comment.content} */}
+                  {parts.map((part, index) =>
+                    part.startsWith("@") ? (
+                      <Link
+                        href={`/profile/${part.slice(1)}`}
+                        key={index}
+                        className={styles.Mention}
+                      >
+                        {part}
+                      </Link>
+                    ) : (
+                      part
+                    )
+                  )}
                 </span>
               </div>
               <div className={styles.CommentContentTime}>

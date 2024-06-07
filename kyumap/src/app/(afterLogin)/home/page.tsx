@@ -21,7 +21,7 @@ export default async function Home() {
   return (
     <HydrationBoundary state={dehydrateState}>
       <MainSection />
-      {/* <FollowRecommendSection /> */}
+      <FollowRecommendSection />
     </HydrationBoundary>
   );
 }

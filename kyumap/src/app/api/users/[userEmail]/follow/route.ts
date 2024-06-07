@@ -8,7 +8,9 @@ type Props = {
 };
 
 export async function POST(req: NextRequest, { params }: Props) {
+  console.log("hihiihhihihi");
   const userEmail = await req.json();
+  console.log(userEmail, "userEmail");
   const decodeEmail = decodeURIComponent(userEmail);
   // params.userEmail의 팔로우 목록에 decodeEmail이 없으면 추가
   const targetUserUpdate = await User.findOneAndUpdate(

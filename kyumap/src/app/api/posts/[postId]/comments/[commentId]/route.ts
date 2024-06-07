@@ -22,26 +22,39 @@ export async function DELETE(req: NextRequest, { params }: Props) {
 
   try {
     const comment = await Comment.findOne({ _id: commentId });
-    console.log(comment, "comment");
-    if (!comment) {
+    const reply = await Comment.findOne({ "reply._id": commentId });
+    if (!comment && !reply) {
       return NextResponse.json({ error: "Comment not found" }, { status: 404 });
     }
+    if (comment) {
+      if (comment.User.email !== userSession.email) {
+        return NextResponse.json(
+          { error: "You are not authorized to delete this comment" },
+          { status: 403 }
+        );
+      }
+      await Comment.deleteOne({ _id: commentId });
+      await Post.findOneAndUpdate(
+        { postId: postId },
+        { $inc: { "_count.Comments": -1 } },
+        { new: true }
+      );
+    } else if (reply) {
+      if (reply.User.email !== userSession.email) {
+        return NextResponse.json(
+          { error: "You are not authorized to delete this reply" },
+          { status: 403 }
+        );
+      }
 
-    // 세션의 사용자 이메일과 댓글 작성자의 이메일을 비교합니다.
-    if (comment.User.email !== userSession.email) {
-      return NextResponse.json(
-        { error: "You are not authorized to delete this comment" },
-        { status: 403 }
+      await Comment.updateOne(
+        { "reply._id": commentId },
+        {
+          $pull: { reply: { _id: commentId } },
+          $inc: { "_count.Comments": -1 },
+        }
       );
     }
-
-    // 댓글을 삭제합니다.
-    await Comment.deleteOne({ _id: commentId });
-    await Post.findOneAndUpdate(
-      { postId: postId },
-      { $inc: { "_count.Comments": -1 } },
-      { new: true }
-    );
 
     return NextResponse.json({ success: true });
   } catch (error) {

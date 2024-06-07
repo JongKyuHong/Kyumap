@@ -5,13 +5,14 @@ import React, {
   useCallback,
   useEffect,
   MouseEventHandler,
+  useRef,
 } from "react";
 import styles from "./detail.module.css";
 import Link from "next/link";
 import Image from "next/image";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { IPost } from "@/model/Post";
 import { IComment } from "@/model/Comment";
@@ -26,7 +27,6 @@ import { getPost } from "@/app/(afterLogin)/_lib/getPost";
 import useDeviceSize from "@/app/(afterLogin)/_component/useDeviceSize";
 import { useSession } from "next-auth/react";
 import Comment from "./Comment";
-import { Session } from "next-auth";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -50,6 +50,7 @@ export default function DetailPage({ postId }: Props) {
   const [isClickedExitBtn, setExitBtn] = useState(false);
   const [targetCommentId, setTargetCommentId] = useState("");
   const [replyTarget, setReplyTarget] = useState("");
+  const [isCtype, setCType] = useState(true); // comment라면 true, reply라면 false
 
   const { data: session } = useSession();
 
@@ -116,7 +117,7 @@ export default function DetailPage({ postId }: Props) {
               const index = value.pages[pageIndex].findIndex(
                 (v) => v.postId === Number(postId)
               );
-              const shallow = { ...value };
+              const shallow: any = { ...value };
               value.pages = [...value.pages];
               value.pages[pageIndex] = [...value.pages[pageIndex]];
               shallow.pages[pageIndex][index] = {
@@ -170,13 +171,13 @@ export default function DetailPage({ postId }: Props) {
                 (v) => v.postId === Number(postId)
               );
               console.log("found index", index);
-              const shallow = { ...value };
+              const shallow: any = { ...value };
               value.pages = { ...value.pages };
               value.pages[pageIndex] = [...value.pages[pageIndex]];
               shallow.pages[pageIndex][index] = {
                 ...shallow.pages[pageIndex][index],
                 Hearts: shallow.pages[pageIndex][index].Hearts.filter(
-                  (v) => v.email !== session?.user?.email
+                  (v: any) => v.email !== session?.user?.email
                 ),
                 _count: {
                   ...shallow.pages[pageIndex][index]._count,
@@ -224,8 +225,11 @@ export default function DetailPage({ postId }: Props) {
       console.log("queryKeys", queryKeys);
       queryKeys.forEach((queryKey) => {
         if (queryKey[0] === "posts") {
-          const value: IPost | InfiniteData<IPost[]> | undefined =
-            queryClient.getQueryData(queryKey);
+          // const value: IPost | InfiniteData<IPost[]> | undefined =
+          //   queryClient.getQueryData(queryKey);
+          const value = queryClient.getQueryData<IPost | InfiniteData<IPost[]>>(
+            queryKey
+          );
           if (value && "pages" in value) {
             console.log("array", value);
             const obj = value.pages
@@ -239,14 +243,13 @@ export default function DetailPage({ postId }: Props) {
               const index = value.pages[pageIndex].findIndex(
                 (v) => v.postId === Number(postId)
               );
-              console.log("found index", index);
-              const shallow = { ...value };
+              const shallow: any = { ...value };
               value.pages = [...value.pages];
               value.pages[pageIndex] = [...value.pages[pageIndex]];
               shallow.pages[pageIndex][index] = {
                 ...shallow.pages[pageIndex][index],
                 Hearts: shallow.pages[pageIndex][index].Hearts.filter(
-                  (v) => v.email !== session?.user?.email
+                  (v: any) => v.email !== session?.user?.email
                 ),
                 _count: {
                   ...shallow.pages[pageIndex][index]._count,
@@ -296,8 +299,7 @@ export default function DetailPage({ postId }: Props) {
               const index = value.pages[pageIndex].findIndex(
                 (v) => v.postId === Number(postId)
               );
-              console.log("found index", index);
-              const shallow = { ...value };
+              const shallow: any = { ...value };
               value.pages = { ...value.pages };
               value.pages[pageIndex] = [...value.pages[pageIndex]];
               shallow.pages[pageIndex][index] = {
@@ -331,13 +333,13 @@ export default function DetailPage({ postId }: Props) {
   });
 
   const addComment = useMutation({
-    mutationFn: (commentData: {
+    mutationFn: async (commentData: {
       postId: string;
       CommentText: string;
       userSession: any;
     }) => {
-      return fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${commentData.postId}/comments`,
+      return await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${postId}/comments`,
         {
           credentials: "include",
           method: "post",
@@ -351,24 +353,80 @@ export default function DetailPage({ postId }: Props) {
         }
       );
     },
-    onMutate: (commentData) => {
-      // 댓글을 추가하기 전에 캐시를 업데이트합니다.
+    // onMutate: (commentData) => {
+    //   // 댓글을 추가하기 전에 캐시를 업데이트합니다.
+    //   const previousComments = queryClient.getQueryData<IComment[]>([
+    //     "posts",
+    //     commentData.postId,
+    //     "comments",
+    //   ]);
+
+    //   // 게시물의 현재 정보를 가져옵니다.
+    //   const post = queryClient.getQueryData<IPost>([
+    //     "posts",
+    //     commentData.postId,
+    //   ]);
+
+    //   if (previousComments && post) {
+    //     // 댓글 배열을 업데이트합니다.
+    //     queryClient.setQueryData(
+    //       ["posts", commentData.postId, "comments"],
+    //       [
+    //         ...previousComments,
+    //         {
+    //           comment: commentData.CommentText,
+    //           User: commentData.userSession,
+    //         }, // 임시 댓글 객체
+    //       ]
+    //     );
+
+    //     // 게시물의 댓글 수를 1 증가시킵니다.
+    //     const updatedPost = {
+    //       ...post,
+    //       _count: {
+    //         ...post._count,
+    //         Comments: post._count.Comments + 1,
+    //       },
+    //     };
+
+    //     // 업데이트된 게시물 정보를 캐시에 저장합니다.
+    //     queryClient.setQueryData(["posts", commentData.postId], updatedPost);
+    //   }
+    //   return { previousComments, post };
+    // },
+    onError(error, commentData, context: MutationContext | undefined) {
+      // 에러가 발생하면 이전 댓글 목록으로 롤백합니다.
+      queryClient.setQueryData(
+        ["posts", postId, "comments"],
+        context?.previousComments
+      );
+
+      if (context?.post) {
+        const rolledBackPost = {
+          ...context.post,
+          _count: {
+            ...context.post._count,
+            Comments: context.post._count.Comments - 1,
+          },
+        };
+        queryClient.setQueryData(["posts", postId], rolledBackPost);
+      }
+    },
+    onSuccess(data, commentData) {
+      // 성공 시 캐시를 무효화하여 최신 댓글 목록을 가져옵니다.
       const previousComments = queryClient.getQueryData<IComment[]>([
         "posts",
-        commentData.postId,
+        postId,
         "comments",
       ]);
 
       // 게시물의 현재 정보를 가져옵니다.
-      const post = queryClient.getQueryData<IPost>([
-        "posts",
-        commentData.postId,
-      ]);
+      const post = queryClient.getQueryData<IPost>(["posts", postId]);
 
       if (previousComments && post) {
         // 댓글 배열을 업데이트합니다.
         queryClient.setQueryData(
-          ["posts", commentData.postId, "comments"],
+          ["posts", postId, "comments"],
           [
             ...previousComments,
             {
@@ -388,35 +446,14 @@ export default function DetailPage({ postId }: Props) {
         };
 
         // 업데이트된 게시물 정보를 캐시에 저장합니다.
-        queryClient.setQueryData(["posts", commentData.postId], updatedPost);
+        queryClient.setQueryData(["posts", postId], updatedPost);
       }
-      return { previousComments, post };
-    },
-    onError(error, commentData, context: MutationContext | undefined) {
-      // 에러가 발생하면 이전 댓글 목록으로 롤백합니다.
-      queryClient.setQueryData(
-        ["posts", commentData.postId, "comments"],
-        context?.previousComments
-      );
 
-      if (context?.post) {
-        const rolledBackPost = {
-          ...context.post,
-          _count: {
-            ...context.post._count,
-            Comments: context.post._count.Comments - 1,
-          },
-        };
-        queryClient.setQueryData(["posts", commentData.postId], rolledBackPost);
-      }
-    },
-    onSuccess(data, commentData) {
-      // 성공 시 캐시를 무효화하여 최신 댓글 목록을 가져옵니다.
       queryClient.invalidateQueries({
-        queryKey: ["posts", commentData.postId, "comments"],
+        queryKey: ["posts", postId, "comments"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["posts", commentData.postId],
+        queryKey: ["posts", postId],
       });
       setComment("");
     },
@@ -429,7 +466,7 @@ export default function DetailPage({ postId }: Props) {
       userSession: any;
     }) => {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${commentData.postId}/comments/${commentData.commentId}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${postId}/comments/${commentData.commentId}`,
         {
           credentials: "include",
           method: "delete",
@@ -453,15 +490,12 @@ export default function DetailPage({ postId }: Props) {
     onMutate: async (commentData) => {
       const previousComments = queryClient.getQueryData<IComment[]>([
         "posts",
-        commentData.postId,
+        postId,
         "comments",
       ]);
 
       // 게시물의 현재 정보를 가져옵니다.
-      const post = queryClient.getQueryData<IPost>([
-        "posts",
-        commentData.postId,
-      ]);
+      const post = queryClient.getQueryData<IPost>(["posts", postId]);
 
       if (previousComments && post) {
         // 댓글 배열에서 삭제할 댓글을 제외합니다.
@@ -471,7 +505,7 @@ export default function DetailPage({ postId }: Props) {
 
         // 업데이트된 댓글 배열을 캐시에 저장합니다.
         queryClient.setQueryData(
-          ["posts", commentData.postId, "comments"],
+          ["posts", postId, "comments"],
           updatedComments
         );
 
@@ -485,31 +519,23 @@ export default function DetailPage({ postId }: Props) {
         };
 
         // 업데이트된 게시물 정보를 캐시에 저장합니다.
-        queryClient.setQueryData(["posts", commentData.postId], updatedPost);
+        queryClient.setQueryData(["posts", postId], updatedPost);
       }
       return { previousComments };
-    },
-    onSuccess: (commentData) => {
-      queryClient.invalidateQueries({
-        queryKey: ["posts", commentData.postId, "comments"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["posts", commentData.postId],
-      });
     },
     onError: (error, commentData, context) => {
       // 에러가 발생하면 이전 댓글 목록으로 롤백합니다.
       queryClient.setQueryData(
-        ["posts", commentData.postId, "comments"],
+        ["posts", postId, "comments"],
         context?.previousComments
       );
     },
     onSettled: (commentData) => {
       queryClient.invalidateQueries({
-        queryKey: ["posts", commentData.postId, "comments"],
+        queryKey: ["posts", postId, "comments"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["posts", commentData.postId],
+        queryKey: ["posts", postId],
       });
       setExitBtn(false);
     },
@@ -525,7 +551,7 @@ export default function DetailPage({ postId }: Props) {
       // 코멘트 아이디를 가져와서 거기다가 답글을 넣음 필요한 param가 commentid, postid도 넣어야하나??
       // apiUrl = `/api/specialComments`; // postId에 달려있는 댓글중
       return await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${commentData.postId}/${replyTarget}/reply`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${postId}/${replyTarget}/reply`,
         {
           credentials: "include",
           method: "post",
@@ -539,24 +565,80 @@ export default function DetailPage({ postId }: Props) {
         }
       );
     },
-    onMutate: (commentData) => {
-      // 댓글을 추가하기 전에 캐시를 업데이트합니다.
+    // onMutate: (commentData) => {
+    //   // 성공 시 캐시를 무효화하여 최신 댓글 목록을 가져옵니다.
+    //   // 댓글을 추가하기 전에 캐시를 업데이트합니다.
+    //   const previousComments = queryClient.getQueryData<IComment[]>([
+    //     "posts",
+    //     commentData.postId,
+    //     "comments",
+    //   ]);
+
+    //   // 게시물의 현재 정보를 가져옵니다.
+    //   const post = queryClient.getQueryData<IPost>([
+    //     "posts",
+    //     commentData.postId,
+    //   ]);
+
+    //   if (previousComments && post) {
+    //     // 댓글 배열을 업데이트합니다.
+    //     queryClient.setQueryData(
+    //       ["posts", commentData.postId, "comments"],
+    //       [
+    //         ...previousComments,
+    //         {
+    //           comment: commentData.CommentText,
+    //           User: commentData.userSession,
+    //         }, // 임시 댓글 객체
+    //       ]
+    //     );
+
+    //     // 게시물의 댓글 수를 1 증가시킵니다.
+    //     const updatedPost = {
+    //       ...post,
+    //       _count: {
+    //         ...post._count,
+    //         Comments: post._count.Comments + 1,
+    //       },
+    //     };
+
+    //     // 업데이트된 게시물 정보를 캐시에 저장합니다.
+    //     queryClient.setQueryData(["posts", commentData.postId], updatedPost);
+    //   }
+    //   return { previousComments };
+    // },
+    onError(error, commentData, context: MutationContext | undefined) {
+      // 에러가 발생하면 이전 댓글 목록으로 롤백합니다.
+      queryClient.setQueryData(
+        ["posts", postId, "comments"],
+        context?.previousComments
+      );
+
+      if (context?.post) {
+        const rolledBackPost = {
+          ...context.post,
+          _count: {
+            ...context.post._count,
+            Comments: context.post._count.Comments - 1,
+          },
+        };
+        queryClient.setQueryData(["posts", postId], rolledBackPost);
+      }
+    },
+    onSuccess(data, commentData) {
       const previousComments = queryClient.getQueryData<IComment[]>([
         "posts",
-        commentData.postId,
+        postId,
         "comments",
       ]);
 
       // 게시물의 현재 정보를 가져옵니다.
-      const post = queryClient.getQueryData<IPost>([
-        "posts",
-        commentData.postId,
-      ]);
+      const post = queryClient.getQueryData<IPost>(["posts", postId]);
 
       if (previousComments && post) {
         // 댓글 배열을 업데이트합니다.
         queryClient.setQueryData(
-          ["posts", commentData.postId, "comments"],
+          ["posts", postId, "comments"],
           [
             ...previousComments,
             {
@@ -576,35 +658,13 @@ export default function DetailPage({ postId }: Props) {
         };
 
         // 업데이트된 게시물 정보를 캐시에 저장합니다.
-        queryClient.setQueryData(["posts", commentData.postId], updatedPost);
+        queryClient.setQueryData(["posts", postId], updatedPost);
       }
-      return { previousComments, post };
-    },
-    onError(error, commentData, context: MutationContext | undefined) {
-      // 에러가 발생하면 이전 댓글 목록으로 롤백합니다.
-      queryClient.setQueryData(
-        ["posts", commentData.postId, "comments"],
-        context?.previousComments
-      );
-
-      if (context?.post) {
-        const rolledBackPost = {
-          ...context.post,
-          _count: {
-            ...context.post._count,
-            Comments: context.post._count.Comments - 1,
-          },
-        };
-        queryClient.setQueryData(["posts", commentData.postId], rolledBackPost);
-      }
-    },
-    onSuccess(data, commentData) {
-      // 성공 시 캐시를 무효화하여 최신 댓글 목록을 가져옵니다.
       queryClient.invalidateQueries({
-        queryKey: ["posts", commentData.postId, "comments"],
+        queryKey: ["posts", postId, "comments"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["posts", commentData.postId],
+        queryKey: ["posts", postId],
       });
       setReplyTarget("");
       setComment("");
@@ -671,10 +731,13 @@ export default function DetailPage({ postId }: Props) {
     setExitBtn(e);
   };
 
-  const ReplyInfo = (commenttext: string, id: string) => {
+  const ReplyInfo = (commenttext: string, id: string, ctype: boolean) => {
     setReplyTarget(id);
     setComment("@" + commenttext + " ");
+    setCType(ctype);
   };
+
+  // console.log(CommentText, "CommentText");
 
   const CommentInfo = (commenttext: string, id: string) => {};
 
@@ -688,7 +751,9 @@ export default function DetailPage({ postId }: Props) {
       return null;
     }
     const userSession = session.user;
-    if (CommentText[0] === "@") {
+    console.log("submitComment : ", CommentText, session, isCtype);
+    if (!isCtype) {
+      // true면 comment
       if (replyTarget) {
         addReplyComment.mutate({
           postId,
@@ -2081,6 +2146,7 @@ export default function DetailPage({ postId }: Props) {
                                                     </div>
                                                   </div>
                                                 </div>
+
                                                 <textarea
                                                   onChange={onChangeTextArea}
                                                   aria-label="댓글 달기..."
@@ -2091,7 +2157,8 @@ export default function DetailPage({ postId }: Props) {
                                                     styles.CommentFormArea
                                                   }
                                                   value={CommentText}
-                                                ></textarea>
+                                                />
+
                                                 <div
                                                   className={
                                                     styles.CommentFormEnter

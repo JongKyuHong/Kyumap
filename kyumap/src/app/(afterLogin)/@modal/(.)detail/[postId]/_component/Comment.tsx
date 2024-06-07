@@ -35,7 +35,7 @@ export default function Comment({
   useEffect(() => {
     const has = comment?._count?.Comments > 0 ? true : false;
     setHasReply(has);
-  }, [postId, comment, hasReply, session]);
+  }, [postId, comment, session]);
 
   const onClickExitBtn = (id: string) => {
     onClickExitBtnChild(id, true);
@@ -44,6 +44,8 @@ export default function Comment({
   const onClickReplyBtn = () => {
     setClickedReply(!isClickedReply);
   };
+
+  if (!comment) return null;
 
   return (
     <div className={styles.CommentDiv}>
@@ -76,7 +78,7 @@ export default function Comment({
               {isClickedReply &&
                 comment!.reply!.map((data, index) => (
                   <Reply
-                  parentId={parentId}
+                    parentId={parentId}
                     key={index}
                     comment={data}
                     ReplyInfo={ReplyInfo}

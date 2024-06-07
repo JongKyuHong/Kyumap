@@ -4022,9 +4022,25 @@
   vertical-align: baseline;
 }
 
-.ReplyLiDiv2{
+.ReplyLiDiv2 {
   align-items: flex-start;
-    display: flex;
-    flex-direction: row;
-    width: calc(100% - 28px);
+  display: flex;
+  flex-direction: row;
+  width: calc(100% - 28px);
+}
+
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.loader {
+  animation: rotating 2s linear infinite;
+}
+
+.Mention {
+  color: blue;
 }
