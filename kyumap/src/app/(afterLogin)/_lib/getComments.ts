@@ -1,8 +1,8 @@
 import { QueryFunction } from "@tanstack/query-core";
-import { IPost } from "@/model/Post";
+import { IComment } from "@/model/Comment";
 
 export const getComments: QueryFunction<
-  IPost[],
+  IComment[],
   [_1: string, postId: string, _3: string]
 > = async ({ queryKey }) => {
   const [_1, postId, _2] = queryKey;

@@ -27,6 +27,8 @@ export default async function page({ params }: Props) {
   });
   const dehydrateState = dehydrate(queryClient);
 
+  if (!postId) return null;
+
   return (
     <HydrationBoundary state={dehydrateState}>
       <DetailPage postId={postId} />

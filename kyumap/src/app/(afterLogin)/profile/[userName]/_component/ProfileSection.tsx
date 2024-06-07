@@ -21,6 +21,7 @@ type Props = {
 export default function ProfileSection({ userEmail }: Props) {
   const [followed, setFollowed] = useState(false);
   const [hovered, setHovered] = useState(false);
+  const [isMe, setMe] = useState(false);
 
   // userData나 session이 변경될 때마다 팔로우 상태를 업데이트
 
@@ -46,6 +47,14 @@ export default function ProfileSection({ userEmail }: Props) {
     setFollowed(isFollowed);
   }, [userData, session]);
 
+  useEffect(() => {
+    if (session) {
+      if (userEmail === session?.user!.email) {
+        setMe(true);
+      }
+    }
+  }, [userEmail, session]);
+
   // const followed = !!userData?.Followers?.find(
   //   (v) => v.email === session?.user?.email
   // );
@@ -68,8 +77,7 @@ export default function ProfileSection({ userEmail }: Props) {
       ]);
       if (value) {
         const index = value.findIndex((v) => v.email === userEmail);
-        const shallow = [...value];
-        console.log(shallow, "ssh");
+        const shallow: any = [...value];
         shallow[index] = {
           ...shallow[index],
           Followers: [{ email: session?.user?.email as string }],
@@ -103,11 +111,11 @@ export default function ProfileSection({ userEmail }: Props) {
       ]);
       if (value) {
         const index = value.findIndex((v) => v.email === userId);
-        const shallow = [...value];
+        const shallow: any = [...value];
         shallow[index] = {
           ...shallow[index],
           Followers: shallow[index].Followers.filter(
-            (v) => v.email !== session?.user?.email
+            (v: any) => v.email !== session?.user?.email
           ),
           _count: {
             ...shallow[index]._count,
@@ -115,23 +123,23 @@ export default function ProfileSection({ userEmail }: Props) {
           },
         };
         queryClient.setQueryData(["users", "followRecommends"], shallow);
-        const value2: IUser | undefined = queryClient.getQueryData([
-          "users",
-          userEmail,
-        ]);
-        if (value2) {
-          const shallow = {
-            ...value2,
-            Followers: value2.Followers.filter(
-              (v) => v.email !== session?.user?.email
-            ),
-            _count: {
-              ...value2._count,
-              Followers: value2._count?.Followers - 1,
-            },
-          };
-          queryClient.setQueryData(["users", userEmail], shallow);
-        }
+      }
+      const value2: IUser | undefined = queryClient.getQueryData([
+        "users",
+        userEmail,
+      ]);
+      if (value2) {
+        const shallow = {
+          ...value2,
+          Followers: value2.Followers.filter(
+            (v) => v.email !== session?.user?.email
+          ),
+          _count: {
+            ...value2._count,
+            Followers: value2._count?.Followers - 1,
+          },
+        };
+        queryClient.setQueryData(["users", userEmail], shallow);
       }
     },
     onSuccess: () => {
@@ -142,7 +150,6 @@ export default function ProfileSection({ userEmail }: Props) {
 
   const unfollow = useMutation({
     mutationFn: (userEmail: string) => {
-      console.log("unfollow", userEmail);
       return fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${userEmail}/follow`,
         {
@@ -159,11 +166,11 @@ export default function ProfileSection({ userEmail }: Props) {
       ]);
       if (value) {
         const index = value.findIndex((v) => v.email === userEmail);
-        const shallow = [...value];
+        const shallow: any = [...value];
         shallow[index] = {
           ...shallow[index],
           Followers: shallow[index].Followers.filter(
-            (v) => v.email !== session?.user?.email
+            (v: any) => v.email !== session?.user?.email
           ),
           _count: {
             ...shallow[index]._count,
@@ -171,23 +178,23 @@ export default function ProfileSection({ userEmail }: Props) {
           },
         };
         queryClient.setQueryData(["users", "followRecommends"], shallow);
-        const value2: IUser | undefined = queryClient.getQueryData([
-          "users",
-          userEmail,
-        ]);
-        if (value2) {
-          const shallow = {
-            ...value2,
-            Followers: value2.Followers.filter(
-              (v) => v.email !== session?.user?.email
-            ),
-            _count: {
-              ...value2._count,
-              Followers: value2._count?.Followers - 1,
-            },
-          };
-          queryClient.setQueryData(["users", userEmail], shallow);
-        }
+      }
+      const value2: IUser | undefined = queryClient.getQueryData([
+        "users",
+        userEmail,
+      ]);
+      if (value2) {
+        const shallow = {
+          ...value2,
+          Followers: value2.Followers.filter(
+            (v) => v.email !== session?.user?.email
+          ),
+          _count: {
+            ...value2._count,
+            Followers: value2._count?.Followers - 1,
+          },
+        };
+        queryClient.setQueryData(["users", userEmail], shallow);
       }
     },
     onError(error, userEmail: string) {
@@ -197,8 +204,7 @@ export default function ProfileSection({ userEmail }: Props) {
       ]);
       if (value) {
         const index = value.findIndex((v) => v.email === userEmail);
-        console.log(value, userEmail, index);
-        const shallow = [...value];
+        const shallow: any = [...value];
         shallow[index] = {
           ...shallow[index],
           Followers: [{ email: session?.user?.email as string }],
@@ -235,10 +241,8 @@ export default function ProfileSection({ userEmail }: Props) {
     e.stopPropagation();
     e.preventDefault();
     if (followed) {
-      console.log(followed, userEmail, "fol");
       unfollow.mutate(userEmail);
     } else {
-      console.log(followed, userEmail, "fol2");
       follow.mutate(userEmail);
     }
   };
@@ -332,35 +336,37 @@ export default function ProfileSection({ userEmail }: Props) {
                       className={styles.HeaderSectionFollowBtn2}
                       tabIndex={0}
                     >
-                      <button
-                        className={styles.HeaderSectionFollowBtn4}
-                        style={{
-                          backgroundColor: followed
-                            ? "rgb(239, 239, 239)"
-                            : "rgb(0, 149, 246)",
-                          color: followed ? "rgb(0,0,0)" : "rgb(255,255,255)",
-                        }}
-                        type="button"
-                        onClick={onFollow}
-                      >
-                        <div
-                          className={styles.HeaderSectionFollowBtn5}
-                          style={{ height: "100%" }}
+                      {!isMe && (
+                        <button
+                          className={styles.HeaderSectionFollowBtn4}
+                          style={{
+                            backgroundColor: followed
+                              ? "rgb(239, 239, 239)"
+                              : "rgb(0, 149, 246)",
+                            color: followed ? "rgb(0,0,0)" : "rgb(255,255,255)",
+                          }}
+                          type="button"
+                          onClick={onFollow}
                         >
                           <div
-                            className={styles.HeaderSectionFollowBtn6}
-                            dir="auto"
-                            onMouseEnter={() => setHovered(true)}
-                            onMouseLeave={() => setHovered(false)}
+                            className={styles.HeaderSectionFollowBtn5}
+                            style={{ height: "100%" }}
                           >
-                            {followed
-                              ? hovered
-                                ? "팔로우 취소"
-                                : "팔로잉"
-                              : "팔로우"}
+                            <div
+                              className={styles.HeaderSectionFollowBtn6}
+                              dir="auto"
+                              onMouseEnter={() => setHovered(true)}
+                              onMouseLeave={() => setHovered(false)}
+                            >
+                              {followed
+                                ? hovered
+                                  ? "팔로우 취소"
+                                  : "팔로잉"
+                                : "팔로우"}
+                            </div>
                           </div>
-                        </div>
-                      </button>
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
