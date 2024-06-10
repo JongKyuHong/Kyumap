@@ -31,6 +31,7 @@
   --ig-toggle-background-on-prism: 15, 20, 25;
   --ig-stroke-prism: 255, 255, 255;
   --ig-toggle-background-off-prism: 219, 223, 228;
+  --web-overlay-on-media: 38, 38, 38;
 
   --overlay-alpha-80: rgba(0, 0, 0, 0.65);
 

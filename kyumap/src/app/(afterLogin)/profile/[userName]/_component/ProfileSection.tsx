@@ -248,7 +248,7 @@ export default function ProfileSection({ userEmail }: Props) {
   };
 
   if (!userData) return null;
-  if (!session) return null;
+  // if (!session) return null;
 
   if (userError) {
     return (

@@ -16,7 +16,7 @@ type Props = {
 
 export default function FollowList({ user }: Props) {
   const [followed, setFollowed] = useState(false);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
     const isFollowed = !!user.Followers?.find(
@@ -24,6 +24,10 @@ export default function FollowList({ user }: Props) {
     );
     setFollowed(isFollowed);
   }, [user, session]);
+
+  if (status === "loading") {
+    return <p>로딩중...</p>;
+  }
 
   const queryClient = useQueryClient();
 
@@ -198,9 +202,9 @@ export default function FollowList({ user }: Props) {
   const onFollow: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
     e.preventDefault();
-    if (session?.user.email === user.email){
-      alert("자기자신은 팔로우 할 수 없습니다.")
-      return
+    if (session?.user!.email === user.email) {
+      alert("자기자신은 팔로우 할 수 없습니다.");
+      return;
     }
     if (followed) {
       unfollow.mutate(user.email);

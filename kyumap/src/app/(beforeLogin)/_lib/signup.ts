@@ -3,6 +3,19 @@
 import { redirect } from "next/navigation";
 import { signIn } from "@/auth";
 
+interface PresignedPostData {
+  url: string;
+  fields: {
+    key: string;
+    bucket: string;
+    "X-Amz-Algorithm": string;
+    "X-Amz-Credential": string;
+    "X-Amz-Date": string;
+    Policy: string;
+    "X-Amz-Signature": string;
+  };
+}
+
 const signup = async (prevState: any, formData: FormData) => {
   if (!formData.get("id") || !(formData.get("id") as string)?.trim()) {
     return { message: "no_id" };
@@ -22,37 +35,48 @@ const signup = async (prevState: any, formData: FormData) => {
   formData.set("nickname", formData.get("name") as string);
   let shouldRedirect = false;
   try {
+    const checkDuplicate = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/duplicate`,
+      {
+        method: "post",
+        body: JSON.stringify({
+          email: formData.get("id"),
+          nickname: formData.get("name"),
+        }),
+      }
+    );
+    const checkDuplicateResult = await checkDuplicate.json();
+
+    if (checkDuplicateResult.status === 400) {
+      return { message: checkDuplicateResult.message };
+    }
+
     let file = formData.get("image") as File;
     let filename = encodeURIComponent(file.name);
     // console.log(filename, "filename");
+    const imageType = "image";
     let result_url = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/image/upload?file=${filename}`
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/image/upload?file=${filename}&type=${imageType}`
     );
 
-    result_url = await result_url.json();
-    // console.log(result_url, "result_url");
+    const result_url2: PresignedPostData = await result_url.json();
 
     const ImageFormData = new FormData();
     Object.entries({
-      ...(result_url.fields as { fields?: any }),
+      ...(result_url2.fields as { fields?: any }),
       file,
     }).forEach(([key, value]) => {
       ImageFormData.append(key, value as string);
     });
-    // console.log(ImageFormData, "imageFormData");
-    // console.log(result_url.url, "urlurl");
-    console.log(ImageFormData, "signup.ts에서 aws로 보내는 formData");
-    let uploadResult = await fetch(result_url.url, {
+
+    let uploadResult = await fetch(result_url2.url, {
       method: "POST",
       body: ImageFormData,
     });
 
-    // console.log(uploadResult, "uploadResult");
-    console.log(uploadResult.ok, "isitok?");
-
     if (uploadResult.ok) {
-      formData.set("imageUrl", uploadResult.url + "/" + filename);
-      console.log(formData.get("imageUrl"), "uploadUrl");
+      formData.set("imageUrl", uploadResult.url + "/image/" + filename);
+      console.log(formData, "formData");
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/users`,
         {
@@ -61,11 +85,7 @@ const signup = async (prevState: any, formData: FormData) => {
           credentials: "include",
         }
       );
-      console.log(response.status, "status");
-      if (response.status === 403) {
-        return { message: "user_exists" };
-      }
-      // console.log(await response.json(), "resjson");
+
       shouldRedirect = true;
       await signIn("credentials", {
         email: formData.get("id"),

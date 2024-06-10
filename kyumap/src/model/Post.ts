@@ -12,7 +12,10 @@ export interface IPost extends Document {
   content: string;
   createdAt: Date;
   Images: string[];
+  altTexts: string[];
   Hearts: UserID[];
+  hideLikesAndViews: Boolean;
+  hideComments: Boolean;
   _count: {
     Hearts: number;
     Comments: number;
@@ -43,11 +46,24 @@ const postSchema: Schema = new mongoose.Schema({
       required: true,
     },
   ],
+  altTexts: [
+    {
+      type: String,
+    },
+  ],
   Hearts: [
     {
       email: { type: String },
     },
   ],
+  hideLikesAndViews: {
+    type: Boolean,
+    default: false,
+  },
+  hideComments: {
+    type: Boolean,
+    default: false,
+  },
   _count: {
     Hearts: { type: Number, default: 0 },
     Comments: { type: Number, default: 0 },

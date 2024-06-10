@@ -16,6 +16,6 @@ export async function getFollowRecommends(userEmail: string) {
     // This will activate the closest `error.js` Error Boundary
     throw new Error("Failed to fetch data");
   }
-
-  return await res.json();
+  const data = await res.json();
+  return data;
 }

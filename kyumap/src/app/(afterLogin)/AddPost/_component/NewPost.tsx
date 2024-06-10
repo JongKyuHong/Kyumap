@@ -2,6 +2,7 @@
 
 import React, {
   ChangeEventHandler,
+  ChangeEvent,
   ReactEventHandler,
   FormEventHandler,
   useCallback,
@@ -9,6 +10,7 @@ import React, {
   useState,
   useEffect,
   FormEvent,
+  Fragment,
 } from "react";
 import styles from "./newpost.module.css";
 import { useRouter } from "next/navigation";
@@ -21,18 +23,19 @@ import useDeviceSize from "../../_component/useDeviceSize";
 import { IPost } from "@/model/Post";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
-import { url } from "inspector";
+
+interface PreviewItem {
+  dataUrl: string;
+  file: File;
+  type: "image" | "video";
+  thumbnailUrl?: string;
+}
 
 export default function NewPost() {
   const { data: session } = useSession();
   const [content, setContent] = useState("");
   const [isActive, setActive] = useState(false);
-  const [preview, setPreview] = useState<
-    Array<{
-      dataUrl: string;
-      file: File;
-    } | null>
-  >([]);
+  const [preview, setPreview] = useState<PreviewItem[]>([]);
   const [ratioWidth, setWidth] = useState<number>(0);
   const [isMultiImg, setMultiImg] = useState(false);
   const [currentNumber, setNumber] = useState(0);
@@ -40,19 +43,18 @@ export default function NewPost() {
   const [isClickedExitBtn, setExitBtn] = useState(false);
   const [isAccExpand, setAccExpand] = useState(false);
   const [isSettingExpand, setSettingExpand] = useState(false);
-  const [isArticleInfoHide, setArticleInfoHide] = useState(false);
-  const [isCommentHide, setCommentHide] = useState(false);
+  const [isArticleInfoHide, setArticleInfoHide] = useState<boolean>(false);
+  const [isCommentHide, setCommentHide] = useState<boolean>(false);
+  const [altTexts, setAltTexts] = useState(preview.map(() => "")); // 대체 텍스트
 
   const router = useRouter();
   const imgRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
 
-  if (!session) return null;
-
-  const onClickBackBtn = useCallback(() => {
+  const onClickBackBtn = () => {
     router.back();
-  }, [router]);
+  };
 
   const handleFileSelect = () => {
     if (imgRef.current) {
@@ -65,12 +67,13 @@ export default function NewPost() {
       e.preventDefault();
 
       const urlformLst = [];
+      const altTextsLst = [];
       for (let idx = 0; idx < preview.length; idx++) {
-        let file = preview[idx]!.file;
+        const { file, type } = preview[idx];
         let filename = encodeURIComponent(file.name);
         // 프리사인 url받기
         let result_url = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/image/upload?file=${filename}`
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/image/upload?file=${filename}&type=${type}`
         );
 
         result_url = await result_url.json();
@@ -81,22 +84,24 @@ export default function NewPost() {
             ImageFormData.append(key, value as string);
           }
         );
-
+        console.log(ImageFormData, "imageFormData");
         // 업로드
         let uploadResult = await fetch(result_url.url, {
           method: "POST",
           body: ImageFormData,
         });
-
-        let url = uploadResult.url + "/" + file.name;
+        console.log(uploadResult, "url url url url filenName");
+        let url = uploadResult.url + `/${type}/` + filename;
         urlformLst.push(url);
+        altTextsLst.push(altTexts[idx]);
       }
 
       const postFormData = new FormData();
       postFormData.append("images", JSON.stringify(urlformLst));
+      postFormData.append("altTexts", JSON.stringify(altTextsLst));
+      postFormData.append("isHideInfo", isArticleInfoHide.toString());
+      postFormData.append("isHideComments", isCommentHide.toString());
 
-      // console.log(postFormData, "urlLstPostFormData");
-      // console.log(session, "/addpost session");
       if (session?.user?.email)
         postFormData.append("userEmail", session.user.email);
       if (session?.user?.name)
@@ -144,34 +149,80 @@ export default function NewPost() {
     mutate(e);
   };
 
-  // const [preview, setPreview] = useState<Array<string | null>>([]);
-  const onUpload: ChangeEventHandler<HTMLInputElement> = (e) => {
-    e.preventDefault();
-    if (e.target.files && e.target.files.length > 0) {
-      const newPreviews: Array<{ dataUrl: string; file: File } | null> = [];
+  const generateVideoThumbnail = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const video = document.createElement("video");
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      const reader = new FileReader();
 
-      // 이전 미리보기 데이터를 새 배열에 복사
-      for (let i = 0; i < preview.length; i++) {
-        newPreviews[i] = preview[i];
-      }
-
-      Array.from(e.target.files).forEach((file, index) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setPreview((prevPreview) => {
-            const prev = [...prevPreview];
-            prev.push({ dataUrl: reader.result as string, file }); // 이전 데이터 끝에 새로운 데이터를 추가
-            return prev;
-          });
+      reader.onload = (event) => {
+        video.src = event.target?.result as string;
+        video.onloadeddata = () => {
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          video.currentTime = 1; // 첫 번째 초의 프레임을 사용
         };
-        reader.readAsDataURL(file);
-      });
 
-      setPreview(newPreviews); // 새로운 미리보기 배열로 업데이트
-      // console.log(preview, "preview");
-    }
+        video.onseeked = () => {
+          if (context) {
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const thumbnailUrl = canvas.toDataURL("image/png");
+            resolve(thumbnailUrl);
+          } else {
+            reject("캔버스 컨텍스트를 가져올 수 없습니다.");
+          }
+        };
+
+        video.onerror = (error: any) => {
+          reject("비디오 로드 중 오류 발생: " + error.message);
+        };
+      };
+
+      reader.onerror = (error: any) => {
+        reject("파일 읽기 중 오류 발생: " + error.message);
+      };
+
+      reader.readAsDataURL(file);
+    });
   };
 
+  const onUpload: ChangeEventHandler<HTMLInputElement> = async (e) => {
+    e.preventDefault();
+    if (e.target.files && e.target.files.length > 0) {
+      let newPreviews: PreviewItem[] = [...preview]; // 변경 사항 없음
+
+      const filePromises = Array.from(e.target.files).map(async (file) => {
+        if (file.type.startsWith("video")) {
+          try {
+            const thumbnailUrl = await generateVideoThumbnail(file);
+            newPreviews = [
+              ...newPreviews,
+              { dataUrl: thumbnailUrl, file, type: "video" },
+            ];
+          } catch (error) {
+            console.error("동영상 섬네일 생성 중 오류 발생:", error);
+          }
+        } else {
+          const reader = new FileReader();
+          const fileLoadPromise = new Promise<void>((resolve) => {
+            reader.onloadend = () => {
+              newPreviews = [
+                ...newPreviews,
+                { dataUrl: reader.result as string, file, type: "image" },
+              ];
+              resolve();
+            };
+          });
+          reader.readAsDataURL(file);
+          await fileLoadPromise;
+        }
+      });
+
+      await Promise.all(filePromises);
+      setPreview(newPreviews);
+    }
+  };
   const calculateSize = () => {
     if (isMobile) {
       // setWidth(378);
@@ -244,12 +295,15 @@ export default function NewPost() {
   };
 
   useEffect(() => {
+    setAltTexts(preview.map(() => ""));
+  }, [preview]);
+
+  useEffect(() => {
     if (preview.length > 1) {
       setMultiImg(true);
     } else {
       setMultiImg(false);
     }
-    console.log(isMultiImg, preview.length, "ismulti");
   }, [isMultiImg, preview]);
 
   useEffect(() => {
@@ -308,11 +362,21 @@ export default function NewPost() {
 
   const onRemoveImage = (index: number) => () => {
     setPreview((prevPreview) => {
-      const prev = [...prevPreview];
-      prev[index] = null;
-      return prev;
+      // 필터를 사용하여 특정 인덱스를 제외한 모든 항목을 반환
+      return prevPreview.filter((_, i) => i !== index);
     });
   };
+
+  const onClickAltTextChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const newAltTexts = [...altTexts];
+    newAltTexts[index] = e.target.value;
+    setAltTexts(newAltTexts);
+  };
+
+  if (!session) return null;
 
   return (
     <div className={styles.ModalMainDiv}>
@@ -1517,7 +1581,7 @@ export default function NewPost() {
                                               className={styles.AccExpandDiv2}
                                             >
                                               {preview.map((pdata, index) => (
-                                                <>
+                                                <Fragment key={index}>
                                                   <div
                                                     className={
                                                       styles.AccExpandDiv3
@@ -1574,10 +1638,17 @@ export default function NewPost() {
                                                         type="text"
                                                         spellCheck="true"
                                                         name="alt-text"
+                                                        value={altTexts[index]}
+                                                        onChange={(e) =>
+                                                          onClickAltTextChange(
+                                                            e,
+                                                            index
+                                                          )
+                                                        }
                                                       ></input>
                                                     </div>
                                                   </div>
-                                                </>
+                                                </Fragment>
                                               ))}
                                             </div>
                                           </div>
