@@ -350,32 +350,34 @@ export default function ActionButtons({ post }: Props) {
                   </div>
                 </div>
               </span>
-              <span>
-                <Link href={`/detail/${postId}`}>
-                  <div className={styles.iconDiv} role="button" tabIndex={0}>
-                    <div className={styles.iconInnerDiv}>
-                      <svg
-                        aria-label="댓글 달기"
-                        className={styles.iconSvg}
-                        fill="currentColor"
-                        height="24"
-                        role="img"
-                        viewBox="0 0 24 24"
-                        width="24"
-                      >
-                        <title>댓글 달기</title>
-                        <path
-                          d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                        ></path>
-                      </svg>
+              {!post.hideComments && (
+                <span>
+                  <Link href={`/detail/${postId}`}>
+                    <div className={styles.iconDiv} role="button" tabIndex={0}>
+                      <div className={styles.iconInnerDiv}>
+                        <svg
+                          aria-label="댓글 달기"
+                          className={styles.iconSvg}
+                          fill="currentColor"
+                          height="24"
+                          role="img"
+                          viewBox="0 0 24 24"
+                          width="24"
+                        >
+                          <title>댓글 달기</title>
+                          <path
+                            d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                          ></path>
+                        </svg>
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              </span>
+                  </Link>
+                </span>
+              )}
             </div>
             <div className={styles.rightSectionIcon}>
               <div>
@@ -415,31 +417,33 @@ export default function ActionButtons({ post }: Props) {
               </div>
             </div>
           </div>
-          <section className={styles.likeSection}>
-            <div className={styles.likeSectionDiv}>
-              <div className={styles.likeSectionInnerDiv}>
-                <span className={styles.likeSectionSpan}>
-                  <Link
-                    href="#"
-                    className={styles.likeModalLink}
-                    role="link"
-                    tabIndex={0}
-                  >
-                    <span
-                      className={styles.likeInnerSpan}
-                      style={{ lineHeight: "18px" }}
+          {!post.hideLikesAndViews && (
+            <section className={styles.likeSection}>
+              <div className={styles.likeSectionDiv}>
+                <div className={styles.likeSectionInnerDiv}>
+                  <span className={styles.likeSectionSpan}>
+                    <Link
+                      href="#"
+                      className={styles.likeModalLink}
+                      role="link"
+                      tabIndex={0}
                     >
-                      {"좋아요 "}
-                      <span className={styles.likeCountSpan}>
-                        {post._count?.Hearts || 0}
+                      <span
+                        className={styles.likeInnerSpan}
+                        style={{ lineHeight: "18px" }}
+                      >
+                        {"좋아요 "}
+                        <span className={styles.likeCountSpan}>
+                          {post._count?.Hearts || 0}
+                        </span>
+                        {"개"}
                       </span>
-                      {"개"}
-                    </span>
-                  </Link>
-                </span>
+                    </Link>
+                  </span>
+                </div>
               </div>
-            </div>
-          </section>
+            </section>
+          )}
           <div className={styles.postContent}>
             <div className={styles.postUserName}>
               <span className={styles.postUserNameSpan}>
@@ -477,78 +481,83 @@ export default function ActionButtons({ post }: Props) {
               </span>
             </span>
           </div>
-          <div className={styles.postComment}>
-            <Link
-              href={`/detail/${post.postId}`}
-              className={styles.commentLink}
-              role="link"
-              tabIndex={0}
-            >
-              <span
-                style={{ lineHeight: "18px" }}
-                className={styles.linkCommentSpan}
-                dir="auto"
+          {!post.hideComments && (
+            <div className={styles.postComment}>
+              <Link
+                href={`/detail/${post.postId}`}
+                className={styles.commentLink}
+                role="link"
+                tabIndex={0}
               >
-                <span className={styles.linkCommentInnerSpan}>{"댓글 "}</span>
-                {`${post._count.Comments}개 모두 보기`}
-              </span>
-            </Link>
-          </div>
-          <div className={styles.commentInput}>
-            <section className={styles.inputSection}>
-              <div className={styles.inputSecitonDiv}>
-                <form className={styles.formInput} method="POST">
-                  <div className={styles.formInputDiv}>
-                    <div className={styles.formInputInnerDiv}>
-                      <div
-                        className={styles.formInputInnerDiv2}
-                        role="button"
-                        tabIndex={0}
-                      >
-                        <div className={styles.formInputInnerDiv3}>
-                          <svg
-                            aria-label="이모티콘"
-                            className={styles.Emoticon}
-                            fill="currentColor"
-                            height="13"
-                            role="img"
-                            viewBox="0 0 24 24"
-                            width="13"
-                          >
-                            <title>이모티콘</title>
-                            <path d="M15.83 10.997a1.167 1.167 0 1 0 1.167 1.167 1.167 1.167 0 0 0-1.167-1.167Zm-6.5 1.167a1.167 1.167 0 1 0-1.166 1.167 1.167 1.167 0 0 0 1.166-1.167Zm5.163 3.24a3.406 3.406 0 0 1-4.982.007 1 1 0 1 0-1.557 1.256 5.397 5.397 0 0 0 8.09 0 1 1 0 0 0-1.55-1.263ZM12 .503a11.5 11.5 0 1 0 11.5 11.5A11.513 11.513 0 0 0 12 .503Zm0 21a9.5 9.5 0 1 1 9.5-9.5 9.51 9.51 0 0 1-9.5 9.5Z"></path>
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
-                    <textarea
-                      aria-label="댓글 달기..."
-                      className={styles.formInputTextArea}
-                      placeholder="댓글 달기..."
-                      autoComplete="off"
-                      autoCorrect="off"
-                      onChange={handleTextareaChange}
-                      // style={{
-                      //   height: "18px!important",
-                      // }}
-                    ></textarea>
-                    {CommentText ? (
-                      <div className={styles.EnterBtn}>
+                <span
+                  style={{ lineHeight: "18px" }}
+                  className={styles.linkCommentSpan}
+                  dir="auto"
+                >
+                  <span className={styles.linkCommentInnerSpan}>{"댓글 "}</span>
+                  {`${post._count.Comments}개 모두 보기`}
+                </span>
+              </Link>
+            </div>
+          )}
+
+          {!post.hideComments && (
+            <div className={styles.commentInput}>
+              <section className={styles.inputSection}>
+                <div className={styles.inputSecitonDiv}>
+                  <form className={styles.formInput} method="POST">
+                    <div className={styles.formInputDiv}>
+                      <div className={styles.formInputInnerDiv}>
                         <div
-                          className={styles.EnterDiv}
+                          className={styles.formInputInnerDiv2}
                           role="button"
                           tabIndex={0}
-                          onClick={onSubmitComment}
                         >
-                          게시
+                          <div className={styles.formInputInnerDiv3}>
+                            <svg
+                              aria-label="이모티콘"
+                              className={styles.Emoticon}
+                              fill="currentColor"
+                              height="13"
+                              role="img"
+                              viewBox="0 0 24 24"
+                              width="13"
+                            >
+                              <title>이모티콘</title>
+                              <path d="M15.83 10.997a1.167 1.167 0 1 0 1.167 1.167 1.167 1.167 0 0 0-1.167-1.167Zm-6.5 1.167a1.167 1.167 0 1 0-1.166 1.167 1.167 1.167 0 0 0 1.166-1.167Zm5.163 3.24a3.406 3.406 0 0 1-4.982.007 1 1 0 1 0-1.557 1.256 5.397 5.397 0 0 0 8.09 0 1 1 0 0 0-1.55-1.263ZM12 .503a11.5 11.5 0 1 0 11.5 11.5A11.513 11.513 0 0 0 12 .503Zm0 21a9.5 9.5 0 1 1 9.5-9.5 9.51 9.51 0 0 1-9.5 9.5Z"></path>
+                            </svg>
+                          </div>
                         </div>
                       </div>
-                    ) : null}
-                  </div>
-                </form>
-              </div>
-            </section>
-          </div>
+                      <textarea
+                        aria-label="댓글 달기..."
+                        className={styles.formInputTextArea}
+                        placeholder="댓글 달기..."
+                        autoComplete="off"
+                        autoCorrect="off"
+                        onChange={handleTextareaChange}
+                        // style={{
+                        //   height: "18px!important",
+                        // }}
+                      ></textarea>
+                      {CommentText ? (
+                        <div className={styles.EnterBtn}>
+                          <div
+                            className={styles.EnterDiv}
+                            role="button"
+                            tabIndex={0}
+                            onClick={onSubmitComment}
+                          >
+                            게시
+                          </div>
+                        </div>
+                      ) : null}
+                    </div>
+                  </form>
+                </div>
+              </section>
+            </div>
+          )}
         </div>
       </div>
     </div>

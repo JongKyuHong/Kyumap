@@ -15,6 +15,5 @@ export async function getPostRecommends({ pageParam }: Props) {
     throw new Error("Failed to fetch data");
   }
   const data = await res.json();
-  console.log(data, "getPostRecommends res");
   return data;
 }

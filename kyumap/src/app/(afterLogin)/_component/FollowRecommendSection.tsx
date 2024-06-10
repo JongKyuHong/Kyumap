@@ -17,8 +17,7 @@ import { useSession } from "next-auth/react";
 
 export default function FollowRecommendSection() {
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
-  const { data: session } = useSession();
-  if (!isDesktop || !session) return null;
+  const { data: session, status } = useSession();
 
   const { data: RecommendsData } = useQuery<IUser[]>({
     queryKey: ["users", "followRecommends", session?.user!.email],
@@ -26,6 +25,10 @@ export default function FollowRecommendSection() {
     staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
     gcTime: 300 * 1000,
   });
+  if (status === "loading") {
+    return <p>로딩중...</p>;
+  }
+  if (!isDesktop) return null;
 
   return (
     <div className={styles.FollowList}>
@@ -160,9 +163,10 @@ export default function FollowRecommendSection() {
                           position: "relative",
                         }}
                       >
-                        {RecommendsData?.map((user) => (
-                          <FollowList user={user} key={user.id} />
-                        ))}
+                        {RecommendsData &&
+                          RecommendsData?.map((user, index) => (
+                            <FollowList user={user} key={index} />
+                          ))}
                       </div>
                     </div>
                   </div>
