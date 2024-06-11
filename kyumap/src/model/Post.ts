@@ -16,6 +16,7 @@ export interface IPost extends Document {
   Hearts: UserID[];
   hideLikesAndViews: Boolean;
   hideComments: Boolean;
+  reels: Boolean;
   _count: {
     Hearts: number;
     Comments: number;
@@ -63,6 +64,9 @@ const postSchema: Schema = new mongoose.Schema({
   hideComments: {
     type: Boolean,
     default: false,
+  },
+  reels: {
+    type: Boolean,
   },
   _count: {
     Hearts: { type: Number, default: 0 },

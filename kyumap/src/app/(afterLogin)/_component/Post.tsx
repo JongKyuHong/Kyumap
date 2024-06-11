@@ -119,8 +119,10 @@ export default function Post({ post }: Props) {
     );
   }
 
+  const onClickMenu = () => {};
+
   if (!post) return null;
-  console.log(post, "Post post");
+
   return (
     <article>
       <div className={styles.articleDiv}>
@@ -215,7 +217,7 @@ export default function Post({ post }: Props) {
             </div>
             <div className={styles.articleMoreInfo}>
               <div className={styles.articleMoreInfo2}>
-                <div className={styles.articleMoreInfo3}>
+                <div className={styles.articleMoreInfo3} onClick={onClickMenu}>
                   <div className={styles.articleMoreInfo4}>
                     <div
                       className={styles.articleMoreInfo5}

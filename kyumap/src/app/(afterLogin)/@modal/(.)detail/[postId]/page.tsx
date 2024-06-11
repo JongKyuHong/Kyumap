@@ -25,13 +25,14 @@ export default async function page({ params }: Props) {
     queryKey: ["posts", postId],
     queryFn: getPost,
   });
+  const post = await getPost({ queryKey: ["posts", postId] });
+  console.log(post, "page post");
   const dehydrateState = dehydrate(queryClient);
 
-  if (!postId) return null;
+  if (!post) return null;
 
   return (
-    <HydrationBoundary state={dehydrateState}>
-      <DetailPage postId={postId} />
-    </HydrationBoundary>
+    // <HydrationBoundary state={dehydrateState}></HydrationBoundary>
+    <DetailPage post={post} />
   );
 }

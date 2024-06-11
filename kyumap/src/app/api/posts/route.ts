@@ -57,6 +57,7 @@ export async function POST(req: NextRequest) {
   const content = reqBody.get("content");
   const isHideInfo = reqBody.get("isHideInfo") === "true"; // 문자열로 받은 값 다시 boolean으로 변환
   const isHideComments = reqBody.get("isHideComments") === "true";
+  const reels = reqBody.get("reels") === "true";
 
   let images = [];
   const imagesString = reqBody.get("images");
@@ -107,15 +108,15 @@ export async function POST(req: NextRequest) {
       Comments: [],
       hideLikesAndViews: isHideInfo,
       hideComments: isHideComments,
+      reels: reels,
       _count: {
         Hearts: 0,
         Comments: 0,
       },
       hashTag: [],
     };
-    console.log(data, "post에 넣기 전 data");
+
     const posts = await Post.create(data);
-    console.log(posts, "post에 넣은 후 posts");
     return NextResponse.json(posts);
   } catch (err: any) {
     return NextResponse.json({ error: err.message });

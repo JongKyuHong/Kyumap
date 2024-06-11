@@ -42,7 +42,7 @@
 }
 
 .ExitBtn {
-  z-index: 3;
+  z-index: 5;
   position: relative;
 }
 
@@ -386,7 +386,7 @@
   box-sizing: border-box;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  z-index: 0;
+  z-index: 4;
 }
 
 .replynextdiv3 {
@@ -4043,4 +4043,145 @@
 
 .Mention {
   color: blue;
+}
+
+.videoDiv {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(var(--web-always-black));
+  position: absolute;
+}
+.videoDiv2 {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: block;
+  z-index: 0;
+}
+
+.videoDiv3 {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.videoDiv4 {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.videoDiv5 {
+  width: 100%;
+  height: 100%;
+  position: static;
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+}
+
+.videoDiv66 {
+  bottom: 0;
+  top: 0;
+  right: 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  left: 0;
+  position: absolute;
+}
+
+.videoDiv6 {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  position: absolute;
+}
+
+.videoDiv7 {
+  overflow-y: visible;
+  overflow-x: visible;
+  bottom: 0;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  right: 0;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  position: absolute;
+  z-index: 1000;
+}
+
+.videoDiv8 {
+  top: 50%;
+  margin-top: -67px;
+  left: 50%;
+  margin-left: -67px;
+  position: absolute;
+}
+
+.videoBtn {
+  padding-bottom: 8px;
+  overflow-y: visible;
+  margin-bottom: 16px;
+  padding-top: 8px;
+  overflow-x: visible;
+  border-bottom-left-radius: 50%;
+  padding-left: 8px;
+  border-top-right-radius: 50%;
+  align-content: stretch;
+  margin-right: 16px;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  flex-shrink: 0;
+  background-color: rgb(var(--web-overlay-on-media));
+  position: static;
+  padding-right: 8px;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  flex-grow: 0;
+  border-bottom-right-radius: 50%;
+  border-top-left-radius: 50%;
+}
+
+.videoButton {
+  border: 0;
+  color: rgb(var(--ig-primary-button));
+  display: inline-block;
+  padding: 0 !important;
+  position: relative;
+  text-align: center;
+  font-family: var(--font-family-system);
+  -webkit-appearance: none;
+  background: none;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: var(--font-weight-system-semibold);
+  pointer-events: auto;
+  text-overflow: ellipsis;
+  text-transform: inherit;
+  -webkit-user-select: none;
+  width: auto;
+  line-height: var(--system-14-line-height);
+  margin: 0;
+}
+
+.audioSvg {
+  color: rgb(var(--web-always-white));
+  position: relative;
+  display: block;
+  forced-color-adjust: auto;
 }

@@ -32,7 +32,7 @@ dayjs.locale("ko");
 dayjs.extend(relativeTime);
 
 type Props = {
-  postId: string;
+  post: IPost;
 };
 
 interface MutationContext {
@@ -40,7 +40,7 @@ interface MutationContext {
   post?: IPost;
 }
 
-export default function DetailPage({ postId }: Props) {
+export default function DetailPage({ post }: Props) {
   const [isLiked, setLiked] = useState(false);
   const [CommentText, setComment] = useState("");
   const [saveIconClicked, setSaveClicked] = useState(false);
@@ -51,29 +51,35 @@ export default function DetailPage({ postId }: Props) {
   const [targetCommentId, setTargetCommentId] = useState("");
   const [replyTarget, setReplyTarget] = useState("");
   const [isCtype, setCType] = useState(true); // comment라면 true, reply라면 false
-
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isUserPaused, setIsUserPaused] = useState(false); // 사용자가 직접 일시정지했는지 여부
+  const [isMuted, setMuted] = useState(true);
+  // const [fileExtension, setFileExtension] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [isImg, setImg] = useState(true);
   const { data: session } = useSession();
 
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
-
+  // console.log(post, "post");
+  const postId = post.postId;
   const { data: comments } = useQuery<
     IComment[],
     Object,
     IComment[],
     [string, string, string]
   >({
-    queryKey: ["posts", postId, "comments"],
+    queryKey: ["posts", postId.toString(), "comments"],
     queryFn: getComments,
     staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
     gcTime: 300 * 1000,
   });
 
-  const { data: post } = useQuery<IPost, Object, IPost, [string, string]>({
-    queryKey: ["posts", postId],
-    queryFn: getPost,
-    staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
-    gcTime: 300 * 1000,
-  });
+  // const { data: post } = useQuery<IPost, Object, IPost, [string, string]>({
+  //   queryKey: ["posts", postId],
+  //   queryFn: getPost,
+  //   staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
+  //   gcTime: 300 * 1000,
+  // });
 
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -83,10 +89,50 @@ export default function DetailPage({ postId }: Props) {
     setLiked(liked);
   }, [post, session]);
 
+  const onClickVideo = () => {
+    if (videoRef.current) {
+      if (videoRef.current.paused) {
+        videoRef.current.play();
+        setIsUserPaused(false);
+      } else {
+        videoRef.current.pause();
+        setIsUserPaused(true);
+      }
+    }
+  };
+
+  const toggleMute = () => {
+    setMuted(!isMuted);
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+    }
+  };
+
+  const getFileExtension = (url: any) => {
+    return url.split(".").pop();
+  };
+
+  const currentFile = post.Images[currentNumber];
+  const fileExtension = getFileExtension(currentFile);
+
+  useEffect(() => {
+    if (post && post.Images && post.Images[currentNumber]) {
+      if (post.Images[currentNumber].endsWith(".mp4")) {
+        console.log("동영상");
+        setImg(false);
+      } else {
+        console.log("이미지");
+        setImg(true);
+      }
+    }
+  }, [post, currentNumber]);
+
   const heart = useMutation({
     mutationFn: () => {
       return fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${postId}/heart`,
+        `${
+          process.env.NEXT_PUBLIC_BASE_URL
+        }/api/posts/${postId.toString()}/heart`,
         {
           method: "post",
           credentials: "include",
@@ -211,7 +257,9 @@ export default function DetailPage({ postId }: Props) {
   const unheart = useMutation({
     mutationFn: () => {
       return fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${postId}/heart`,
+        `${
+          process.env.NEXT_PUBLIC_BASE_URL
+        }/api/posts/${postId.toString()}/heart`,
         {
           method: "delete",
           credentials: "include",
@@ -334,12 +382,14 @@ export default function DetailPage({ postId }: Props) {
 
   const addComment = useMutation({
     mutationFn: async (commentData: {
-      postId: string;
+      postId: Number;
       CommentText: string;
       userSession: any;
     }) => {
       return await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${postId}/comments`,
+        `${
+          process.env.NEXT_PUBLIC_BASE_URL
+        }/api/posts/${postId.toString()}/comments`,
         {
           credentials: "include",
           method: "post",
@@ -397,7 +447,7 @@ export default function DetailPage({ postId }: Props) {
     onError(error, commentData, context: MutationContext | undefined) {
       // 에러가 발생하면 이전 댓글 목록으로 롤백합니다.
       queryClient.setQueryData(
-        ["posts", postId, "comments"],
+        ["posts", postId.toString(), "comments"],
         context?.previousComments
       );
 
@@ -409,24 +459,27 @@ export default function DetailPage({ postId }: Props) {
             Comments: context.post._count.Comments - 1,
           },
         };
-        queryClient.setQueryData(["posts", postId], rolledBackPost);
+        queryClient.setQueryData(["posts", postId.toString()], rolledBackPost);
       }
     },
     onSuccess(data, commentData) {
       // 성공 시 캐시를 무효화하여 최신 댓글 목록을 가져옵니다.
       const previousComments = queryClient.getQueryData<IComment[]>([
         "posts",
-        postId,
+        postId.toString(),
         "comments",
       ]);
 
       // 게시물의 현재 정보를 가져옵니다.
-      const post = queryClient.getQueryData<IPost>(["posts", postId]);
+      const post = queryClient.getQueryData<IPost>([
+        "posts",
+        postId.toString(),
+      ]);
 
       if (previousComments && post) {
         // 댓글 배열을 업데이트합니다.
         queryClient.setQueryData(
-          ["posts", postId, "comments"],
+          ["posts", postId.toString(), "comments"],
           [
             ...previousComments,
             {
@@ -446,14 +499,14 @@ export default function DetailPage({ postId }: Props) {
         };
 
         // 업데이트된 게시물 정보를 캐시에 저장합니다.
-        queryClient.setQueryData(["posts", postId], updatedPost);
+        queryClient.setQueryData(["posts", postId.toString()], updatedPost);
       }
 
       queryClient.invalidateQueries({
-        queryKey: ["posts", postId, "comments"],
+        queryKey: ["posts", postId.toString(), "comments"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["posts", postId],
+        queryKey: ["posts", postId.toString()],
       });
       setComment("");
     },
@@ -461,12 +514,14 @@ export default function DetailPage({ postId }: Props) {
 
   const deleteComment = useMutation({
     mutationFn: async (commentData: {
-      postId: string;
+      postId: Number;
       commentId: string;
       userSession: any;
     }) => {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${postId}/comments/${commentData.commentId}`,
+        `${
+          process.env.NEXT_PUBLIC_BASE_URL
+        }/api/posts/${postId.toString()}/comments/${commentData.commentId}`,
         {
           credentials: "include",
           method: "delete",
@@ -490,12 +545,15 @@ export default function DetailPage({ postId }: Props) {
     onMutate: async (commentData) => {
       const previousComments = queryClient.getQueryData<IComment[]>([
         "posts",
-        postId,
+        postId.toString(),
         "comments",
       ]);
 
       // 게시물의 현재 정보를 가져옵니다.
-      const post = queryClient.getQueryData<IPost>(["posts", postId]);
+      const post = queryClient.getQueryData<IPost>([
+        "posts",
+        postId.toString(),
+      ]);
 
       if (previousComments && post) {
         // 댓글 배열에서 삭제할 댓글을 제외합니다.
@@ -505,7 +563,7 @@ export default function DetailPage({ postId }: Props) {
 
         // 업데이트된 댓글 배열을 캐시에 저장합니다.
         queryClient.setQueryData(
-          ["posts", postId, "comments"],
+          ["posts", postId.toString(), "comments"],
           updatedComments
         );
 
@@ -519,23 +577,23 @@ export default function DetailPage({ postId }: Props) {
         };
 
         // 업데이트된 게시물 정보를 캐시에 저장합니다.
-        queryClient.setQueryData(["posts", postId], updatedPost);
+        queryClient.setQueryData(["posts", postId.toString()], updatedPost);
       }
       return { previousComments };
     },
     onError: (error, commentData, context) => {
       // 에러가 발생하면 이전 댓글 목록으로 롤백합니다.
       queryClient.setQueryData(
-        ["posts", postId, "comments"],
+        ["posts", postId.toString(), "comments"],
         context?.previousComments
       );
     },
     onSettled: (commentData) => {
       queryClient.invalidateQueries({
-        queryKey: ["posts", postId, "comments"],
+        queryKey: ["posts", postId.toString(), "comments"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["posts", postId],
+        queryKey: ["posts", postId.toString()],
       });
       setExitBtn(false);
     },
@@ -543,7 +601,7 @@ export default function DetailPage({ postId }: Props) {
 
   const addReplyComment = useMutation({
     mutationFn: async (commentData: {
-      postId: string;
+      postId: Number;
       replyTarget: string; // parent Id임
       CommentText: string;
       userSession: any;
@@ -551,7 +609,9 @@ export default function DetailPage({ postId }: Props) {
       // 코멘트 아이디를 가져와서 거기다가 답글을 넣음 필요한 param가 commentid, postid도 넣어야하나??
       // apiUrl = `/api/specialComments`; // postId에 달려있는 댓글중
       return await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${postId}/${replyTarget}/reply`,
+        `${
+          process.env.NEXT_PUBLIC_BASE_URL
+        }/api/posts/${postId.toString()}/${replyTarget}/reply`,
         {
           credentials: "include",
           method: "post",
@@ -610,7 +670,7 @@ export default function DetailPage({ postId }: Props) {
     onError(error, commentData, context: MutationContext | undefined) {
       // 에러가 발생하면 이전 댓글 목록으로 롤백합니다.
       queryClient.setQueryData(
-        ["posts", postId, "comments"],
+        ["posts", postId.toString(), "comments"],
         context?.previousComments
       );
 
@@ -622,23 +682,26 @@ export default function DetailPage({ postId }: Props) {
             Comments: context.post._count.Comments - 1,
           },
         };
-        queryClient.setQueryData(["posts", postId], rolledBackPost);
+        queryClient.setQueryData(["posts", postId.toString()], rolledBackPost);
       }
     },
     onSuccess(data, commentData) {
       const previousComments = queryClient.getQueryData<IComment[]>([
         "posts",
-        postId,
+        postId.toString(),
         "comments",
       ]);
 
       // 게시물의 현재 정보를 가져옵니다.
-      const post = queryClient.getQueryData<IPost>(["posts", postId]);
+      const post = queryClient.getQueryData<IPost>([
+        "posts",
+        postId.toString(),
+      ]);
 
       if (previousComments && post) {
         // 댓글 배열을 업데이트합니다.
         queryClient.setQueryData(
-          ["posts", postId, "comments"],
+          ["posts", postId.toString(), "comments"],
           [
             ...previousComments,
             {
@@ -658,13 +721,13 @@ export default function DetailPage({ postId }: Props) {
         };
 
         // 업데이트된 게시물 정보를 캐시에 저장합니다.
-        queryClient.setQueryData(["posts", postId], updatedPost);
+        queryClient.setQueryData(["posts", postId.toString()], updatedPost);
       }
       queryClient.invalidateQueries({
-        queryKey: ["posts", postId, "comments"],
+        queryKey: ["posts", postId.toString(), "comments"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["posts", postId],
+        queryKey: ["posts", postId.toString()],
       });
       setReplyTarget("");
       setComment("");
@@ -682,8 +745,24 @@ export default function DetailPage({ postId }: Props) {
       } else {
         setMultiImg(false);
       }
+
+      const getFileExtension = (url: any) => {
+        return url.split(".").pop();
+      };
+
+      // const currentFile = decodeURIComponent(post.Images[currentNumber]);
+      // console.log(currentFile, "currentFile");
+      // const extension = getFileExtension(currentFile);
+      // if (extension.match(/(mp4|avi|mov)$/i)) {
+      //   setImg(false);
+      // } else {
+      //   setImg(true);
+      // }
+      // // setFileExtension(extension);
+      // console.log(isImg, "isImg");
+      // setFileName(currentFile);
     }
-  }, [post]);
+  }, [post, currentNumber, fileName]);
 
   const saveIconClick = useCallback(() => {
     setSaveClicked((prev) => !prev);
@@ -751,7 +830,7 @@ export default function DetailPage({ postId }: Props) {
       return null;
     }
     const userSession = session.user;
-    console.log("submitComment : ", CommentText, session, isCtype);
+    // console.log("submitComment : ", CommentText, session, isCtype);
     if (!isCtype) {
       // true면 comment
       if (replyTarget) {
@@ -766,8 +845,6 @@ export default function DetailPage({ postId }: Props) {
       addComment.mutate({ postId, CommentText, userSession });
     }
   };
-
-  if (!post) return null;
 
   return (
     <>
@@ -880,7 +957,9 @@ export default function DetailPage({ postId }: Props) {
                                                   alt={`${
                                                     post!.User.nickname
                                                   }님이 올린 사진`}
-                                                  src={post!.User.image}
+                                                  src={
+                                                    post.Images[currentNumber]
+                                                  }
                                                   crossOrigin="anonymous"
                                                   draggable="false"
                                                   className={styles.logoW}
@@ -949,23 +1028,178 @@ export default function DetailPage({ postId }: Props) {
                                                           paddingBottom: "75%",
                                                         }}
                                                       >
-                                                        <Image
-                                                          width={0}
-                                                          height={0}
-                                                          sizes="100vw"
-                                                          alt="Photo by"
-                                                          className={
-                                                            styles.ArticleImage
-                                                          }
-                                                          object-fit="cover"
-                                                          crossOrigin="anonymous"
-                                                          decoding="auto"
-                                                          src={
-                                                            post!.Images[
-                                                              currentNumber
-                                                            ]
-                                                          }
-                                                        />
+                                                        {!isImg ? (
+                                                          // 확장자가 mp4, avi, mov인 경우 동영상으로 간주
+                                                          <div
+                                                            className={
+                                                              styles.videoDiv
+                                                            }
+                                                          >
+                                                            <div
+                                                              className={
+                                                                styles.videoDiv2
+                                                              }
+                                                            >
+                                                              <div
+                                                                className={
+                                                                  styles.videoDiv3
+                                                                }
+                                                              >
+                                                                <div
+                                                                  className={
+                                                                    styles.videoDiv4
+                                                                  }
+                                                                >
+                                                                  <div
+                                                                    className={
+                                                                      styles.videoDiv5
+                                                                    }
+                                                                  >
+                                                                    <video
+                                                                      ref={
+                                                                        videoRef
+                                                                      }
+                                                                      className={
+                                                                        styles.video
+                                                                      }
+                                                                      playsInline
+                                                                      // preload="none"
+                                                                      autoPlay
+                                                                      loop
+                                                                      muted
+                                                                      // controls
+                                                                      style={{
+                                                                        display:
+                                                                          "block",
+                                                                      }}
+                                                                      src={
+                                                                        currentFile
+                                                                      }
+                                                                      crossOrigin="anonymous"
+                                                                    >
+                                                                      <p>
+                                                                        동영상을
+                                                                        로드할
+                                                                        수
+                                                                        없습니다.
+                                                                      </p>
+                                                                    </video>
+                                                                    <div>
+                                                                      <div
+                                                                        className={
+                                                                          styles.videoDiv6
+                                                                        }
+                                                                        onClick={
+                                                                          onClickVideo
+                                                                        }
+                                                                      >
+                                                                        <div
+                                                                          className={
+                                                                            styles.videoDiv66
+                                                                          }
+                                                                        >
+                                                                          {/* {!isPlaying && (
+                                                                            <div
+                                                                              className={
+                                                                                styles.videoDiv8
+                                                                              }
+                                                                            >
+                                                                              <div aria-label="재생"></div>
+                                                                            </div>
+                                                                          )} */}
+                                                                        </div>
+                                                                      </div>
+                                                                      <div
+                                                                        className={
+                                                                          styles.videoDiv7
+                                                                        }
+                                                                        onClick={
+                                                                          toggleMute
+                                                                        }
+                                                                      >
+                                                                        <button
+                                                                          className={
+                                                                            styles.videoButton
+                                                                          }
+                                                                          aria-label="오디오 켜기/끄기"
+                                                                        >
+                                                                          <div
+                                                                            className={
+                                                                              styles.videoBtn
+                                                                            }
+                                                                          >
+                                                                            {!isMuted ? (
+                                                                              <svg
+                                                                                aria-label="오디오를 재생 중입니다"
+                                                                                className={
+                                                                                  styles.audioSvg
+                                                                                }
+                                                                                fill="currentColor"
+                                                                                height="12"
+                                                                                role="img"
+                                                                                viewBox="0 0 24 24"
+                                                                                width="12"
+                                                                              >
+                                                                                <title>
+                                                                                  오디오를
+                                                                                  재생
+                                                                                  중입니다
+                                                                                </title>
+                                                                                <path d="M16.636 7.028a1.5 1.5 0 1 0-2.395 1.807 5.365 5.365 0 0 1 1.103 3.17 5.378 5.378 0 0 1-1.105 3.176 1.5 1.5 0 1 0 2.395 1.806 8.396 8.396 0 0 0 1.71-4.981 8.39 8.39 0 0 0-1.708-4.978Zm3.73-2.332A1.5 1.5 0 1 0 18.04 6.59 8.823 8.823 0 0 1 20 12.007a8.798 8.798 0 0 1-1.96 5.415 1.5 1.5 0 0 0 2.326 1.894 11.672 11.672 0 0 0 2.635-7.31 11.682 11.682 0 0 0-2.635-7.31Zm-8.963-3.613a1.001 1.001 0 0 0-1.082.187L5.265 6H2a1 1 0 0 0-1 1v10.003a1 1 0 0 0 1 1h3.265l5.01 4.682.02.021a1 1 0 0 0 1.704-.814L12.005 2a1 1 0 0 0-.602-.917Z"></path>
+                                                                              </svg>
+                                                                            ) : (
+                                                                              <svg
+                                                                                aria-label="오디오 소리 꺼짐"
+                                                                                className={
+                                                                                  styles.audioSvg
+                                                                                }
+                                                                                fill="currentColor"
+                                                                                height="12"
+                                                                                role="img"
+                                                                                viewBox="0 0 48 48"
+                                                                                width="12"
+                                                                              >
+                                                                                <title>
+                                                                                  오디오
+                                                                                  소리
+                                                                                  꺼짐
+                                                                                </title>
+                                                                                <path
+                                                                                  clipRule="evenodd"
+                                                                                  d="M1.5 13.3c-.8 0-1.5.7-1.5 1.5v18.4c0 .8.7 1.5 1.5 1.5h8.7l12.9 12.9c.9.9 2.5.3 2.5-1v-9.8c0-.4-.2-.8-.4-1.1l-22-22c-.3-.3-.7-.4-1.1-.4h-.6zm46.8 31.4-5.5-5.5C44.9 36.6 48 31.4 48 24c0-11.4-7.2-17.4-7.2-17.4-.6-.6-1.6-.6-2.2 0L37.2 8c-.6.6-.6 1.6 0 2.2 0 0 5.7 5 5.7 13.8 0 5.4-2.1 9.3-3.8 11.6L35.5 32c1.1-1.7 2.3-4.4 2.3-8 0-6.8-4.1-10.3-4.1-10.3-.6-.6-1.6-.6-2.2 0l-1.4 1.4c-.6.6-.6 1.6 0 2.2 0 0 2.6 2 2.6 6.7 0 1.8-.4 3.2-.9 4.3L25.5 22V1.4c0-1.3-1.6-1.9-2.5-1L13.5 10 3.3-.3c-.6-.6-1.5-.6-2.1 0L-.2 1.1c-.6.6-.6 1.5 0 2.1L4 7.6l26.8 26.8 13.9 13.9c.6.6 1.5.6 2.1 0l1.4-1.4c.7-.6.7-1.6.1-2.2z"
+                                                                                  fillRule="evenodd"
+                                                                                ></path>
+                                                                              </svg>
+                                                                            )}
+                                                                          </div>
+                                                                        </button>
+                                                                      </div>
+                                                                    </div>
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                            </div>
+                                                          </div>
+                                                        ) : (
+                                                          <></>
+                                                          // <Image
+                                                          //   width={0}
+                                                          //   height={0}
+                                                          //   sizes="100vw"
+                                                          //   alt="Photo by"
+                                                          //   className={
+                                                          //     styles.ArticleImage
+                                                          //   }
+                                                          //   object-fit="cover"
+                                                          //   crossOrigin="anonymous"
+                                                          //   decoding="auto"
+                                                          //   src={
+                                                          //     post.Images[
+                                                          //       currentNumber
+                                                          //     ]
+                                                          //   }
+                                                          // />
+                                                        )}
                                                       </div>
                                                     </div>
                                                   </div>
@@ -1367,23 +1601,177 @@ export default function DetailPage({ postId }: Props) {
                                                           paddingBottom: "75%",
                                                         }}
                                                       >
-                                                        <Image
-                                                          alt="Photo by"
-                                                          width={0}
-                                                          height={0}
-                                                          sizes="100vw"
-                                                          className={
-                                                            styles.ArticleImage
-                                                          }
-                                                          object-fit="cover"
-                                                          crossOrigin="anonymous"
-                                                          decoding="auto"
-                                                          src={
-                                                            post!.Images[
-                                                              currentNumber
-                                                            ]
-                                                          }
-                                                        />
+                                                        {!isImg ? (
+                                                          // 확장자가 mp4, avi, mov인 경우 동영상으로 간주
+                                                          <div
+                                                            className={
+                                                              styles.videoDiv
+                                                            }
+                                                          >
+                                                            <div
+                                                              className={
+                                                                styles.videoDiv2
+                                                              }
+                                                            >
+                                                              <div
+                                                                className={
+                                                                  styles.videoDiv3
+                                                                }
+                                                              >
+                                                                <div
+                                                                  className={
+                                                                    styles.videoDiv4
+                                                                  }
+                                                                >
+                                                                  <div
+                                                                    className={
+                                                                      styles.videoDiv5
+                                                                    }
+                                                                  >
+                                                                    <video
+                                                                      ref={
+                                                                        videoRef
+                                                                      }
+                                                                      className={
+                                                                        styles.video
+                                                                      }
+                                                                      playsInline
+                                                                      // preload="none"
+                                                                      autoPlay
+                                                                      loop
+                                                                      muted
+                                                                      // controls
+                                                                      style={{
+                                                                        display:
+                                                                          "block",
+                                                                      }}
+                                                                      src={
+                                                                        currentFile
+                                                                      }
+                                                                      crossOrigin="anonymous"
+                                                                    >
+                                                                      <p>
+                                                                        동영상을
+                                                                        로드할
+                                                                        수
+                                                                        없습니다.
+                                                                      </p>
+                                                                    </video>
+                                                                    <div>
+                                                                      <div
+                                                                        className={
+                                                                          styles.videoDiv6
+                                                                        }
+                                                                        onClick={
+                                                                          onClickVideo
+                                                                        }
+                                                                      >
+                                                                        <div
+                                                                          className={
+                                                                            styles.videoDiv66
+                                                                          }
+                                                                        >
+                                                                          {/* {!isPlaying && (
+                                                                              <div
+                                                                                className={
+                                                                                  styles.videoDiv8
+                                                                                }
+                                                                              >
+                                                                                <div aria-label="재생"></div>
+                                                                              </div>
+                                                                            )} */}
+                                                                        </div>
+                                                                      </div>
+                                                                      <div
+                                                                        className={
+                                                                          styles.videoDiv7
+                                                                        }
+                                                                        onClick={
+                                                                          toggleMute
+                                                                        }
+                                                                      >
+                                                                        <button
+                                                                          className={
+                                                                            styles.videoButton
+                                                                          }
+                                                                          aria-label="오디오 켜기/끄기"
+                                                                        >
+                                                                          <div
+                                                                            className={
+                                                                              styles.videoBtn
+                                                                            }
+                                                                          >
+                                                                            {!isMuted ? (
+                                                                              <svg
+                                                                                aria-label="오디오를 재생 중입니다"
+                                                                                className={
+                                                                                  styles.audioSvg
+                                                                                }
+                                                                                fill="currentColor"
+                                                                                height="12"
+                                                                                role="img"
+                                                                                viewBox="0 0 24 24"
+                                                                                width="12"
+                                                                              >
+                                                                                <title>
+                                                                                  오디오를
+                                                                                  재생
+                                                                                  중입니다
+                                                                                </title>
+                                                                                <path d="M16.636 7.028a1.5 1.5 0 1 0-2.395 1.807 5.365 5.365 0 0 1 1.103 3.17 5.378 5.378 0 0 1-1.105 3.176 1.5 1.5 0 1 0 2.395 1.806 8.396 8.396 0 0 0 1.71-4.981 8.39 8.39 0 0 0-1.708-4.978Zm3.73-2.332A1.5 1.5 0 1 0 18.04 6.59 8.823 8.823 0 0 1 20 12.007a8.798 8.798 0 0 1-1.96 5.415 1.5 1.5 0 0 0 2.326 1.894 11.672 11.672 0 0 0 2.635-7.31 11.682 11.682 0 0 0-2.635-7.31Zm-8.963-3.613a1.001 1.001 0 0 0-1.082.187L5.265 6H2a1 1 0 0 0-1 1v10.003a1 1 0 0 0 1 1h3.265l5.01 4.682.02.021a1 1 0 0 0 1.704-.814L12.005 2a1 1 0 0 0-.602-.917Z"></path>
+                                                                              </svg>
+                                                                            ) : (
+                                                                              <svg
+                                                                                aria-label="오디오 소리 꺼짐"
+                                                                                className={
+                                                                                  styles.audioSvg
+                                                                                }
+                                                                                fill="currentColor"
+                                                                                height="12"
+                                                                                role="img"
+                                                                                viewBox="0 0 48 48"
+                                                                                width="12"
+                                                                              >
+                                                                                <title>
+                                                                                  오디오
+                                                                                  소리
+                                                                                  꺼짐
+                                                                                </title>
+                                                                                <path
+                                                                                  clipRule="evenodd"
+                                                                                  d="M1.5 13.3c-.8 0-1.5.7-1.5 1.5v18.4c0 .8.7 1.5 1.5 1.5h8.7l12.9 12.9c.9.9 2.5.3 2.5-1v-9.8c0-.4-.2-.8-.4-1.1l-22-22c-.3-.3-.7-.4-1.1-.4h-.6zm46.8 31.4-5.5-5.5C44.9 36.6 48 31.4 48 24c0-11.4-7.2-17.4-7.2-17.4-.6-.6-1.6-.6-2.2 0L37.2 8c-.6.6-.6 1.6 0 2.2 0 0 5.7 5 5.7 13.8 0 5.4-2.1 9.3-3.8 11.6L35.5 32c1.1-1.7 2.3-4.4 2.3-8 0-6.8-4.1-10.3-4.1-10.3-.6-.6-1.6-.6-2.2 0l-1.4 1.4c-.6.6-.6 1.6 0 2.2 0 0 2.6 2 2.6 6.7 0 1.8-.4 3.2-.9 4.3L25.5 22V1.4c0-1.3-1.6-1.9-2.5-1L13.5 10 3.3-.3c-.6-.6-1.5-.6-2.1 0L-.2 1.1c-.6.6-.6 1.5 0 2.1L4 7.6l26.8 26.8 13.9 13.9c.6.6 1.5.6 2.1 0l1.4-1.4c.7-.6.7-1.6.1-2.2z"
+                                                                                  fillRule="evenodd"
+                                                                                ></path>
+                                                                              </svg>
+                                                                            )}
+                                                                          </div>
+                                                                        </button>
+                                                                      </div>
+                                                                    </div>
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                            </div>
+                                                          </div>
+                                                        ) : (
+                                                          <Image
+                                                            alt="Photo by"
+                                                            width={0}
+                                                            height={0}
+                                                            sizes="100vw"
+                                                            className={
+                                                              styles.ArticleImage
+                                                            }
+                                                            object-fit="cover"
+                                                            crossOrigin="anonymous"
+                                                            decoding="auto"
+                                                            src={
+                                                              post.Images[
+                                                                currentNumber
+                                                              ]
+                                                            }
+                                                          />
+                                                        )}
                                                       </div>
                                                     </div>
                                                   </div>
@@ -2043,7 +2431,7 @@ export default function DetailPage({ postId }: Props) {
                                                         <Comment
                                                           key={index}
                                                           comment={comment}
-                                                          postId={postId}
+                                                          postId={postId.toString()}
                                                           onClickExitBtnChild={
                                                             onClickExitBtnChild
                                                           }
