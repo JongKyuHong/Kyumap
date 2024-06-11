@@ -28,11 +28,7 @@ export default async function RootLayout({ children, modal }: Props) {
                         <NavTab me={session} />
                         <div className={styles.rightSectionWrapper}>
                           <section className={styles.rootSection}>
-                            <main className={styles.rootMain}>
-                              <div className={styles.mainrootDiv}>
-                                {children}
-                              </div>
-                            </main>
+                            <main className={styles.rootMain}>{children}</main>
                           </section>
                         </div>
                       </>

@@ -16,6 +16,7 @@ import { useSession } from "next-auth/react";
 import styles from "./post.module.css";
 import { IPost } from "@/model/Post";
 import { useRouter } from "next/navigation";
+import { getUser } from "../_lib/getUser";
 
 interface Props {
   post: IPost;
@@ -25,7 +26,6 @@ interface PostData {
   _count: {
     Comments: number;
   };
-  // 다른 필요한 속성들을 여기에 추가할 수 있습니다.
 }
 
 export default function ActionButtons({ post }: Props) {
@@ -34,10 +34,30 @@ export default function ActionButtons({ post }: Props) {
   const [CommentText, setComment] = useState("");
   const [isLiked, setLiked] = useState(false);
   const [commentCount, setCommentCount] = useState(0);
+  const [isSaved, setSaved] = useState(false);
 
   useEffect(() => {
-    const liked = !!post?.Hearts?.find((v) => v.email === session?.user?.email);
-    setLiked(liked);
+    const abortController = new AbortController();
+    const fetchData = async () => {
+      if (!session?.user?.email) return;
+      const user = await getUser({
+        queryKey: ["users", session.user.email],
+        signal: abortController.signal,
+        meta: undefined,
+      });
+      const ssave = !!user?.Saved.find(
+        (v: any) => v.id === post.postId.toString()
+      );
+
+      const liked = !!post?.Hearts?.find(
+        (v) => v.email === session?.user?.email
+      );
+      setLiked(liked);
+      setSaved(ssave);
+    };
+    fetchData();
+    // const liked = !!post?.Hearts?.find((v) => v.email === session?.user?.email);
+    // setLiked(liked);
   }, [post, session, queryClient]);
 
   const router = useRouter();
@@ -58,15 +78,12 @@ export default function ActionButtons({ post }: Props) {
     onMutate() {
       const queryCache = queryClient.getQueryCache();
       const queryKeys = queryCache.getAll().map((cache) => cache.queryKey);
-      console.log("queryKeys", queryKeys);
       queryKeys.forEach((queryKey) => {
         if (queryKey[0] === "posts") {
           const value: IPost | InfiniteData<IPost[]> | undefined =
             queryClient.getQueryData(queryKey);
           if (value && "pages" in value) {
-            console.log("array", value);
             const obj = value.pages.flat().find((v) => v.postId === postId);
-            console.log(obj, "obj");
             if (obj) {
               // 존재는 하는지
               const pageIndex = value.pages.findIndex((page) =>
@@ -75,7 +92,7 @@ export default function ActionButtons({ post }: Props) {
               const index = value.pages[pageIndex].findIndex(
                 (v) => v.postId === postId
               );
-              const shallow = { ...value };
+              const shallow: any = { ...value };
               value.pages = [...value.pages];
               value.pages[pageIndex] = [...value.pages[pageIndex]];
               shallow.pages[pageIndex][index] = {
@@ -87,7 +104,6 @@ export default function ActionButtons({ post }: Props) {
                 },
               };
               queryClient.setQueryData(queryKey, shallow);
-              console.log(shallow, "shallow");
             }
           } else if (value) {
             // 싱글 포스트인 경우
@@ -100,7 +116,6 @@ export default function ActionButtons({ post }: Props) {
                   Hearts: value._count.Hearts + 1,
                 },
               };
-              console.log(shallow, "shallow");
               queryClient.setQueryData(queryKey, shallow);
             }
           }
@@ -113,13 +128,11 @@ export default function ActionButtons({ post }: Props) {
     onError() {
       const queryCache = queryClient.getQueryCache();
       const queryKeys = queryCache.getAll().map((cache) => cache.queryKey);
-      console.log("queryKeys", queryKeys);
       queryKeys.forEach((queryKey) => {
         if (queryKey[0] === "posts") {
           const value: IPost | InfiniteData<IPost[]> | undefined =
             queryClient.getQueryData(queryKey);
           if (value && "pages" in value) {
-            console.log("array", value);
             const obj = value.pages.flat().find((v) => v.postId === postId);
             if (obj) {
               // 존재는 하는지
@@ -129,14 +142,13 @@ export default function ActionButtons({ post }: Props) {
               const index = value.pages[pageIndex].findIndex(
                 (v) => v.postId === postId
               );
-              console.log("found index", index);
-              const shallow = { ...value };
+              const shallow: any = { ...value };
               value.pages = { ...value.pages };
               value.pages[pageIndex] = [...value.pages[pageIndex]];
               shallow.pages[pageIndex][index] = {
                 ...shallow.pages[pageIndex][index],
                 Hearts: shallow.pages[pageIndex][index].Hearts.filter(
-                  (v) => v.email !== session?.user?.email
+                  (v: any) => v.email !== session?.user?.email
                 ),
                 _count: {
                   ...shallow.pages[pageIndex][index]._count,
@@ -181,13 +193,11 @@ export default function ActionButtons({ post }: Props) {
     onMutate() {
       const queryCache = queryClient.getQueryCache();
       const queryKeys = queryCache.getAll().map((cache) => cache.queryKey);
-      console.log("queryKeys", queryKeys);
       queryKeys.forEach((queryKey) => {
         if (queryKey[0] === "posts") {
           const value: IPost | InfiniteData<IPost[]> | undefined =
             queryClient.getQueryData(queryKey);
           if (value && "pages" in value) {
-            console.log("array", value);
             const obj = value.pages.flat().find((v) => v.postId === postId);
             if (obj) {
               // 존재는 하는지
@@ -197,14 +207,13 @@ export default function ActionButtons({ post }: Props) {
               const index = value.pages[pageIndex].findIndex(
                 (v) => v.postId === postId
               );
-              console.log("found index", index);
-              const shallow = { ...value };
+              const shallow: any = { ...value };
               value.pages = [...value.pages];
               value.pages[pageIndex] = [...value.pages[pageIndex]];
               shallow.pages[pageIndex][index] = {
                 ...shallow.pages[pageIndex][index],
                 Hearts: shallow.pages[pageIndex][index].Hearts.filter(
-                  (v) => v.email !== session?.user?.email
+                  (v: any) => v.email !== session?.user?.email
                 ),
                 _count: {
                   ...shallow.pages[pageIndex][index]._count,
@@ -238,14 +247,11 @@ export default function ActionButtons({ post }: Props) {
     onError() {
       const queryCache = queryClient.getQueryCache();
       const queryKeys = queryCache.getAll().map((cache) => cache.queryKey);
-      console.log("queryKeys", queryKeys);
       queryKeys.forEach((queryKey) => {
         if (queryKey[0] === "posts") {
-          console.log(queryKey[0]);
           const value: IPost | InfiniteData<IPost[]> | undefined =
             queryClient.getQueryData(queryKey);
           if (value && "pages" in value) {
-            console.log("array", value);
             const obj = value.pages.flat().find((v) => v.postId === postId);
             if (obj) {
               // 존재는 하는지
@@ -255,8 +261,7 @@ export default function ActionButtons({ post }: Props) {
               const index = value.pages[pageIndex].findIndex(
                 (v) => v.postId === postId
               );
-              console.log("found index", index);
-              const shallow = { ...value };
+              const shallow: any = { ...value };
               value.pages = { ...value.pages };
               value.pages[pageIndex] = [...value.pages[pageIndex]];
               shallow.pages[pageIndex][index] = {
@@ -289,12 +294,154 @@ export default function ActionButtons({ post }: Props) {
     onSettled() {},
   });
 
+  const saved = useMutation({
+    mutationFn: () => {
+      return fetch(
+        `${
+          process.env.NEXT_PUBLIC_BASE_URL
+        }/api/posts/${postId.toString()}/save`,
+        {
+          method: "post",
+          credentials: "include",
+          body: JSON.stringify(session),
+        }
+      );
+    },
+    onMutate: async () => {
+      await queryClient.cancelQueries({
+        queryKey: ["user", session!.user!.email],
+      });
+      const previousUserData = queryClient.getQueryData([
+        "user",
+        session!.user!.email,
+      ]);
+
+      queryClient.setQueryData(
+        ["user", session!.user!.email],
+        (oldData: any) => {
+          if (!oldData) {
+            return {
+              email: session!.user!.email,
+              nickname: session!.user!.name, // 기본 닉네임 (필요에 따라 수정)
+              image: session!.user!.image, // 기본 이미지 (필요에 따라 수정)
+              Saved: [postId.toString()],
+              Followers: [],
+              Followings: [],
+              _count: {
+                Followers: 0,
+                Followings: 0,
+              },
+            };
+          }
+
+          return {
+            ...oldData,
+            Saved: oldData.Saved
+              ? [...oldData.Saved, postId.toString()]
+              : [postId.toString()],
+          };
+        }
+      );
+
+      return { previousUserData };
+    },
+    onError: (err, variables, context) => {
+      if (context && context.previousUserData) {
+        queryClient.setQueryData(
+          ["user", session!.user!.email],
+          context.previousUserData
+        );
+      }
+    },
+    onSuccess() {
+      setSaved(true);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["user", session!.user!.email],
+      });
+    },
+  });
+
+  const unsaved = useMutation({
+    mutationFn: () => {
+      return fetch(
+        `${
+          process.env.NEXT_PUBLIC_BASE_URL
+        }/api/posts/${postId.toString()}/save`,
+        {
+          method: "delete",
+          credentials: "include",
+          body: JSON.stringify(session),
+        }
+      );
+    },
+    onMutate: async () => {
+      if (!session || !session.user || !session.user.email) {
+        throw new Error("Session or user information is missing");
+      }
+
+      await queryClient.cancelQueries({
+        queryKey: ["user", session!.user!.email],
+      });
+      const previousUserData = queryClient.getQueryData([
+        "user",
+        session!.user!.email,
+      ]);
+
+      queryClient.setQueryData(
+        ["user", session!.user!.email],
+        (oldData: any) => {
+          if (!oldData || !oldData.Saved) {
+            return oldData;
+          }
+          return {
+            ...oldData,
+            Saved: oldData.Saved.filter((v: any) => v.id !== postId.toString()),
+          };
+        }
+      );
+
+      return { previousUserData };
+    },
+    onError: (err, variables, context) => {
+      console.log(err, "err");
+      if (context && context.previousUserData) {
+        queryClient.setQueryData(
+          ["user", session!.user!.email],
+          context.previousUserData
+        );
+      }
+    },
+    onSuccess() {
+      setSaved(false);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["user", session!.user!.email],
+      });
+    },
+  });
+
+  // 하트를 클릭했을때
   const onClickHeart: MouseEventHandler<HTMLDivElement> = (e) => {
     e.stopPropagation();
     if (isLiked) {
+      // 이미 좋아요를 눌렀으면
       unheart.mutate();
     } else {
       heart.mutate();
+    }
+  };
+
+  // 저장됨 클릭
+  const onClickSaved: MouseEventHandler<HTMLDivElement> = (e) => {
+    e.stopPropagation();
+    if (isSaved) {
+      // 이미 저장함
+      unsaved.mutate();
+    } else {
+      saved.mutate();
     }
   };
 
@@ -385,6 +532,7 @@ export default function ActionButtons({ post }: Props) {
                   aria-disabled="false"
                   role="button"
                   style={{ cursor: "pointer" }}
+                  onClick={onClickSaved}
                 >
                   <div
                     className={styles.iconInnerDiv2}
@@ -392,25 +540,40 @@ export default function ActionButtons({ post }: Props) {
                     tabIndex={0}
                   >
                     <div className={styles.iconSvgOuterDiv}>
-                      <svg
-                        aria-label="저장"
-                        className={styles.iconSvg}
-                        fill="currentColor"
-                        height="24"
-                        role="img"
-                        viewBox="0 0 24 24"
-                        width="24"
-                      >
-                        <title>저장</title>
-                        <polygon
-                          fill="none"
-                          points="20 21 12 13.44 4 21 4 3 20 3 20 21"
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                        ></polygon>
-                      </svg>
+                      {isSaved ? (
+                        <svg
+                          aria-label="삭제"
+                          className={styles.iconSvg}
+                          fill="currentColor"
+                          height="24"
+                          role="img"
+                          viewBox="0 0 24 24"
+                          width="24"
+                        >
+                          <title>삭제</title>
+                          <path d="M20 22a.999.999 0 0 1-.687-.273L12 14.815l-7.313 6.912A1 1 0 0 1 3 21V3a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1Z"></path>
+                        </svg>
+                      ) : (
+                        <svg
+                          aria-label="저장"
+                          className={styles.iconSvg}
+                          fill="currentColor"
+                          height="24"
+                          role="img"
+                          viewBox="0 0 24 24"
+                          width="24"
+                        >
+                          <title>저장</title>
+                          <polygon
+                            fill="none"
+                            points="20 21 12 13.44 4 21 4 3 20 3 20 21"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                          ></polygon>
+                        </svg>
+                      )}
                     </div>
                   </div>
                 </div>

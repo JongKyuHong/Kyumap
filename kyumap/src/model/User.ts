@@ -16,6 +16,8 @@ export interface IUser extends Document {
   nickname: string;
   image: string;
   Followers: UserID[];
+  Followings: UserID[];
+  Saved: string[];
   _count: {
     Followers: number;
     Followings: number;
@@ -35,6 +37,11 @@ export const userSchema: Schema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  Saved: [
+    {
+      id: { type: String },
+    },
+  ],
   Followers: [
     {
       email: { type: String },

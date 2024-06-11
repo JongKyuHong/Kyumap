@@ -4,7 +4,7 @@ import { IUser } from "@/model/User";
 export const getUser: QueryFunction<
   IUser,
   [_1: string, userEmail: string]
-> = async ({ queryKey }) => {
+> = async ({ queryKey, signal, meta }) => {
   const [_1, userEmail] = queryKey;
 
   const res = await fetch(

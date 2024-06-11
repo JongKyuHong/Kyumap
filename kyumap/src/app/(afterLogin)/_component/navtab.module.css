@@ -987,7 +987,7 @@
   align-items: stretch;
   align-self: auto;
   justify-content: flex-start;
-  z-index: 10;
+  z-index: 3;
   flex-grow: 0;
   border-top-left-radius: 0;
   border-top-right-radius: 0;

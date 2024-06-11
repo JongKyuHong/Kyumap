@@ -65,14 +65,14 @@ export default function NewPost() {
   const { mutate, isPending } = useMutation({
     mutationFn: async (e: FormEvent) => {
       e.preventDefault();
-
+      let lastType = "";
       const urlformLst = [];
       const altTextsLst = [];
       for (let idx = 0; idx < preview.length; idx++) {
         const { file, type } = preview[idx];
         let filename = encodeURIComponent(file.name);
         // 프리사인 url받기
-        let result_url = await fetch(
+        let result_url: any = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/image/upload?file=${filename}&type=${type}`
         );
 
@@ -90,13 +90,18 @@ export default function NewPost() {
           method: "POST",
           body: ImageFormData,
         });
-        console.log(uploadResult, "url url url url filenName");
         let url = uploadResult.url + `/${type}/` + filename;
         urlformLst.push(url);
         altTextsLst.push(altTexts[idx]);
+        lastType = type;
       }
 
       const postFormData = new FormData();
+      if (urlformLst.length === 1 && lastType === "video") {
+        postFormData.append("reels", true.toString());
+      } else {
+        postFormData.append("reels", false.toString());
+      }
       postFormData.append("images", JSON.stringify(urlformLst));
       postFormData.append("altTexts", JSON.stringify(altTextsLst));
       postFormData.append("isHideInfo", isArticleInfoHide.toString());

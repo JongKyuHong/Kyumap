@@ -1,4 +1,5 @@
-import Post from "../../../../../model/Post";
+import Post from "../../../../../../model/Post";
+import User from "../../../../../../model/User";
 import dbConnect from "@/app/(afterLogin)/_lib/dbConnect";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -22,12 +23,30 @@ export async function GET(req: NextRequest, { params }: Props) {
   }
 
   try {
-    let query: { [key: string]: any } = { "User.email": userEmail };
+    const userEmail = params.userEmail;
+
+    // 유저 정보를 가져옵니다.
+    const user = await User.findOne({ email: userEmail });
+
+    if (!user) {
+      return NextResponse.json(
+        { success: false, message: "User not found" },
+        { status: 404 }
+      );
+    }
+
+    // 유저의 Saved 필드에서 postId들을 추출합니다.
+    const savedPostIds = user.Saved.map(
+      (savedItem: { id: string }) => savedItem.id
+    );
 
     // 커서(ID)가 있다면, 해당 ID 이후의 게시물을 조회하는 쿼리를 생성합니다.
+    let query: { [key: string]: any } = { postId: { $in: savedPostIds } };
+
     if (cursor !== undefined) {
-      query["postId"] = { $gt: cursor };
+      query["postId"] = { $in: savedPostIds, $gt: cursor };
     }
+
     // limit을 설정하여 한 번에 로드할 게시물 수를 제한합니다.
     const posts = await Post.find(query).limit(21).sort({ postId: 1 });
     console.log(posts, "posts api");

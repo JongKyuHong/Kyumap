@@ -51,6 +51,14 @@
   .HeaderSectionBlank {
     margin-bottom: 20px;
   }
+
+  /* .PostSavedLink {
+    margin-right: 60px;
+  } */
+
+  .PostVideoLink {
+    margin-right: 60px;
+  }
 }
 
 .MainDiv {
@@ -148,8 +156,8 @@
 .PostLink {
   align-items: center;
   text-decoration: none;
-  border-top: 1px solid rgb(var(--ig-primary-text)) !important;
-  color: rgb(var(--ig-primary-text));
+  /* border-top: 1px solid rgb(var(--ig-primary-text)) !important; */
+  /* color: rgb(var(--ig-primary-text)); */
   margin-top: -1px !important;
   font-family: var(--font-family-system);
   cursor: pointer;
@@ -179,6 +187,84 @@
   outline: none;
 }
 
+.PostSavedLink {
+  align-items: center;
+  color: rgb(var(--ig-secondary-text));
+  text-decoration: none;
+  font-family: var(--font-family-system);
+  align-items: center;
+  cursor: pointer;
+  display: flex !important;
+  flex-direction: row;
+  height: 52px;
+  justify-content: center;
+  text-transform: uppercase;
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-bottom-style: none;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  display: inline;
+  border-left-width: 0;
+  padding-left: 0;
+  background-color: transparent;
+  touch-action: manipulation;
+  border-right-style: none;
+  border-right-width: 0;
+  box-sizing: border-box;
+  border-top-width: 0;
+  padding-right: 0;
+  margin-left: 0;
+  -webkit-tap-highlight-color: transparent;
+  border-top-style: none;
+  border-left-style: none;
+  text-align: inherit;
+  margin-right: 0;
+  list-style: none;
+  outline: none;
+}
+
+.PostVideoLink {
+  align-items: center;
+  color: rgb(var(--ig-secondary-text));
+  text-decoration: none;
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-bottom-style: none;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  display: inline;
+  border-left-width: 0;
+  padding-left: 0;
+  background-color: transparent;
+  touch-action: manipulation;
+  border-right-style: none;
+  border-right-width: 0;
+  box-sizing: border-box;
+  border-top-width: 0;
+  padding-right: 0;
+  cursor: pointer;
+  margin-left: 0;
+  -webkit-tap-highlight-color: transparent;
+  border-top-style: none;
+  border-left-style: none;
+  text-align: inherit;
+  /* margin-right: 0; */
+  list-style: none;
+  text-decoration: none;
+  outline: none;
+  font-family: var(--font-family-system);
+  align-items: center;
+  cursor: pointer;
+  display: flex !important;
+  flex-direction: row;
+  height: 52px;
+  justify-content: center;
+  text-transform: uppercase;
+}
+
 .PostLinkDiv {
   overflow-y: visible;
   overflow-x: visible;
@@ -192,7 +278,7 @@
   flex-shrink: 0;
   flex-direction: row;
   align-self: auto;
-  justify-content: flex-start;
+  justify-content: center;
   position: relative;
   flex-grow: 0;
   border-top-left-radius: 0;

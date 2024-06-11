@@ -1,7 +1,7 @@
 "use client";
 
 import React, { Fragment, useEffect } from "react";
-import styles from "../profile.module.css";
+import styles from "../../profile.module.css";
 import Link from "next/link";
 import {
   useInfiniteQuery,
@@ -9,7 +9,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { IPost } from "@/model/Post";
-import { getUserPosts } from "@/app/(afterLogin)/_lib/getUserPosts";
+import { getUserSavedPosts } from "@/app/(afterLogin)/_lib/getUserSavedPosts";
 import { useInView } from "react-intersection-observer";
 import { useRouter } from "next/navigation";
 
@@ -17,10 +17,9 @@ type Props = {
   userEmail: string;
 };
 
-export default function UserPosts({ userEmail }: Props) {
+export default function Saved({ userEmail }: Props) {
   const router = useRouter();
   const queryClient = useQueryClient();
-  console.log(userEmail, "userEmail posts");
   const { data, fetchNextPage, hasNextPage, isFetching, error } =
     useInfiniteQuery<
       IPost[],
@@ -29,9 +28,9 @@ export default function UserPosts({ userEmail }: Props) {
       [_1: string, string, _3: string],
       number
     >({
-      queryKey: ["user", userEmail, "posts"],
+      queryKey: ["user", userEmail, "saveposts"],
       initialPageParam: 0,
-      queryFn: getUserPosts,
+      queryFn: getUserSavedPosts,
       getNextPageParam: (lastPage) => lastPage.at(-1)?.postId,
       staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
       gcTime: 300 * 1000,
@@ -53,6 +52,8 @@ export default function UserPosts({ userEmail }: Props) {
 
   const chunkSize = 3;
   const UserPost = [];
+
+  console.log(data, "저장됨 데이터");
 
   if (data && data.pages) {
     const platData = data.pages.flat();
