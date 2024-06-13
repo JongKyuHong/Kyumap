@@ -23,7 +23,6 @@ export async function POST(
       },
       { new: true }
     );
-    console.log("Updated Post:", updatedPost);
 
     // 성공 시 클라이언트에 보낼 응답
     return new Response(JSON.stringify({ success: true, updatedPost }), {
@@ -75,7 +74,6 @@ export async function DELETE(
       }, // 수행할 작업
       { new: true } // 업데이트된 문서 반환
     );
-    console.log("Updated Post:", updatedPost);
 
     // 성공 응답
     return new Response(JSON.stringify({ success: true, updatedPost }), {

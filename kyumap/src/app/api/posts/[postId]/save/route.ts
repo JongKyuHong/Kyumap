@@ -12,7 +12,6 @@ export async function POST(req: NextRequest, { params }: Props) {
   try {
     const postId = params.postId;
     const userData = await req.json();
-    console.log(postId, userData, "api hihi");
     const user = await User.findOneAndUpdate(
       { email: userData.user.email },
       {

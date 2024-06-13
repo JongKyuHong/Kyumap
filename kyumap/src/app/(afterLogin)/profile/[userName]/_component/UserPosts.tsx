@@ -12,6 +12,7 @@ import { IPost } from "@/model/Post";
 import { getUserPosts } from "@/app/(afterLogin)/_lib/getUserPosts";
 import { useInView } from "react-intersection-observer";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 type Props = {
   userEmail: string;
@@ -57,6 +58,7 @@ export default function UserPosts({ userEmail }: Props) {
   if (data && data.pages) {
     const platData = data.pages.flat();
     for (let i = 0; i < platData.length; i += chunkSize) {
+      console.log(platData[i]);
       UserPost.push(platData.slice(i, i + chunkSize));
     }
   }
@@ -94,15 +96,28 @@ export default function UserPosts({ userEmail }: Props) {
                     >
                       <div className={styles.LinkDiv}>
                         <div className={styles.LinkDiv2}>
-                          <img
-                            style={{
-                              objectFit: "cover",
-                            }}
-                            alt={`${rdata.content}`}
-                            src={`${rdata.Images[0]}`}
-                            className={styles.ImageLink}
-                            crossOrigin="anonymous"
-                          />
+                          {rdata.Images[0].endsWith(".mp4") ? (
+                            <video
+                              style={{
+                                objectFit: "cover",
+                              }}
+                              src={`${rdata.Images[0]}`}
+                              className={styles.ImageLink}
+                            ></video>
+                          ) : (
+                            <Image
+                              style={{
+                                objectFit: "cover",
+                              }}
+                              width={0}
+                              height={0}
+                              sizes="100vw"
+                              alt={`${rdata.content}`}
+                              src={`${rdata.Images[0]}`}
+                              className={styles.ImageLink}
+                              crossOrigin="anonymous"
+                            />
+                          )}
                         </div>
                         <div className={styles.LinkDiv3}></div>
                       </div>

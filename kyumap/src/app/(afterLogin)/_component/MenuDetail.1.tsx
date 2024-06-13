@@ -1,9 +1,7 @@
 "use client";
-
 import Link from "next/link";
 import styles from "./menudetail.module.css";
 import { useCallback, useState } from "react";
-// import DarkMode from "./DarkMode";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -38,7 +36,6 @@ export default function MenuDetail() {
         method: "post",
         credentials: "include",
       });
-      signOut({ callbackUrl: "/" });
       // router.replace("/");
     });
   };

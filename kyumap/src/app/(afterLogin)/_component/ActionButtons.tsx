@@ -309,7 +309,7 @@ export default function ActionButtons({ post }: Props) {
     },
     onMutate: async () => {
       await queryClient.cancelQueries({
-        queryKey: ["user", session!.user!.email],
+        queryKey: ["users", session!.user!.email],
       });
       const previousUserData = queryClient.getQueryData([
         "user",
@@ -317,7 +317,7 @@ export default function ActionButtons({ post }: Props) {
       ]);
 
       queryClient.setQueryData(
-        ["user", session!.user!.email],
+        ["users", session!.user!.email],
         (oldData: any) => {
           if (!oldData) {
             return {
@@ -327,6 +327,11 @@ export default function ActionButtons({ post }: Props) {
               Saved: [postId.toString()],
               Followers: [],
               Followings: [],
+              Info: {
+                intro: "",
+                website: "",
+                gender: "",
+              },
               _count: {
                 Followers: 0,
                 Followings: 0,

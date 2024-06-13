@@ -8,9 +8,7 @@ type Props = {
 };
 
 export async function POST(req: NextRequest, { params }: Props) {
-  console.log("hihiihhihihi");
   const userEmail = await req.json();
-  console.log(userEmail, "userEmail");
   const decodeEmail = decodeURIComponent(userEmail);
   // params.userEmail의 팔로우 목록에 decodeEmail이 없으면 추가
   const targetUserUpdate = await User.findOneAndUpdate(
@@ -32,7 +30,6 @@ export async function POST(req: NextRequest, { params }: Props) {
     { new: true } // 업데이트된 문서를 반환합니다.
   );
 
-  console.log({ targetUserUpdate, sourceUserUpdate }, "userData update");
   return NextResponse.json({
     targetUser: targetUserUpdate,
     sourceUser: sourceUserUpdate,
@@ -66,7 +63,6 @@ export async function DELETE(
     { new: true }
   );
 
-  console.log({ targetUserUpdate, sourceUserUpdate }, "userData delete");
   return NextResponse.json({
     targetUser: targetUserUpdate,
     sourceUser: sourceUserUpdate,

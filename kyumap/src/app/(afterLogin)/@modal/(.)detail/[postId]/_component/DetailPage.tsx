@@ -27,6 +27,7 @@ import { getPost } from "@/app/(afterLogin)/_lib/getPost";
 import useDeviceSize from "@/app/(afterLogin)/_component/useDeviceSize";
 import { useSession } from "next-auth/react";
 import Comment from "./Comment";
+import { getUser } from "../../../../_lib/getUser";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -43,7 +44,6 @@ interface MutationContext {
 export default function DetailPage({ post }: Props) {
   const [isLiked, setLiked] = useState(false);
   const [CommentText, setComment] = useState("");
-  const [saveIconClicked, setSaveClicked] = useState(false);
   const [isMultiImg, setMultiImg] = useState(false);
   const [currentNumber, setNumber] = useState(0);
   const [isEmoClicked, setEmoClicked] = useState(false);
@@ -54,13 +54,13 @@ export default function DetailPage({ post }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isUserPaused, setIsUserPaused] = useState(false); // 사용자가 직접 일시정지했는지 여부
   const [isMuted, setMuted] = useState(true);
-  // const [fileExtension, setFileExtension] = useState("");
   const [fileName, setFileName] = useState("");
   const [isImg, setImg] = useState(true);
+  const [isSaved, setSaved] = useState(false);
   const { data: session } = useSession();
 
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
-  // console.log(post, "post");
+
   const postId = post.postId;
   const { data: comments } = useQuery<
     IComment[],
@@ -85,8 +85,25 @@ export default function DetailPage({ post }: Props) {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    const liked = !!post?.Hearts?.find((v) => v.email === session?.user?.email);
-    setLiked(liked);
+    const abortController = new AbortController();
+    const fetchData = async () => {
+      if (!session?.user?.email) return;
+      const user = await getUser({
+        queryKey: ["users", session.user.email],
+        signal: abortController.signal,
+        meta: undefined,
+      });
+      const ssave = !!user?.Saved.find(
+        (v: any) => v.id === post.postId.toString()
+      );
+
+      const liked = !!post?.Hearts?.find(
+        (v) => v.email === session?.user?.email
+      );
+      setLiked(liked);
+      setSaved(ssave);
+    };
+    fetchData();
   }, [post, session]);
 
   const onClickVideo = () => {
@@ -734,6 +751,135 @@ export default function DetailPage({ post }: Props) {
     },
   });
 
+  const saved = useMutation({
+    mutationFn: () => {
+      return fetch(
+        `${
+          process.env.NEXT_PUBLIC_BASE_URL
+        }/api/posts/${postId.toString()}/save`,
+        {
+          method: "post",
+          credentials: "include",
+          body: JSON.stringify(session),
+        }
+      );
+    },
+    onMutate: async () => {
+      await queryClient.cancelQueries({
+        queryKey: ["user", session!.user!.email],
+      });
+      const previousUserData = queryClient.getQueryData([
+        "user",
+        session!.user!.email,
+      ]);
+
+      queryClient.setQueryData(
+        ["user", session!.user!.email],
+        (oldData: any) => {
+          if (!oldData) {
+            return {
+              email: session!.user!.email,
+              nickname: session!.user!.name, // 기본 닉네임 (필요에 따라 수정)
+              image: session!.user!.image, // 기본 이미지 (필요에 따라 수정)
+              Saved: [postId.toString()],
+              Followers: [],
+              Followings: [],
+              _count: {
+                Followers: 0,
+                Followings: 0,
+              },
+            };
+          }
+
+          return {
+            ...oldData,
+            Saved: oldData.Saved
+              ? [...oldData.Saved, postId.toString()]
+              : [postId.toString()],
+          };
+        }
+      );
+
+      return { previousUserData };
+    },
+    onError: (err, variables, context) => {
+      if (context && context.previousUserData) {
+        queryClient.setQueryData(
+          ["user", session!.user!.email],
+          context.previousUserData
+        );
+      }
+    },
+    onSuccess() {
+      setSaved(true);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["user", session!.user!.email],
+      });
+    },
+  });
+
+  const unsaved = useMutation({
+    mutationFn: () => {
+      return fetch(
+        `${
+          process.env.NEXT_PUBLIC_BASE_URL
+        }/api/posts/${postId.toString()}/save`,
+        {
+          method: "delete",
+          credentials: "include",
+          body: JSON.stringify(session),
+        }
+      );
+    },
+    onMutate: async () => {
+      if (!session || !session.user || !session.user.email) {
+        throw new Error("Session or user information is missing");
+      }
+
+      await queryClient.cancelQueries({
+        queryKey: ["user", session!.user!.email],
+      });
+      const previousUserData = queryClient.getQueryData([
+        "user",
+        session!.user!.email,
+      ]);
+
+      queryClient.setQueryData(
+        ["user", session!.user!.email],
+        (oldData: any) => {
+          if (!oldData || !oldData.Saved) {
+            return oldData;
+          }
+          return {
+            ...oldData,
+            Saved: oldData.Saved.filter((v: any) => v.id !== postId.toString()),
+          };
+        }
+      );
+
+      return { previousUserData };
+    },
+    onError: (err, variables, context) => {
+      console.log(err, "err");
+      if (context && context.previousUserData) {
+        queryClient.setQueryData(
+          ["user", session!.user!.email],
+          context.previousUserData
+        );
+      }
+    },
+    onSuccess() {
+      setSaved(false);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["user", session!.user!.email],
+      });
+    },
+  });
+
   const onChangeTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setComment(e.target.value);
   };
@@ -749,24 +895,8 @@ export default function DetailPage({ post }: Props) {
       const getFileExtension = (url: any) => {
         return url.split(".").pop();
       };
-
-      // const currentFile = decodeURIComponent(post.Images[currentNumber]);
-      // console.log(currentFile, "currentFile");
-      // const extension = getFileExtension(currentFile);
-      // if (extension.match(/(mp4|avi|mov)$/i)) {
-      //   setImg(false);
-      // } else {
-      //   setImg(true);
-      // }
-      // // setFileExtension(extension);
-      // console.log(isImg, "isImg");
-      // setFileName(currentFile);
     }
   }, [post, currentNumber, fileName]);
-
-  const saveIconClick = useCallback(() => {
-    setSaveClicked((prev) => !prev);
-  }, []);
 
   const onClickXbox = useCallback(() => {
     router.back();
@@ -843,6 +973,16 @@ export default function DetailPage({ post }: Props) {
       }
     } else {
       addComment.mutate({ postId, CommentText, userSession });
+    }
+  };
+
+  const onClickSaved: MouseEventHandler<HTMLDivElement> = (e) => {
+    e.stopPropagation();
+    if (isSaved) {
+      // 이미 저장함
+      unsaved.mutate();
+    } else {
+      saved.mutate();
     }
   };
 
@@ -1336,6 +1476,7 @@ export default function DetailPage({ post }: Props) {
                                               role="button"
                                               tabIndex={0}
                                               style={{ cursor: "pointer" }}
+                                              onClick={onClickSaved}
                                             >
                                               <div
                                                 className={
@@ -2159,19 +2300,19 @@ export default function DetailPage({ post }: Props) {
                                                 role="button"
                                                 tabIndex={0}
                                                 style={{ cursor: "pointer" }}
+                                                onClick={onClickSaved}
                                               >
                                                 <div
                                                   className={styles.iconDiv}
                                                   role="button"
                                                   tabIndex={0}
-                                                  onClick={saveIconClick}
                                                 >
                                                   <div
                                                     className={
                                                       styles.iconInnerDiv
                                                     }
                                                   >
-                                                    {saveIconClicked ? (
+                                                    {isSaved ? (
                                                       <svg
                                                         aria-label="삭제"
                                                         className={

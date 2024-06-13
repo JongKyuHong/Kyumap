@@ -42,14 +42,12 @@ export default async function ProfileLayout({
 
   const dehydrateState = dehydrate(queryClient);
   return (
-    <div>
-      <HydrationBoundary state={dehydrateState}>
-        <div className={styles.maindDiv}>
-          <ProfileSection userEmail={userEmail} userName={userName} />
-          {/* <UserPosts userEmail={userEmail} /> */}
-          {children}
-        </div>
-      </HydrationBoundary>
-    </div>
+    <HydrationBoundary state={dehydrateState}>
+      <div className={styles.MainDiv}>
+        <ProfileSection userEmail={userEmail} userName={userName} />
+        {/* <UserPosts userEmail={userEmail} /> */}
+        {children}
+      </div>
+    </HydrationBoundary>
   );
 }

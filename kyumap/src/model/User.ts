@@ -18,9 +18,15 @@ export interface IUser extends Document {
   Followers: UserID[];
   Followings: UserID[];
   Saved: string[];
+  Info: {
+    website: string;
+    intro: string;
+    gender: string;
+  };
   _count: {
     Followers: number;
     Followings: number;
+    posts: number;
   };
 }
 
@@ -52,9 +58,15 @@ export const userSchema: Schema = new mongoose.Schema({
       email: { type: String },
     },
   ],
+  Info: {
+    website: { type: String, default: "" },
+    intro: { type: String, default: "" },
+    gender: { type: String, default: "" },
+  },
   _count: {
     Followers: { type: Number, default: 0 },
     Followings: { type: Number, default: 0 },
+    posts: { type: Number, default: 0 },
   },
 });
 

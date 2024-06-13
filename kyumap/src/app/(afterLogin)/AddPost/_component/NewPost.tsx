@@ -70,6 +70,7 @@ export default function NewPost() {
       const altTextsLst = [];
       for (let idx = 0; idx < preview.length; idx++) {
         const { file, type } = preview[idx];
+        console.log(file, type, "file아직 인코딩 하기 전");
         let filename = encodeURIComponent(file.name);
         // 프리사인 url받기
         let result_url: any = await fetch(
@@ -90,6 +91,7 @@ export default function NewPost() {
           method: "POST",
           body: ImageFormData,
         });
+        console.log(uploadResult.ok, "ok나오나???");
         let url = uploadResult.url + `/${type}/` + filename;
         urlformLst.push(url);
         altTextsLst.push(altTexts[idx]);
@@ -139,6 +141,12 @@ export default function NewPost() {
           }
         );
       }
+      await queryClient.invalidateQueries({
+        queryKey: ["user", session?.user?.email, "posts"],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["user", session?.user?.email, "reels"],
+      });
     },
     onError(error) {
       console.error(error);

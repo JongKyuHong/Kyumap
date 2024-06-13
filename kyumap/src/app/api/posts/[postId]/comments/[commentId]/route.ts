@@ -16,9 +16,7 @@ export async function DELETE(req: NextRequest, { params }: Props) {
   const postId = params.postId;
   const commentId = new ObjectId(params.commentId);
 
-  console.log(postId, commentId, "post comment");
   const { userSession } = await req.json();
-  console.log(userSession, "session");
 
   try {
     const comment = await Comment.findOne({ _id: commentId });

@@ -38,9 +38,10 @@
   --media-info: 335px;
 
   --post-separator: 239, 239, 239;
-
+  --ig-tertiary-icon: 199, 199, 199;
   --web-always-black: 0, 0, 0;
   --web-always-white: 255, 255, 255;
+  --ig-text-input-border-prism: 219, 233, 228;
 
   --grey-7: 85, 85, 85;
 
@@ -56,6 +57,7 @@
   --mobile-nav-height: 45px;
   --modal-padding: 16px;
   --input-border-radius: 6px;
+  --system-30-font-size: 30px;
 
   --modal-border-radius: 12px;
   --system-14-font-size: 14px;

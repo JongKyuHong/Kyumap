@@ -7,7 +7,7 @@ import smallLogo from "../../../../public/smallLogo.png";
 import smallLogo2 from "../../../../public/smallLogo2.png";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
-import MenuDetail from "./MenuDetail";
+import MenuDetail from "./MenuDetail.1";
 import chi from "../../../../public/chi.png";
 import SearchTab from "./SearchTab";
 import useDeviceSize from "./useDeviceSize";
