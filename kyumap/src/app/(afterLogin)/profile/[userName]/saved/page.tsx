@@ -14,8 +14,7 @@ export default async function Page({ params }: Props) {
   const userEmail = await getUserEmail(userName);
 
   return (
-    <div className={styles.maindDiv}>
-      <Saved userEmail={userEmail} />
-    </div>
+    // <div className={styles.maindDiv}></div>
+    <Saved userEmail={userEmail} userName={userName} />
   );
 }

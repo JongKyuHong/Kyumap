@@ -46,37 +46,35 @@ const signup = async (prevState: any, formData: FormData) => {
       }
     );
     const checkDuplicateResult = await checkDuplicate.json();
-
     if (checkDuplicateResult.status === 400) {
       return { message: checkDuplicateResult.message };
     }
 
-    let file = formData.get("image") as File;
+    let file = formData.get("image") as any;
     let filename = encodeURIComponent(file.name);
     // console.log(filename, "filename");
     const imageType = "image";
-    let result_url = await fetch(
+    let result_url: any = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/image/upload?file=${filename}&type=${imageType}`
     );
 
-    const result_url2: PresignedPostData = await result_url.json();
+    result_url = await result_url.json();
 
     const ImageFormData = new FormData();
     Object.entries({
-      ...(result_url2.fields as { fields?: any }),
+      ...result_url.fields,
       file,
     }).forEach(([key, value]) => {
       ImageFormData.append(key, value as string);
     });
 
-    let uploadResult = await fetch(result_url2.url, {
+    let uploadResult = await fetch(result_url.url, {
       method: "POST",
       body: ImageFormData,
     });
-
+    console.log(uploadResult.ok, "이미지 url 업로드");
     if (uploadResult.ok) {
       formData.set("imageUrl", uploadResult.url + "/image/" + filename);
-      console.log(formData, "formData");
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/users`,
         {

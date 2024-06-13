@@ -14,7 +14,6 @@ export async function POST(req: NextRequest, { params }: Props) {
   await dbConnect();
   const { userSession } = await req.json();
   const { email } = userSession;
-  console.log(email, params.postId, params.commentId, "들어옴?");
   const cid = new ObjectId(params.commentId);
   const comment = await Comment.findOneAndUpdate(
     { "reply._id": cid },
@@ -24,7 +23,6 @@ export async function POST(req: NextRequest, { params }: Props) {
     },
     { new: true } // 업데이트된 문서를 반환합니다.
   );
-  console.log(comment, "comment있음?>");
   if (!comment) {
     return NextResponse.json({ message: "Comment not found" }, { status: 404 });
   }

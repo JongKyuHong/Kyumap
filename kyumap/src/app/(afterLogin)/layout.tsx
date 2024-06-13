@@ -23,7 +23,7 @@ export default async function RootLayout({ children, modal }: Props) {
               <div className={styles.leafParent}>
                 <div className={styles.leafChild}>
                   <div className={styles.container} style={{ height: "100%" }}>
-                    {session?.user && (
+                    {session && session.user && (
                       <>
                         <NavTab me={session} />
                         <div className={styles.rightSectionWrapper}>

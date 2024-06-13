@@ -6,10 +6,12 @@ import style from "./msection.module.css";
 import PostRecommends from "./PostRecommends";
 import ResponsiveNav from "./ResponsiveNav";
 import useDeviceSize from "./useDeviceSize";
+import { useSession } from "next-auth/react";
 
 export default function MainSection() {
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
-
+  const { data: session } = useSession();
+  if (!session) return null;
   return (
     <>
       {isMobile ? (

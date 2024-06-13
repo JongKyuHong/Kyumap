@@ -50,6 +50,8 @@ export default function ProfileSection({ userEmail, userName }: Props) {
       setNum(2);
     } else if (segment === "reels") {
       setNum(1);
+    } else {
+      setNum(0);
     }
   }, [segment]);
 
@@ -296,7 +298,7 @@ export default function ProfileSection({ userEmail, userName }: Props) {
   }
 
   return (
-    <div className={styles.MainDiv}>
+    <>
       <header className={styles.MainDivHeader}>
         <div className={styles.HeaderProfile}>
           <div
@@ -386,7 +388,9 @@ export default function ProfileSection({ userEmail, userName }: Props) {
             <li className={styles.InfoLi}>
               {"게시글 "}
               <span className={styles.InfoSpan}>
-                <span className={styles.InfoInnerSpan}>{"508"}</span>
+                <span className={styles.InfoInnerSpan}>
+                  {userData._count.posts || 0}
+                </span>
               </span>
             </li>
             <li className={styles.InfoLi}>
@@ -413,60 +417,71 @@ export default function ProfileSection({ userEmail, userName }: Props) {
               </span>
             </div>
             <div className={styles.ProfileContentType}>
-              <div className={styles.ProfileContentType2} dir="auto">
+              {/* <div className={styles.ProfileContentType2} dir="auto">
                 {"교육"}
-              </div>
+              </div> */}
             </div>
             <h1 className={styles.ProfileContentInfo} dir="auto">
-              {"자기가 쓴 소개 ~~"}
+              {`${userData.Info.intro}`}
               <br />
-              <Link
+              {/* <Link
                 href="#"
                 className={styles.InfoLink}
                 tabIndex={0}
                 role="link"
               >
                 {"자기가 태그한 사람~~~"}
-              </Link>
+              </Link> */}
             </h1>
             <button className={styles.ProfileContentBtn} type="button">
-              <div className={styles.ProfileBtnLink}>
-                <span className={styles.LinkSvgSpan}>
-                  <svg
-                    aria-label="링크 아이콘"
-                    className={styles.LinkSvg}
-                    fill="currentColor"
-                    height="12"
-                    role="img"
-                    viewBox="0 0 24 24"
-                    width="12"
-                  >
-                    <title>링크 아이콘</title>
-                    <path
-                      d="m9.726 5.123 1.228-1.228a6.47 6.47 0 0 1 9.15 9.152l-1.227 1.227m-4.603 4.603-1.228 1.228a6.47 6.47 0 0 1-9.15-9.152l1.227-1.227"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                    ></path>
-                    <line
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      x1="8.471"
-                      x2="15.529"
-                      y1="15.529"
-                      y2="8.471"
-                    ></line>
-                  </svg>
-                </span>
-                <div className={styles.ProfileLinkDiv} dir="auto">
-                  {"링크 명"}
+              {userData?.Info.website && (
+                <div className={styles.ProfileBtnLink}>
+                  <span className={styles.LinkSvgSpan}>
+                    <svg
+                      aria-label="링크 아이콘"
+                      className={styles.LinkSvg}
+                      fill="currentColor"
+                      height="12"
+                      role="img"
+                      viewBox="0 0 24 24"
+                      width="12"
+                    >
+                      <title>링크 아이콘</title>
+                      <path
+                        d="m9.726 5.123 1.228-1.228a6.47 6.47 0 0 1 9.15 9.152l-1.227 1.227m-4.603 4.603-1.228 1.228a6.47 6.47 0 0 1-9.15-9.152l1.227-1.227"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                      ></path>
+                      <line
+                        fill="none"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        x1="8.471"
+                        x2="15.529"
+                        y1="15.529"
+                        y2="8.471"
+                      ></line>
+                    </svg>
+                  </span>
+                  <div className={styles.ProfileLinkDiv} dir="auto">
+                    <Link
+                      href={`${
+                        userData?.Info.website.startsWith("http://") ||
+                        userData?.Info.website.startsWith("https://")
+                          ? userData.Info.website
+                          : `https://${userData?.Info.website}`
+                      }`}
+                    >
+                      {`${userData?.Info.website}`}
+                    </Link>
+                  </div>
                 </div>
-              </div>
+              )}
             </button>
           </div>
         </section>
@@ -626,43 +641,45 @@ export default function ProfileSection({ userEmail, userName }: Props) {
             <span className={styles.PostLinkSpan}>릴스</span>
           </div>
         </Link>
-        <Link
-          aria-selected="false"
-          className={styles.PostSavedLink}
-          href={`/profile/${userName}/saved`}
-          role="tab"
-          tabIndex={0}
-          onClick={() => setNum(2)}
-          style={{
-            color: tabNum === 2 ? "rgb(0, 0, 0)" : "rgb(115, 115, 115)",
-            borderTop:
-              tabNum === 2 ? "1px solid rgb(var(--ig-primary-text))" : "0",
-          }}
-        >
-          <div className={styles.PostLinkDiv}>
-            <svg
-              aria-label=""
-              className={styles.PostLinkSvg}
-              height="12"
-              role="img"
-              viewBox="0 0 24 24"
-              width="12"
-            >
-              <title></title>
-              <polygon
-                fill="none"
-                points="20 21 12 13.44 4 21 4 3 20 3 20 21"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-              ></polygon>
-            </svg>
-            <span className={styles.PostLinkSpan}>저장됨</span>
-          </div>
-        </Link>
+        {session && userName === session?.user!.name && (
+          <Link
+            aria-selected="false"
+            className={styles.PostSavedLink}
+            href={`/profile/${userName}/saved`}
+            role="tab"
+            tabIndex={0}
+            onClick={() => setNum(2)}
+            style={{
+              color: tabNum === 2 ? "rgb(0, 0, 0)" : "rgb(115, 115, 115)",
+              borderTop:
+                tabNum === 2 ? "1px solid rgb(var(--ig-primary-text))" : "0",
+            }}
+          >
+            <div className={styles.PostLinkDiv}>
+              <svg
+                aria-label=""
+                className={styles.PostLinkSvg}
+                height="12"
+                role="img"
+                viewBox="0 0 24 24"
+                width="12"
+              >
+                <title></title>
+                <polygon
+                  fill="none"
+                  points="20 21 12 13.44 4 21 4 3 20 3 20 21"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                ></polygon>
+              </svg>
+              <span className={styles.PostLinkSpan}>저장됨</span>
+            </div>
+          </Link>
+        )}
       </div>
       {/* <UserPosts userEmail={userEmail} /> */}
-    </div>
+    </>
   );
 }

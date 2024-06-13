@@ -13,7 +13,7 @@ type Props = {
 export async function POST(req: NextRequest, { params }: Props) {
   await dbConnect();
   const data = await req.json();
-  console.log("태그했을때 데이터 : ", data);
+
   const user = {
     nickname: data.User.name,
     email: data.User.email,

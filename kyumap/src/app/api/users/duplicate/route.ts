@@ -5,10 +5,8 @@ import dbConnect from "@/app/(afterLogin)/_lib/dbConnect";
 export async function POST(req: NextRequest) {
   await dbConnect();
   const data = await req.json();
-  console.log(data, "data");
   const email = data.email;
   const nickname = data.nickname;
-  console.log(email, nickname, "emiladata");
 
   const emailExists = await User.findOne({ email: email });
   if (emailExists) {

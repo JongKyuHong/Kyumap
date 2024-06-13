@@ -9,8 +9,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     region: "ap-northeast-2",
     signatureVersion: "v4",
   });
-  //   console.log(req, "reqreqreqreq");
-  //   console.log(req.nextUrl.searchParams.get("file"), "223232");
+
   const s3 = new aws.S3();
 
   const lst: any[] = [];
@@ -24,9 +23,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
         ["content-length-range", 0, 1048576 * 50], // 파일용량 50MB 까지 제한
       ],
     });
-
-    // let filename = url.fields.key.name;
-    // lst.push(url.url + "/" + filename);
     lst.push(url);
   }
 
@@ -52,7 +48,6 @@ export async function GET(req: NextRequest, res: NextResponse) {
   }
 
   const decodeFileName = decodeURIComponent(filename);
-
   const contentType = type === "image" ? "image/*" : "video/*";
 
   const url = s3.createPresignedPost({

@@ -12,6 +12,7 @@ import { IPost } from "@/model/Post";
 import { getReels } from "@/app/(afterLogin)/_lib/getReels";
 import { useInView } from "react-intersection-observer";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 type Props = {
   userEmail: string;
@@ -95,15 +96,28 @@ export default function Reels({ userEmail }: Props) {
                     >
                       <div className={styles.LinkDiv}>
                         <div className={styles.LinkDiv2}>
-                          <img
-                            style={{
-                              objectFit: "cover",
-                            }}
-                            alt={`${rdata.content}`}
-                            src={`${rdata.Images[0]}`}
-                            className={styles.ImageLink}
-                            crossOrigin="anonymous"
-                          />
+                          {rdata.Images[0].endsWith(".mp4") ? (
+                            <video
+                              style={{
+                                objectFit: "cover",
+                              }}
+                              src={`${rdata.Images[0]}`}
+                              className={styles.ImageLink}
+                            ></video>
+                          ) : (
+                            <Image
+                              style={{
+                                objectFit: "cover",
+                              }}
+                              alt={`${rdata.content}`}
+                              width={0}
+                              height={0}
+                              sizes="100vw"
+                              src={`${rdata.Images[0]}`}
+                              className={styles.ImageLink}
+                              crossOrigin="anonymous"
+                            />
+                          )}
                         </div>
                         <div className={styles.LinkDiv3}></div>
                       </div>

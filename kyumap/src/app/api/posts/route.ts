@@ -1,5 +1,6 @@
 import dbConnect from "@/app/(afterLogin)/_lib/dbConnect";
 import Post from "@/model/Post";
+import User from "@/model/User";
 import { NextResponse, NextRequest } from "next/server";
 import getNextSequenceValue from "@/model/getNextSequenceValue";
 import Redis from "ioredis";
@@ -26,7 +27,6 @@ export async function GET(
     query = { postId: { $gt: Number(cursor) } };
   }
 
-  // console.log(cursor, query, "/api/posts/route.ts");
   try {
     const posts = await Post.find(query).sort({ postId: 1 }).limit(limit);
     // const posts = await Post.find({});
@@ -50,7 +50,6 @@ export async function POST(req: NextRequest) {
     console.error("Failed to parse request body:", err);
     return NextResponse.json({ error: "Failed to parse request body" });
   }
-  // console.log(reqBody, "api/posts/routes의 reqBody");
   const userEmail = reqBody.get("userEmail");
   const userImage = reqBody.get("userImage");
   const userName = reqBody.get("userName");
@@ -116,6 +115,13 @@ export async function POST(req: NextRequest) {
       hashTag: [],
     };
 
+    const users = await User.findOneAndUpdate(
+      { email: userEmail },
+      {
+        $inc: { "_count.posts": 1 },
+      },
+      { new: true }
+    );
     const posts = await Post.create(data);
     return NextResponse.json(posts);
   } catch (err: any) {
@@ -124,3 +130,4 @@ export async function POST(req: NextRequest) {
     await redis.del(lockKey);
   }
 }
+

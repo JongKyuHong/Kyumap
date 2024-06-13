@@ -49,7 +49,6 @@ export async function GET(req: NextRequest, { params }: Props) {
 
     // limit을 설정하여 한 번에 로드할 게시물 수를 제한합니다.
     const posts = await Post.find(query).limit(21).sort({ postId: 1 });
-    console.log(posts, "posts api");
     return NextResponse.json(posts);
   } catch (error) {
     console.error(error);

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Fragment, useEffect } from "react";
+import React, { useEffect } from "react";
 import styles from "../../profile.module.css";
 import Link from "next/link";
 import {
@@ -11,15 +11,29 @@ import {
 import { IPost } from "@/model/Post";
 import { getUserSavedPosts } from "@/app/(afterLogin)/_lib/getUserSavedPosts";
 import { useInView } from "react-intersection-observer";
-import { useRouter } from "next/navigation";
+import { useRouter, redirect } from "next/navigation";
+import Image from "next/image";
+import { useSession } from "next-auth/react";
 
 type Props = {
   userEmail: string;
+  userName: string;
 };
 
-export default function Saved({ userEmail }: Props) {
+export default function Saved({ userEmail, userName }: Props) {
   const router = useRouter();
   const queryClient = useQueryClient();
+  console.log(userEmail, "userEmail");
+  const { data: session, status } = useSession();
+
+  if (status === "loading") return; // 세션 상태를 로딩 중인 경우 대기
+  if (!session) {
+    router.push("/login"); // 로그인 페이지로 리다이렉트
+  } else if (session && session!.user!.email !== userEmail) {
+    // router.push(`/profile/${userName}`);
+    redirect(`/profile/${userName}`);
+  }
+
   const { data, fetchNextPage, hasNextPage, isFetching, error } =
     useInfiniteQuery<
       IPost[],
@@ -95,15 +109,28 @@ export default function Saved({ userEmail }: Props) {
                     >
                       <div className={styles.LinkDiv}>
                         <div className={styles.LinkDiv2}>
-                          <img
-                            style={{
-                              objectFit: "cover",
-                            }}
-                            alt={`${rdata.content}`}
-                            src={`${rdata.Images[0]}`}
-                            className={styles.ImageLink}
-                            crossOrigin="anonymous"
-                          />
+                          {rdata.Images[0].endsWith(".mp4") ? (
+                            <video
+                              style={{
+                                objectFit: "cover",
+                              }}
+                              src={`${rdata.Images[0]}`}
+                              className={styles.ImageLink}
+                            ></video>
+                          ) : (
+                            <Image
+                              style={{
+                                objectFit: "cover",
+                              }}
+                              alt={`${rdata.content}`}
+                              src={`${rdata.Images[0]}`}
+                              width={0}
+                              height={0}
+                              sizes="100vw"
+                              className={styles.ImageLink}
+                              crossOrigin="anonymous"
+                            />
+                          )}
                         </div>
                         <div className={styles.LinkDiv3}></div>
                       </div>
@@ -125,38 +152,35 @@ export default function Saved({ userEmail }: Props) {
           </div>
         </div>
       ) : (
-        <div className={styles.PostLinkDiv}>
-          <div style={{ maxWidth: "350px" }} className={styles.NDiv}>
-            <div className={styles.CamDiv} role="button" tabIndex={0}>
-              <div className={styles.CamDiv2}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  width="24"
-                  height="24"
-                >
-                  <path d="M0 0h24v24H0z" fill="none" />
-                  <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm8-6h-3c-.6 0-1 .4-1 1s.4 1 1 1h2.2l-2.5 2.5C13.4 7.5 12.7 8 12 8c-1.7 0-3-1.3-3-3s1.3-3 3-3c.7 0 1.4.3 1.9.8l2.5-2.5V3c0 .6.4 1 1 1s1-.4 1-1zm4 8h-2l-2.3 2.3c-.5.2-1 .4-1.6.4-1.7 0-3-1.3-3-3s1.3-3 3-3c.6 0 1.1.2 1.6.4l2.3-2.3h2c1.1 0 2 .9 2 2v6c0 1.1-.9 2-2 2zm-4-4c-1.7 0-3-1.3-3-3s1.3-3 3-3 3 1.3 3 3-1.3 3-3 3z" />
-                </svg>
-              </div>
-            </div>
-            <div className={styles.NDiv2}>
-              <span style={{ lineHeight: "36px" }} className={styles.NSpan}>
-                {"사진 공유"}
-              </span>
-            </div>
-            <div className={styles.NDiv3}>
-              <span style={{ lineHeight: "18px" }} className={styles.Nspan2}>
-                {"사진을 공유하면 회원님의 프로필에 표시됩니다."}
-              </span>
-            </div>
-            <div
-              className={styles.NDiv4}
-              role="button"
-              tabIndex={0}
-              onClick={showPostForm}
+        <div className={styles.savedDiv}>
+          <div className={styles.savedDiv2} style={{ maxWidth: "350px" }}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              className={styles.savedDiv3}
             >
-              {"첫 사진 공유하기"}
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+              <polyline points="17 21 17 13 7 13 7 21"></polyline>
+              <polyline points="7 3 7 8 15 8"></polyline>
+            </svg>
+            <div className={styles.savedDiv4}>
+              <span className={styles.savedDiv5} style={{ lineHeight: "36px" }}>
+                {"저장"}
+              </span>
+            </div>
+            <div className={styles.savedDiv6}>
+              <span className={styles.savedDiv7} style={{ lineHeight: "18px" }}>
+                {
+                  "다시 보고 싶은 사진과 동영상을 저장하세요. 콘텐츠를 저장해도 다른 사람에게 알림이 전송되지 않으며, 저장된 콘텐츠는 회원님만 볼 수 있습니다."
+                }
+              </span>
             </div>
           </div>
         </div>

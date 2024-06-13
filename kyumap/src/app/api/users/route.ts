@@ -15,7 +15,6 @@ export async function POST(req: Request) {
       password: reqBody.get("password"),
       image: reqBody.get("imageUrl"),
     };
-    console.log(data, "api users data");
     const newUser = await User.create(data);
     return NextResponse.json(newUser, { status: 201 });
   } catch (error) {

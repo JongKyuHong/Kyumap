@@ -35,8 +35,10 @@ export async function GET(req: NextRequest, { params }: Props) {
       );
     }
 
-    // 커서(ID)가 있다면, 해당 ID 이후의 게시물을 조회하는 쿼리를 생성합니다.
-    let query: { [key: string]: any } = { userEmail: userEmail, reels: true };
+    let query: { [key: string]: any } = {
+      "User.email": userEmail,
+      reels: true,
+    };
 
     if (cursor !== undefined) {
       query["postId"] = { $gt: cursor };
@@ -44,7 +46,6 @@ export async function GET(req: NextRequest, { params }: Props) {
 
     // limit을 설정하여 한 번에 로드할 게시물 수를 제한합니다.
     const posts = await Post.find(query).limit(21).sort({ postId: 1 });
-    console.log(posts, "posts api");
     return NextResponse.json(posts);
   } catch (error) {
     console.error(error);
