@@ -256,7 +256,10 @@ export default function SearchTab({ onClickMounted }: Props) {
                                                   styles.profileBodySpan2
                                                 }
                                               >
-                                                {recentHistory.nickname}
+                                                {recentHistory.nickname} •{" "}
+                                                {"팔로워 "}
+                                                {recentHistory._count.Followers}
+                                                명
                                               </span>
                                             </span>
                                           </div>

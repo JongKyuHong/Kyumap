@@ -66,7 +66,7 @@ export default function SearchCard({
                       style={{ lineHeight: "18px" }}
                       className={styles.profileId}
                     >
-                      {userData.id}
+                      {userData.nickname}
                     </span>
                   </div>
                   <span
@@ -74,7 +74,7 @@ export default function SearchCard({
                     className={styles.profileBodySpan}
                   >
                     <span className={styles.profileBodySpan2}>
-                      {userData.nickname}
+                      {userData.Info.intro}
                     </span>
                   </span>
                 </div>
