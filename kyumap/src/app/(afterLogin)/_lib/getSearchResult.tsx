@@ -23,5 +23,7 @@ export const getSearchResult: QueryFunction<
     throw new Error("Failed to fetch data");
   }
 
-  return res.json();
+  const data = await res.json();
+  console.log(data, "검색 데이터");
+  return data;
 };

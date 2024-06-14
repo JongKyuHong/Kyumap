@@ -797,7 +797,7 @@ export default function NavTab({ me }: Props) {
                     !isEx && styles.containerClose
                   }`}
                 >
-                  <SearchTab />
+                  <SearchTab onClickMounted={onClickEx} />
                 </div>
               )}
             </div>

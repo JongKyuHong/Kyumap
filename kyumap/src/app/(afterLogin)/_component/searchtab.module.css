@@ -183,7 +183,7 @@
   unicode-bidi: isolate;
 }
 
-.searchBarDiv {
+/* .searchBarDiv {
   align-items: stretch;
   border: 0;
   bottom: 0;
@@ -200,6 +200,18 @@
   right: 0;
   top: 0;
   vertical-align: baseline;
+} */
+
+.searchBarDiv {
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  z-index: 3;
+  background-repeat: no-repeat;
+  right: 12px;
+  transform: translateY(-50%);
+  position: absolute;
+  background-position: -318px -333px;
 }
 
 .searchBarDiv2 {
