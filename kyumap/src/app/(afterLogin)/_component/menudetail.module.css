@@ -53,7 +53,7 @@
   height: 100%;
   overflow-y: hidden;
   border-top-right-radius: 16px;
-  background-color: rgb(255, 255, 255);
+  background-color: rgb(var(--ig-banner-background));
   border-top-left-radius: 16px;
   flex-direction: column;
   display: flex;
@@ -87,8 +87,8 @@
   top: 0;
   box-sizing: border-box;
   transition-property: opacity, transform;
-  transition-timing-function: cubic-bezier(0.08, 0.52, 0.52, 1);
-  transition-duration: 200ms;
+  transition-timing-function: var(--fds-soft);
+  transition-duration: var(--fds-fast);
   z-index: 0;
   left: 0;
   position: absolute;
@@ -99,8 +99,8 @@
   top: 0;
   box-sizing: border-box;
   transition-property: opacity, transform;
-  transition-timing-function: cubic-bezier(0.08, 0.52, 0.52, 1);
-  transition-duration: 200ms;
+  transition-timing-function: var(--fds-soft);
+  transition-duration: var(--fds-fast);
   z-index: 0;
   left: 0;
   position: absolute;
@@ -112,8 +112,8 @@
   box-sizing: border-box;
   transition-property: opacity, transform;
   pointer-events: none;
-  transition-timing-function: cubic-bezier(0.08, 0.52, 0.52, 1);
-  transition-duration: 200ms;
+  transition-timing-function: var(--fds-soft);
+  transition-duration: var(--fds-fast);
   z-index: 0;
   left: 0;
   position: absolute;
@@ -132,7 +132,7 @@
 }
 
 .navLink {
-  background-color: rgb(255, 255, 255);
+  background-color: rgb(var(--ig-banner-background));
   border-bottom-color: rgba(0, 0, 0, 0.4);
   width: 100%;
   padding-top: 0;
@@ -183,7 +183,7 @@
 
 .navLink,
 .navLink:visited {
-  color: rgb(0, 55, 107);
+  color: rgb(var(--ig-link));
   text-decoration: none;
 }
 
@@ -323,7 +323,7 @@
 }
 
 .Icon {
-  color: rgb(0, 0, 0);
+  color: rgb(var(--ig-primary-text));
   position: relative;
   display: block;
 }
@@ -389,7 +389,7 @@
   margin: 0 !important;
   font-size: 14px;
   font-weight: 400;
-  color: rgb(0, 0, 0);
+  color: rgb(var(--ig-primary-text));
   word-wrap: break-word;
   position: relative;
   display: block;
@@ -420,7 +420,7 @@
   max-width: 100%;
   margin: 0 !important;
   font-size: 16px;
-  color: rgb(0, 0, 0);
+  color: rgb(var(--ig-primary-text));
   word-wrap: break-word;
   position: relative;
   font-weight: 600;
@@ -463,13 +463,13 @@
 
 .modeInner {
   max-height: 100%;
-  background-color: rgb(255, 255, 255);
+  background-color: rgb(var(--ig-banner-background));
   flex-direction: column;
   display: flex;
 }
 
 .modeDiv {
-  background-color: rgb(255, 255, 255);
+  background-color: rgb(var(--ig-banner-background));
   width: 100%;
   max-width: 100%;
   border-bottom-right-radius: unset;
@@ -594,7 +594,7 @@
 .darkDiv {
   padding: 8px;
   overflow-y: auto;
-  background-color: rgb(255, 255, 255);
+  background-color: rgb(var(--ig-banner-background));
   flex-grow: 1;
 }
 

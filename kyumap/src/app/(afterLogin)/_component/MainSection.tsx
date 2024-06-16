@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import styles from "./mainsection.module.css";
 import style from "./msection.module.css";
 import PostRecommends from "./PostRecommends";
@@ -11,6 +11,19 @@ import { useSession } from "next-auth/react";
 export default function MainSection() {
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
   const { data: session } = useSession();
+
+  useEffect(() => {
+    const savedDarkMode = localStorage.getItem("darkMode");
+    console.log(savedDarkMode, "saveadarkmode");
+    if (savedDarkMode !== null) {
+      const isDark = JSON.parse(savedDarkMode);
+      document.documentElement.setAttribute(
+        "color-theme",
+        isDark ? "dark" : "light"
+      );
+    }
+  }, []);
+
   if (!session) return null;
   return (
     <>
@@ -48,7 +61,12 @@ export default function MainSection() {
           <ResponsiveNav />
         </section>
       ) : (
-        <div style={{ maxWidth: "630px", width: "100%" }}>
+        <div
+          style={{
+            maxWidth: "630px",
+            width: "100%",
+          }}
+        >
           <div className={styles.rootDivInner}>
             <div className={styles.rootDivInner2}>
               <div>

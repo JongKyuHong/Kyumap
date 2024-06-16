@@ -28,7 +28,12 @@ export default async function RootLayout({ children, modal }: Props) {
                         <NavTab me={session} />
                         <div className={styles.rightSectionWrapper}>
                           <section className={styles.rootSection}>
-                            <main className={styles.rootMain}>{children}</main>
+                            <main
+                              className={styles.rootMain}
+                              style={{ height: "90vh", overflowY: "auto" }}
+                            >
+                              {children}
+                            </main>
                           </section>
                         </div>
                       </>
