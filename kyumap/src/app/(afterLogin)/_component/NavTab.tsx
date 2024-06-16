@@ -7,7 +7,7 @@ import smallLogo from "../../../../public/smallLogo.png";
 import smallLogo2 from "../../../../public/smallLogo2.png";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
-import MenuDetail from "./MenuDetail.1";
+import MenuDetail from "./MenuDetail";
 import chi from "../../../../public/chi.png";
 import SearchTab from "./SearchTab";
 import useDeviceSize from "./useDeviceSize";
@@ -343,11 +343,17 @@ export default function NavTab({ me }: Props) {
             <div className={styles.leftSectionInner}>
               <div
                 className={styles.leftSection}
-                style={{ width: isEx ? "72px" : "" }}
+                style={{
+                  width: isEx ? "72px" : "",
+                  transform: "translateX(0px)",
+                }}
               >
                 <div
                   className={styles.leftDiv2}
-                  style={{ width: isEx ? "72px" : "" }}
+                  style={{
+                    width: isEx ? "72px" : "",
+                    transform: "translateX(0px)",
+                  }}
                 >
                   <div className={styles.logoOuter}>
                     <div className={styles.logoInner}>
@@ -774,7 +780,12 @@ export default function NavTab({ me }: Props) {
                             >
                               <div style={{ width: "100%" }}>
                                 <div style={{ width: "100%" }}>
-                                  <span className={styles.menuSpan}>
+                                  <span
+                                    className={styles.menuSpan}
+                                    style={{
+                                      lineHeight: "20px",
+                                    }}
+                                  >
                                     <span className={styles.menuSpanInner}>
                                       더 보기
                                     </span>

@@ -1088,7 +1088,8 @@
 }
 
 .postUserProfile {
-  color: rgb(var(--ig-secondary-button));
+  /* color: rgb(var(--ig-secondary-button)); */
+  color: rgb(var(--ig-primary-text));
   height: auto;
   border-bottom-color: var(--always-dark-overlay);
   padding-top: 0;
@@ -1102,7 +1103,6 @@
   width: auto;
   font-weight: var(--font-weight-system-semibold);
   display: inline;
-  color: rgb(var(--ig-secondary-button));
   border-top-left-radius: 2px;
   border-left-width: 0;
   justify-content: center;

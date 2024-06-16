@@ -270,7 +270,7 @@ export default function FollowList({ user }: Props) {
                     <div className={styles.IdSectionDiv}>
                       <div>
                         <Link
-                          href={`/profile/${user?.email}`}
+                          href={`/profile/${user?.nickname}`}
                           role="link"
                           tabIndex={0}
                           className={styles.IdSectionLink}
