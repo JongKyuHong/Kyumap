@@ -114,6 +114,11 @@ export default function FollowList({ user }: Props) {
         queryClient.setQueryData(["users", userEmail], shallow);
       }
     },
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: ["users", "followRecommends"],
+      });
+    },
   });
   const unfollow = useMutation({
     mutationFn: (userEmail: string) => {
@@ -197,6 +202,11 @@ export default function FollowList({ user }: Props) {
         };
         queryClient.setQueryData(["users", userEmail], shallow);
       }
+    },
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: ["users", "followRecommends"],
+      });
     },
   });
   const onFollow: MouseEventHandler<HTMLButtonElement> = (e) => {

@@ -8,28 +8,42 @@ import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { useQueryClient } from "@tanstack/react-query";
 
-export default function MenuDetail() {
+type Props = {
+  darkMode: boolean;
+  onClickDark: () => void;
+};
+
+export default function MenuDetail({ darkMode, onClickDark }: Props) {
   const queryClient = useQueryClient();
   const [clicked, setClicked] = useState(false);
-  const [darkMode, setDark] = useState(false);
+  // const [darkMode, setDark] = useState(false);
 
   const router = useRouter();
   const { data: session } = useSession();
 
-  useEffect(() => {
-    localStorage.setItem("darkMode", JSON.stringify(darkMode));
-  }, [darkMode]);
+  // useEffect(() => {
+  //   const savedDarkMode = localStorage.getItem("darkMode");
+  //   if (savedDarkMode !== null) {
+  //     const isDark = JSON.parse(savedDarkMode);
+  //     setDark(isDark);
+  //     document.documentElement.setAttribute(
+  //       "color-theme",
+  //       isDark ? "dark" : "light"
+  //     );
+  //   }
+  // }, []);
 
-  const onClickDark = () => {
-    if (darkMode) {
-      // 이미 다크모드에서 눌렀으므로 light모드로
-      document.documentElement.setAttribute("color-theme", "light");
-      setDark(false);
-    } else {
-      document.documentElement.setAttribute("color-theme", "dark");
-      setDark(true);
-    }
-  };
+  // useEffect(() => {
+  //   localStorage.setItem("darkMode", JSON.stringify(darkMode));
+  // }, [darkMode]);
+
+  // const onClickDark = () => {
+  //   if (darkMode) {
+  //     setDark(false);
+  //   } else {
+  //     setDark(true);
+  //   }
+  // };
 
   const onClickBtn = useCallback(() => {
     setClicked((clicked) => !clicked);
@@ -42,13 +56,11 @@ export default function MenuDetail() {
     queryClient.invalidateQueries({
       queryKey: ["users"],
     });
-    signOut({ redirect: false }).then(() => {
+    signOut({ callbackUrl: "/" }).then(() => {
       fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/logout`, {
         method: "post",
         credentials: "include",
       });
-      signOut({ callbackUrl: "/" });
-      // router.replace("/");
     });
   };
 
@@ -65,7 +77,7 @@ export default function MenuDetail() {
                       <div className={styles.navInner4}>
                         <div
                           className={styles.navInner5}
-                          style={{ height: clicked ? "119px" : "290px" }}
+                          style={{ height: clicked ? "119px" : "305px" }}
                         >
                           <div
                             className={styles.navInner6}
@@ -127,44 +139,6 @@ export default function MenuDetail() {
                                                 className={styles.innerSpan}
                                               >
                                                 설정
-                                              </span>
-                                            </span>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className={styles.linkDivOuter}></div>
-                              </Link>
-                              <Link className={styles.navLink} href="#">
-                                <div className={styles.linkDiv}>
-                                  <div className={styles.linkInnerDiv}>
-                                    <div className={styles.linkInnerDiv2}>
-                                      <div className={styles.navIcon}>
-                                        <div className={styles.iconInner}>
-                                          <svg
-                                            aria-label="내 활동"
-                                            className={styles.Icon}
-                                            fill="currentColor"
-                                            height="18"
-                                            role="img"
-                                            viewBox="0 0 24 24"
-                                            width="18"
-                                          >
-                                            <title>내 활동</title>
-                                            <path d="M19 1H5C2.794 1 1 2.794 1 5v14c0 2.206 1.794 4 4 4h14c2.206 0 4-1.794 4-4V5c0-2.206-1.794-4-4-4ZM5 3h14c1.103 0 2 .897 2 2v6h-2.382l-2.723-5.447c-.34-.678-1.45-.678-1.79 0L9 15.764l-2.105-4.211A1 1 0 0 0 6 11H3V5c0-1.103.897-2 2-2Zm14 18H5c-1.103 0-2-.897-2-2v-6h2.382l2.723 5.447a1 1 0 0 0 1.79 0L15 8.236l2.105 4.211A1 1 0 0 0 18 13h3v6c0 1.103-.897 2-2 2Z"></path>
-                                          </svg>
-                                        </div>
-                                      </div>
-                                      <div className={styles.iconTitle}>
-                                        <div className={styles.titleInner}>
-                                          <div className={styles.spanOuter}>
-                                            <span className={styles.Span}>
-                                              <span
-                                                className={styles.innerSpan}
-                                              >
-                                                내 활동
                                               </span>
                                             </span>
                                           </div>
@@ -268,23 +242,71 @@ export default function MenuDetail() {
                               </div>
                               <div className={styles.underline}></div>
                               <div
-                                className={styles.linkDiv}
+                                className={styles.linkDivv}
                                 style={{ cursor: "pointer" }}
                                 onClick={onClickLogOut}
                               >
-                                <div className={styles.linkInnerDiv}>
-                                  <div className={styles.iconTitle}>
-                                    <div className={styles.titleInner}>
-                                      <div className={styles.spanOuter}>
-                                        <span className={styles.Span}>
-                                          <span className={styles.innerSpan}>
-                                            로그아웃
-                                          </span>
-                                        </span>
+                                <div className={styles.linkDiv}>
+                                  <div className={styles.linkInnerDiv}>
+                                    <div className={styles.iconTitle2}>
+                                      <div className={styles.titleInner2}>
+                                        <div className={styles.spanOuter2}>
+                                          <div className={styles.spanOuter3}>
+                                            <span
+                                              className={styles.Span}
+                                              style={{ lineHeight: "18px" }}
+                                            >
+                                              <span
+                                                className={styles.innerSpan}
+                                              >
+                                                <Link href="/NewLogin">
+                                                  계정전환
+                                                </Link>
+                                              </span>
+                                            </span>
+                                          </div>
+                                        </div>
+                                        <div
+                                          className={styles.titleInnerright}
+                                        ></div>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
+                                {/* <div className={styles.linkDiv2}></div> */}
+                              </div>
+                              <div className={styles.underline2}></div>
+                              <div
+                                className={styles.linkDivv}
+                                style={{ cursor: "pointer" }}
+                                onClick={onClickLogOut}
+                              >
+                                <div className={styles.linkDiv}>
+                                  <div className={styles.linkInnerDiv}>
+                                    <div className={styles.iconTitle2}>
+                                      <div className={styles.titleInner2}>
+                                        <div className={styles.spanOuter2}>
+                                          <div className={styles.spanOuter3}>
+                                            <span
+                                              className={styles.Span}
+                                              style={{ lineHeight: "18px" }}
+                                            >
+                                              <span
+                                                className={styles.innerSpan}
+                                              >
+                                                로그아웃
+                                              </span>
+                                            </span>
+                                          </div>
+                                        </div>
+                                        <div
+                                          className={styles.titleInnerright}
+                                        ></div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                {/* <div className={styles.linkDiv2}></div> */}
                               </div>
                             </div>
                           </div>

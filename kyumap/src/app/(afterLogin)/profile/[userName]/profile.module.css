@@ -1420,3 +1420,84 @@
   display: block;
   content: "";
 }
+
+.CamDiv3 {
+  border-color: rgb(var(--grey-9));
+  align-items: center;
+  background: transparent;
+  border-radius: 50%;
+  border-style: solid;
+  box-sizing: border-box;
+  display: inline-flex;
+  justify-content: center;
+  position: relative;
+}
+
+.CamDivSpan {
+  background-repeat: no-repeat;
+  background-position: -384px -396px;
+  height: 24px;
+  width: 24px;
+  display: block;
+}
+
+.CamDivSpanSvg {
+  /* fill: rgb(var(--grey-9)); */
+  color: rgb(var(--ig-primary-text));
+}
+
+.CamDiv4 {
+  overflow-y: visible;
+  margin-top: 32px;
+  overflow-x: visible;
+  margin-bottom: 48px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.CamDivSpan2 {
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-weight: 800;
+  font-size: var(--system-30-font-size);
+  color: rgb(var(--ig-primary-text));
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  position: relative;
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  margin-left: 0 !important;
+  word-break: break-word;
+}
+
+.CamDivSpan2::before {
+  margin-top: -5px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.CamDivSpan2::after {
+  margin-top: -6px;
+  height: 0;
+  display: block;
+  content: "";
+}

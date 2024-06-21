@@ -21,7 +21,9 @@
   --ig-banner-background: 255, 255, 255;
   --ig-secondary-icon: 142, 142, 142;
   --ig-badge: 255, 48, 64;
+  --ig-secondary-text: 168, 168, 168;
   --ig-secondary-button-background: 239, 239, 239;
+  --ig-secondary-icon: 142, 142, 142;
   --ig-elevated-background: 255, 255, 255;
   --ig-stroke: 219, 219, 219;
   --grey-2: 219, 219, 219;
@@ -32,8 +34,10 @@
   --ig-stroke-prism: 255, 255, 255;
   --ig-toggle-background-off-prism: 219, 223, 228;
   --web-overlay-on-media: 38, 38, 38;
+  --grey-9: 38, 38, 38;
 
   --overlay-alpha-80: rgba(0, 0, 0, 0.65);
+  --hover-overlay: rgba(0, 0, 0, 0.05);
 
   --media-info: 335px;
 
@@ -43,6 +47,8 @@
   --web-always-white: 255, 255, 255;
   --ig-text-input-border-prism: 219, 233, 228;
   --ig-banner-background: 255, 255, 255;
+  --ig-stroke-on-media: 255, 255, 255;
+  --ig-text-on-media: 255, 255, 255;
 
   --grey-7: 85, 85, 85;
 
@@ -93,6 +99,7 @@
   --creation-padding-x: 64px;
 
   --ig-hover-overlay: 0, 0, 0, 0.05;
+  --ig-stroke: 219, 219, 219;
   --fds-animation-expand-collapse-in: cubic-bezier(0.17, 0.17, 0, 1);
   --fds-animation-move-in: cubic-bezier(0.17, 0.17, 0, 1);
   --fds-animation-move-out: cubic-bezier(0.17, 0.17, 0, 1);
@@ -119,6 +126,13 @@
   --ig-toggle-background-on-prism: 248, 249, 249;
   --ig-toggle-background-off-prism: 50, 53, 57;
   --ig-banner-background: 38, 38, 38;
+  --ig-highlight-background: 38, 38, 38;
+  --ig-hover-overlay: 255, 255, 255, 0.1;
+  --ig-stroke: 85, 85, 85;
+  --ig-secondary-background: 26, 26, 26;
+  --ig-secondary-button: 245, 245, 245;
+  --ig-link: 224, 241, 255;
+  --ig-primary-icon: 245, 245, 245;
 }
 
 * {

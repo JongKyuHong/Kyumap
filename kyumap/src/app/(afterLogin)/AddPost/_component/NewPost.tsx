@@ -83,26 +83,27 @@ export default function NewPost() {
         const { file, type } = preview[idx];
         console.log(file, type, "file아직 인코딩 하기 전");
         let filename = encodeURIComponent(file.name);
+        // console.log(filename, "filename");
         // 프리사인 url받기
         let result_url: any = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/image/upload?file=${filename}&type=${type}`
         );
 
         result_url = await result_url.json();
-
+        // console.log(result_url, "result_url");
         const ImageFormData = new FormData();
         Object.entries({ ...result_url.fields, file }).forEach(
           ([key, value]) => {
             ImageFormData.append(key, value as string);
           }
         );
-        console.log(ImageFormData, "imageFormData");
+        // console.log(ImageFormData, "imageFormData");
         // 업로드
         let uploadResult = await fetch(result_url.url, {
           method: "POST",
           body: ImageFormData,
         });
-        console.log(uploadResult.ok, "ok나오나???");
+        // console.log(uploadResult, "ok나오나???");
         let url = uploadResult.url + `/${type}/` + filename;
         urlformLst.push(url);
         altTextsLst.push(altTexts[idx]);
@@ -157,6 +158,9 @@ export default function NewPost() {
       });
       await queryClient.invalidateQueries({
         queryKey: ["user", session?.user?.email, "reels"],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["posts", "reels"],
       });
     },
     onError(error) {
