@@ -1,7 +1,9 @@
 "use client";
 
-import React, { ReactEventHandler, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./mainsection.module.css";
+import smallLogo from "../../../../public/smallLogo.png";
+import smallLogodark from "../../../../public/smallLogodark.png";
 import Image from "next/image";
 import Link from "next/link";
 import useDeviceSize from "./useDeviceSize";
@@ -9,6 +11,21 @@ import useDeviceSize from "./useDeviceSize";
 export default function ResponsiveNav() {
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
   const [clickedAddPost, setAddPost] = useState(false);
+  const [isDark, setDark] = useState<boolean>(false);
+
+  useEffect(() => {
+    const savedDarkMode = localStorage.getItem("darkMode");
+    if (savedDarkMode !== null) {
+      const isDark = JSON.parse(savedDarkMode);
+      console.log(isDark, "isDark");
+      setDark(isDark);
+      console.log(isDark, "isDark2");
+      document.documentElement.setAttribute(
+        "color-theme",
+        isDark ? "dark" : "light"
+      );
+    }
+  }, []);
 
   const onClickAddpost = () => {
     setAddPost(!clickedAddPost);
@@ -35,13 +52,23 @@ export default function ResponsiveNav() {
                           >
                             <div className={styles.MDiv7}>
                               <div className={styles.MDiv9}>
-                                <Image
-                                  alt="Kyumap"
-                                  src="/smallLogo.png"
-                                  aria-label="Kyumap"
-                                  width={103}
-                                  height={29}
-                                />
+                                {isDark ? (
+                                  <Image
+                                    alt="Kyumap"
+                                    src={smallLogodark}
+                                    aria-label="Kyumap"
+                                    width={103}
+                                    height={29}
+                                  />
+                                ) : (
+                                  <Image
+                                    alt="Kyumap"
+                                    src={smallLogo}
+                                    aria-label="Kyumap"
+                                    width={103}
+                                    height={29}
+                                  />
+                                )}
                               </div>
                             </div>
                             <div className={styles.MDiv8} role="none"></div>

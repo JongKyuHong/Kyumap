@@ -29,7 +29,6 @@
   .rightSectionWrapper {
     max-height: calc(100% - var(--revamp-nav-bottom-toolbar-height));
     flex-grow: 1;
-    width: 100%;
   }
 }
 
@@ -52,6 +51,7 @@
 }
 
 .rightSectionWrapper {
+  width: 100%;
   margin-left: auto;
 }
 

@@ -39,6 +39,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
   });
   const s3 = new aws.S3();
   const filename = req.nextUrl.searchParams.get("file");
+  console.log(filename, "filename api");
   const type = req.nextUrl.searchParams.get("type");
   if (!filename || !type) {
     return NextResponse.json(
@@ -47,12 +48,13 @@ export async function GET(req: NextRequest, res: NextResponse) {
     );
   }
 
-  const decodeFileName = decodeURIComponent(filename);
+  // const decodeFileName = decodeURIComponent(filename);
+
   const contentType = type === "image" ? "image/*" : "video/*";
 
   const url = s3.createPresignedPost({
     Bucket: process.env.BUCKET_NAME,
-    Fields: { key: `${type}/${decodeFileName}`, "Content-Type": contentType },
+    Fields: { key: `${type}/${filename}`, "Content-Type": contentType },
     Expires: 60, // seconds
     Conditions: [
       ["content-length-range", 0, 1048576 * 50], //파일용량 50MB 까지 제한

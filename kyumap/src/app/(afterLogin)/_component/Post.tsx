@@ -81,7 +81,9 @@ export default function Post({ post }: Props) {
     return url.split(".").pop();
   };
 
+  // console.log(post, "post오류뜨나?");
   const currentFile = post.Images[currentNumber];
+
   const fileExtension = getFileExtension(currentFile);
 
   const onClickVideo = () => {

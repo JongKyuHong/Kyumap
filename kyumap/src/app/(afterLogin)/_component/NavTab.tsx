@@ -4,25 +4,33 @@ import React, { useState, useEffect } from "react";
 import styles from "./navtab.module.css";
 import Image from "next/image";
 import smallLogo from "../../../../public/smallLogo.png";
+import smallLogodark from "../../../../public/smallLogodark.png";
+import smallLogodark2 from "../../../../public/smallLogodark2.png";
 import smallLogo2 from "../../../../public/smallLogo2.png";
 import Link from "next/link";
-import { useSelectedLayoutSegment } from "next/navigation";
 import MenuDetail from "./MenuDetail";
-import chi from "../../../../public/chi.png";
 import SearchTab from "./SearchTab";
 import useDeviceSize from "./useDeviceSize";
-// import { useSession } from "next-auth/react";
 import { Session } from "@auth/core/types";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
+import { IUser } from "../../../model/User";
+import { getUser } from "@/app/(afterLogin)/_lib/getUser";
+import { useSession } from "next-auth/react";
 
 type Props = {
-  me: Session | null;
+  me: any;
 };
 
 export default function NavTab({ me }: Props) {
   const [isEx, setEx] = useState(false);
   const [clickedMenu, setMenu] = useState(false);
   const [isMounted, setMounted] = useState(true);
+  const [isDark, setDark] = useState<boolean>(false);
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
+  // const { data: session } = useSession();
+
+  const userEmail = me?.user?.email;
+  const queryClient = useQueryClient();
 
   const onClickEx = () => {
     setEx(!isEx);
@@ -35,7 +43,29 @@ export default function NavTab({ me }: Props) {
 
   useEffect(() => {
     setMounted(true);
+    const savedDarkMode = localStorage.getItem("darkMode");
+    if (savedDarkMode !== null) {
+      const isDark = JSON.parse(savedDarkMode);
+      console.log(isDark, "isDark");
+      setDark(isDark);
+      console.log(isDark, "isDark2");
+      document.documentElement.setAttribute(
+        "color-theme",
+        isDark ? "dark" : "light"
+      );
+    }
   }, []);
+
+  useEffect(() => {
+    const hi = async () => {
+      await queryClient.invalidateQueries({ queryKey: ["users", userEmail] });
+    };
+    hi();
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("darkMode", JSON.stringify(isDark));
+  }, [isDark]);
 
   useEffect(() => {
     if (!isEx) {
@@ -45,6 +75,45 @@ export default function NavTab({ me }: Props) {
       };
     }
   }, [isEx]);
+
+  const {
+    data: userData,
+    error: userError,
+    isLoading: userLoading,
+  } = useQuery<IUser, Object, IUser, [string, string]>({
+    queryKey: ["users", userEmail as string],
+    queryFn: getUser,
+    staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
+    gcTime: 300 * 1000,
+  });
+
+  if (userLoading) {
+    return <div>로딩중...</div>;
+  }
+
+  // if (!session) {
+  //   return null;
+  // }
+
+  // useEffect(() => {
+  //   const dark = localStorage.getItem("darkMode");
+  //   console.log(dark, "dkar");
+  //   if (dark === "false") {
+  //     setDark(true);
+  //   } else {
+  //     setDark(false);
+  //   }
+  // }, [isDark]);
+
+  const onClickDark = () => {
+    if (isDark) {
+      document.documentElement.setAttribute("color-theme", "light");
+      setDark(false);
+    } else {
+      document.documentElement.setAttribute("color-theme", "dark");
+      setDark(true);
+    }
+  };
 
   return (
     <>
@@ -296,7 +365,7 @@ export default function NavTab({ me }: Props) {
                         >
                           <div className={styles.MHomeDiv}>
                             <Link
-                              href={`/profile/${me?.user?.name}`} // /profile/myid
+                              href={`/profile/${userData!.nickname}`} // /profile/myid me?.user?.name
                               role="link"
                               tabIndex={0}
                               className={styles.MHomeLink}
@@ -315,10 +384,13 @@ export default function NavTab({ me }: Props) {
                                         role="link"
                                       >
                                         <Image
-                                          alt={`${me?.user?.name}님의 프로필`}
-                                          height={24}
-                                          width={24}
-                                          src={`${me?.user?.image}`}
+                                          alt={`${
+                                            userData!.nickname
+                                          }님의 프로필`} // me?.user?.name
+                                          height={0}
+                                          width={0}
+                                          sizes="100vw"
+                                          src={`${userData!.image}`} // me?.user?.image
                                           className={styles.MImage}
                                         />
                                       </span>
@@ -372,21 +444,39 @@ export default function NavTab({ me }: Props) {
                               >
                                 <div className={styles.logoImageOuter}>
                                   <div className={styles.logoImageInner}>
-                                    <picture>
-                                      <source
-                                        srcSet={"/smallLogo2.png"}
-                                        width="24px"
-                                        height="24px"
-                                        media="(max-width: 1263px)"
-                                      />
-                                      <Image
-                                        className={styles.logo}
-                                        src={smallLogo2}
-                                        alt="logo"
-                                        width={24}
-                                        height={29}
-                                      />
-                                    </picture>
+                                    {isDark ? (
+                                      <picture>
+                                        <source
+                                          srcSet={"/smallLogodark2.png"}
+                                          width="24px"
+                                          height="24px"
+                                          media="(max-width: 1263px)"
+                                        />
+                                        <Image
+                                          className={styles.logo}
+                                          src={smallLogodark2}
+                                          alt="logo"
+                                          width={24}
+                                          height={29}
+                                        />
+                                      </picture>
+                                    ) : (
+                                      <picture>
+                                        <source
+                                          srcSet={"/smallLogo2.png"}
+                                          width="24px"
+                                          height="24px"
+                                          media="(max-width: 1263px)"
+                                        />
+                                        <Image
+                                          className={styles.logo}
+                                          src={smallLogo2}
+                                          alt="logo"
+                                          width={24}
+                                          height={29}
+                                        />
+                                      </picture>
+                                    )}
                                   </div>
                                 </div>
                               </Link>
@@ -403,21 +493,39 @@ export default function NavTab({ me }: Props) {
                           >
                             <div className={styles.logoImageOuter}>
                               <div className={styles.logoImageInner}>
-                                <picture>
-                                  <source
-                                    srcSet={"/smallLogo.png"}
-                                    width="24px"
-                                    height="24px"
-                                    media="(max-width: 1263px)"
-                                  />
-                                  <Image
-                                    className={styles.logo}
-                                    src={smallLogo}
-                                    alt="logo"
-                                    width={103}
-                                    height={29}
-                                  />
-                                </picture>
+                                {isDark ? (
+                                  <picture>
+                                    <source
+                                      srcSet={"/smallLogodark.png"}
+                                      width="24px"
+                                      height="24px"
+                                      media="(max-width: 1263px)"
+                                    />
+                                    <Image
+                                      className={styles.logo}
+                                      src={smallLogodark}
+                                      alt="logo"
+                                      width={103}
+                                      height={29}
+                                    />
+                                  </picture>
+                                ) : (
+                                  <picture>
+                                    <source
+                                      srcSet={"/smallLogo.png"}
+                                      width="24px"
+                                      height="24px"
+                                      media="(max-width: 1263px)"
+                                    />
+                                    <Image
+                                      className={styles.logo}
+                                      src={smallLogo}
+                                      alt="logo"
+                                      width={103}
+                                      height={29}
+                                    />
+                                  </picture>
+                                )}
                               </div>
                             </div>
                           </Link>
@@ -695,7 +803,7 @@ export default function NavTab({ me }: Props) {
                           >
                             <Link
                               className={styles.navLink}
-                              href={`/profile/${me?.user?.name}`}
+                              href={`/profile/${userData!.nickname}`} // me?.user?.name
                               role="link"
                               tabIndex={0}
                             >
@@ -719,7 +827,7 @@ export default function NavTab({ me }: Props) {
                                         role="link"
                                       >
                                         <Image
-                                          src={`${me?.user?.image}`}
+                                          src={`${userData!.image}`} // me?.user?.image
                                           alt="프로필"
                                           crossOrigin="anonymous"
                                           draggable="false"
@@ -798,7 +906,11 @@ export default function NavTab({ me }: Props) {
                       </div>
                     </span>
                   </div>
-                  {clickedMenu ? <MenuDetail /> : <div></div>}
+                  {clickedMenu ? (
+                    <MenuDetail onClickDark={onClickDark} darkMode={isDark} />
+                  ) : (
+                    <div></div>
+                  )}
                 </div>
               </div>
               {!isMounted && (

@@ -23,6 +23,28 @@ export const {
       return session;
     },
   },
+  events: {
+    signOut(data) {
+      // console.log(
+      //   "auth.ts events signout",
+      //   "session" in data && data.session,
+      //   "token" in data && data.token
+      // );
+      // if ('session' in data) {
+      //   data.session = null;
+      // }
+      // if ('token' in data) {
+      //   data.token = null;
+      // }
+    },
+    session(data) {
+      // console.log(
+      //   "auth.ts events session",
+      //   "session" in data && data.session,
+      //   "token" in data && data.token
+      // );
+    },
+  },
   providers: [
     CredentialsProvider({
       async authorize(credentials) {

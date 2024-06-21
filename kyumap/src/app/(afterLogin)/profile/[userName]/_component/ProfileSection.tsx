@@ -495,7 +495,10 @@ export default function ProfileSection({ userEmail, userName }: Props) {
           className={styles.PostLink}
           onClick={() => setNum(0)}
           style={{
-            color: tabNum === 0 ? "rgb(0, 0, 0)" : "rgb(115, 115, 115)",
+            color:
+              tabNum === 0
+                ? "rgb(var(--ig-primary-text))"
+                : "rgb(115, 115, 115)",
             borderTop:
               tabNum === 0 ? "1px solid rgb(var(--ig-primary-text))" : "0",
           }}
@@ -577,7 +580,10 @@ export default function ProfileSection({ userEmail, userName }: Props) {
           tabIndex={0}
           onClick={() => setNum(1)}
           style={{
-            color: tabNum === 1 ? "rgb(0, 0, 0)" : "rgb(115, 115, 115)",
+            color:
+              tabNum === 1
+                ? "rgb(var(--ig-primary-text))"
+                : "rgb(115, 115, 115)",
             borderTop:
               tabNum === 1 ? "1px solid rgb(var(--ig-primary-text))" : "0",
           }}
@@ -650,7 +656,10 @@ export default function ProfileSection({ userEmail, userName }: Props) {
             tabIndex={0}
             onClick={() => setNum(2)}
             style={{
-              color: tabNum === 2 ? "rgb(0, 0, 0)" : "rgb(115, 115, 115)",
+              color:
+                tabNum === 2
+                  ? "rgb(var(--ig-primary-text))"
+                  : "rgb(115, 115, 115)",
               borderTop:
                 tabNum === 2 ? "1px solid rgb(var(--ig-primary-text))" : "0",
             }}

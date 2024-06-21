@@ -1,15 +1,40 @@
 "use client";
 
-import React, { useState } from "react";
+import React, {
+  useState,
+  useEffect,
+  FormEventHandler,
+  ChangeEventHandler,
+} from "react";
 import styles from "./loginmodal.module.css";
 import smallLogo from "../../../../public/smallLogo.png";
+import smallLogodark from "../../../../public/smallLogodark.png";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { signIn, signOut } from "next-auth/react";
 
 export default function LoginModal() {
   const [viewPassword, setViewPassword] = useState(false);
   const router = useRouter();
+  const [isDark, setDark] = useState<boolean>(false);
+  const [id, setId] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    const savedDarkMode = localStorage.getItem("darkMode");
+    if (savedDarkMode !== null) {
+      const isDark = JSON.parse(savedDarkMode);
+      console.log(isDark, "isDark");
+      setDark(isDark);
+      console.log(isDark, "isDark2");
+      document.documentElement.setAttribute(
+        "color-theme",
+        isDark ? "dark" : "light"
+      );
+    }
+  }, []);
 
   const onClickPBtn = () => {
     setViewPassword(!viewPassword);
@@ -18,6 +43,43 @@ export default function LoginModal() {
   const onClickXbox = () => {
     router.back();
   };
+
+  const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+    setMessage("");
+    try {
+      // await signOut({ callbackUrl: "/" }).then(() => {
+      //   fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/logout`, {
+      //     method: "post",
+      //     credentials: "include",
+      //   });
+      // });
+
+      const signInResponse = await signIn("credentials", {
+        email: id,
+        password,
+        redirect: false,
+      });
+
+      if (signInResponse?.error) {
+        throw new Error(signInResponse.error);
+      }
+      router.replace("/home");
+      // router.refresh();
+    } catch (error) {
+      console.error(error);
+      setMessage("아이디와 비밀번호가 일치하지 않습니다.");
+    }
+  };
+
+  const onChangeId: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setId(e.target.value);
+  };
+
+  const onChangePassword: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setPassword(e.target.value);
+  };
+
   return (
     <div className={styles.LoginMain}>
       <div className={styles.LoginMain2}>
@@ -94,22 +156,38 @@ export default function LoginModal() {
                                     tabIndex={0}
                                     style={{ cursor: "pointer" }}
                                   >
-                                    <Image
-                                      src={smallLogo}
-                                      alt="logo"
-                                      style={{
-                                        backgroundPosition: "0px -52px",
-                                        backgroundSize: "auto",
-                                        width: "175px",
-                                        height: "51px",
-                                        backgroundRepeat: "no-repeat",
-                                        display: "inline-block",
-                                      }}
-                                    ></Image>
+                                    {isDark ? (
+                                      <Image
+                                        src={smallLogodark}
+                                        alt="logo"
+                                        style={{
+                                          backgroundPosition: "0px -52px",
+                                          backgroundSize: "auto",
+                                          width: "175px",
+                                          height: "51px",
+                                          backgroundRepeat: "no-repeat",
+                                          display: "inline-block",
+                                        }}
+                                      ></Image>
+                                    ) : (
+                                      <Image
+                                        src={smallLogo}
+                                        alt="logo"
+                                        style={{
+                                          backgroundPosition: "0px -52px",
+                                          backgroundSize: "auto",
+                                          width: "175px",
+                                          height: "51px",
+                                          backgroundRepeat: "no-repeat",
+                                          display: "inline-block",
+                                        }}
+                                      ></Image>
+                                    )}
                                   </div>
                                 </div>
                                 <div className={styles.ModalBodyMain}>
                                   <form
+                                    onSubmit={onSubmit}
                                     className={styles.LoginForm}
                                     id="loginForm"
                                     method="post"
@@ -131,7 +209,8 @@ export default function LoginModal() {
                                               autoCorrect="off"
                                               maxLength={75}
                                               type="text"
-                                              value=""
+                                              value={id}
+                                              onChange={onChangeId}
                                               name="username"
                                             ></input>
                                           </label>
@@ -159,8 +238,9 @@ export default function LoginModal() {
                                                   ? "text"
                                                   : "password"
                                               }
-                                              value=""
+                                              value={password}
                                               name="password"
+                                              onChange={onChangePassword}
                                             ></input>
                                           </label>
                                           <div className={styles.ViewPassword}>
@@ -182,11 +262,11 @@ export default function LoginModal() {
                                         <div className={styles.InfoInnerDiv}>
                                           <label className={styles.InfoLabel}>
                                             <div className={styles.CheckBoxDiv}>
-                                              {/* <div
+                                              <div
                                                 className={
                                                   styles.CheckBoxInnerDiv
                                                 }
-                                              ></div> */}
+                                              ></div>
                                               <input
                                                 dir="ltr"
                                                 aria-label="속이빈 체크 표시 아이콘"
