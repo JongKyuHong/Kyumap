@@ -1,6 +1,6 @@
 .rootDiv {
   scroll-padding-top: 32px;
-  /* overflow-y: auto; */
+  overflow-y: auto;
   padding-top: 32px;
   height: 100vh;
   background-color: rgb(var(--ig-primary-background));
@@ -8,34 +8,6 @@
   scrollbar-width: none;
   -ms-overflow-style: none;
   scroll-snap-type: y mandatory;
-  position: relative;
-  overflow: hidden;
-}
-
-@keyframes slideUp {
-  0% {
-    transform: translateY(100%);
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideDown {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(100%);
-  }
-}
-
-.slideUp {
-  animation: slideUp 0.5s ease-in-out;
-}
-
-.slideDown {
-  animation: slideDown 0.5s ease-in-out;
 }
 
 .rootDiv2 {

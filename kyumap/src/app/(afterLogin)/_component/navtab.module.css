@@ -133,7 +133,6 @@
   border-right-style: solid;
   border-right-color: rgb(var(--ig-separator));
   border-right-width: 1px;
-
   z-index: 1;
 }
 
@@ -340,6 +339,33 @@
   transition: background-color 0.3s;
 }
 
+.LinkDivExHome2 {
+  padding-top: 11px;
+  padding-bottom: 11px;
+  border-bottom-width: 1px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  border-bottom-color: rgb(var(--grey-2));
+  border-bottom-style: solid;
+  border-left-width: 1px;
+  border-right-color: rgb(var(--grey-2));
+  border-right-style: solid;
+  border-right-width: 1px;
+  padding-left: 11px;
+  border-top-color: rgb(var(--grey-2));
+  border-left-color: rgb(var(--grey-2));
+  border-top-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+  box-sizing: border-box;
+  display: inline-flex;
+  border-bottom-right-radius: 8px;
+  border-left-style: solid;
+  padding-right: 11px;
+  border-top-left-radius: 8px;
+  border-top-width: 1px;
+  border-top-style: solid;
+}
+
 .LinkDivExHome {
   padding-top: 12px;
   padding-bottom: 12px;
@@ -391,6 +417,32 @@
   color: rgb(var(--ig-primary-text));
   position: relative;
   display: block;
+}
+
+.navProfile {
+  top: 50%;
+  border-bottom-width: 2px;
+  width: 28px;
+  border-bottom-color: rgb(var(--ig-primary-text));
+  border-bottom-style: solid;
+  left: 50%;
+  height: 28px;
+  border-bottom-left-radius: 50%;
+  border-top-right-radius: 50%;
+  border-right-style: solid;
+  border-right-color: rgb(var(--ig-primary-text));
+  border-top-color: rgb(var(--ig-primary-text));
+  border-right-width: 2px;
+  border-left-color: rgb(var(--ig-primary-text));
+  border-top-width: 2px;
+  box-sizing: border-box;
+  border-left-style: solid;
+  border-left-width: 2px;
+  border-bottom-right-radius: 50%;
+  border-top-left-radius: 50%;
+  border-top-style: solid;
+  transform: translate(-50%, -50%);
+  position: absolute;
 }
 
 .navTitle {
