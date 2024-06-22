@@ -33,6 +33,7 @@ export default async function RootLayout({ children, modal }: Props) {
                             <main
                               className={styles.rootMain}
                               style={{ height: "90vh", overflowY: "auto" }}
+                              role="main"
                             >
                               {children}
                             </main>

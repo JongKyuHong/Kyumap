@@ -1,15 +1,21 @@
 "use client";
 
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect, Fragment, useTransition } from "react";
 import { useInfiniteQuery, InfiniteData } from "@tanstack/react-query";
 import { getRandomReels } from "../../_lib/getRandomReels";
 import { IPost } from "../../../../model/Post";
-import { useRouter } from "next/navigation";
 import styles from "./reels.module.css";
 import Reels from "./Reels";
-import { useInView } from "react-intersection-observer";
+import Loading from "../../home/loading";
+import crypto from "crypto";
 
 export default function ReelsParent() {
+  const [currentIndex, setCurrentIndex] = useState(
+    Number(localStorage.getItem("reelsIndex")) || 0
+  );
+  const [endIndex, setEndIndex] = useState(
+    Number(localStorage.getItem("reelsLength")) || 0
+  );
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery<
     IPost[],
     Object,
@@ -28,15 +34,77 @@ export default function ReelsParent() {
   });
 
   const allReelsData = data?.pages.flat() || [];
-  console.log(allReelsData, "allReelsData");
-  const router = useRouter();
 
-  if (allReelsData[0]) {
-    console.log(allReelsData.length, "loglog");
-    localStorage.setItem("reelsIndex", "0");
-    localStorage.setItem("reelsLength", allReelsData.length.toString());
-    router.replace(`/reels/${allReelsData[0].postId}`);
+  if (allReelsData && allReelsData.length > 0) {
+    const hashId = generateMD5Hash(
+      allReelsData[currentIndex].postId.toString()
+    );
+    history.replaceState(null, "", `/reels/${hashId}`);
   }
 
-  return null;
+  useEffect(() => {
+    if (!localStorage.getItem("reelsLength")) {
+      localStorage.setItem("reelsLength", allReelsData.length.toString());
+      setEndIndex(allReelsData.length);
+    }
+    if (!localStorage.getItem("reelsIndex")) {
+      localStorage.setItem("reelsIndex", "0");
+      setCurrentIndex(0);
+    }
+  }, []);
+
+  const handleScroll = (event: WheelEvent) => {
+    if (event.deltaY > 0) {
+      // 스크롤 다운
+      if (allReelsData) {
+        if (currentIndex < endIndex - 1) {
+          let plus = currentIndex + 1;
+          localStorage.setItem("reelsIndex", plus.toString());
+          setCurrentIndex(plus);
+        }
+      }
+    } else if (event.deltaY < 0) {
+      // 스크롤 업
+      if (allReelsData && currentIndex > 0) {
+        let minus = currentIndex - 1;
+        localStorage.setItem("reelsIndex", minus.toString());
+        setCurrentIndex(minus);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (allReelsData && allReelsData.length > 0) {
+      const hashId = generateMD5Hash(
+        allReelsData[currentIndex].postId.toString()
+      );
+      history.replaceState(null, "", `/reels/${hashId}`);
+    }
+  }, [currentIndex]);
+
+  function generateMD5Hash(data: string) {
+    return crypto.createHash("md5").update(data).digest("hex");
+  }
+
+  useEffect(() => {
+    window.addEventListener("wheel", handleScroll);
+
+    return () => {
+      window.removeEventListener("wheel", handleScroll);
+    };
+  }, [handleScroll]);
+
+  if (isFetching) {
+    return <Loading />;
+  }
+
+  return (
+    <div className={`${styles.rootDiv}`} tabIndex={0}>
+      {allReelsData.map((page, index) => (
+        <Fragment key={index}>
+          <Reels post={page} />
+        </Fragment>
+      ))}
+    </div>
+  );
 }
