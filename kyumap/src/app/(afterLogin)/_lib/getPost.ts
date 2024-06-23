@@ -1,11 +1,12 @@
 export const getPost = async ({ queryKey }: { queryKey: [string, string] }) => {
-  const [_1, id] = queryKey;
+  const [_1, postId] = queryKey;
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${id}`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${postId}`,
     {
       next: {
-        tags: ["posts", id],
+        tags: ["posts", postId],
       },
+      cache: "no-store",
       credentials: "include",
     }
   );
@@ -13,5 +14,6 @@ export const getPost = async ({ queryKey }: { queryKey: [string, string] }) => {
   if (!res.ok) {
     throw new Error("Failed to fetch data");
   }
-  return res.json();
+  const data = await res.json();
+  return data;
 };

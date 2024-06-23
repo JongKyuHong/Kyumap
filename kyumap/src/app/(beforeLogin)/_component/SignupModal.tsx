@@ -6,7 +6,6 @@ import { useFormState, useFormStatus } from "react-dom";
 import onSubmit from "../_lib/signup";
 
 function showMessage(message: string | null) {
-  console.log("message", message);
   if (message === "no_id") {
     return "아이디를 입력하세요.";
   }
@@ -19,8 +18,11 @@ function showMessage(message: string | null) {
   if (message === "no_image") {
     return "이미지를 업로드하세요.";
   }
-  if (message === "user_exists") {
-    return "이미 사용 중인 아이디입니다.";
+  if (message === "already_use_nickname") {
+    return "이미 사용 중인 닉네임입니다.";
+  }
+  if (message === "already_use_email") {
+    return "이미 사용 중인 이메일입니다.";
   }
   return "";
 }

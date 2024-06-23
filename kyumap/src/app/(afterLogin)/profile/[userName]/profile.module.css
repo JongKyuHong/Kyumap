@@ -51,13 +51,35 @@
   .HeaderSectionBlank {
     margin-bottom: 20px;
   }
+
+  /* .PostSavedLink {
+    margin-right: 60px;
+  } */
+
+  .PostVideoLink {
+    margin-right: 60px;
+  }
 }
 
-.MainDiv {
+/* .MainDiv {
   margin-bottom: 0;
   flex-grow: 1;
   margin: 0 auto 30px;
   max-width: 935px;
+} */
+
+.MainDiv {
+  margin-top: 0;
+  padding-top: 30px;
+  margin-bottom: 30px;
+  max-width: 935px;
+  width: calc(100% - 40px);
+  padding-bottom: 0;
+  margin-right: auto;
+  padding-right: 20px;
+  padding-left: 20px;
+  flex-grow: 1;
+  margin-left: auto;
 }
 
 .MainDivHeader {
@@ -148,8 +170,8 @@
 .PostLink {
   align-items: center;
   text-decoration: none;
-  border-top: 1px solid rgb(var(--ig-primary-text)) !important;
-  color: rgb(var(--ig-primary-text));
+  /* border-top: 1px solid rgb(var(--ig-primary-text)) !important; */
+  /* color: rgb(var(--ig-primary-text)); */
   margin-top: -1px !important;
   font-family: var(--font-family-system);
   cursor: pointer;
@@ -179,6 +201,84 @@
   outline: none;
 }
 
+.PostSavedLink {
+  align-items: center;
+  color: rgb(var(--ig-secondary-text));
+  text-decoration: none;
+  font-family: var(--font-family-system);
+  align-items: center;
+  cursor: pointer;
+  display: flex !important;
+  flex-direction: row;
+  height: 52px;
+  justify-content: center;
+  text-transform: uppercase;
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-bottom-style: none;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  display: inline;
+  border-left-width: 0;
+  padding-left: 0;
+  background-color: transparent;
+  touch-action: manipulation;
+  border-right-style: none;
+  border-right-width: 0;
+  box-sizing: border-box;
+  border-top-width: 0;
+  padding-right: 0;
+  margin-left: 0;
+  -webkit-tap-highlight-color: transparent;
+  border-top-style: none;
+  border-left-style: none;
+  text-align: inherit;
+  margin-right: 0;
+  list-style: none;
+  outline: none;
+}
+
+.PostVideoLink {
+  align-items: center;
+  color: rgb(var(--ig-secondary-text));
+  text-decoration: none;
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-bottom-style: none;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  display: inline;
+  border-left-width: 0;
+  padding-left: 0;
+  background-color: transparent;
+  touch-action: manipulation;
+  border-right-style: none;
+  border-right-width: 0;
+  box-sizing: border-box;
+  border-top-width: 0;
+  padding-right: 0;
+  cursor: pointer;
+  margin-left: 0;
+  -webkit-tap-highlight-color: transparent;
+  border-top-style: none;
+  border-left-style: none;
+  text-align: inherit;
+  /* margin-right: 0; */
+  list-style: none;
+  text-decoration: none;
+  outline: none;
+  font-family: var(--font-family-system);
+  align-items: center;
+  cursor: pointer;
+  display: flex !important;
+  flex-direction: row;
+  height: 52px;
+  justify-content: center;
+  text-transform: uppercase;
+}
+
 .PostLinkDiv {
   overflow-y: visible;
   overflow-x: visible;
@@ -192,7 +292,7 @@
   flex-shrink: 0;
   flex-direction: row;
   align-self: auto;
-  justify-content: flex-start;
+  justify-content: center;
   position: relative;
   flex-grow: 0;
   border-top-left-radius: 0;
@@ -1155,4 +1255,249 @@
   margin-right: 0;
   list-style: none;
   outline: none;
+}
+
+.savedDiv {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.savedDiv2 {
+  margin-top: 60px;
+  overflow-y: visible;
+  overflow-x: visible;
+  margin-bottom: 60px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  margin-left: 44px;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  margin-right: 44px;
+  border-top-right-radius: 0;
+}
+
+.savedDiv3 {
+  background-repeat: no-repeat;
+  background-position: -192px -269px;
+  height: 62px;
+  width: 62px;
+}
+
+.savedDiv4 {
+  overflow-y: visible;
+  margin-top: 24px;
+  overflow-x: visible;
+  margin-bottom: 24px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.savedDiv5 {
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-weight: 800;
+  font-size: var(--system-30-font-size);
+  color: rgb(var(--ig-primary-text));
+  text-align: center;
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  position: relative;
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  margin-left: 0 !important;
+  word-break: break-word;
+}
+
+.savedDiv5::before {
+  margin-top: -5px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.savedDiv5::after {
+  margin-top: -6px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.savedDiv6 {
+  overflow-y: visible;
+  overflow-x: visible;
+  margin-bottom: 24px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.savedDiv7 {
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-size: var(--system-14-font-size);
+  font-weight: 400;
+  color: rgb(var(--ig-primary-text));
+  text-align: center;
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  position: relative;
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  margin-left: 0 !important;
+  word-break: break-word;
+}
+
+.savedDiv7::before {
+  margin-top: -3px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.savedDiv7::after {
+  margin-top: -4px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.CamDiv3 {
+  border-color: rgb(var(--grey-9));
+  align-items: center;
+  background: transparent;
+  border-radius: 50%;
+  border-style: solid;
+  box-sizing: border-box;
+  display: inline-flex;
+  justify-content: center;
+  position: relative;
+}
+
+.CamDivSpan {
+  background-repeat: no-repeat;
+  background-position: -384px -396px;
+  height: 24px;
+  width: 24px;
+  display: block;
+}
+
+.CamDivSpanSvg {
+  /* fill: rgb(var(--grey-9)); */
+  color: rgb(var(--ig-primary-text));
+}
+
+.CamDiv4 {
+  overflow-y: visible;
+  margin-top: 32px;
+  overflow-x: visible;
+  margin-bottom: 48px;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.CamDivSpan2 {
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-weight: 800;
+  font-size: var(--system-30-font-size);
+  color: rgb(var(--ig-primary-text));
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  position: relative;
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  margin-left: 0 !important;
+  word-break: break-word;
+}
+
+.CamDivSpan2::before {
+  margin-top: -5px;
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.CamDivSpan2::after {
+  margin-top: -6px;
+  height: 0;
+  display: block;
+  content: "";
 }

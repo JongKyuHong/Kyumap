@@ -1,47 +1,54 @@
 "use client";
 import styles from "./mainsection.module.css";
-
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import chi from "../../../../public/chi.png";
 import cx from "classnames";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import { User } from "@/model/User";
+import { IUser } from "@/model/User";
 import { MouseEventHandler } from "react";
 
 type Props = {
-  user: User;
+  user: IUser;
 };
 
 export default function FollowList({ user }: Props) {
-  const { data: session } = useSession();
-  const followed = !!user.Followers?.find((v) => v.id === session?.user?.email);
+  const [followed, setFollowed] = useState(false);
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    const isFollowed = !!user.Followers?.find(
+      (v) => v.email === session?.user?.email
+    );
+    setFollowed(isFollowed);
+  }, [user, session]);
+
   const queryClient = useQueryClient();
 
   const follow = useMutation({
-    mutationFn: (userId: string) => {
-      console.log("follow", userId);
+    mutationFn: (userEmail: string) => {
       return fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${userId}/follow`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${userEmail}/follow`, //
         {
           credentials: "include",
           method: "post",
+          body: JSON.stringify(session?.user?.email),
         }
       );
     },
-    onMutate(userId: string) {
-      const value: User[] | undefined = queryClient.getQueryData([
+    onMutate(userEmail: string) {
+      const value: IUser[] | undefined = queryClient.getQueryData([
         "users",
         "followRecommends",
       ]);
       if (value) {
-        const index = value.findIndex((v) => v.id === userId);
-        console.log(value, userId, index);
-        const shallow = [...value];
+        const index = value.findIndex((v) => v.email === userEmail);
+        const shallow: any = [...value];
         shallow[index] = {
           ...shallow[index],
-          Followers: [{ id: session?.user?.email as string }],
+          Followers: [{ email: session?.user?.email as string }],
           _count: {
             ...shallow[index]._count,
             Followers: shallow[index]._count?.Followers + 1,
@@ -49,35 +56,34 @@ export default function FollowList({ user }: Props) {
         };
         queryClient.setQueryData(["users", "followRecommends"], shallow);
       }
-      const value2: User | undefined = queryClient.getQueryData([
+      const value2: IUser | undefined = queryClient.getQueryData([
         "users",
-        userId,
+        userEmail,
       ]);
       if (value2) {
         const shallow = {
           ...value2,
-          Followers: [{ id: session?.user?.email as string }],
+          Followers: [{ email: session?.user?.email as string }],
           _count: {
             ...value2._count,
             Followers: value2._count?.Followers + 1,
           },
         };
-        queryClient.setQueryData(["users", userId], shallow);
+        queryClient.setQueryData(["users", userEmail], shallow);
       }
     },
-    onError(error, userId: string) {
-      const value: User[] | undefined = queryClient.getQueryData([
+    onError(error, userEmail: string) {
+      const value: IUser[] | undefined = queryClient.getQueryData([
         "users",
         "followRecommends",
       ]);
       if (value) {
-        const index = value.findIndex((v) => v.id === userId);
-        console.log(value, userId, index);
-        const shallow = [...value];
+        const index = value.findIndex((v) => v.email === userEmail);
+        const shallow: any = [...value];
         shallow[index] = {
           ...shallow[index],
           Followers: shallow[index].Followers.filter(
-            (v) => v.id !== session?.user?.email
+            (v: any) => v.email !== session?.user?.email
           ),
           _count: {
             ...shallow[index]._count,
@@ -85,50 +91,54 @@ export default function FollowList({ user }: Props) {
           },
         };
         queryClient.setQueryData(["users", "followRecommends"], shallow);
-        const value2: User | undefined = queryClient.getQueryData([
-          "users",
-          userId,
-        ]);
-        if (value2) {
-          const shallow = {
-            ...value2,
-            Followers: value2.Followers.filter(
-              (v) => v.id !== session?.user?.email
-            ),
-            _count: {
-              ...value2._count,
-              Followers: value2._count?.Followers - 1,
-            },
-          };
-          queryClient.setQueryData(["users", userId], shallow);
-        }
       }
+      const value2: IUser | undefined = queryClient.getQueryData([
+        "users",
+        userEmail,
+      ]);
+      if (value2) {
+        const shallow = {
+          ...value2,
+          Followers: value2.Followers.filter(
+            (v) => v.email !== session?.user?.email
+          ),
+          _count: {
+            ...value2._count,
+            Followers: value2._count?.Followers - 1,
+          },
+        };
+        queryClient.setQueryData(["users", userEmail], shallow);
+      }
+    },
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: ["users", "followRecommends"],
+      });
     },
   });
   const unfollow = useMutation({
-    mutationFn: (userId: string) => {
-      console.log("unfollow", userId);
+    mutationFn: (userEmail: string) => {
       return fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${userId}/follow`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${userEmail}/follow`,
         {
           credentials: "include",
           method: "delete",
+          body: JSON.stringify(session?.user?.email),
         }
       );
     },
-    onMutate(userId: string) {
-      const value: User[] | undefined = queryClient.getQueryData([
+    onMutate(userEmail: string) {
+      const value: IUser[] | undefined = queryClient.getQueryData([
         "users",
         "followRecommends",
       ]);
       if (value) {
-        const index = value.findIndex((v) => v.id === userId);
-        console.log(value, userId, index);
-        const shallow = [...value];
+        const index = value.findIndex((v) => v.email === userEmail);
+        const shallow: any = [...value];
         shallow[index] = {
           ...shallow[index],
           Followers: shallow[index].Followers.filter(
-            (v) => v.id !== session?.user?.email
+            (v: any) => v.email !== session?.user?.email
           ),
           _count: {
             ...shallow[index]._count,
@@ -136,37 +146,36 @@ export default function FollowList({ user }: Props) {
           },
         };
         queryClient.setQueryData(["users", "followRecommends"], shallow);
-        const value2: User | undefined = queryClient.getQueryData([
-          "users",
-          userId,
-        ]);
-        if (value2) {
-          const shallow = {
-            ...value2,
-            Followers: value2.Followers.filter(
-              (v) => v.id !== session?.user?.email
-            ),
-            _count: {
-              ...value2._count,
-              Followers: value2._count?.Followers - 1,
-            },
-          };
-          queryClient.setQueryData(["users", userId], shallow);
-        }
+      }
+      const value2: IUser | undefined = queryClient.getQueryData([
+        "users",
+        userEmail,
+      ]);
+      if (value2) {
+        const shallow = {
+          ...value2,
+          Followers: value2.Followers.filter(
+            (v) => v.email !== session?.user?.email
+          ),
+          _count: {
+            ...value2._count,
+            Followers: value2._count?.Followers - 1,
+          },
+        };
+        queryClient.setQueryData(["users", userEmail], shallow);
       }
     },
-    onError(error, userId: string) {
-      const value: User[] | undefined = queryClient.getQueryData([
+    onError(error, userEmail: string) {
+      const value: IUser[] | undefined = queryClient.getQueryData([
         "users",
         "followRecommends",
       ]);
       if (value) {
-        const index = value.findIndex((v) => v.id === userId);
-        console.log(value, userId, index);
-        const shallow = [...value];
+        const index = value.findIndex((v) => v.email === userEmail);
+        const shallow: any = [...value];
         shallow[index] = {
           ...shallow[index],
-          Followers: [{ id: session?.user?.email as string }],
+          Followers: [{ email: session?.user?.email as string }],
           _count: {
             ...shallow[index]._count,
             Followers: shallow[index]._count?.Followers + 1,
@@ -174,32 +183,45 @@ export default function FollowList({ user }: Props) {
         };
         queryClient.setQueryData(["users", "followRecommends"], shallow);
       }
-      const value2: User | undefined = queryClient.getQueryData([
+      const value2: IUser | undefined = queryClient.getQueryData([
         "users",
-        userId,
+        userEmail,
       ]);
       if (value2) {
         const shallow = {
           ...value2,
-          Followers: [{ id: session?.user?.email as string }],
+          Followers: [{ email: session?.user?.email as string }],
           _count: {
             ...value2._count,
             Followers: value2._count?.Followers + 1,
           },
         };
-        queryClient.setQueryData(["users", userId], shallow);
+        queryClient.setQueryData(["users", userEmail], shallow);
       }
+    },
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: ["users", "followRecommends"],
+      });
     },
   });
   const onFollow: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
     e.preventDefault();
+    if (session?.user!.email === user.email) {
+      alert("자기자신은 팔로우 할 수 없습니다.");
+      return;
+    }
     if (followed) {
-      unfollow.mutate(user.id);
+      unfollow.mutate(user.email);
     } else {
-      follow.mutate(user.id);
+      follow.mutate(user.email);
     }
   };
+
+  if (status === "loading") {
+    return <p>로딩중...</p>;
+  }
 
   return (
     <div className={styles.RecommendtionListDiv2}>
@@ -227,7 +249,7 @@ export default function FollowList({ user }: Props) {
                         className={styles.ImageDiv2Canvas}
                       ></canvas>
                       <Link
-                        href={`${user?.id}`}
+                        href={`${user?.nickname}`}
                         role="link"
                         tabIndex={0}
                         style={{
@@ -258,7 +280,7 @@ export default function FollowList({ user }: Props) {
                     <div className={styles.IdSectionDiv}>
                       <div>
                         <Link
-                          href={`/profile/${user?.id}`}
+                          href={`/profile/${user?.nickname}`}
                           role="link"
                           tabIndex={0}
                           className={styles.IdSectionLink}

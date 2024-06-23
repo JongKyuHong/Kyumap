@@ -1,19 +1,30 @@
 import styles from "./searchtab.module.css";
 import Link from "next/link";
 import Image from "next/image";
-import { User as IUser } from "@/model/User";
+import { IUser } from "@/model/User";
 
 type Props = {
   userData: IUser;
+  onClick: (user: IUser) => void;
+  onClickMounted: () => void;
 };
 
-export default function SearchCard({ userData }: Props) {
+export default function SearchCard({
+  userData,
+  onClick,
+  onClickMounted,
+}: Props) {
+  const handleClick = () => {
+    onClick(userData);
+    onClickMounted();
+  };
   return (
     <Link
-      href={`/profile/${userData.id}`}
+      href={`/profile/${userData.nickname}`}
       className={styles.recentLink}
       role="link"
       tabIndex={0}
+      onClick={handleClick}
     >
       <div className={styles.linkInnerDiv}>
         <div className={styles.linkInnerDiv3}>
@@ -23,7 +34,7 @@ export default function SearchCard({ userData }: Props) {
                 <div className={styles.profileImage3}>
                   <object type="nested/pressable">
                     <Link
-                      href={`/profile/${userData.id}`}
+                      href={`/profile/${userData.nickname}`}
                       role="link"
                       style={{
                         height: "44px",
@@ -35,7 +46,8 @@ export default function SearchCard({ userData }: Props) {
                         width={0}
                         height={0}
                         sizes="100vw"
-                        src={userData.image}
+                        // src={userData.image}
+                        src={`${userData.image}`}
                         alt="profile이미지"
                         draggable="false"
                         crossOrigin="anonymous"
@@ -54,7 +66,7 @@ export default function SearchCard({ userData }: Props) {
                       style={{ lineHeight: "18px" }}
                       className={styles.profileId}
                     >
-                      {userData.id}
+                      {userData.nickname}
                     </span>
                   </div>
                   <span
@@ -62,47 +74,9 @@ export default function SearchCard({ userData }: Props) {
                     className={styles.profileBodySpan}
                   >
                     <span className={styles.profileBodySpan2}>
-                      {userData.nickname}
+                      {userData.Info.intro}
                     </span>
                   </span>
-                </div>
-              </div>
-            </div>
-            <div className={styles.profileXbox}>
-              <div className={styles.profileXbox2}>
-                <div className={styles.profileXbox3} role="button" tabIndex={0}>
-                  <div className={styles.profileXbox4}>
-                    <svg
-                      aria-label="닫기"
-                      className={styles.XboxSvg}
-                      fill="currentColor"
-                      height="16"
-                      role="img"
-                      viewBox="0 0 24 24"
-                      width="16"
-                    >
-                      <title>닫기</title>
-                      <polyline
-                        fill="none"
-                        points="20.643 3.357 12 12 3.353 20.647"
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="3"
-                      ></polyline>
-                      <line
-                        fill="none"
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="3"
-                        x1="20.649"
-                        x2="3.354"
-                        y1="20.649"
-                        y2="3.354"
-                      ></line>
-                    </svg>
-                  </div>
                 </div>
               </div>
             </div>

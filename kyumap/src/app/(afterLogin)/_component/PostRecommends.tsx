@@ -3,7 +3,7 @@
 import { useInfiniteQuery, InfiniteData } from "@tanstack/react-query";
 import { getPostRecommends } from "../_lib/getPostRecommends";
 import Post from "@/app/(afterLogin)/_component/Post";
-import { Post as IPost } from "@/model/Post";
+import { IPost } from "@/model/Post";
 import { Fragment, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 
@@ -21,6 +21,7 @@ export default function PostRecommends() {
     getNextPageParam: (lastPage) => lastPage.at(-1)?.postId,
     staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
     gcTime: 300 * 1000,
+    refetchOnWindowFocus: true,
   });
   const { ref, inView } = useInView({
     threshold: 0,

@@ -32,6 +32,13 @@
   border-top-right-radius: 0;
 }
 
+.mainrootDiv {
+  width: 100%;
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+}
+
 .postDivInner {
   max-width: 100%;
   width: min(470px, 100vw);
@@ -75,7 +82,7 @@
   flex-direction: column;
   height: 85px;
   outline: none;
-  overflow-y: hidden;
+  /* overflow-y: hidden; */
   position: relative;
 }
 
@@ -103,7 +110,7 @@
   height: 100%;
   position: relative;
   overflow-x: auto;
-  overflow-y: hidden;
+  /* overflow-y: hidden; */
 }
 
 .rootDivInner7 {

@@ -78,9 +78,9 @@ export default function SmallScreenVerNewPost() {
                               <line
                                 fill="none"
                                 stroke="currentColor"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
                                 x1="21"
                                 x2="3"
                                 y1="3"
@@ -89,9 +89,9 @@ export default function SmallScreenVerNewPost() {
                               <line
                                 fill="none"
                                 stroke="currentColor"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
                                 x1="21"
                                 x2="3"
                                 y1="21"
@@ -118,6 +118,7 @@ export default function SmallScreenVerNewPost() {
                                   height={0}
                                   width={0}
                                   sizes="100vw"
+                                  priority={true}
                                   style={{
                                     // height: "100%",
                                     // width: "150%",

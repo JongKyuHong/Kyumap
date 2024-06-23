@@ -6,7 +6,6 @@ import {
 import { getComments } from "@/app/(afterLogin)/_lib/getComments";
 import { getPost } from "@/app/(afterLogin)/_lib/getPost";
 import DetailPage from "./_component/DetailPage";
-import RQProvider from "@/app/(afterLogin)/_component/RQProvider";
 
 type Props = {
   params: {
@@ -26,13 +25,14 @@ export default async function page({ params }: Props) {
     queryKey: ["posts", postId],
     queryFn: getPost,
   });
+  const post = await getPost({ queryKey: ["posts", postId] });
+  console.log(post, "page post");
   const dehydrateState = dehydrate(queryClient);
 
+  if (!post) return null;
+
   return (
-    <RQProvider>
-      <HydrationBoundary state={dehydrateState}>
-        <DetailPage postId={postId} />
-      </HydrationBoundary>
-    </RQProvider>
+    // <HydrationBoundary state={dehydrateState}></HydrationBoundary>
+    <DetailPage post={post} />
   );
 }

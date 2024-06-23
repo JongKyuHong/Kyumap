@@ -4,6 +4,7 @@ import RQProvider from "./_component/RQProvider";
 import { auth } from "@/auth";
 import NavTab from "./_component/NavTab";
 import FollowRecommendSection from "./_component/FollowRecommendSection";
+import Nav from "./_component/Nav";
 
 type Props = { children: ReactNode; modal: ReactNode };
 
@@ -23,15 +24,18 @@ export default async function RootLayout({ children, modal }: Props) {
               <div className={styles.leafParent}>
                 <div className={styles.leafChild}>
                   <div className={styles.container} style={{ height: "100%" }}>
-                    {session?.user && (
+                    {session && session.user && (
                       <>
-                        <NavTab me={session} />
+                        {/* <NavTab me={session} /> */}
+                        <Nav />
                         <div className={styles.rightSectionWrapper}>
                           <section className={styles.rootSection}>
-                            <main className={styles.rootMain}>
-                              <div className={styles.mainrootDiv}>
-                                {children}
-                              </div>
+                            <main
+                              className={styles.rootMain}
+                              style={{ height: "90vh", overflowY: "auto" }}
+                              role="main"
+                            >
+                              {children}
                             </main>
                           </section>
                         </div>
