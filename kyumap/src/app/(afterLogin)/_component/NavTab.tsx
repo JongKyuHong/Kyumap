@@ -83,11 +83,11 @@ export default function NavTab({ me }: Props) {
   }, [pathname]);
 
   useEffect(() => {
-    const hi = async () => {
+    const invalidateQuery = async () => {
       await queryClient.invalidateQueries({ queryKey: ["users", userEmail] });
     };
-    hi();
-  }, []);
+    invalidateQuery();
+  }, [queryClient, userEmail]);
 
   useEffect(() => {
     localStorage.setItem("darkMode", JSON.stringify(isDark));
@@ -492,7 +492,7 @@ export default function NavTab({ me }: Props) {
                                           src={smallLogodark2}
                                           alt="logo"
                                           width={24}
-                                          height={29}
+                                          height={24}
                                         />
                                       </picture>
                                     ) : (
@@ -684,7 +684,7 @@ export default function NavTab({ me }: Props) {
                               <div
                                 className={
                                   isEx || !isDesktop
-                                    ? styles.LinkDivExHome2
+                                    ? styles.LinkDivExHome
                                     : styles.LinkDivHome
                                 }
                               >

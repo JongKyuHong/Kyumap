@@ -58,13 +58,14 @@ export default function Post({ post }: Props) {
       threshold: 0.5, // 비디오의 50%가 보일 때 트리거
     });
 
-    if (videoRef.current) {
-      observer.observe(videoRef.current);
+    const videoElement = videoRef.current;
+    if (videoElement) {
+      observer.observe(videoElement);
     }
 
     return () => {
-      if (videoRef.current) {
-        observer.unobserve(videoRef.current);
+      if (videoElement) {
+        observer.unobserve(videoElement);
       }
     };
   }, [handleIntersection]);

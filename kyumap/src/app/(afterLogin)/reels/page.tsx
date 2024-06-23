@@ -7,7 +7,7 @@ import {
 import { getRandomReels } from "../_lib/getRandomReels";
 import ReelsParent from "./_component/ReelsParent";
 
-export default async function () {
+export default async function Page() {
   const queryClient = new QueryClient();
   await queryClient.prefetchInfiniteQuery({
     queryKey: ["posts", "reels"],

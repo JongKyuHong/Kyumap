@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import styles from "./menudetail.module.css";
-import { useCallback, useState, useEffect } from "react";
+import { useState } from "react";
 import DarkMode from "./DarkMode";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
@@ -16,38 +16,12 @@ type Props = {
 export default function MenuDetail({ darkMode, onClickDark }: Props) {
   const queryClient = useQueryClient();
   const [clicked, setClicked] = useState(false);
-  // const [darkMode, setDark] = useState(false);
-
   const router = useRouter();
   const { data: session } = useSession();
 
-  // useEffect(() => {
-  //   const savedDarkMode = localStorage.getItem("darkMode");
-  //   if (savedDarkMode !== null) {
-  //     const isDark = JSON.parse(savedDarkMode);
-  //     setDark(isDark);
-  //     document.documentElement.setAttribute(
-  //       "color-theme",
-  //       isDark ? "dark" : "light"
-  //     );
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   localStorage.setItem("darkMode", JSON.stringify(darkMode));
-  // }, [darkMode]);
-
-  // const onClickDark = () => {
-  //   if (darkMode) {
-  //     setDark(false);
-  //   } else {
-  //     setDark(true);
-  //   }
-  // };
-
-  const onClickBtn = useCallback(() => {
+  const onClickBtn = () => {
     setClicked((clicked) => !clicked);
-  }, [clicked]);
+  };
 
   const onClickLogOut = () => {
     queryClient.invalidateQueries({

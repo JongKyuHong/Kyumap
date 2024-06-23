@@ -38,7 +38,7 @@ export default function Page() {
     };
 
     getUserData();
-  }, []);
+  }, [session]);
 
   const handleTextAreaChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const value = event.target.value;
