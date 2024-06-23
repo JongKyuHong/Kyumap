@@ -640,12 +640,12 @@ export default function ActionButtons({ post }: Props) {
                         {"#해시태그 내용#누르면 해시태그 검색 창으로"}
                       </Link>
                     ))} */}
-                <Link
+                {/* <Link
                   href={`/explore/tags/${post.hashTag}`}
                   className={styles.hashTag}
                 >
                   {"#해시태그 내용#누르면 해시태그 검색 창으로"}
-                </Link>
+                </Link> */}
               </span>
             </span>
           </div>

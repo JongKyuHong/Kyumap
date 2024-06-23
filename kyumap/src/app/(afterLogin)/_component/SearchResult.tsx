@@ -18,7 +18,6 @@ export default function SearchResult({
   addToHistory,
   onClickMounted,
 }: Props) {
-  if (!searchParams) return null;
   const { data } = useQuery<IUser[], Object, IUser[], [string, string]>({
     queryKey: ["search", searchParams],
     queryFn: getSearchResult,

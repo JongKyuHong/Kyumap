@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Fragment, useTransition } from "react";
+import { useState, useEffect, Fragment, useCallback, useMemo } from "react";
 import { useInfiniteQuery, InfiniteData } from "@tanstack/react-query";
 import { getRandomReels } from "../../_lib/getRandomReels";
 import { IPost } from "../../../../model/Post";
@@ -33,7 +33,9 @@ export default function ReelsParent() {
     refetchOnMount: true,
   });
 
-  const allReelsData = data?.pages.flat() || [];
+  const allReelsData = useMemo(() => {
+    return data?.pages.flat() || [];
+  }, []);
 
   if (allReelsData && allReelsData.length > 0) {
     const hashId = generateMD5Hash(
@@ -51,27 +53,30 @@ export default function ReelsParent() {
       localStorage.setItem("reelsIndex", "0");
       setCurrentIndex(0);
     }
-  }, []);
+  }, [allReelsData.length]);
 
-  const handleScroll = (event: WheelEvent) => {
-    if (event.deltaY > 0) {
-      // 스크롤 다운
-      if (allReelsData) {
-        if (currentIndex < endIndex - 1) {
-          let plus = currentIndex + 1;
-          localStorage.setItem("reelsIndex", plus.toString());
-          setCurrentIndex(plus);
+  const handleScroll = useCallback(
+    (event: WheelEvent) => {
+      if (event.deltaY > 0) {
+        // 스크롤 다운
+        if (allReelsData) {
+          if (currentIndex < endIndex - 1) {
+            let plus = currentIndex + 1;
+            localStorage.setItem("reelsIndex", plus.toString());
+            setCurrentIndex(plus);
+          }
+        }
+      } else if (event.deltaY < 0) {
+        // 스크롤 업
+        if (allReelsData && currentIndex > 0) {
+          let minus = currentIndex - 1;
+          localStorage.setItem("reelsIndex", minus.toString());
+          setCurrentIndex(minus);
         }
       }
-    } else if (event.deltaY < 0) {
-      // 스크롤 업
-      if (allReelsData && currentIndex > 0) {
-        let minus = currentIndex - 1;
-        localStorage.setItem("reelsIndex", minus.toString());
-        setCurrentIndex(minus);
-      }
-    }
-  };
+    },
+    [allReelsData, currentIndex, endIndex]
+  );
 
   useEffect(() => {
     if (allReelsData && allReelsData.length > 0) {
@@ -80,7 +85,7 @@ export default function ReelsParent() {
       );
       history.replaceState(null, "", `/reels/${hashId}`);
     }
-  }, [currentIndex]);
+  }, [currentIndex, allReelsData]);
 
   function generateMD5Hash(data: string) {
     return crypto.createHash("md5").update(data).digest("hex");

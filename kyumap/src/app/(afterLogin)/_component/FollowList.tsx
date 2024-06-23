@@ -25,10 +25,6 @@ export default function FollowList({ user }: Props) {
     setFollowed(isFollowed);
   }, [user, session]);
 
-  if (status === "loading") {
-    return <p>로딩중...</p>;
-  }
-
   const queryClient = useQueryClient();
 
   const follow = useMutation({
@@ -222,6 +218,10 @@ export default function FollowList({ user }: Props) {
       follow.mutate(user.email);
     }
   };
+
+  if (status === "loading") {
+    return <p>로딩중...</p>;
+  }
 
   return (
     <div className={styles.RecommendtionListDiv2}>

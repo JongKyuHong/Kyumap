@@ -23,16 +23,19 @@ type Props = {
 export default function Saved({ userEmail, userName }: Props) {
   const router = useRouter();
   const queryClient = useQueryClient();
-  console.log(userEmail, "userEmail");
   const { data: session, status } = useSession();
 
-  if (status === "loading") return; // 세션 상태를 로딩 중인 경우 대기
-  if (!session) {
-    router.push("/login"); // 로그인 페이지로 리다이렉트
-  } else if (session && session!.user!.email !== userEmail) {
-    // router.push(`/profile/${userName}`);
-    redirect(`/profile/${userName}`);
-  }
+  useEffect(() => {
+    if (status === "loading") {
+      return; // 세션 상태를 로딩 중인 경우 효과 실행 중지
+    }
+
+    if (!session) {
+      router.push("/login"); // 로그인 페이지로 리다이렉트
+    } else if (session && session!.user!.email !== userEmail) {
+      redirect(`/profile/${userName}`);
+    }
+  }, [status, session, userEmail, router, userName]);
 
   const { data, fetchNextPage, hasNextPage, isFetching, error } =
     useInfiniteQuery<
@@ -49,7 +52,6 @@ export default function Saved({ userEmail, userName }: Props) {
       staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
       gcTime: 300 * 1000,
     });
-  // console.log(data, "data");
 
   const user = queryClient.getQueryData(["users", userEmail]);
 
@@ -67,7 +69,13 @@ export default function Saved({ userEmail, userName }: Props) {
   const chunkSize = 3;
   const UserPost = [];
 
-  console.log(data, "저장됨 데이터");
+  // if (status === "loading") return; // 세션 상태를 로딩 중인 경우 대기
+  // if (!session) {
+  //   router.push("/login"); // 로그인 페이지로 리다이렉트
+  // } else if (session && session!.user!.email !== userEmail) {
+  //   // router.push(`/profile/${userName}`);
+  //   redirect(`/profile/${userName}`);
+  // }
 
   if (data && data.pages) {
     const platData = data.pages.flat();
@@ -81,8 +89,6 @@ export default function Saved({ userEmail, userName }: Props) {
   };
 
   if (!user) return null;
-
-  console.log(UserPost, "userPost");
 
   return (
     <>

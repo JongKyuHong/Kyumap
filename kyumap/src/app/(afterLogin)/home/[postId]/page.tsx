@@ -9,7 +9,7 @@ export default function Page() {
 
   useEffect(() => {
     router.push("/home");
-  }, []);
+  }, [router]);
 
   return null;
 }
