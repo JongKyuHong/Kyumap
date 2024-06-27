@@ -104,6 +104,13 @@ export default function SignupModal() {
               </button>
               <div className={styles.error}>{showMessage(state?.message)}</div>
             </div>
+            <div>
+              <div className={styles.submitBtn}>
+                <button className={styles.submitBtn2} disabled type="submit">
+                  가입
+                </button>
+              </div>
+            </div>
           </form>
         </div>
       </div>
