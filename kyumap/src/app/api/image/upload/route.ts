@@ -26,7 +26,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     lst.push(url);
   }
 
-  return NextResponse.json(lst, { status: 200 });
+  return NextResponse.json({ data: lst, status: 200 });
 }
 
 export async function GET(req: NextRequest, res: NextResponse) {
@@ -42,10 +42,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
   console.log(filename, "filename api");
   const type = req.nextUrl.searchParams.get("type");
   if (!filename || !type) {
-    return NextResponse.json(
-      { error: "Invalid file or type" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "Invalid file or type", status: 400 });
   }
 
   // const decodeFileName = decodeURIComponent(filename);
@@ -62,5 +59,5 @@ export async function GET(req: NextRequest, res: NextResponse) {
     ],
   });
 
-  return NextResponse.json(url, { status: 200 });
+  return NextResponse.json({ data: url, status: 200 });
 }

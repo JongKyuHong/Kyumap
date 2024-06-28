@@ -11,7 +11,6 @@ type Props = {
 export async function GET(req: NextRequest, { params }: Props) {
   await dbConnect();
   const email = decodeURIComponent(params.userEmail);
-
   const userData = await User.findOne({ email: email });
   return NextResponse.json(userData);
 }

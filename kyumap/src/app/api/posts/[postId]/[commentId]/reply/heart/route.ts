@@ -24,7 +24,7 @@ export async function POST(req: NextRequest, { params }: Props) {
     { new: true } // 업데이트된 문서를 반환합니다.
   );
   if (!comment) {
-    return NextResponse.json({ message: "Comment not found" }, { status: 404 });
+    return NextResponse.json({ message: "Comment not found", status: 404 });
   }
 
   return NextResponse.json(comment);

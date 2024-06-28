@@ -56,9 +56,6 @@ export async function DELETE(req: NextRequest, { params }: Props) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Internal Server Error", status: 500 });
   }
 }

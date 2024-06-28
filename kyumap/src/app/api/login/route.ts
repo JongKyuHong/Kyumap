@@ -8,7 +8,7 @@ export async function POST(req: Request) {
   const res = await User.findOne({ email: reqBody.email });
 
   if (!res) {
-    return NextResponse.json({ error: "User not found" }, { status: 404 });
+    return NextResponse.json({ error: "User not found", status: 404 });
   }
 
   return NextResponse.json(res);

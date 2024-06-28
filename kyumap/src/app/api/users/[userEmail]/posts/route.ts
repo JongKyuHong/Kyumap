@@ -34,9 +34,10 @@ export async function GET(req: NextRequest, { params }: Props) {
   } catch (error) {
     console.error(error);
 
-    return NextResponse.json(
-      { success: false, message: "Failed to fetch data" },
-      { status: 500 }
-    );
+    return NextResponse.json({
+      success: false,
+      message: "Failed to fetch data",
+      status: 500,
+    });
   }
 }

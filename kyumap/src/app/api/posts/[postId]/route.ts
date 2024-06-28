@@ -27,21 +27,21 @@ export async function DELETE(req: NextRequest, { params }: Props) {
     });
     console.log(post, "post");
     if (!post) {
-      return NextResponse.json(
-        { error: "게시글을 찾을 수 없거나 권한이 없습니다." },
-        { status: 400 }
-      );
+      return NextResponse.json({
+        error: "게시글을 찾을 수 없거나 권한이 없습니다.",
+        status: 400,
+      });
     }
 
-    return NextResponse.json(
-      { message: "게시글이 삭제되었습니다." },
-      { status: 200 }
-    );
+    return NextResponse.json({
+      message: "게시글이 삭제되었습니다.",
+      status: 200,
+    });
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
-      { error: "서버 오류가 발생하였습니다." },
-      { status: 500 }
-    );
+    return NextResponse.json({
+      error: "서버 오류가 발생하였습니다.",
+      status: 500,
+    });
   }
 }

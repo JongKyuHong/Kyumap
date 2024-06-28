@@ -46,6 +46,7 @@ const signup = async (prevState: any, formData: FormData) => {
       }
     );
     const checkDuplicateResult = await checkDuplicate.json();
+    console.log(checkDuplicateResult, "response");
     if (checkDuplicateResult.status === 400) {
       return { message: checkDuplicateResult.message };
     }

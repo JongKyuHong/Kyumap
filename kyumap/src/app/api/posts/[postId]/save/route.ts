@@ -21,12 +21,12 @@ export async function POST(req: NextRequest, { params }: Props) {
     );
 
     if (user) {
-      return NextResponse.json(user, { status: 200 });
+      return NextResponse.json({ data: user, status: 200 });
     } else {
       return NextResponse.json({ status: 404 });
     }
   } catch (error) {
-    return NextResponse.json(error, { status: 500 });
+    return NextResponse.json({ data: error, status: 500 });
   }
 }
 
@@ -43,11 +43,11 @@ export async function DELETE(req: NextRequest, { params }: Props) {
     );
 
     if (user) {
-      return NextResponse.json(user, { status: 200 });
+      return NextResponse.json({ data: user, status: 200 });
     } else {
       return NextResponse.json({ status: 404 });
     }
   } catch (error) {
-    return NextResponse.json(error, { status: 500 });
+    return NextResponse.json({ data: error, status: 500 });
   }
 }

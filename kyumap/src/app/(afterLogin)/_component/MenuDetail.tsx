@@ -24,6 +24,7 @@ export default function MenuDetail({ darkMode, onClickDark }: Props) {
   };
 
   const onClickLogOut = () => {
+    console.log("여기 들어온거 아니지?");
     queryClient.invalidateQueries({
       queryKey: ["posts"],
     });
@@ -218,7 +219,7 @@ export default function MenuDetail({ darkMode, onClickDark }: Props) {
                               <div
                                 className={styles.linkDivv}
                                 style={{ cursor: "pointer" }}
-                                onClick={onClickLogOut}
+                                // onClick={onClickLogOut}
                               >
                                 <div className={styles.linkDiv}>
                                   <div className={styles.linkInnerDiv}>

@@ -11,19 +11,18 @@ import Link from "next/link";
 import MenuDetail from "./MenuDetail";
 import SearchTab from "./SearchTab";
 import useDeviceSize from "./useDeviceSize";
-import { Session } from "@auth/core/types";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { IUser } from "../../../model/User";
 import { getUser } from "@/app/(afterLogin)/_lib/getUser";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 type Props = {
   me: any;
 };
 
-export default function NavTab({ me }: Props) {
+export default function NavTab() {
   const pathname = usePathname();
-  console.log(pathname, "pathname");
   const [isEx, setEx] = useState(false);
   const [clickedMenu, setMenu] = useState(false);
   const [isMounted, setMounted] = useState(true);
@@ -38,9 +37,10 @@ export default function NavTab({ me }: Props) {
     pathname.startsWith("/profile") ? true : false
   );
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
-  // const { data: session } = useSession();
+  const { data: session } = useSession();
 
-  const userEmail = me?.user?.email;
+  // const userEmail = me?.user?.email;
+  const userEmail = session?.user?.email;
   const queryClient = useQueryClient();
 
   const onClickEx = () => {
