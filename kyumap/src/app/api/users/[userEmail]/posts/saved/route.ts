@@ -16,10 +16,11 @@ export async function GET(req: NextRequest, { params }: Props) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   // userEmail이 이메일 형식에 맞지 않을 경우, 에러 메시지와 함께 응답을 반환합니다.
   if (!emailRegex.test(userEmail)) {
-    return NextResponse.json(
-      { success: false, message: "Invalid email format" },
-      { status: 400 }
-    );
+    return NextResponse.json({
+      success: false,
+      message: "Invalid email format",
+      status: 400,
+    });
   }
 
   try {
@@ -29,10 +30,11 @@ export async function GET(req: NextRequest, { params }: Props) {
     const user = await User.findOne({ email: userEmail });
 
     if (!user) {
-      return NextResponse.json(
-        { success: false, message: "User not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({
+        success: false,
+        message: "User not found",
+        status: 404,
+      });
     }
 
     // 유저의 Saved 필드에서 postId들을 추출합니다.
@@ -53,9 +55,10 @@ export async function GET(req: NextRequest, { params }: Props) {
   } catch (error) {
     console.error(error);
 
-    return NextResponse.json(
-      { success: false, message: "Failed to fetch data" },
-      { status: 500 }
-    );
+    return NextResponse.json({
+      success: false,
+      message: "Failed to fetch data",
+      status: 500,
+    });
   }
 }

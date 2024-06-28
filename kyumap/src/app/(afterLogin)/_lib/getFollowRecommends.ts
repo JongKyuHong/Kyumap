@@ -12,10 +12,11 @@ export async function getFollowRecommends(userEmail: string) {
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.
 
-  if (!res.ok) {
+  const data = await res.json();
+  if (data.status === 500) {
     // This will activate the closest `error.js` Error Boundary
     throw new Error("Failed to fetch data");
   }
-  const data = await res.json();
-  return data;
+
+  return data.data;
 }

@@ -20,7 +20,7 @@ export default async function Nav() {
 
   return (
     <HydrationBoundary state={dehydrateState}>
-      <NavTab me={session} />
+      <NavTab />
     </HydrationBoundary>
   );
 }

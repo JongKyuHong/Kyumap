@@ -13,6 +13,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn, signOut } from "next-auth/react";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function LoginModal() {
   const [viewPassword, setViewPassword] = useState(false);
@@ -21,6 +22,7 @@ export default function LoginModal() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const savedDarkMode = localStorage.getItem("darkMode");
@@ -61,10 +63,15 @@ export default function LoginModal() {
         redirect: false,
       });
 
+      console.log(signInResponse, "asdf");
+
       if (signInResponse?.error) {
         throw new Error(signInResponse.error);
       }
-      router.replace("/home");
+      if (signInResponse!.ok) {
+        router.replace("/home");
+      }
+
       // router.refresh();
     } catch (error) {
       console.error(error);

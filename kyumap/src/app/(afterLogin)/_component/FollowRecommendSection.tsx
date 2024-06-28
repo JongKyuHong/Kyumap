@@ -15,8 +15,9 @@ import { useSession } from "next-auth/react";
 //   me: Session | null;
 // };
 
-export default function FollowRecommendSection({ session }: any) {
+export default function FollowRecommendSection() {
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
+  const { data: session } = useSession();
   const { data: RecommendsData, isLoading } = useQuery<IUser[]>({
     queryKey: ["users", "followRecommends", session?.user!.email],
     queryFn: () => getFollowRecommends(session?.user!.email as string),

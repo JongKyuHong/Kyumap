@@ -43,13 +43,13 @@ export default function SignupModal() {
             <div className={styles.modalBody}>
               <div className={styles.inputDiv}>
                 <label className={styles.inputLabel} htmlFor="id">
-                  아이디
+                  이메일
                 </label>
                 <input
                   id="id"
                   name="id"
                   className={styles.input}
-                  type="text"
+                  type="email"
                   placeholder=""
                   required
                 />
@@ -103,13 +103,6 @@ export default function SignupModal() {
                 가입하기
               </button>
               <div className={styles.error}>{showMessage(state?.message)}</div>
-            </div>
-            <div>
-              <div className={styles.submitBtn}>
-                <button className={styles.submitBtn2} disabled type="submit">
-                  가입
-                </button>
-              </div>
             </div>
           </form>
         </div>
