@@ -23,12 +23,37 @@ import useDeviceSize from "../../_component/useDeviceSize";
 import { IPost } from "@/model/Post";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
+import MapComponent from "./MapComponent";
 
 interface PreviewItem {
   dataUrl: string;
   file: File;
   type: "image" | "video";
   thumbnailUrl?: string;
+}
+
+async function getCoordinatesFromAddress(address: string) {
+  const apiKey = `${process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY}`;
+  const url = `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(
+    address
+  )}`;
+
+  console.log(address, "address");
+
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `KakaoAK ${apiKey}`,
+    },
+  });
+
+  const data = await response.json();
+
+  if (data.documents.length > 0) {
+    const { y: latitude, x: longitude } = data.documents[0].address;
+    return { latitude, longitude };
+  } else {
+    throw new Error("Address not found");
+  }
 }
 
 export default function NewPost() {
@@ -47,6 +72,7 @@ export default function NewPost() {
   const [isCommentHide, setCommentHide] = useState<boolean>(false);
   const [altTexts, setAltTexts] = useState(preview.map(() => "")); // 대체 텍스트
   const [darktheme, setTheme] = useState<boolean>(false);
+  const [location, setLocation] = useState<string>("");
 
   useEffect(() => {
     const rootElement = document.documentElement;
@@ -116,8 +142,13 @@ export default function NewPost() {
       } else {
         postFormData.append("reels", false.toString());
       }
+
+      const { latitude, longitude } = await getCoordinatesFromAddress(location);
+
       postFormData.append("images", JSON.stringify(urlformLst));
       postFormData.append("altTexts", JSON.stringify(altTextsLst));
+      postFormData.append("lat", latitude);
+      postFormData.append("lng", longitude);
       postFormData.append("isHideInfo", isArticleInfoHide.toString());
       postFormData.append("isHideComments", isCommentHide.toString());
 
@@ -1545,35 +1576,10 @@ export default function NewPost() {
                                       </div>
                                       <div className={styles.locationDiv}>
                                         <div className={styles.locationDiv2}>
-                                          <label
-                                            className={styles.locationDiv3}
-                                            style={{ height: "44px" }}
-                                          >
-                                            <input
-                                              autoComplete="off"
-                                              spellCheck="true"
-                                              type="text"
-                                              name="creation-location-input"
-                                              placeholder="위치 추가"
-                                              className={styles.locationInput}
-                                            ></input>
-                                            <div
-                                              className={styles.locationSvgDiv}
-                                            >
-                                              <svg
-                                                aria-label="위치 추가"
-                                                className={styles.locationSvg}
-                                                fill="currentColor"
-                                                height="16"
-                                                role="img"
-                                                viewBox="0 0 24 24"
-                                                width="16"
-                                              >
-                                                <title>위치 추가</title>
-                                                <path d="M12.053 8.105a1.604 1.604 0 1 0 1.604 1.604 1.604 1.604 0 0 0-1.604-1.604Zm0-7.105a8.684 8.684 0 0 0-8.708 8.66c0 5.699 6.14 11.495 8.108 13.123a.939.939 0 0 0 1.2 0c1.969-1.628 8.109-7.424 8.109-13.123A8.684 8.684 0 0 0 12.053 1Zm0 19.662C9.29 18.198 5.345 13.645 5.345 9.66a6.709 6.709 0 0 1 13.417 0c0 3.985-3.944 8.538-6.709 11.002Z"></path>
-                                              </svg>
-                                            </div>
-                                          </label>
+                                          <MapComponent
+                                            location={location}
+                                            setLocation={setLocation}
+                                          />
                                         </div>
                                       </div>
                                       <div className={styles.AccessibilityDiv}>
