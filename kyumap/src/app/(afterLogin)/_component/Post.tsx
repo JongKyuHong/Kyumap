@@ -513,12 +513,12 @@ export default function Post({ post }: Props) {
                                     r="14"
                                     fill="rgba(240, 240, 240, 0.8)"
                                     stroke="lightgray"
-                                    stroke-width="2"
+                                    strokeWidth="2"
                                   />
                                   <path
                                     d="M18 11l-6 6 6 6"
                                     stroke="gray"
-                                    stroke-width="2"
+                                    strokeWidth="2"
                                     fill="none"
                                   />
                                 </svg>
@@ -567,12 +567,12 @@ export default function Post({ post }: Props) {
                                     r="14"
                                     fill="rgba(240, 240, 240, 0.8)"
                                     stroke="lightgray"
-                                    stroke-width="2"
+                                    strokeWidth="2"
                                   />
                                   <path
                                     d="M12 11l6 6-6 6"
                                     stroke="gray"
-                                    stroke-width="2"
+                                    strokeWidth="2"
                                     fill="none"
                                   />
                                 </svg>

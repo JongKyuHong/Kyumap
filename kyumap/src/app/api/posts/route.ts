@@ -54,6 +54,8 @@ export async function POST(req: NextRequest) {
   const userImage = reqBody.get("userImage");
   const userName = reqBody.get("userName");
   const content = reqBody.get("content");
+  const lat = reqBody.get("lat");
+  const lng = reqBody.get("lng");
   const isHideInfo = reqBody.get("isHideInfo") === "true"; // 문자열로 받은 값 다시 boolean으로 변환
   const isHideComments = reqBody.get("isHideComments") === "true";
   const reels = reqBody.get("reels") === "true";
@@ -108,6 +110,10 @@ export async function POST(req: NextRequest) {
       hideLikesAndViews: isHideInfo,
       hideComments: isHideComments,
       reels: reels,
+      position: {
+        lat: lat,
+        lng: lng,
+      },
       _count: {
         Hearts: 0,
         Comments: 0,
@@ -130,4 +136,3 @@ export async function POST(req: NextRequest) {
     await redis.del(lockKey);
   }
 }
-
