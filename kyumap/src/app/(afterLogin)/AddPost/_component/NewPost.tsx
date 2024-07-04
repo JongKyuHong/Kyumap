@@ -154,6 +154,9 @@ export default function NewPost() {
         );
         postFormData.append("lat", latitude);
         postFormData.append("lng", longitude);
+      } else {
+        postFormData.append("lat", "");
+        postFormData.append("lng", "");
       }
 
       if (session?.user?.email)

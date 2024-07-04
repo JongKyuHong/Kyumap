@@ -17,6 +17,10 @@ export interface IPost extends Document {
   hideLikesAndViews: Boolean;
   hideComments: Boolean;
   reels: Boolean;
+  position: {
+    lat: string;
+    lng: string;
+  };
   _count: {
     Hearts: number;
     Comments: number;
@@ -66,6 +70,10 @@ const postSchema: Schema = new mongoose.Schema({
   },
   reels: {
     type: Boolean,
+  },
+  position: {
+    lat: { type: String, default: "" },
+    lng: { type: String, default: "" },
   },
   _count: {
     Hearts: { type: Number, default: 0 },
