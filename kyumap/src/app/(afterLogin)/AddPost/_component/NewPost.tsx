@@ -129,7 +129,7 @@ export default function NewPost() {
           method: "POST",
           body: ImageFormData,
         });
-        // console.log(uploadResult, "ok나오나???");
+        console.log(uploadResult, "ok나오나???");
         let url = uploadResult.url + `/${type}/` + filename;
         urlformLst.push(url);
         altTextsLst.push(altTexts[idx]);
@@ -143,14 +143,18 @@ export default function NewPost() {
         postFormData.append("reels", false.toString());
       }
 
-      const { latitude, longitude } = await getCoordinatesFromAddress(location);
-
       postFormData.append("images", JSON.stringify(urlformLst));
       postFormData.append("altTexts", JSON.stringify(altTextsLst));
-      postFormData.append("lat", latitude);
-      postFormData.append("lng", longitude);
       postFormData.append("isHideInfo", isArticleInfoHide.toString());
       postFormData.append("isHideComments", isCommentHide.toString());
+
+      if (location) {
+        const { latitude, longitude } = await getCoordinatesFromAddress(
+          location
+        );
+        postFormData.append("lat", latitude);
+        postFormData.append("lng", longitude);
+      }
 
       if (session?.user?.email)
         postFormData.append("userEmail", session.user.email);

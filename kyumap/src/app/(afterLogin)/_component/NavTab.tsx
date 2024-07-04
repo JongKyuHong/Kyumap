@@ -127,6 +127,10 @@ export default function NavTab() {
     }
   };
 
+  if (!userData) {
+    return null;
+  }
+
   return (
     <>
       {isMobile ? (
