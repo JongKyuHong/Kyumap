@@ -501,14 +501,26 @@ export default function Post({ post }: Props) {
                                 onClick={onClickPrevBtn}
                               >
                                 <svg
-                                  className={styles.arrow}
-                                  viewBox="0 0 24 24"
-                                  focusable="false"
-                                  height="18"
-                                  width="18"
+                                  width="30"
+                                  height="34"
+                                  viewBox="0 0 30 34"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
                                 >
-                                  <path d="M0 0h24v24H0z" fill="none"></path>
-                                  <path d="M16.41 5.41L15 4l-8 8 8 8 1.41-1.41L9.83 12"></path>
+                                  <circle
+                                    cx="15"
+                                    cy="17"
+                                    r="14"
+                                    fill="rgba(240, 240, 240, 0.8)"
+                                    stroke="lightgray"
+                                    stroke-width="2"
+                                  />
+                                  <path
+                                    d="M18 11l-6 6 6 6"
+                                    stroke="gray"
+                                    stroke-width="2"
+                                    fill="none"
+                                  />
                                 </svg>
                               </div>
                             </button>
@@ -532,7 +544,7 @@ export default function Post({ post }: Props) {
                                 className={styles.nextBtn}
                                 onClick={onClickNextBtn}
                               >
-                                <svg
+                                {/* <svg
                                   className={styles.arrow}
                                   viewBox="0 0 24 24"
                                   focusable="false"
@@ -541,6 +553,28 @@ export default function Post({ post }: Props) {
                                 >
                                   <path d="M0 0h24v24H0z" fill="none"></path>
                                   <path d="M7.59 18.41L9 20l8-8-8-8-1.41 1.41L14.17 12"></path>
+                                </svg> */}
+                                <svg
+                                  width="30"
+                                  height="34"
+                                  viewBox="0 0 30 34"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <circle
+                                    cx="15"
+                                    cy="17"
+                                    r="14"
+                                    fill="rgba(240, 240, 240, 0.8)"
+                                    stroke="lightgray"
+                                    stroke-width="2"
+                                  />
+                                  <path
+                                    d="M12 11l6 6-6 6"
+                                    stroke="gray"
+                                    stroke-width="2"
+                                    fill="none"
+                                  />
                                 </svg>
                               </div>
                             </button>

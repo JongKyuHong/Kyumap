@@ -59,5 +59,5 @@ export async function GET(req: NextRequest, res: NextResponse) {
     ],
   });
 
-  return NextResponse.json({ data: url, status: 200 });
+  return NextResponse.json(url);
 }
