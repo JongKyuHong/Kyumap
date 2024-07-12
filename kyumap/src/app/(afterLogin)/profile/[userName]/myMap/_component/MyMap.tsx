@@ -1,12 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  Map,
-  useKakaoLoader,
-  MapMarker,
-  KakaoMapContext,
-} from "react-kakao-maps-sdk";
+import { Map, useKakaoLoader } from "react-kakao-maps-sdk";
 import styles from "./MyMap.module.css";
 import KMapMarker from "./kMapMarker";
 
@@ -42,25 +37,38 @@ export default function MyMap({ userEmail }: Props) {
 
   console.log(mapData, "mapData");
   return (
-    <div className={styles.divStyle}>
-      <Map
-        center={{ lat: 37.5666612, lng: 126.9783785 }}
-        style={{ width: "100%", height: "100%" }}
+    // <div className={styles.divStyle}>
+    <div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          paddingBottom: "0px",
+          paddingTop: "0px",
+          position: "relative",
+          width: "100%",
+          height: "70vh",
+        }}
       >
-        {mapData.map((v, index) => (
-          <KMapMarker
-            key={`EventMarkerContainer-${v.position.lat}-${v.position.lng}`}
-            position={{
-              lat: parseFloat(v.position.lat),
-              lng: parseFloat(v.position.lng),
-            }}
-            nickname={v.User.nickname}
-            content={v.content}
-            imgsrc={v.Images[0]}
-            id={index}
-          ></KMapMarker>
-        ))}
-      </Map>
+        <Map
+          center={{ lat: 37.5666612, lng: 126.9783785 }}
+          style={{ width: "100%", height: "100%" }}
+        >
+          {mapData.map((v, index) => (
+            <KMapMarker
+              key={`EventMarkerContainer-${v.position.lat}-${v.position.lng}`}
+              position={{
+                lat: parseFloat(v.position.lat),
+                lng: parseFloat(v.position.lng),
+              }}
+              nickname={v.User.nickname}
+              content={v.content}
+              imgsrc={v.Images[0]}
+              id={index}
+            ></KMapMarker>
+          ))}
+        </Map>
+      </div>
     </div>
   );
 }
