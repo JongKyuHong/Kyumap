@@ -8,16 +8,15 @@ import styles from "./mainsection.module.css";
 import useDeviceSize from "./useDeviceSize";
 import Link from "next/link";
 import Image from "next/image";
-import { Session } from "@auth/core/types";
 import { useSession } from "next-auth/react";
 
-// type Props = {
-//   me: Session | null;
-// };
+type Props = {
+  session: any;
+};
 
-export default function FollowRecommendSection() {
+export default function FollowRecommendSection({ session }: Props) {
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
   const { data: RecommendsData, isLoading } = useQuery<IUser[]>({
     queryKey: ["users", "followRecommends", session?.user!.email],
     queryFn: () => getFollowRecommends(session?.user!.email as string),
