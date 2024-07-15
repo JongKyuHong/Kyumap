@@ -32,7 +32,7 @@ export default async function Home() {
     <HydrationBoundary state={dehydrateState}>
       <div className={styles.mainrootDiv}>
         <MainSection session={session} />
-        <FollowRecommendSection />
+        <FollowRecommendSection session={session} />
       </div>
     </HydrationBoundary>
   );

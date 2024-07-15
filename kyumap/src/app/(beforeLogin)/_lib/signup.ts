@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { signIn } from "@/auth";
+import { signIn, auth } from "@/auth";
 
 interface PresignedPostData {
   url: string;
@@ -92,6 +92,7 @@ const signup = async (prevState: any, formData: FormData) => {
         password: formData.get("password"),
         redirect: false,
       });
+      await auth();
     } else {
       return { message: "img_upload_error" };
     }

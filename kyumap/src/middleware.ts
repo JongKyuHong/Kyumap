@@ -4,7 +4,9 @@ import { NextResponse } from "next/server";
 export async function middleware() {
   const session = await auth();
   if (!session) {
-    return NextResponse.redirect("http://localhost:3000/i/flow/login");
+    return NextResponse.redirect(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/i/flow/login`
+    );
   }
 }
 

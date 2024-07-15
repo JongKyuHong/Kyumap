@@ -18,10 +18,10 @@ import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 
 type Props = {
-  me: any;
+  session: any;
 };
 
-export default function NavTab() {
+export default function NavTab({ session }: Props) {
   const pathname = usePathname();
   const [isEx, setEx] = useState(false);
   const [clickedMenu, setMenu] = useState(false);
@@ -37,9 +37,8 @@ export default function NavTab() {
     pathname.startsWith("/profile") ? true : false
   );
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
 
-  // const userEmail = me?.user?.email;
   const userEmail = session?.user?.email;
   console.log(userEmail, session, "session");
   const queryClient = useQueryClient();
@@ -66,9 +65,7 @@ export default function NavTab() {
     const savedDarkMode = localStorage.getItem("darkMode");
     if (savedDarkMode !== null) {
       const isDark = JSON.parse(savedDarkMode);
-      console.log(isDark, "isDark");
       setDark(isDark);
-      console.log(isDark, "isDark2");
       document.documentElement.setAttribute(
         "color-theme",
         isDark ? "dark" : "light"
@@ -77,7 +74,6 @@ export default function NavTab() {
   }, []);
 
   useEffect(() => {
-    console.log(pathname.startsWith("/profile"), "pathname");
     setHome(pathname === "/home" ? true : false);
     setReels(pathname === "/reels" ? true : false);
     setProfile(pathname.startsWith("/profile") ? true : false);
@@ -94,15 +90,6 @@ export default function NavTab() {
     localStorage.setItem("darkMode", JSON.stringify(isDark));
   }, [isDark]);
 
-  // useEffect(() => {
-  //   if (!isEx) {
-  //     const Anime = setTimeout(() => {}, 500);
-  //     return () => {
-  //       clearTimeout(Anime);
-  //     };
-  //   }
-  // }, [isEx]);
-
   const {
     data: userData,
     error: userError,
@@ -114,6 +101,8 @@ export default function NavTab() {
     gcTime: 300 * 1000,
     enabled: !!userEmail,
   });
+
+  console.log(userData, "userData");
 
   if (userLoading) {
     return <div>로딩중...</div>;
