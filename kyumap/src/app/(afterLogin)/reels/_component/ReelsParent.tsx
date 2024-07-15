@@ -35,7 +35,7 @@ export default function ReelsParent() {
 
   const allReelsData = useMemo(() => {
     return data?.pages.flat() || [];
-  }, []);
+  }, [data?.pages]);
 
   if (allReelsData && allReelsData.length > 0) {
     const hashId = generateMD5Hash(

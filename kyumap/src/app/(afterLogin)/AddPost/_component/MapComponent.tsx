@@ -75,7 +75,7 @@ export default function MapComponent({ location, setLocation }: Props) {
       window.addEventListener("load", initMap);
       return () => window.removeEventListener("load", initMap);
     }
-  }, []);
+  }, [setLocation]);
 
   const handleLocationClick = () => {
     if (typeof window.sample5_execDaumPostcode === "function") {
