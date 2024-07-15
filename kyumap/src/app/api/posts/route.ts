@@ -3,9 +3,6 @@ import Post from "@/model/Post";
 import User from "@/model/User";
 import { NextResponse, NextRequest } from "next/server";
 import getNextSequenceValue from "@/model/getNextSequenceValue";
-import Redis from "ioredis";
-
-const redis = new Redis();
 
 export async function GET(
   req: NextRequest,
@@ -29,7 +26,6 @@ export async function GET(
 
   try {
     const posts = await Post.find(query).sort({ postId: 1 }).limit(limit);
-    // const posts = await Post.find({});
     return NextResponse.json(posts);
   } catch (err: any) {
     return NextResponse.json({ error: err.message });
@@ -37,26 +33,31 @@ export async function GET(
 }
 
 export async function POST(req: NextRequest) {
+  console.log("Received POST request");
   try {
     await dbConnect();
+    console.log("Database connected");
   } catch (err) {
     console.error("Database connection failed:", err);
     return NextResponse.json({ error: "Database connection failed" });
   }
+
   let reqBody;
   try {
     reqBody = await req.formData();
+    console.log("Request body parsed");
   } catch (err) {
     console.error("Failed to parse request body:", err);
     return NextResponse.json({ error: "Failed to parse request body" });
   }
+
   const userEmail = reqBody.get("userEmail");
   const userImage = reqBody.get("userImage");
   const userName = reqBody.get("userName");
   const content = reqBody.get("content");
   const lat = reqBody.get("lat");
   const lng = reqBody.get("lng");
-  const isHideInfo = reqBody.get("isHideInfo") === "true"; // 문자열로 받은 값 다시 boolean으로 변환
+  const isHideInfo = reqBody.get("isHideInfo") === "true";
   const isHideComments = reqBody.get("isHideComments") === "true";
   const reels = reqBody.get("reels") === "true";
 
@@ -78,61 +79,52 @@ export async function POST(req: NextRequest) {
     altTexts = JSON.parse(altTextsString as string);
   }
 
-  const lockKey = "postIdLock";
-  const lockTimeout = 3000; // 3 seconds
+  let postId;
+  try {
+    postId = await getNextSequenceValue("postId");
+    console.log(`Generated postId: ${postId}`);
+  } catch (err) {
+    console.error("Failed to get next sequence value:", err);
+    return NextResponse.json({ error: "Failed to get next sequence value" });
+  }
+
+  const data = {
+    postId: postId,
+    User: {
+      email: userEmail,
+      image: userImage,
+      nickname: userName,
+    },
+    content: content,
+    Images: images,
+    altTexts: altTexts,
+    Hearts: [],
+    Comments: [],
+    hideLikesAndViews: isHideInfo,
+    hideComments: isHideComments,
+    reels: reels,
+    position: {
+      lat: lat,
+      lng: lng,
+    },
+    _count: {
+      Hearts: 0,
+      Comments: 0,
+    },
+    hashTag: [],
+  };
 
   try {
-    const lock = await redis.set(lockKey, "locked", "PX", lockTimeout, "NX");
-    if (!lock) {
-      return NextResponse.json({ error: "Failed to acquire lock" });
-    }
-
-    let postId;
-    try {
-      postId = await getNextSequenceValue("postId");
-    } catch (err) {
-      console.error("Failed to get next sequence value:", err);
-      return NextResponse.json({ error: "Failed to get next sequence value" });
-    }
-
-    const data = {
-      postId: postId,
-      User: {
-        email: userEmail,
-        image: userImage,
-        nickname: userName,
-      },
-      content: content,
-      Images: images,
-      altTexts: altTexts,
-      Hearts: [],
-      Comments: [],
-      hideLikesAndViews: isHideInfo,
-      hideComments: isHideComments,
-      reels: reels,
-      position: {
-        lat: lat,
-        lng: lng,
-      },
-      _count: {
-        Hearts: 0,
-        Comments: 0,
-      },
-      hashTag: [],
-    };
-
-    const users = await User.findOneAndUpdate(
+    await User.findOneAndUpdate(
       { email: userEmail },
-      {
-        $inc: { "_count.posts": 1 },
-      },
+      { $inc: { "_count.posts": 1 } },
       { new: true }
     );
-    const posts = await Post.create(data);
-    return NextResponse.json(posts);
+    const post = await Post.create(data);
+    console.log(`Post created with postId: ${post.postId}`);
+    return NextResponse.json(post);
   } catch (err: any) {
+    console.error("Failed to create post:", err);
     return NextResponse.json({ error: err.message });
-  } finally {
-    await redis.del(lockKey);
   }
 }

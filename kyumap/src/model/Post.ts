@@ -82,13 +82,14 @@ const postSchema: Schema = new mongoose.Schema({
 });
 
 postSchema.pre<IPost>("save", async function (next) {
-  if (this.isNew) {
+  if (this.isNew && !this.postId) {
     try {
+      console.log(`Generating postId for new post`);
       this.postId = await getNextSequenceValue("postId");
+      console.log(`Generated postId in pre-save hook: ${this.postId}`);
     } catch (error) {
       const castError = error as Error;
       console.error(castError.message);
-      // `next` 함수에 `castError` 전달
       next(castError);
       return;
     }

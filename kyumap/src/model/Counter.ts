@@ -12,7 +12,7 @@ const counterSchema = new mongoose.Schema({
   },
   seq: {
     type: Number,
-    default: 0,
+    required: true,
   },
 });
 
