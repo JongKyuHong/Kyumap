@@ -1,15 +1,18 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import styles from "./mainsection.module.css";
 import style from "./msection.module.css";
 import PostRecommends from "./PostRecommends";
 import ResponsiveNav from "./ResponsiveNav";
 import useDeviceSize from "./useDeviceSize";
+import { useSession } from "next-auth/react";
 
-export default function MainSection() {
+export default function MainSection({ session }: any) {
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
+  // const { data: session } = useSession();
 
+  if (!session) return null;
   return (
     <>
       {isMobile ? (
@@ -46,44 +49,14 @@ export default function MainSection() {
           <ResponsiveNav />
         </section>
       ) : (
-        <div style={{ maxWidth: "630px", width: "100%" }}>
+        <div
+          style={{
+            maxWidth: "630px",
+            width: "100%",
+          }}
+        >
           <div className={styles.rootDivInner}>
-            <div className={styles.rootDivInner2}>
-              <div>
-                <div className={styles.rootDivInner3}>
-                  <div className={styles.rootDivInner4}>
-                    <div className={styles.rootDivInner5}>
-                      <div className={styles.rootDivInner6}>
-                        <div className={styles.rootDivInner7}>
-                          <ul className={styles.followUl}>
-                            <li
-                              style={{
-                                transform: "translateX(0px)",
-                                width: "2px",
-                              }}
-                            ></li>
-                            <li
-                              style={{
-                                transform: "translateX(400px)",
-                                width: "2px",
-                              }}
-                            ></li>
-                            {
-                              "여기서는 팔로우한 사람들의 새 게시글 translateX는 요소의 개수만큼 80씩커짐"
-                            }
-                            <li
-                              className={styles.foolowLi}
-                              tabIndex={-1}
-                              style={{ transform: "translateX(2px)" }}
-                            ></li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <div className={styles.rootDivInner2}></div>
             <div className={styles.postDiv}>
               <div
                 className={styles.postDivInner}
@@ -100,153 +73,8 @@ export default function MainSection() {
                     }}
                   >
                     <PostRecommends />
-                    {/* <Post post={dummyData} /> */}
                   </div>
                 </div>
-                {/* <div className={styles.postFooter}>
-                        <div
-                          className={styles.postFooterDiv}
-                          style={{ height: "32px", width: "32px" }}
-                        >
-                          <svg
-                            aria-label="읽어들이는 중..."
-                            className={styles.footerLoading}
-                          >
-                            <rect
-                              className={styles.loadingAnimation1}
-                              height="6"
-                              opacity="0"
-                              rx="3"
-                              ry="3"
-                              width="25"
-                              x="72"
-                              y="47"
-                              transform="rotate(-90, 50, 50)"
-                            ></rect>
-                            <rect
-                              className={styles.loadingAnimation1}
-                              height="6"
-                              opacity="0.0833333"
-                              rx="3"
-                              ry="3"
-                              width="25"
-                              x="72"
-                              y="47"
-                              transform="rotate(-60, 50, 50)"
-                            ></rect>
-                            <rect
-                              className={styles.loadingAnimation1}
-                              height="6"
-                              opacity="0.166667"
-                              rx="3"
-                              ry="3"
-                              width="25"
-                              x="72"
-                              y="47"
-                              transform="rotate(-30, 50, 50)"
-                            ></rect>
-                            <rect
-                              className={styles.loadingAnimation1}
-                              height="6"
-                              opacity="0.25"
-                              rx="3"
-                              width="25"
-                              ry="3"
-                              x="72"
-                              y="47"
-                              transform="rotate(0, 50, 50)"
-                            ></rect>
-                            <rect
-                              className={styles.loadingAnimation1}
-                              height="6"
-                              opacity="0.333333"
-                              rx="3"
-                              width="25"
-                              ry="3"
-                              x="72"
-                              y="47"
-                              transform="rotate(30, 50, 50)"
-                            ></rect>
-                            <rect
-                              className={styles.loadingAnimation1}
-                              height="6"
-                              opacity="0.416667"
-                              rx="3"
-                              width="25"
-                              ry="3"
-                              x="72"
-                              y="47"
-                              transform="rotate(60, 50, 50)"
-                            ></rect>
-                            <rect
-                              className={styles.loadingAnimation1}
-                              height="6"
-                              opacity="0.5"
-                              rx="3"
-                              width="25"
-                              ry="3"
-                              x="72"
-                              y="47"
-                              transform="rotate(90, 50, 50)"
-                            ></rect>
-                            <rect
-                              className={styles.loadingAnimation1}
-                              height="6"
-                              opacity="0.583333"
-                              rx="3"
-                              width="25"
-                              ry="3"
-                              x="72"
-                              y="47"
-                              transform="rotate(120, 50, 50)"
-                            ></rect>
-                            <rect
-                              className={styles.loadingAnimation1}
-                              height="6"
-                              opacity="0.666667"
-                              rx="3"
-                              width="25"
-                              ry="3"
-                              x="72"
-                              y="47"
-                              transform="rotate(150, 50, 50)"
-                            ></rect>
-                            <rect
-                              className={styles.loadingAnimation1}
-                              height="6"
-                              opacity="0.75"
-                              rx="3"
-                              width="25"
-                              ry="3"
-                              x="72"
-                              y="47"
-                              transform="rotate(180, 50, 50)"
-                            ></rect>
-                            <rect
-                              className={styles.loadingAnimation1}
-                              height="6"
-                              opacity="0.833333"
-                              rx="3"
-                              width="25"
-                              ry="3"
-                              x="72"
-                              y="47"
-                              transform="rotate(210, 50, 50)"
-                            ></rect>
-                            <rect
-                              className={styles.loadingAnimation1}
-                              height="6"
-                              opacity="0.916667"
-                              rx="3"
-                              width="25"
-                              ry="3"
-                              x="72"
-                              y="47"
-                              transform="rotate(240, 50, 50)"
-                            ></rect>
-                          </svg>
-                        </div>
-                      </div> */}
               </div>
             </div>
           </div>

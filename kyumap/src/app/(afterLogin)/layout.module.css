@@ -29,7 +29,6 @@
   .rightSectionWrapper {
     max-height: calc(100% - var(--revamp-nav-bottom-toolbar-height));
     flex-grow: 1;
-    width: 100%;
   }
 }
 
@@ -131,7 +130,6 @@
 
 .rootSection {
   min-height: 100vh;
-  overflow-x: hidden;
   flex-direction: column;
   display: flex;
   flex-grow: 1;

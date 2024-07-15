@@ -2,6 +2,7 @@
 
 import React, {
   ChangeEventHandler,
+  ChangeEvent,
   ReactEventHandler,
   FormEventHandler,
   useCallback,
@@ -9,6 +10,7 @@ import React, {
   useState,
   useEffect,
   FormEvent,
+  Fragment,
 } from "react";
 import styles from "./newpost.module.css";
 import { useRouter } from "next/navigation";
@@ -18,20 +20,47 @@ import {
   InfiniteData,
 } from "@tanstack/react-query";
 import useDeviceSize from "../../_component/useDeviceSize";
-import { Post } from "@/model/Post";
+import { IPost } from "@/model/Post";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
+import MapComponent from "./MapComponent";
+
+interface PreviewItem {
+  dataUrl: string;
+  file: File;
+  type: "image" | "video";
+  thumbnailUrl?: string;
+}
+
+async function getCoordinatesFromAddress(address: string) {
+  const apiKey = `${process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY}`;
+  const url = `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(
+    address
+  )}`;
+
+  console.log(address, "address");
+
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `KakaoAK ${apiKey}`,
+    },
+  });
+
+  const data = await response.json();
+
+  if (data.documents.length > 0) {
+    const { y: latitude, x: longitude } = data.documents[0].address;
+    return { latitude, longitude };
+  } else {
+    throw new Error("Address not found");
+  }
+}
 
 export default function NewPost() {
   const { data: session } = useSession();
   const [content, setContent] = useState("");
   const [isActive, setActive] = useState(false);
-  const [preview, setPreview] = useState<
-    Array<{
-      dataUrl: string;
-      file: File;
-    } | null>
-  >([]);
+  const [preview, setPreview] = useState<PreviewItem[]>([]);
   const [ratioWidth, setWidth] = useState<number>(0);
   const [isMultiImg, setMultiImg] = useState(false);
   const [currentNumber, setNumber] = useState(0);
@@ -39,17 +68,30 @@ export default function NewPost() {
   const [isClickedExitBtn, setExitBtn] = useState(false);
   const [isAccExpand, setAccExpand] = useState(false);
   const [isSettingExpand, setSettingExpand] = useState(false);
-  const [isArticleInfoHide, setArticleInfoHide] = useState(false);
-  const [isCommentHide, setCommentHide] = useState(false);
+  const [isArticleInfoHide, setArticleInfoHide] = useState<boolean>(false);
+  const [isCommentHide, setCommentHide] = useState<boolean>(false);
+  const [altTexts, setAltTexts] = useState(preview.map(() => "")); // 대체 텍스트
+  const [darktheme, setTheme] = useState<boolean>(false);
+  const [location, setLocation] = useState<string>("");
+
+  useEffect(() => {
+    const rootElement = document.documentElement;
+    const currentTheme = rootElement.getAttribute("color-theme");
+    if (currentTheme === "dark") {
+      setTheme(true);
+    } else {
+      setTheme(false);
+    }
+  }, []);
 
   const router = useRouter();
   const imgRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
 
-  const onClickBackBtn = useCallback(() => {
+  const onClickBackBtn = () => {
     router.back();
-  }, [router]);
+  };
 
   const handleFileSelect = () => {
     if (imgRef.current) {
@@ -57,18 +99,78 @@ export default function NewPost() {
     }
   };
 
-  const mutation = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: async (e: FormEvent) => {
       e.preventDefault();
-      const formData = new FormData();
-      formData.append("content", content);
-      preview.forEach((p) => {
-        p && formData.append("images", p.file);
-      });
+      let lastType = "";
+      const urlformLst = [];
+      const altTextsLst = [];
+      for (let idx = 0; idx < preview.length; idx++) {
+        const { file, type } = preview[idx];
+        console.log(file, type, "file아직 인코딩 하기 전");
+        let filename = encodeURIComponent(file.name);
+        // console.log(filename, "filename");
+        // 프리사인 url받기
+        let result_url: any = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/image/upload?file=${filename}&type=${type}`
+        );
+
+        result_url = await result_url.json();
+        // console.log(result_url, "result_url");
+        const ImageFormData = new FormData();
+        Object.entries({ ...result_url.fields, file }).forEach(
+          ([key, value]) => {
+            ImageFormData.append(key, value as string);
+          }
+        );
+        // console.log(ImageFormData, "imageFormData");
+        // 업로드
+        let uploadResult = await fetch(result_url.url, {
+          method: "POST",
+          body: ImageFormData,
+        });
+        console.log(uploadResult, "ok나오나???");
+        let url = uploadResult.url + `/${type}/` + filename;
+        urlformLst.push(url);
+        altTextsLst.push(altTexts[idx]);
+        lastType = type;
+      }
+
+      const postFormData = new FormData();
+      if (urlformLst.length === 1 && lastType === "video") {
+        postFormData.append("reels", true.toString());
+      } else {
+        postFormData.append("reels", false.toString());
+      }
+
+      postFormData.append("images", JSON.stringify(urlformLst));
+      postFormData.append("altTexts", JSON.stringify(altTextsLst));
+      postFormData.append("isHideInfo", isArticleInfoHide.toString());
+      postFormData.append("isHideComments", isCommentHide.toString());
+
+      if (location) {
+        const { latitude, longitude } = await getCoordinatesFromAddress(
+          location
+        );
+        postFormData.append("lat", latitude);
+        postFormData.append("lng", longitude);
+      } else {
+        postFormData.append("lat", "");
+        postFormData.append("lng", "");
+      }
+
+      if (session?.user?.email)
+        postFormData.append("userEmail", session.user.email);
+      if (session?.user?.name)
+        postFormData.append("userName", session.user.name);
+      if (session?.user?.image)
+        postFormData.append("userImage", session.user.image);
+      postFormData.append("content", content);
+
       return fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posts`, {
         method: "post",
         credentials: "include",
-        body: formData,
+        body: postFormData,
       });
     },
     async onSuccess(response, variable) {
@@ -78,7 +180,7 @@ export default function NewPost() {
       if (queryClient.getQueryData(["posts", "recommends"])) {
         queryClient.setQueryData(
           ["posts", "recommends"],
-          (prevData: { pages: Post[][] }) => {
+          (prevData: { pages: IPost[][] }) => {
             const shallow = {
               ...prevData,
               pages: [...prevData.pages],
@@ -89,6 +191,15 @@ export default function NewPost() {
           }
         );
       }
+      await queryClient.invalidateQueries({
+        queryKey: ["user", session?.user?.email, "posts"],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["user", session?.user?.email, "reels"],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["posts", "reels"],
+      });
     },
     onError(error) {
       console.error(error);
@@ -99,38 +210,85 @@ export default function NewPost() {
     },
   });
 
-  // const [preview, setPreview] = useState<Array<string | null>>([]);
-  const onUpload: ChangeEventHandler<HTMLInputElement> = (e) => {
+  const onSubmit = (e: FormEvent) => {
+    if (isPending) return;
+    mutate(e);
+  };
+
+  const generateVideoThumbnail = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const video = document.createElement("video");
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      const reader = new FileReader();
+
+      reader.onload = (event) => {
+        video.src = event.target?.result as string;
+        video.onloadeddata = () => {
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          video.currentTime = 1; // 첫 번째 초의 프레임을 사용
+        };
+
+        video.onseeked = () => {
+          if (context) {
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const thumbnailUrl = canvas.toDataURL("image/png");
+            resolve(thumbnailUrl);
+          } else {
+            reject("캔버스 컨텍스트를 가져올 수 없습니다.");
+          }
+        };
+
+        video.onerror = (error: any) => {
+          reject("비디오 로드 중 오류 발생: " + error.message);
+        };
+      };
+
+      reader.onerror = (error: any) => {
+        reject("파일 읽기 중 오류 발생: " + error.message);
+      };
+
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const onUpload: ChangeEventHandler<HTMLInputElement> = async (e) => {
     e.preventDefault();
     if (e.target.files && e.target.files.length > 0) {
-      const newPreviews: Array<{ dataUrl: string; file: File } | null> = [];
+      let newPreviews: PreviewItem[] = [...preview]; // 변경 사항 없음
 
-      // 이전 미리보기 데이터를 새 배열에 복사
-      for (let i = 0; i < preview.length; i++) {
-        newPreviews[i] = preview[i];
-      }
-
-      Array.from(e.target.files).forEach((file, index) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setPreview((prevPreview) => {
-            const prev = [...prevPreview];
-            prev.push({ dataUrl: reader.result as string, file }); // 이전 데이터 끝에 새로운 데이터를 추가
-            return prev;
+      const filePromises = Array.from(e.target.files).map(async (file) => {
+        if (file.type.startsWith("video")) {
+          try {
+            const thumbnailUrl = await generateVideoThumbnail(file);
+            newPreviews = [
+              ...newPreviews,
+              { dataUrl: thumbnailUrl, file, type: "video" },
+            ];
+          } catch (error) {
+            console.error("동영상 섬네일 생성 중 오류 발생:", error);
+          }
+        } else {
+          const reader = new FileReader();
+          const fileLoadPromise = new Promise<void>((resolve) => {
+            reader.onloadend = () => {
+              newPreviews = [
+                ...newPreviews,
+                { dataUrl: reader.result as string, file, type: "image" },
+              ];
+              resolve();
+            };
           });
-        };
-        reader.readAsDataURL(file);
+          reader.readAsDataURL(file);
+          await fileLoadPromise;
+        }
       });
 
-      setPreview(newPreviews); // 새로운 미리보기 배열로 업데이트
-      console.log(preview, "preview");
+      await Promise.all(filePromises);
+      setPreview(newPreviews);
     }
   };
-
-  const onSubmit = (e: FormEvent) => {
-    mutation.mutate(e);
-  };
-
   const calculateSize = () => {
     if (isMobile) {
       // setWidth(378);
@@ -203,12 +361,15 @@ export default function NewPost() {
   };
 
   useEffect(() => {
+    setAltTexts(preview.map(() => ""));
+  }, [preview]);
+
+  useEffect(() => {
     if (preview.length > 1) {
       setMultiImg(true);
     } else {
       setMultiImg(false);
     }
-    console.log(isMultiImg, preview.length, "ismulti");
   }, [isMultiImg, preview]);
 
   useEffect(() => {
@@ -267,11 +428,21 @@ export default function NewPost() {
 
   const onRemoveImage = (index: number) => () => {
     setPreview((prevPreview) => {
-      const prev = [...prevPreview];
-      prev[index] = null;
-      return prev;
+      // 필터를 사용하여 특정 인덱스를 제외한 모든 항목을 반환
+      return prevPreview.filter((_, i) => i !== index);
     });
   };
+
+  const onClickAltTextChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const newAltTexts = [...altTexts];
+    newAltTexts[index] = e.target.value;
+    setAltTexts(newAltTexts);
+  };
+
+  if (!session) return null;
 
   return (
     <div className={styles.ModalMainDiv}>
@@ -591,6 +762,7 @@ export default function NewPost() {
                                               height={0}
                                               alt={"postImage"}
                                               sizes="100vw"
+                                              priority={true}
                                             />
                                             <div
                                               className={styles.imgTab3}
@@ -718,6 +890,7 @@ export default function NewPost() {
                                                 width={0}
                                                 height={0}
                                                 sizes="100vw"
+                                                priority={true}
                                               />
                                             </div>
                                           </div>
@@ -730,48 +903,78 @@ export default function NewPost() {
                                 <>
                                   <div className={styles.ModalBodyInnerDiv}>
                                     <div className={styles.ModalBodyInnerDiv2}>
-                                      <svg
-                                        aria-label="이미지나 동영상과 같은 미디어를 나타내는 아이콘"
-                                        className={styles.ModalBodySvg}
-                                        fill={
-                                          isActive
-                                            ? "rgb(0, 149, 246)"
-                                            : "black"
-                                        }
-                                        height={77}
-                                        role="img"
-                                        viewBox="0 0 97.6 77.3"
-                                        width={96}
-                                      >
-                                        <title>
-                                          이미지나 동영상과 같은 미디어를
-                                          나타내는 아이콘
-                                        </title>
-                                        <path
-                                          d="M16.3 24h.3c2.8-.2 4.9-2.6 4.8-5.4-.2-2.8-2.6-4.9-5.4-4.8s-4.9 2.6-4.8 5.4c.1 2.7 2.4 4.8 5.1 4.8zm-2.4-7.2c.5-.6 1.3-1 2.1-1h.2c1.7 0 3.1 1.4 3.1 3.1 0 1.7-1.4 3.1-3.1 3.1-1.7 0-3.1-1.4-3.1-3.1 0-.8.3-1.5.8-2.1z"
+                                      {darktheme ? (
+                                        <svg
+                                          aria-label="이미지나 동영상과 같은 미디어를 나타내는 아이콘"
+                                          className={styles.ModalBodySvg}
+                                          fill="currentColor"
+                                          height="77"
+                                          role="img"
+                                          viewBox="0 0 97.6 77.3"
+                                          width="96"
+                                        >
+                                          <title>
+                                            이미지나 동영상과 같은 미디어를
+                                            나타내는 아이콘
+                                          </title>
+                                          <path
+                                            d="M16.3 24h.3c2.8-.2 4.9-2.6 4.8-5.4-.2-2.8-2.6-4.9-5.4-4.8s-4.9 2.6-4.8 5.4c.1 2.7 2.4 4.8 5.1 4.8zm-2.4-7.2c.5-.6 1.3-1 2.1-1h.2c1.7 0 3.1 1.4 3.1 3.1 0 1.7-1.4 3.1-3.1 3.1-1.7 0-3.1-1.4-3.1-3.1 0-.8.3-1.5.8-2.1z"
+                                            fill="currentColor"
+                                          ></path>
+                                          <path
+                                            d="M84.7 18.4 58 16.9l-.2-3c-.3-5.7-5.2-10.1-11-9.8L12.9 6c-5.7.3-10.1 5.3-9.8 11L5 51v.8c.7 5.2 5.1 9.1 10.3 9.1h.6l21.7-1.2v.6c-.3 5.7 4 10.7 9.8 11l34 2h.6c5.5 0 10.1-4.3 10.4-9.8l2-34c.4-5.8-4-10.7-9.7-11.1zM7.2 10.8C8.7 9.1 10.8 8.1 13 8l34-1.9c4.6-.3 8.6 3.3 8.9 7.9l.2 2.8-5.3-.3c-5.7-.3-10.7 4-11 9.8l-.6 9.5-9.5 10.7c-.2.3-.6.4-1 .5-.4 0-.7-.1-1-.4l-7.8-7c-1.4-1.3-3.5-1.1-4.8.3L7 49 5.2 17c-.2-2.3.6-4.5 2-6.2zm8.7 48c-4.3.2-8.1-2.8-8.8-7.1l9.4-10.5c.2-.3.6-.4 1-.5.4 0 .7.1 1 .4l7.8 7c.7.6 1.6.9 2.5.9.9 0 1.7-.5 2.3-1.1l7.8-8.8-1.1 18.6-21.9 1.1zm76.5-29.5-2 34c-.3 4.6-4.3 8.2-8.9 7.9l-34-2c-4.6-.3-8.2-4.3-7.9-8.9l2-34c.3-4.4 3.9-7.9 8.4-7.9h.5l34 2c4.7.3 8.2 4.3 7.9 8.9z"
+                                            fill="currentColor"
+                                          ></path>
+                                          <path
+                                            d="M78.2 41.6 61.3 30.5c-2.1-1.4-4.9-.8-6.2 1.3-.4.7-.7 1.4-.7 2.2l-1.2 20.1c-.1 2.5 1.7 4.6 4.2 4.8h.3c.7 0 1.4-.2 2-.5l18-9c2.2-1.1 3.1-3.8 2-6-.4-.7-.9-1.3-1.5-1.8zm-1.4 6-18 9c-.4.2-.8.3-1.3.3-.4 0-.9-.2-1.2-.4-.7-.5-1.2-1.3-1.1-2.2l1.2-20.1c.1-.9.6-1.7 1.4-2.1.8-.4 1.7-.3 2.5.1L77 43.3c1.2.8 1.5 2.3.7 3.4-.2.4-.5.7-.9.9z"
+                                            fill="currentColor"
+                                          ></path>
+                                        </svg>
+                                      ) : (
+                                        <svg
+                                          aria-label="이미지나 동영상과 같은 미디어를 나타내는 아이콘"
+                                          className={styles.ModalBodySvg}
                                           fill={
                                             isActive
                                               ? "rgb(0, 149, 246)"
                                               : "black"
                                           }
-                                        ></path>
-                                        <path
-                                          d="M84.7 18.4 58 16.9l-.2-3c-.3-5.7-5.2-10.1-11-9.8L12.9 6c-5.7.3-10.1 5.3-9.8 11L5 51v.8c.7 5.2 5.1 9.1 10.3 9.1h.6l21.7-1.2v.6c-.3 5.7 4 10.7 9.8 11l34 2h.6c5.5 0 10.1-4.3 10.4-9.8l2-34c.4-5.8-4-10.7-9.7-11.1zM7.2 10.8C8.7 9.1 10.8 8.1 13 8l34-1.9c4.6-.3 8.6 3.3 8.9 7.9l.2 2.8-5.3-.3c-5.7-.3-10.7 4-11 9.8l-.6 9.5-9.5 10.7c-.2.3-.6.4-1 .5-.4 0-.7-.1-1-.4l-7.8-7c-1.4-1.3-3.5-1.1-4.8.3L7 49 5.2 17c-.2-2.3.6-4.5 2-6.2zm8.7 48c-4.3.2-8.1-2.8-8.8-7.1l9.4-10.5c.2-.3.6-.4 1-.5.4 0 .7.1 1 .4l7.8 7c.7.6 1.6.9 2.5.9.9 0 1.7-.5 2.3-1.1l7.8-8.8-1.1 18.6-21.9 1.1zm76.5-29.5-2 34c-.3 4.6-4.3 8.2-8.9 7.9l-34-2c-4.6-.3-8.2-4.3-7.9-8.9l2-34c.3-4.4 3.9-7.9 8.4-7.9h.5l34 2c4.7.3 8.2 4.3 7.9 8.9z"
-                                          fill={
-                                            isActive
-                                              ? "rgb(0, 149, 246)"
-                                              : "black"
-                                          }
-                                        ></path>
-                                        <path
-                                          d="M78.2 41.6 61.3 30.5c-2.1-1.4-4.9-.8-6.2 1.3-.4.7-.7 1.4-.7 2.2l-1.2 20.1c-.1 2.5 1.7 4.6 4.2 4.8h.3c.7 0 1.4-.2 2-.5l18-9c2.2-1.1 3.1-3.8 2-6-.4-.7-.9-1.3-1.5-1.8zm-1.4 6-18 9c-.4.2-.8.3-1.3.3-.4 0-.9-.2-1.2-.4-.7-.5-1.2-1.3-1.1-2.2l1.2-20.1c.1-.9.6-1.7 1.4-2.1.8-.4 1.7-.3 2.5.1L77 43.3c1.2.8 1.5 2.3.7 3.4-.2.4-.5.7-.9.9z"
-                                          fill={
-                                            isActive
-                                              ? "rgb(0, 149, 246)"
-                                              : "black"
-                                          }
-                                        ></path>
-                                      </svg>
+                                          height={77}
+                                          role="img"
+                                          viewBox="0 0 97.6 77.3"
+                                          width={96}
+                                        >
+                                          <title>
+                                            이미지나 동영상과 같은 미디어를
+                                            나타내는 아이콘
+                                          </title>
+                                          <path
+                                            d="M16.3 24h.3c2.8-.2 4.9-2.6 4.8-5.4-.2-2.8-2.6-4.9-5.4-4.8s-4.9 2.6-4.8 5.4c.1 2.7 2.4 4.8 5.1 4.8zm-2.4-7.2c.5-.6 1.3-1 2.1-1h.2c1.7 0 3.1 1.4 3.1 3.1 0 1.7-1.4 3.1-3.1 3.1-1.7 0-3.1-1.4-3.1-3.1 0-.8.3-1.5.8-2.1z"
+                                            fill={
+                                              isActive
+                                                ? "rgb(0, 149, 246)"
+                                                : "black"
+                                            }
+                                          ></path>
+                                          <path
+                                            d="M84.7 18.4 58 16.9l-.2-3c-.3-5.7-5.2-10.1-11-9.8L12.9 6c-5.7.3-10.1 5.3-9.8 11L5 51v.8c.7 5.2 5.1 9.1 10.3 9.1h.6l21.7-1.2v.6c-.3 5.7 4 10.7 9.8 11l34 2h.6c5.5 0 10.1-4.3 10.4-9.8l2-34c.4-5.8-4-10.7-9.7-11.1zM7.2 10.8C8.7 9.1 10.8 8.1 13 8l34-1.9c4.6-.3 8.6 3.3 8.9 7.9l.2 2.8-5.3-.3c-5.7-.3-10.7 4-11 9.8l-.6 9.5-9.5 10.7c-.2.3-.6.4-1 .5-.4 0-.7-.1-1-.4l-7.8-7c-1.4-1.3-3.5-1.1-4.8.3L7 49 5.2 17c-.2-2.3.6-4.5 2-6.2zm8.7 48c-4.3.2-8.1-2.8-8.8-7.1l9.4-10.5c.2-.3.6-.4 1-.5.4 0 .7.1 1 .4l7.8 7c.7.6 1.6.9 2.5.9.9 0 1.7-.5 2.3-1.1l7.8-8.8-1.1 18.6-21.9 1.1zm76.5-29.5-2 34c-.3 4.6-4.3 8.2-8.9 7.9l-34-2c-4.6-.3-8.2-4.3-7.9-8.9l2-34c.3-4.4 3.9-7.9 8.4-7.9h.5l34 2c4.7.3 8.2 4.3 7.9 8.9z"
+                                            fill={
+                                              isActive
+                                                ? "rgb(0, 149, 246)"
+                                                : "black"
+                                            }
+                                          ></path>
+                                          <path
+                                            d="M78.2 41.6 61.3 30.5c-2.1-1.4-4.9-.8-6.2 1.3-.4.7-.7 1.4-.7 2.2l-1.2 20.1c-.1 2.5 1.7 4.6 4.2 4.8h.3c.7 0 1.4-.2 2-.5l18-9c2.2-1.1 3.1-3.8 2-6-.4-.7-.9-1.3-1.5-1.8zm-1.4 6-18 9c-.4.2-.8.3-1.3.3-.4 0-.9-.2-1.2-.4-.7-.5-1.2-1.3-1.1-2.2l1.2-20.1c.1-.9.6-1.7 1.4-2.1.8-.4 1.7-.3 2.5.1L77 43.3c1.2.8 1.5 2.3.7 3.4-.2.4-.5.7-.9.9z"
+                                            fill={
+                                              isActive
+                                                ? "rgb(0, 149, 246)"
+                                                : "black"
+                                            }
+                                          ></path>
+                                        </svg>
+                                      )}
+
                                       <div
                                         className={styles.ModalBodyInnerDiv3}
                                       >
@@ -872,6 +1075,7 @@ export default function NewPost() {
                                                           sizes="100vw"
                                                           crossOrigin="anonymous"
                                                           draggable="false"
+                                                          priority={true}
                                                           // src={"/chi.png"}
                                                         />
                                                       </span>
@@ -1379,35 +1583,10 @@ export default function NewPost() {
                                       </div>
                                       <div className={styles.locationDiv}>
                                         <div className={styles.locationDiv2}>
-                                          <label
-                                            className={styles.locationDiv3}
-                                            style={{ height: "44px" }}
-                                          >
-                                            <input
-                                              autoComplete="off"
-                                              spellCheck="true"
-                                              type="text"
-                                              name="creation-location-input"
-                                              placeholder="위치 추가"
-                                              className={styles.locationInput}
-                                            ></input>
-                                            <div
-                                              className={styles.locationSvgDiv}
-                                            >
-                                              <svg
-                                                aria-label="위치 추가"
-                                                className={styles.locationSvg}
-                                                fill="currentColor"
-                                                height="16"
-                                                role="img"
-                                                viewBox="0 0 24 24"
-                                                width="16"
-                                              >
-                                                <title>위치 추가</title>
-                                                <path d="M12.053 8.105a1.604 1.604 0 1 0 1.604 1.604 1.604 1.604 0 0 0-1.604-1.604Zm0-7.105a8.684 8.684 0 0 0-8.708 8.66c0 5.699 6.14 11.495 8.108 13.123a.939.939 0 0 0 1.2 0c1.969-1.628 8.109-7.424 8.109-13.123A8.684 8.684 0 0 0 12.053 1Zm0 19.662C9.29 18.198 5.345 13.645 5.345 9.66a6.709 6.709 0 0 1 13.417 0c0 3.985-3.944 8.538-6.709 11.002Z"></path>
-                                              </svg>
-                                            </div>
-                                          </label>
+                                          <MapComponent
+                                            location={location}
+                                            setLocation={setLocation}
+                                          />
                                         </div>
                                       </div>
                                       <div className={styles.AccessibilityDiv}>
@@ -1473,7 +1652,7 @@ export default function NewPost() {
                                               className={styles.AccExpandDiv2}
                                             >
                                               {preview.map((pdata, index) => (
-                                                <>
+                                                <Fragment key={index}>
                                                   <div
                                                     className={
                                                       styles.AccExpandDiv3
@@ -1501,6 +1680,7 @@ export default function NewPost() {
                                                           height={44}
                                                           width={67}
                                                           src={`${preview[index]?.dataUrl}`}
+                                                          priority={true}
                                                           alt={"postImage"}
                                                           className={
                                                             styles.AccExpandImg
@@ -1529,10 +1709,17 @@ export default function NewPost() {
                                                         type="text"
                                                         spellCheck="true"
                                                         name="alt-text"
+                                                        value={altTexts[index]}
+                                                        onChange={(e) =>
+                                                          onClickAltTextChange(
+                                                            e,
+                                                            index
+                                                          )
+                                                        }
                                                       ></input>
                                                     </div>
                                                   </div>
-                                                </>
+                                                </Fragment>
                                               ))}
                                             </div>
                                           </div>

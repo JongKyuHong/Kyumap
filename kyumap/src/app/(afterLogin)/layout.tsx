@@ -1,14 +1,14 @@
 import React, { ReactNode } from "react";
 import styles from "./layout.module.css";
 import RQProvider from "./_component/RQProvider";
+import Nav from "./_component/Nav";
 import { auth } from "@/auth";
-import NavTab from "./_component/NavTab";
-import FollowRecommendSection from "./_component/FollowRecommendSection";
 
 type Props = { children: ReactNode; modal: ReactNode };
 
 export default async function RootLayout({ children, modal }: Props) {
   const session = await auth();
+
   return (
     <div>
       <RQProvider>
@@ -23,15 +23,17 @@ export default async function RootLayout({ children, modal }: Props) {
               <div className={styles.leafParent}>
                 <div className={styles.leafChild}>
                   <div className={styles.container} style={{ height: "100%" }}>
-                    {session?.user && (
+                    {session && session.user && (
                       <>
-                        <NavTab me={session} />
+                        <Nav me={session} />
                         <div className={styles.rightSectionWrapper}>
                           <section className={styles.rootSection}>
-                            <main className={styles.rootMain}>
-                              <div className={styles.mainrootDiv}>
-                                {children}
-                              </div>
+                            <main
+                              className={styles.rootMain}
+                              style={{ height: "90vh", overflowY: "auto" }}
+                              role="main"
+                            >
+                              {children}
                             </main>
                           </section>
                         </div>

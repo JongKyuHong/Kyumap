@@ -2,43 +2,40 @@
 
 import Link from "next/link";
 import styles from "./menudetail.module.css";
-import { useCallback, useState } from "react";
-// import DarkMode from "./DarkMode";
+import { useState } from "react";
+import DarkMode from "./DarkMode";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { useQueryClient } from "@tanstack/react-query";
 
-export default function MenuDetail() {
+type Props = {
+  darkMode: boolean;
+  onClickDark: () => void;
+};
+
+export default function MenuDetail({ darkMode, onClickDark }: Props) {
   const queryClient = useQueryClient();
   const [clicked, setClicked] = useState(false);
-  const [darkMode, setDark] = useState(false);
-
   const router = useRouter();
-  const { data } = useSession();
+  const { data: session } = useSession();
 
-  const onClickDark = useCallback(() => {
-    setDark((darkMode) => !darkMode);
-    console.log(darkMode, "clicked dark");
-  }, [darkMode]);
-
-  const onClickBtn = useCallback(() => {
+  const onClickBtn = () => {
     setClicked((clicked) => !clicked);
-    console.log(clicked, "click");
-  }, [clicked]);
+  };
 
   const onClickLogOut = () => {
+    console.log("여기 들어온거 아니지?");
     queryClient.invalidateQueries({
       queryKey: ["posts"],
     });
     queryClient.invalidateQueries({
       queryKey: ["users"],
     });
-    signOut({ redirect: false }).then(() => {
+    signOut({ callbackUrl: "/" }).then(() => {
       fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/logout`, {
         method: "post",
         credentials: "include",
       });
-      router.replace("/");
     });
   };
 
@@ -55,7 +52,7 @@ export default function MenuDetail() {
                       <div className={styles.navInner4}>
                         <div
                           className={styles.navInner5}
-                          style={{ height: clicked ? "119px" : "290px" }}
+                          style={{ height: clicked ? "119px" : "305px" }}
                         >
                           <div
                             className={styles.navInner6}
@@ -70,7 +67,10 @@ export default function MenuDetail() {
                             aria-hidden={clicked ? "true" : "false"}
                           >
                             <div className={styles.navInner7}>
-                              <Link className={styles.navLink} href="#">
+                              <Link
+                                className={styles.navLink}
+                                href={`/accounts/edit`}
+                              >
                                 <div className={styles.linkDiv}>
                                   <div className={styles.linkInnerDiv}>
                                     <div className={styles.linkInnerDiv2}>
@@ -124,45 +124,10 @@ export default function MenuDetail() {
                                 </div>
                                 <div className={styles.linkDivOuter}></div>
                               </Link>
-                              <Link className={styles.navLink} href="#">
-                                <div className={styles.linkDiv}>
-                                  <div className={styles.linkInnerDiv}>
-                                    <div className={styles.linkInnerDiv2}>
-                                      <div className={styles.navIcon}>
-                                        <div className={styles.iconInner}>
-                                          <svg
-                                            aria-label="내 활동"
-                                            className={styles.Icon}
-                                            fill="currentColor"
-                                            height="18"
-                                            role="img"
-                                            viewBox="0 0 24 24"
-                                            width="18"
-                                          >
-                                            <title>내 활동</title>
-                                            <path d="M19 1H5C2.794 1 1 2.794 1 5v14c0 2.206 1.794 4 4 4h14c2.206 0 4-1.794 4-4V5c0-2.206-1.794-4-4-4ZM5 3h14c1.103 0 2 .897 2 2v6h-2.382l-2.723-5.447c-.34-.678-1.45-.678-1.79 0L9 15.764l-2.105-4.211A1 1 0 0 0 6 11H3V5c0-1.103.897-2 2-2Zm14 18H5c-1.103 0-2-.897-2-2v-6h2.382l2.723 5.447a1 1 0 0 0 1.79 0L15 8.236l2.105 4.211A1 1 0 0 0 18 13h3v6c0 1.103-.897 2-2 2Z"></path>
-                                          </svg>
-                                        </div>
-                                      </div>
-                                      <div className={styles.iconTitle}>
-                                        <div className={styles.titleInner}>
-                                          <div className={styles.spanOuter}>
-                                            <span className={styles.Span}>
-                                              <span
-                                                className={styles.innerSpan}
-                                              >
-                                                내 활동
-                                              </span>
-                                            </span>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className={styles.linkDivOuter}></div>
-                              </Link>
-                              <Link className={styles.navLink} href="#">
+                              <Link
+                                className={styles.navLink}
+                                href={`/profile/${session?.user!.name}/saved`}
+                              >
                                 <div className={styles.linkDiv}>
                                   <div className={styles.linkInnerDiv}>
                                     <div className={styles.linkInnerDiv2}>
@@ -252,23 +217,71 @@ export default function MenuDetail() {
                               </div>
                               <div className={styles.underline}></div>
                               <div
-                                className={styles.linkDiv}
+                                className={styles.linkDivv}
                                 style={{ cursor: "pointer" }}
-                                onClick={onClickLogOut}
+                                // onClick={onClickLogOut}
                               >
-                                <div className={styles.linkInnerDiv}>
-                                  <div className={styles.iconTitle}>
-                                    <div className={styles.titleInner}>
-                                      <div className={styles.spanOuter}>
-                                        <span className={styles.Span}>
-                                          <span className={styles.innerSpan}>
-                                            로그아웃
-                                          </span>
-                                        </span>
+                                <div className={styles.linkDiv}>
+                                  <div className={styles.linkInnerDiv}>
+                                    <div className={styles.iconTitle2}>
+                                      <div className={styles.titleInner2}>
+                                        <div className={styles.spanOuter2}>
+                                          <div className={styles.spanOuter3}>
+                                            <span
+                                              className={styles.Span}
+                                              style={{ lineHeight: "18px" }}
+                                            >
+                                              <span
+                                                className={styles.innerSpan}
+                                              >
+                                                <Link href="/NewLogin">
+                                                  계정전환
+                                                </Link>
+                                              </span>
+                                            </span>
+                                          </div>
+                                        </div>
+                                        <div
+                                          className={styles.titleInnerright}
+                                        ></div>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
+                                {/* <div className={styles.linkDiv2}></div> */}
+                              </div>
+                              <div className={styles.underline2}></div>
+                              <div
+                                className={styles.linkDivv}
+                                style={{ cursor: "pointer" }}
+                                onClick={onClickLogOut}
+                              >
+                                <div className={styles.linkDiv}>
+                                  <div className={styles.linkInnerDiv}>
+                                    <div className={styles.iconTitle2}>
+                                      <div className={styles.titleInner2}>
+                                        <div className={styles.spanOuter2}>
+                                          <div className={styles.spanOuter3}>
+                                            <span
+                                              className={styles.Span}
+                                              style={{ lineHeight: "18px" }}
+                                            >
+                                              <span
+                                                className={styles.innerSpan}
+                                              >
+                                                로그아웃
+                                              </span>
+                                            </span>
+                                          </div>
+                                        </div>
+                                        <div
+                                          className={styles.titleInnerright}
+                                        ></div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                {/* <div className={styles.linkDiv2}></div> */}
                               </div>
                             </div>
                           </div>
@@ -333,18 +346,33 @@ export default function MenuDetail() {
                                       <div className={styles.navIcon}>
                                         <div className={styles.innerIcon}>
                                           <div className={styles.innerIconDiv}>
-                                            <svg
-                                              aria-label="테마 아이콘"
-                                              className={styles.Icon}
-                                              fill="currentColor"
-                                              height="18"
-                                              role="img"
-                                              viewBox="0 0 24 24"
-                                              width="18"
-                                            >
-                                              <title>테마 아이콘</title>
-                                              <path d="M12.00018,4.5a1,1,0,0,0,1-1V2a1,1,0,0,0-2,0V3.5A1.00005,1.00005,0,0,0,12.00018,4.5ZM5.28241,6.69678A.99989.99989,0,1,0,6.69647,5.28271l-1.06054-1.061A.99989.99989,0,0,0,4.22186,5.63574ZM4.50018,12a1,1,0,0,0-1-1h-1.5a1,1,0,0,0,0,2h1.5A1,1,0,0,0,4.50018,12Zm.78223,5.30322-1.06055,1.061a.99989.99989,0,1,0,1.41407,1.41406l1.06054-1.061a.99989.99989,0,0,0-1.41406-1.41407ZM12.00018,19.5a1.00005,1.00005,0,0,0-1,1V22a1,1,0,0,0,2,0V20.5A1,1,0,0,0,12.00018,19.5Zm6.71729-2.19678a.99989.99989,0,0,0-1.41406,1.41407l1.06054,1.061A.99989.99989,0,0,0,19.778,18.36426ZM22.00018,11h-1.5a1,1,0,0,0,0,2h1.5a1,1,0,0,0,0-2ZM18.01044,6.98975a.996.996,0,0,0,.707-.293l1.06055-1.061A.99989.99989,0,0,0,18.364,4.22168l-1.06054,1.061a1,1,0,0,0,.707,1.707ZM12.00018,6a6,6,0,1,0,6,6A6.00657,6.00657,0,0,0,12.00018,6Zm0,10a4,4,0,1,1,4-4A4.00458,4.00458,0,0,1,12.00018,16Z"></path>
-                                            </svg>
+                                            {darkMode ? (
+                                              <svg
+                                                aria-label="테마 아이콘"
+                                                className={styles.Icon}
+                                                fill="currentColor"
+                                                height="18"
+                                                role="img"
+                                                viewBox="0 0 24 24"
+                                                width="18"
+                                              >
+                                                <title>테마 아이콘</title>
+                                                <path d="M11.502,22.99805A11.4313,11.4313,0,0,1,.49512,14.83691a.99889.99889,0,0,1,.251-.998,1.01148,1.01148,0,0,1,.99707-.249,9.43041,9.43041,0,0,0,2.75879.40821A9.5082,9.5082,0,0,0,13.5957,1.74023a1.00039,1.00039,0,0,1,1.24707-1.248A11.501,11.501,0,0,1,11.502,22.99805ZM3.08984,15.91211A9.49991,9.49991,0,0,0,21.002,11.498,9.57875,9.57875,0,0,0,15.916,3.08594,11.5083,11.5083,0,0,1,3.08984,15.91211Z"></path>
+                                              </svg>
+                                            ) : (
+                                              <svg
+                                                aria-label="테마 아이콘"
+                                                className={styles.Icon}
+                                                fill="currentColor"
+                                                height="18"
+                                                role="img"
+                                                viewBox="0 0 24 24"
+                                                width="18"
+                                              >
+                                                <title>테마 아이콘</title>
+                                                <path d="M12.00018,4.5a1,1,0,0,0,1-1V2a1,1,0,0,0-2,0V3.5A1.00005,1.00005,0,0,0,12.00018,4.5ZM5.28241,6.69678A.99989.99989,0,1,0,6.69647,5.28271l-1.06054-1.061A.99989.99989,0,0,0,4.22186,5.63574ZM4.50018,12a1,1,0,0,0-1-1h-1.5a1,1,0,0,0,0,2h1.5A1,1,0,0,0,4.50018,12Zm.78223,5.30322-1.06055,1.061a.99989.99989,0,1,0,1.41407,1.41406l1.06054-1.061a.99989.99989,0,0,0-1.41406-1.41407ZM12.00018,19.5a1.00005,1.00005,0,0,0-1,1V22a1,1,0,0,0,2,0V20.5A1,1,0,0,0,12.00018,19.5Zm6.71729-2.19678a.99989.99989,0,0,0-1.41406,1.41407l1.06054,1.061A.99989.99989,0,0,0,19.778,18.36426ZM22.00018,11h-1.5a1,1,0,0,0,0,2h1.5a1,1,0,0,0,0-2ZM18.01044,6.98975a.996.996,0,0,0,.707-.293l1.06055-1.061A.99989.99989,0,0,0,18.364,4.22168l-1.06054,1.061a1,1,0,0,0,.707,1.707ZM12.00018,6a6,6,0,1,0,6,6A6.00657,6.00657,0,0,0,12.00018,6Zm0,10a4,4,0,1,1,4-4A4.00458,4.00458,0,0,1,12.00018,16Z"></path>
+                                              </svg>
+                                            )}
                                           </div>
                                         </div>
                                       </div>
@@ -352,7 +380,10 @@ export default function MenuDetail() {
                                   </div>
                                 </div>
                               </div>
-                              {/* <DarkMode /> */}
+                              <DarkMode
+                                onClickDark={onClickDark}
+                                darkMode={darkMode}
+                              />
                             </div>
                           </div>
                         </div>

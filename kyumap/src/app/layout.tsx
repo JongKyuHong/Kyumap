@@ -5,7 +5,6 @@ import "./globals.css";
 // const inter = Inter({ subsets: ["latin"] });
 // className={inter.className}
 import styles from "./layout.module.css";
-import { MSWComponent } from "./_component/MSWComponent";
 import AuthSession from "./_component/AuthSession";
 
 export const metadata: Metadata = {
@@ -20,9 +19,16 @@ export default function RootLayout({ children }: Props) {
   return (
     <html lang="ko">
       <body className={styles.MainBody}>
-        <MSWComponent />
         <AuthSession>{children}</AuthSession>
       </body>
+      <script
+        src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
+        async
+      />
+      <script
+        src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.KAKAO_JS_API_KEY}&libraries=services&autoload=false`}
+        async
+      />
     </html>
   );
 }
