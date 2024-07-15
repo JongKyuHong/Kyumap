@@ -37,7 +37,7 @@ export default async function Page({ params }: Props) {
                 <div className={styles.container} style={{ height: "100%" }}>
                   {session?.user && (
                     <>
-                      <NavTab me={session} />
+                      <NavTab />
                       <div className={styles.rightSectionWrapper}>
                         <section className={styles.rootSection}>
                           <main className={styles.rootMain}>
