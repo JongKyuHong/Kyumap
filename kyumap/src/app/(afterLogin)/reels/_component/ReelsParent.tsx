@@ -10,12 +10,8 @@ import Loading from "../../home/loading";
 import crypto from "crypto";
 
 export default function ReelsParent() {
-  const [currentIndex, setCurrentIndex] = useState(
-    Number(localStorage.getItem("reelsIndex")) || 0
-  );
-  const [endIndex, setEndIndex] = useState(
-    Number(localStorage.getItem("reelsLength")) || 0
-  );
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [endIndex, setEndIndex] = useState(0);
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery<
     IPost[],
     Object,
@@ -35,7 +31,7 @@ export default function ReelsParent() {
 
   const allReelsData = useMemo(() => {
     return data?.pages.flat() || [];
-  }, [data?.pages]);
+  }, []);
 
   if (allReelsData && allReelsData.length > 0) {
     const hashId = generateMD5Hash(
@@ -45,13 +41,24 @@ export default function ReelsParent() {
   }
 
   useEffect(() => {
-    if (!localStorage.getItem("reelsLength")) {
-      localStorage.setItem("reelsLength", allReelsData.length.toString());
-      setEndIndex(allReelsData.length);
+    if (typeof window !== "undefined") {
+      const storedIndex = Number(localStorage.getItem("reelsIndex")) || 0;
+      const storedLength = Number(localStorage.getItem("reelsLength")) || 0;
+      setCurrentIndex(storedIndex);
+      setEndIndex(storedLength);
     }
-    if (!localStorage.getItem("reelsIndex")) {
-      localStorage.setItem("reelsIndex", "0");
-      setCurrentIndex(0);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      if (!localStorage.getItem("reelsLength")) {
+        localStorage.setItem("reelsLength", allReelsData.length.toString());
+        setEndIndex(allReelsData.length);
+      }
+      if (!localStorage.getItem("reelsIndex")) {
+        localStorage.setItem("reelsIndex", "0");
+        setCurrentIndex(0);
+      }
     }
   }, [allReelsData.length]);
 
