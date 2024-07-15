@@ -1,20 +1,27 @@
-import { QueryFunction } from "@tanstack/query-core";
-import { Post } from "@/model/Post";
+import { QueryFunctionContext, QueryFunction } from "@tanstack/query-core";
+import { IPost } from "@/model/Post";
 
-type Props = {
-  queryKey: [_1: string, _2: string, string];
+// type Props = {
+//   queryKey: [_1: string, userEmail: string, _2: string];
+//   pageParam: number;
+// };
+
+type Props = QueryFunctionContext<[string, string, string]> & {
   pageParam?: number;
 };
-export const getUserPosts = async ({ queryKey, pageParam }: Props) => {
-  const [_1, _2, username] = queryKey;
+
+export const getUserPosts: QueryFunction<
+  IPost[],
+  [string, string, string],
+  number
+> = async ({ queryKey, pageParam }: Props) => {
+  const [_1, userEmail, _2] = queryKey;
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${username}/posts?cursor=${pageParam}`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${userEmail}/posts?cursor=${pageParam}`,
     {
       next: {
-        tags: ["posts", "users", username],
+        tags: ["user", userEmail, "posts"],
       },
-      credentials: "include",
-      cache: "no-store",
     }
   );
   // The return value is *not* serialized
@@ -25,5 +32,6 @@ export const getUserPosts = async ({ queryKey, pageParam }: Props) => {
     throw new Error("Failed to fetch data");
   }
 
-  return res.json();
+  const data = await res.json();
+  return data;
 };

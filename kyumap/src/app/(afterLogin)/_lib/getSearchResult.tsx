@@ -1,17 +1,20 @@
 import { QueryFunction } from "@tanstack/query-core";
-import { User } from "@/model/User";
+import { IUser } from "@/model/User";
 
 export const getSearchResult: QueryFunction<
-  User[],
+  IUser[],
   [_1: string, searchParams: string]
 > = async ({ queryKey }) => {
   const [_1, searchParams] = queryKey;
-  const res = await fetch(`http://localhost:9090/api/search/${searchParams}`, {
-    next: {
-      tags: ["search", searchParams],
-    },
-    cache: "no-store",
-  });
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/search/${searchParams}`,
+    {
+      next: {
+        tags: ["search", searchParams],
+      },
+      cache: "no-store",
+    }
+  );
   // The return value is *not* serialized
   // You can return Date, Map, Set, etc.
 
@@ -20,5 +23,7 @@ export const getSearchResult: QueryFunction<
     throw new Error("Failed to fetch data");
   }
 
-  return res.json();
+  const data = await res.json();
+  console.log(data, "검색 데이터");
+  return data;
 };

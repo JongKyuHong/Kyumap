@@ -2720,6 +2720,9 @@
   outline: none !important;
   font-weight: normal;
   font-family: var(--font-family-system);
+  resize: none; /* 크기 변경 비활성화 */
+  overflow: hidden;
+  white-space: pre-wrap; /* 줄 바꿈 허용 */
 }
 
 .locationSvgDiv {
@@ -2741,6 +2744,7 @@
   flex-grow: 0;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+  cursor: pointer !important;
 }
 
 .locationSvg {
@@ -2857,7 +2861,6 @@
   margin-left: 0;
   background-color: rgb(var(--ig-separator));
   margin-right: 0;
-  background-color: #dadde1;
   color: #dadde1;
 }
 
