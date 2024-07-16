@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "@/app/(beforeLogin)/_component/login.module.css";
+import styles from "./login.module.css";
 import { ChangeEventHandler, FormEventHandler, useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
@@ -9,6 +9,7 @@ export default function LoginModal() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
   const onClickClose = () => {
@@ -18,6 +19,7 @@ export default function LoginModal() {
 
   const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     setMessage("");
     try {
       await signIn("credentials", {
@@ -25,6 +27,7 @@ export default function LoginModal() {
         password,
         redirect: false,
       });
+      setIsLoading(false);
       router.replace("/home");
     } catch (error) {
       console.error(error);
@@ -58,42 +61,77 @@ export default function LoginModal() {
           </button>
           <div>로그인하세요.</div>
         </div>
-        <form onSubmit={onSubmit}>
-          <div className={styles.modalBody}>
-            <div className={styles.inputDiv}>
-              <label className={styles.inputLabel} htmlFor="id">
-                아이디
-              </label>
-              <input
-                id="id"
-                className={styles.input}
-                value={id}
-                type="text"
-                placeholder=""
-                onChange={onChangeId}
-              />
-            </div>
-            <div className={styles.inputDiv}>
-              <label className={styles.inputLabel} htmlFor="password">
-                비밀번호
-              </label>
-              <input
-                id="password"
-                className={styles.input}
-                value={password}
-                type="password"
-                placeholder=""
-                onChange={onChangePassword}
-              />
-            </div>
+        {isLoading ? (
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <svg
+              className={styles.loader}
+              height="100%"
+              viewBox="0 0 32 32"
+              width={40}
+            >
+              <circle
+                cx="16"
+                cy="16"
+                fill="none"
+                r="14"
+                strokeWidth="4"
+                style={{ stroke: "rgb(29, 155, 240)", opacity: 0.2 }}
+              ></circle>
+              <circle
+                cx="16"
+                cy="16"
+                fill="none"
+                r="14"
+                strokeWidth="4"
+                style={{
+                  stroke: "rgb(29, 155, 240)",
+                  strokeDasharray: 80,
+                  strokeDashoffset: 60,
+                }}
+              ></circle>
+            </svg>
           </div>
-          <div className={styles.message}>{message}</div>
-          <div className={styles.modalFooter}>
-            <button className={styles.actionButton} disabled={!id && !password}>
-              로그인하기
-            </button>
-          </div>
-        </form>
+        ) : (
+          <form onSubmit={onSubmit}>
+            <div className={styles.modalBody}>
+              <div className={styles.inputDiv}>
+                <label className={styles.inputLabel} htmlFor="id">
+                  아이디
+                </label>
+                <input
+                  id="id"
+                  className={styles.input}
+                  value={id}
+                  type="text"
+                  placeholder=""
+                  onChange={onChangeId}
+                />
+              </div>
+              <div className={styles.inputDiv}>
+                <label className={styles.inputLabel} htmlFor="password">
+                  비밀번호
+                </label>
+                <input
+                  id="password"
+                  className={styles.input}
+                  value={password}
+                  type="password"
+                  placeholder=""
+                  onChange={onChangePassword}
+                />
+              </div>
+            </div>
+            <div className={styles.message}>{message}</div>
+            <div className={styles.modalFooter}>
+              <button
+                className={styles.actionButton}
+                disabled={!id && !password}
+              >
+                로그인하기
+              </button>
+            </div>
+          </form>
+        )}
       </div>
     </div>
   );

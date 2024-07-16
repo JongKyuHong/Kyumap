@@ -1,9 +1,10 @@
 "use client";
 
+import React, { useState } from "react";
 import styles from "./signup.module.css";
 import BackButton from "./BackButton";
 import { useFormState, useFormStatus } from "react-dom";
-import onSubmit from "../_lib/signup";
+import signup from "../_lib/signup";
 
 function showMessage(message: string | null) {
   if (message === "no_id") {
@@ -28,8 +29,17 @@ function showMessage(message: string | null) {
 }
 
 export default function SignupModal() {
-  const [state, formAction] = useFormState(onSubmit, { message: null });
+  // const [state, formAction] = useFormState(onSubmit, { message: null });
+  const [state, setState] = useState({ message: null });
+  const [isLoading, setIsLoading] = useState(false);
   const { pending } = useFormStatus();
+
+  const onSubmit = async (formData: FormData) => {
+    setIsLoading(true);
+    const result = await signup(null, formData);
+    setState(result);
+    setIsLoading(false);
+  };
 
   return (
     <>
@@ -39,72 +49,112 @@ export default function SignupModal() {
             <BackButton />
             <div>계정을 생성하세요.</div>
           </div>
-          <form action={formAction}>
-            <div className={styles.modalBody}>
-              <div className={styles.inputDiv}>
-                <label className={styles.inputLabel} htmlFor="id">
-                  이메일
-                </label>
-                <input
-                  id="id"
-                  name="id"
-                  className={styles.input}
-                  type="email"
-                  placeholder=""
-                  required
-                />
-              </div>
-              <div className={styles.inputDiv}>
-                <label className={styles.inputLabel} htmlFor="name">
-                  닉네임
-                </label>
-                <input
-                  id="name"
-                  name="name"
-                  className={styles.input}
-                  type="text"
-                  placeholder=""
-                  required
-                />
-              </div>
-              <div className={styles.inputDiv}>
-                <label className={styles.inputLabel} htmlFor="password">
-                  비밀번호
-                </label>
-                <input
-                  id="password"
-                  name="password"
-                  className={styles.input}
-                  type="password"
-                  placeholder=""
-                  required
-                />
-              </div>
-              <div className={styles.inputDiv}>
-                <label className={styles.inputLabel} htmlFor="image">
-                  프로필
-                </label>
-                <input
-                  id="image"
-                  name="image"
-                  className={styles.input}
-                  type="file"
-                  accept="image/*"
-                  required
-                />
-              </div>
-            </div>
-            <div className={styles.modalFooter}>
-              <button
-                type="submit"
-                className={styles.actionButton}
-                disabled={pending} //
+          {isLoading ? (
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <svg
+                className={styles.loader}
+                height="100%"
+                viewBox="0 0 32 32"
+                width={40}
               >
-                가입하기
-              </button>
-              <div className={styles.error}>{showMessage(state?.message)}</div>
+                <circle
+                  cx="16"
+                  cy="16"
+                  fill="none"
+                  r="14"
+                  strokeWidth="4"
+                  style={{ stroke: "rgb(29, 155, 240)", opacity: 0.2 }}
+                ></circle>
+                <circle
+                  cx="16"
+                  cy="16"
+                  fill="none"
+                  r="14"
+                  strokeWidth="4"
+                  style={{
+                    stroke: "rgb(29, 155, 240)",
+                    strokeDasharray: 80,
+                    strokeDashoffset: 60,
+                  }}
+                ></circle>
+              </svg>
             </div>
-          </form>
+          ) : (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+                onSubmit(formData);
+              }}
+            >
+              <div className={styles.modalBody}>
+                <div className={styles.inputDiv}>
+                  <label className={styles.inputLabel} htmlFor="id">
+                    이메일
+                  </label>
+                  <input
+                    id="id"
+                    name="id"
+                    className={styles.input}
+                    type="email"
+                    placeholder=""
+                    required
+                  />
+                </div>
+                <div className={styles.inputDiv}>
+                  <label className={styles.inputLabel} htmlFor="name">
+                    닉네임
+                  </label>
+                  <input
+                    id="name"
+                    name="name"
+                    className={styles.input}
+                    type="text"
+                    placeholder=""
+                    required
+                  />
+                </div>
+                <div className={styles.inputDiv}>
+                  <label className={styles.inputLabel} htmlFor="password">
+                    비밀번호
+                  </label>
+                  <input
+                    id="password"
+                    name="password"
+                    className={styles.input}
+                    type="password"
+                    placeholder=""
+                    required
+                  />
+                </div>
+                <div className={styles.inputDiv}>
+                  <label className={styles.inputLabel} htmlFor="image">
+                    프로필
+                  </label>
+                  <input
+                    id="image"
+                    name="image"
+                    className={styles.input}
+                    type="file"
+                    accept="image/*"
+                    required
+                  />
+                </div>
+              </div>
+              <div className={styles.modalFooter}>
+                <button
+                  type="submit"
+                  className={styles.actionButton}
+                  disabled={pending} //
+                >
+                  가입하기
+                </button>
+                <div className={styles.error}>
+                  {showMessage(state?.message)}
+                </div>
+              </div>
+            </form>
+          )}
         </div>
       </div>
     </>

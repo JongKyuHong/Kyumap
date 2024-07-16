@@ -40,7 +40,6 @@ export default function NavTab({ session }: Props) {
   // const { data: session } = useSession();
 
   const userEmail = session?.user?.email;
-  console.log(userEmail, session, "session");
   const queryClient = useQueryClient();
 
   const onClickEx = () => {
@@ -102,10 +101,38 @@ export default function NavTab({ session }: Props) {
     enabled: !!userEmail,
   });
 
-  console.log(userData, "userData");
-
   if (userLoading) {
-    return <div>로딩중...</div>;
+    return (
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <svg
+          className={styles.loader}
+          height="100%"
+          viewBox="0 0 32 32"
+          width={40}
+        >
+          <circle
+            cx="16"
+            cy="16"
+            fill="none"
+            r="14"
+            strokeWidth="4"
+            style={{ stroke: "rgb(29, 155, 240)", opacity: 0.2 }}
+          ></circle>
+          <circle
+            cx="16"
+            cy="16"
+            fill="none"
+            r="14"
+            strokeWidth="4"
+            style={{
+              stroke: "rgb(29, 155, 240)",
+              strokeDasharray: 80,
+              strokeDashoffset: 60,
+            }}
+          ></circle>
+        </svg>
+      </div>
+    );
   }
 
   const onClickDark = () => {
