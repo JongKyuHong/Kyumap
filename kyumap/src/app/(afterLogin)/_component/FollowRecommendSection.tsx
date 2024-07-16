@@ -8,7 +8,6 @@ import styles from "./mainsection.module.css";
 import useDeviceSize from "./useDeviceSize";
 import Link from "next/link";
 import Image from "next/image";
-import { useSession } from "next-auth/react";
 
 type Props = {
   session: any;
@@ -16,7 +15,6 @@ type Props = {
 
 export default function FollowRecommendSection({ session }: Props) {
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
-  // const { data: session } = useSession();
   const { data: RecommendsData, isLoading } = useQuery<IUser[]>({
     queryKey: ["users", "followRecommends", session?.user!.email],
     queryFn: () => getFollowRecommends(session?.user!.email as string),
@@ -24,7 +22,37 @@ export default function FollowRecommendSection({ session }: Props) {
     gcTime: 300 * 1000,
   });
   if (isLoading) {
-    return <p>로딩중...</p>;
+    return (
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <svg
+          className={styles.loader}
+          height="100%"
+          viewBox="0 0 32 32"
+          width={40}
+        >
+          <circle
+            cx="16"
+            cy="16"
+            fill="none"
+            r="14"
+            strokeWidth="4"
+            style={{ stroke: "rgb(29, 155, 240)", opacity: 0.2 }}
+          ></circle>
+          <circle
+            cx="16"
+            cy="16"
+            fill="none"
+            r="14"
+            strokeWidth="4"
+            style={{
+              stroke: "rgb(29, 155, 240)",
+              strokeDasharray: 80,
+              strokeDashoffset: 60,
+            }}
+          ></circle>
+        </svg>
+      </div>
+    );
   }
   if (!isDesktop || !session) return null;
 
