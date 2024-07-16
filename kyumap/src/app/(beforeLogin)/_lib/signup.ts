@@ -17,6 +17,7 @@ interface PresignedPostData {
 }
 
 const signup = async (prevState: any, formData: FormData) => {
+  console.log(formData, "formData 회원가입");
   if (!formData.get("id") || !(formData.get("id") as string)?.trim()) {
     return { message: "no_id" };
   }
