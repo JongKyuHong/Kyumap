@@ -15,40 +15,19 @@ export const {
   },
   callbacks: {
     jwt({ token }) {
-      // console.log("auth.ts jwt", token);
       return token;
     },
     session({ session, newSession, user }) {
-      // console.log("auth.ts session", session, newSession, user);
       return session;
     },
   },
   events: {
-    signOut(data) {
-      // console.log(
-      //   "auth.ts events signout",
-      //   "session" in data && data.session,
-      //   "token" in data && data.token
-      // );
-      // if ('session' in data) {
-      //   data.session = null;
-      // }
-      // if ('token' in data) {
-      //   data.token = null;
-      // }
-    },
-    session(data) {
-      // console.log(
-      //   "auth.ts events session",
-      //   "session" in data && data.session,
-      //   "token" in data && data.token
-      // );
-    },
+    signOut(data) {},
+    session(data) {},
   },
   providers: [
     CredentialsProvider({
       async authorize(credentials) {
-        // console.log(credentials, "credentials");
         const authResponse = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/login`,
           {
@@ -65,7 +44,6 @@ export const {
         );
 
         let setCookie = authResponse.headers.get("Set-Cookie");
-        // console.log("set-cookie", setCookie);
         if (setCookie) {
           const parsed = cookie.parse(setCookie);
           cookies().set("connect.sid", parsed["connect.sid"], parsed); // 브라우저에 쿠키를 심어주는 것
@@ -82,7 +60,6 @@ export const {
         }
 
         const user = await authResponse.json();
-        // console.log(user, "userloginData");
         return {
           email: user.email,
           name: user.nickname,

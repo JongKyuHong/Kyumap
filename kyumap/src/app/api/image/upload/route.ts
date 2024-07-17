@@ -39,7 +39,6 @@ export async function GET(req: NextRequest, res: NextResponse) {
   });
   const s3 = new aws.S3();
   const filename = req.nextUrl.searchParams.get("file");
-  console.log(filename, "filename api");
   const type = req.nextUrl.searchParams.get("type");
   if (!filename || !type) {
     return NextResponse.json({ error: "Invalid file or type", status: 400 });

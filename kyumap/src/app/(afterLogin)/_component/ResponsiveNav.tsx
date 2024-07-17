@@ -17,9 +17,7 @@ export default function ResponsiveNav() {
     const savedDarkMode = localStorage.getItem("darkMode");
     if (savedDarkMode !== null) {
       const isDark = JSON.parse(savedDarkMode);
-      console.log(isDark, "isDark");
       setDark(isDark);
-      console.log(isDark, "isDark2");
       document.documentElement.setAttribute(
         "color-theme",
         isDark ? "dark" : "light"

@@ -12,7 +12,6 @@ async function dbConnect() {
     });
 
     connection.isConnected = db.connections[0].readyState;
-    console.log(`Connected to database: ${process.env.MONGODB_DB_NAME}`);
   } catch (err) {
     console.error("Failed to connect to MongoDB", err);
     throw err;

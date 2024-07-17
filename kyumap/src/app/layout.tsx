@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-
-// const inter = Inter({ subsets: ["latin"] });
-// className={inter.className}
+import Script from "next/script";
 import styles from "./layout.module.css";
 import AuthSession from "./_component/AuthSession";
 
@@ -21,13 +18,21 @@ export default function RootLayout({ children }: Props) {
       <body className={styles.MainBody}>
         <AuthSession>{children}</AuthSession>
       </body>
-      <script
+      {/* <script
         src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
         async
       />
       <script
         src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.KAKAO_JS_API_KEY}&libraries=services&autoload=false`}
         async
+      /> */}
+      <Script
+        src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
+        strategy="afterInteractive"
+      />
+      <Script
+        src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.KAKAO_JS_API_KEY}&libraries=services&autoload=false`}
+        strategy="afterInteractive"
       />
     </html>
   );

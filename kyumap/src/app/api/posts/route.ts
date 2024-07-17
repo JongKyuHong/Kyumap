@@ -33,10 +33,8 @@ export async function GET(
 }
 
 export async function POST(req: NextRequest) {
-  console.log("Received POST request");
   try {
     await dbConnect();
-    console.log("Database connected");
   } catch (err) {
     console.error("Database connection failed:", err);
     return NextResponse.json({ error: "Database connection failed" });
@@ -45,7 +43,6 @@ export async function POST(req: NextRequest) {
   let reqBody;
   try {
     reqBody = await req.formData();
-    console.log("Request body parsed");
   } catch (err) {
     console.error("Failed to parse request body:", err);
     return NextResponse.json({ error: "Failed to parse request body" });
@@ -82,7 +79,6 @@ export async function POST(req: NextRequest) {
   let postId;
   try {
     postId = await getNextSequenceValue("postId");
-    console.log(`Generated postId: ${postId}`);
   } catch (err) {
     console.error("Failed to get next sequence value:", err);
     return NextResponse.json({ error: "Failed to get next sequence value" });
@@ -121,7 +117,6 @@ export async function POST(req: NextRequest) {
       { new: true }
     );
     const post = await Post.create(data);
-    console.log(`Post created with postId: ${post.postId}`);
     return NextResponse.json(post);
   } catch (err: any) {
     console.error("Failed to create post:", err);

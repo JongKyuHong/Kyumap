@@ -232,11 +232,6 @@ export default function Commentli({
   let parts: any[] = [];
   if (comment && comment.content) {
     parts = comment.content.split(/(@\w+)/g);
-    // 여기서 parts를 사용하세요.
-    console.log(parts, "asdf");
-  } else {
-    // comment나 comment.content가 undefined일 때의 처리를 여기에 적으세요.
-    console.log("hihi");
   }
 
   return (

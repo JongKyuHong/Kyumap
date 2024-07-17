@@ -27,7 +27,6 @@ const KMapMarker = ({ position, nickname, content, imgsrc, id }: Props) => {
   const onClickMarker = () => {
     setVisible((prev) => !prev);
   };
-  console.log(id, "idkampmarker");
 
   return (
     <MapMarker

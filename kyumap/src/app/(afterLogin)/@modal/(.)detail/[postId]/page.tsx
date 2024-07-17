@@ -26,7 +26,6 @@ export default async function page({ params }: Props) {
     queryFn: getPost,
   });
   const post = await getPost({ queryKey: ["posts", postId] });
-  console.log(post, "page post");
   const dehydrateState = dehydrate(queryClient);
 
   if (!post) return null;
