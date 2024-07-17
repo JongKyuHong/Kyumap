@@ -35,7 +35,6 @@ export default function MyMap({ userEmail }: Props) {
     KaKaoLoader;
   }, [userEmail, KaKaoLoader]);
 
-  console.log(mapData, "mapData");
   return (
     // <div className={styles.divStyle}>
     <div>

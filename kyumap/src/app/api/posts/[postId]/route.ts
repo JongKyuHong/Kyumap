@@ -20,12 +20,10 @@ export async function DELETE(req: NextRequest, { params }: Props) {
     await dbConnect();
     const postId = Number(params.postId);
     const userEmail = await req.json();
-    console.log(postId, userEmail, "asldkfjaklsdjfl");
     const post = await Post.findOneAndDelete({
       postId: postId,
       "User.email": userEmail,
     });
-    console.log(post, "post");
     if (!post) {
       return NextResponse.json({
         error: "게시글을 찾을 수 없거나 권한이 없습니다.",

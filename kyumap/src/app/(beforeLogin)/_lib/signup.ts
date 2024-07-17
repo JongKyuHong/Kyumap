@@ -3,19 +3,6 @@
 import { redirect } from "next/navigation";
 import { signIn, auth } from "@/auth";
 
-interface PresignedPostData {
-  url: string;
-  fields: {
-    key: string;
-    bucket: string;
-    "X-Amz-Algorithm": string;
-    "X-Amz-Credential": string;
-    "X-Amz-Date": string;
-    Policy: string;
-    "X-Amz-Signature": string;
-  };
-}
-
 const signup = async (prevState: any, formData: FormData) => {
   if (!formData.get("id") || !(formData.get("id") as string)?.trim()) {
     return { message: "no_id" };
@@ -32,6 +19,7 @@ const signup = async (prevState: any, formData: FormData) => {
   if (!formData.get("image")) {
     return { message: "no_image" };
   }
+
   formData.set("nickname", formData.get("name") as string);
   let shouldRedirect = false;
   try {
@@ -46,14 +34,12 @@ const signup = async (prevState: any, formData: FormData) => {
       }
     );
     const checkDuplicateResult = await checkDuplicate.json();
-    console.log(checkDuplicateResult, "response");
     if (checkDuplicateResult.status === 400) {
       return { message: checkDuplicateResult.message };
     }
 
     let file = formData.get("image") as any;
     let filename = encodeURIComponent(file.name);
-    // console.log(filename, "filename");
     const imageType = "image";
     let result_url: any = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/image/upload?file=${filename}&type=${imageType}`
@@ -73,7 +59,7 @@ const signup = async (prevState: any, formData: FormData) => {
       method: "POST",
       body: ImageFormData,
     });
-    console.log(uploadResult.ok, "이미지 url 업로드");
+
     if (uploadResult.ok) {
       formData.set("imageUrl", uploadResult.url + "/image/" + filename);
       const response = await fetch(

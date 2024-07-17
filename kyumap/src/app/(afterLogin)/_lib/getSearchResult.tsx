@@ -24,6 +24,5 @@ export const getSearchResult: QueryFunction<
   }
 
   const data = await res.json();
-  console.log(data, "검색 데이터");
   return data;
 };

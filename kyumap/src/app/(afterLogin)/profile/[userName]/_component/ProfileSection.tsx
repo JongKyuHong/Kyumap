@@ -47,6 +47,8 @@ export default function ProfileSection({ userEmail, userName }: Props) {
 
   useEffect(() => {
     if (segment === "saved") {
+      setNum(3);
+    } else if (segment === "myMap") {
       setNum(2);
     } else if (segment === "reels") {
       setNum(1);
@@ -647,6 +649,35 @@ export default function ProfileSection({ userEmail, userName }: Props) {
             <span className={styles.PostLinkSpan}>릴스</span>
           </div>
         </Link>
+        <Link
+          aria-selected="false"
+          className={styles.PostVideoLink}
+          href={`/profile/${userName}/myMap`}
+          role="tab"
+          tabIndex={0}
+          onClick={() => setNum(2)}
+          style={{
+            color:
+              tabNum === 2
+                ? "rgb(var(--ig-primary-text))"
+                : "rgb(115, 115, 115)",
+            borderTop:
+              tabNum === 2 ? "1px solid rgb(var(--ig-primary-text))" : "0",
+          }}
+        >
+          <div className={styles.PostLinkDiv}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+            >
+              <path d="M10.567 0c-3.235 0-5.868 2.626-5.868 5.868 0 .878.361 2.036.879 3.353s1.202 2.78 1.884 4.148c1.365 2.732 2.732 5.086 2.732 5.086.416.768 1.779.768 2.195 0 0 0 1.367-2.354 2.732-5.086.682-1.368 1.202-2.78 1.884-4.148.518-1.317.879-2.475.879-3.353C16.435 2.626 13.802 0 10.567 0zM10.567 2.283c1.534 0 2.782 1.248 2.782 2.782 0 1.534-1.248 2.782-2.782 2.782-1.534 0-2.782-1.248-2.782-2.782 0-1.534 1.248-2.782 2.782-2.782zm-5.795 13.046L.638 18.119v6.945l4.234-1.861zm15.631 0L16.269 18.119v6.945l4.234-1.861zm-10.832.568v6.364l4.234 1.861v-6.363c-.459.848-.789 1.42-.789 1.42-.362.625-1.34.625-1.702 0C9.569 17.515 9.15 16.551 8.571 15.897z" />
+            </svg>
+
+            <span className={styles.PostLinkSpan}>지도보기</span>
+          </div>
+        </Link>
         {session && userName === session?.user!.name && (
           <Link
             aria-selected="false"
@@ -654,14 +685,14 @@ export default function ProfileSection({ userEmail, userName }: Props) {
             href={`/profile/${userName}/saved`}
             role="tab"
             tabIndex={0}
-            onClick={() => setNum(2)}
+            onClick={() => setNum(3)}
             style={{
               color:
-                tabNum === 2
+                tabNum === 3
                   ? "rgb(var(--ig-primary-text))"
                   : "rgb(115, 115, 115)",
               borderTop:
-                tabNum === 2 ? "1px solid rgb(var(--ig-primary-text))" : "0",
+                tabNum === 3 ? "1px solid rgb(var(--ig-primary-text))" : "0",
             }}
           >
             <div className={styles.PostLinkDiv}>
