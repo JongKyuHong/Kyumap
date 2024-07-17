@@ -19,7 +19,7 @@ import {
   useQueryClient,
   InfiniteData,
 } from "@tanstack/react-query";
-import useDeviceSize from "../../_component/useDeviceSize";
+import useDeviceSize from "../../../_component/useDeviceSize";
 import { IPost } from "@/model/Post";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
