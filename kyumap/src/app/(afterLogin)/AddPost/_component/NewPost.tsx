@@ -24,36 +24,13 @@ import { IPost } from "@/model/Post";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import MapComponent from "./MapComponent";
+import { getCoordinatesFromAddress } from "./action";
 
 interface PreviewItem {
   dataUrl: string;
   file: File;
   type: "image" | "video";
   thumbnailUrl?: string;
-}
-
-async function getCoordinatesFromAddress(address: string) {
-  const apiKey = `${process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY}`;
-  const url = `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(
-    address
-  )}`;
-
-  console.log(address, "address");
-
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `KakaoAK ${apiKey}`,
-    },
-  });
-
-  const data = await response.json();
-
-  if (data.documents.length > 0) {
-    const { y: latitude, x: longitude } = data.documents[0].address;
-    return { latitude, longitude };
-  } else {
-    throw new Error("Address not found");
-  }
 }
 
 export default function NewPost() {
@@ -107,29 +84,22 @@ export default function NewPost() {
       const altTextsLst = [];
       for (let idx = 0; idx < preview.length; idx++) {
         const { file, type } = preview[idx];
-        console.log(file, type, "file아직 인코딩 하기 전");
         let filename = encodeURIComponent(file.name);
-        // console.log(filename, "filename");
-        // 프리사인 url받기
         let result_url: any = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/image/upload?file=${filename}&type=${type}`
         );
 
         result_url = await result_url.json();
-        // console.log(result_url, "result_url");
         const ImageFormData = new FormData();
         Object.entries({ ...result_url.fields, file }).forEach(
           ([key, value]) => {
             ImageFormData.append(key, value as string);
           }
         );
-        // console.log(ImageFormData, "imageFormData");
-        // 업로드
         let uploadResult = await fetch(result_url.url, {
           method: "POST",
           body: ImageFormData,
         });
-        console.log(uploadResult, "ok나오나???");
         let url = uploadResult.url + `/${type}/` + filename;
         urlformLst.push(url);
         altTextsLst.push(altTexts[idx]);
@@ -406,7 +376,6 @@ export default function NewPost() {
 
   const addEmoticon = (e: React.MouseEvent<HTMLDivElement>) => {
     const innerText = e.currentTarget.innerText || "";
-    console.log(innerText, "asdfasdfas");
     setContent((prevText) => prevText + innerText);
   };
 

@@ -38,7 +38,6 @@ export default function Reels({ userEmail }: Props) {
       staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
       gcTime: 300 * 1000,
     });
-  // console.log(data, "data");
 
   const user = queryClient.getQueryData(["users", userEmail]);
 

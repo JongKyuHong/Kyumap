@@ -28,9 +28,7 @@ export default function LoginModal() {
     const savedDarkMode = localStorage.getItem("darkMode");
     if (savedDarkMode !== null) {
       const isDark = JSON.parse(savedDarkMode);
-      console.log(isDark, "isDark");
       setDark(isDark);
-      console.log(isDark, "isDark2");
       document.documentElement.setAttribute(
         "color-theme",
         isDark ? "dark" : "light"
@@ -62,9 +60,6 @@ export default function LoginModal() {
         password,
         redirect: false,
       });
-
-      console.log(signInResponse, "asdf");
-
       if (signInResponse?.error) {
         throw new Error(signInResponse.error);
       }

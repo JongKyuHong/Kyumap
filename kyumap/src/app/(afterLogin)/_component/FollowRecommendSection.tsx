@@ -190,7 +190,7 @@ export default function FollowRecommendSection({ session }: Props) {
                         }}
                       >
                         {RecommendsData &&
-                          RecommendsData?.map((user, index) => (
+                          RecommendsData.map((user, index) => (
                             <FollowList user={user} key={index} />
                           ))}
                       </div>

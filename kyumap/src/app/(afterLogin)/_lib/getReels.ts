@@ -33,6 +33,5 @@ export const getReels: QueryFunction<
   }
 
   const data = await res.json();
-  console.log(data, "api data 저장됨");
   return data;
 };

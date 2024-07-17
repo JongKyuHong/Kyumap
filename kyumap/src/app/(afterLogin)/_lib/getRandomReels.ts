@@ -32,6 +32,5 @@ export const getRandomReels: QueryFunction<
   }
 
   const data = await res.json();
-  console.log(data, "api reels data 저장됨");
   return data;
 };
