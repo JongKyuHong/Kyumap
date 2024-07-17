@@ -38,7 +38,6 @@ export default function UserPosts({ userEmail }: Props) {
       staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
       gcTime: 300 * 1000,
     });
-  // console.log(data, "data");
 
   const user = queryClient.getQueryData(["users", userEmail]);
 
@@ -59,7 +58,6 @@ export default function UserPosts({ userEmail }: Props) {
   if (data && data.pages) {
     const platData = data.pages.flat();
     for (let i = 0; i < platData.length; i += chunkSize) {
-      console.log(platData[i]);
       UserPost.push(platData.slice(i, i + chunkSize));
     }
   }
@@ -69,8 +67,6 @@ export default function UserPosts({ userEmail }: Props) {
   };
 
   if (!user) return null;
-
-  console.log(UserPost, "userPost");
 
   return (
     <>

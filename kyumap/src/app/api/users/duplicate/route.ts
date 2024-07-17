@@ -7,8 +7,6 @@ export async function POST(req: NextRequest) {
   const data = await req.json();
   const email = data.email;
   const nickname = data.nickname;
-  console.log(email, nickname);
-
   const emailExists = await User.findOne({ email: email });
   if (emailExists) {
     return NextResponse.json({ message: "already_use_email", status: 400 });

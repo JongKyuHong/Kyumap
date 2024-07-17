@@ -135,10 +135,8 @@ export default function DetailPage({ post }: Props) {
   useEffect(() => {
     if (post && post.Images && post.Images[currentNumber]) {
       if (post.Images[currentNumber].endsWith(".mp4")) {
-        console.log("동영상");
         setImg(false);
       } else {
-        console.log("이미지");
         setImg(true);
       }
     }
@@ -160,18 +158,14 @@ export default function DetailPage({ post }: Props) {
     onMutate() {
       const queryCache = queryClient.getQueryCache();
       const queryKeys = queryCache.getAll().map((cache) => cache.queryKey);
-      console.log("queryKeys", queryKeys);
-
       queryKeys.forEach((queryKey) => {
         if (queryKey[0] === "posts") {
           const value: IPost | InfiniteData<IPost[]> | undefined =
             queryClient.getQueryData(queryKey);
           if (value && "pages" in value) {
-            console.log("array", value);
             const obj = value.pages
               .flat()
               .find((v) => v.postId === Number(postId));
-            console.log(obj, "obj");
             if (obj) {
               // 존재는 하는지
               const pageIndex = value.pages.findIndex((page) =>
@@ -192,7 +186,6 @@ export default function DetailPage({ post }: Props) {
                 },
               };
               queryClient.setQueryData(queryKey, shallow);
-              console.log(shallow, "shallow");
             }
           } else if (value) {
             // 싱글 포스트인 경우
@@ -205,7 +198,6 @@ export default function DetailPage({ post }: Props) {
                   Hearts: value._count.Hearts + 1,
                 },
               };
-              console.log(shallow, "shallow");
               queryClient.setQueryData(queryKey, shallow);
             }
           }
@@ -215,13 +207,11 @@ export default function DetailPage({ post }: Props) {
     onError() {
       const queryCache = queryClient.getQueryCache();
       const queryKeys = queryCache.getAll().map((cache) => cache.queryKey);
-      console.log("queryKeys", queryKeys);
       queryKeys.forEach((queryKey) => {
         if (queryKey[0] === "posts") {
           const value: IPost | InfiniteData<IPost[]> | undefined =
             queryClient.getQueryData(queryKey);
           if (value && "pages" in value) {
-            console.log("array", value);
             const obj = value.pages
               .flat()
               .find((v) => v.postId === Number(postId));
@@ -233,7 +223,6 @@ export default function DetailPage({ post }: Props) {
               const index = value.pages[pageIndex].findIndex(
                 (v) => v.postId === Number(postId)
               );
-              console.log("found index", index);
               const shallow: any = { ...value };
               value.pages = { ...value.pages };
               value.pages[pageIndex] = [...value.pages[pageIndex]];
@@ -287,7 +276,6 @@ export default function DetailPage({ post }: Props) {
     onMutate() {
       const queryCache = queryClient.getQueryCache();
       const queryKeys = queryCache.getAll().map((cache) => cache.queryKey);
-      console.log("queryKeys", queryKeys);
       queryKeys.forEach((queryKey) => {
         if (queryKey[0] === "posts") {
           // const value: IPost | InfiniteData<IPost[]> | undefined =
@@ -296,7 +284,6 @@ export default function DetailPage({ post }: Props) {
             queryKey
           );
           if (value && "pages" in value) {
-            console.log("array", value);
             const obj = value.pages
               .flat()
               .find((v) => v.postId === Number(postId));
@@ -345,14 +332,11 @@ export default function DetailPage({ post }: Props) {
     onError() {
       const queryCache = queryClient.getQueryCache();
       const queryKeys = queryCache.getAll().map((cache) => cache.queryKey);
-      console.log("queryKeys", queryKeys);
       queryKeys.forEach((queryKey) => {
         if (queryKey[0] === "posts") {
-          console.log(queryKey[0]);
           const value: IPost | InfiniteData<IPost[]> | undefined =
             queryClient.getQueryData(queryKey);
           if (value && "pages" in value) {
-            console.log("array", value);
             const obj = value.pages
               .flat()
               .find((v) => v.postId === Number(postId));
@@ -946,8 +930,6 @@ export default function DetailPage({ post }: Props) {
     setCType(ctype);
   };
 
-  // console.log(CommentText, "CommentText");
-
   const CommentInfo = (commenttext: string, id: string) => {};
 
   const onClickExitBtnClose = () => {
@@ -960,7 +942,6 @@ export default function DetailPage({ post }: Props) {
       return null;
     }
     const userSession = session.user;
-    // console.log("submitComment : ", CommentText, session, isCtype);
     if (!isCtype) {
       // true면 comment
       if (replyTarget) {

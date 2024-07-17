@@ -24,7 +24,6 @@ export default function MenuDetail({ darkMode, onClickDark }: Props) {
   };
 
   const onClickLogOut = () => {
-    console.log("여기 들어온거 아니지?");
     queryClient.invalidateQueries({
       queryKey: ["posts"],
     });
