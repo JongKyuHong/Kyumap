@@ -465,132 +465,150 @@ export default function NewPost() {
           <div className={styles.ModalInnerDiv4} tabIndex={-1}>
             <div className={styles.ModalInnerDiv5}>
               <div className={styles.ModalInnerDiv6}>
-                {isLoading ? (
-                  <LoadingComponent />
-                ) : (
-                  <div
-                    className={styles.ModalInnerDiv7}
-                    aria-label="새 게시물 만들기"
-                    role="dialog"
-                    onClick={stopPropa}
-                  >
-                    <div className={styles.ModalInnerDiv8}>
-                      <div className={styles.ModalInnerDiv9} role="dialog">
+                <div
+                  className={styles.ModalInnerDiv7}
+                  aria-label="새 게시물 만들기"
+                  role="dialog"
+                  onClick={stopPropa}
+                >
+                  <div className={styles.ModalInnerDiv8}>
+                    <div className={styles.ModalInnerDiv9} role="dialog">
+                      <div
+                        style={{
+                          ...calculateSize(),
+                        }}
+                      >
                         <div
-                          style={{
-                            ...calculateSize(),
-                          }}
+                          className={styles.ModalInnerDiv10}
+                          onDragOver={(e) => e.preventDefault()}
                         >
-                          <div
-                            className={styles.ModalInnerDiv10}
-                            onDragOver={(e) => e.preventDefault()}
-                          >
-                            <div className={styles.ModalInnerDiv11}>
-                              <div
-                                className={styles.ModalHeader}
-                                style={{ width: "100%" }}
-                              >
-                                <div className={styles.ModalHeader2}>
-                                  <div className={styles.ModalHeader3}>
-                                    <div
-                                      className={styles.ModalHeader4}
-                                      style={{ width: "100%", height: "100%" }}
+                          <div className={styles.ModalInnerDiv11}>
+                            <div
+                              className={styles.ModalHeader}
+                              style={{ width: "100%" }}
+                            >
+                              <div className={styles.ModalHeader2}>
+                                <div className={styles.ModalHeader3}>
+                                  <div
+                                    className={styles.ModalHeader4}
+                                    style={{ width: "100%", height: "100%" }}
+                                    dir="auto"
+                                    tabIndex={-1}
+                                  >
+                                    <h1
+                                      className={styles.HeaderH1}
                                       dir="auto"
                                       tabIndex={-1}
+                                      style={{
+                                        width: preview.length
+                                          ? "calc(100% - 120px)"
+                                          : "calc(100% + 0px)",
+                                      }}
                                     >
-                                      <h1
-                                        className={styles.HeaderH1}
-                                        dir="auto"
-                                        tabIndex={-1}
-                                        style={{
-                                          width: preview.length
-                                            ? "calc(100% - 120px)"
-                                            : "calc(100% + 0px)",
-                                        }}
+                                      <div className={styles.HeaderDiv}>
+                                        {preview.length
+                                          ? "자르기"
+                                          : "새 게시물 만들기"}
+                                      </div>
+                                    </h1>
+                                  </div>
+                                  <div className={styles.Underleft}>
+                                    {preview && (
+                                      <div
+                                        className={styles.backarrowbtn}
+                                        // onClick={onRemovePreview}
+                                        onClick={onClickExitBtn}
                                       >
-                                        <div className={styles.HeaderDiv}>
-                                          {preview.length
-                                            ? "자르기"
-                                            : "새 게시물 만들기"}
-                                        </div>
-                                      </h1>
-                                    </div>
-                                    <div className={styles.Underleft}>
-                                      {preview && (
                                         <div
-                                          className={styles.backarrowbtn}
-                                          // onClick={onRemovePreview}
-                                          onClick={onClickExitBtn}
+                                          className={styles.backarrowbtn2}
+                                          role="button"
+                                          tabIndex={0}
                                         >
-                                          <div
-                                            className={styles.backarrowbtn2}
-                                            role="button"
-                                            tabIndex={0}
-                                          >
-                                            <div
-                                              className={styles.backarrowbtn3}
+                                          <div className={styles.backarrowbtn3}>
+                                            <span
+                                              className={styles.backarrowbtn4}
+                                              style={{
+                                                display: "inline-block",
+                                                transform: "rotate(0deg)",
+                                              }}
                                             >
-                                              <span
-                                                className={styles.backarrowbtn4}
-                                                style={{
-                                                  display: "inline-block",
-                                                  transform: "rotate(0deg)",
-                                                }}
+                                              <svg
+                                                aria-label="돌아가기"
+                                                className={
+                                                  styles.backarrowbtnSvg
+                                                }
+                                                fill="currentColor"
+                                                height="24"
+                                                role="img"
+                                                viewBox="0 0 24 24"
+                                                width="24"
                                               >
-                                                <svg
-                                                  aria-label="돌아가기"
-                                                  className={
-                                                    styles.backarrowbtnSvg
-                                                  }
-                                                  fill="currentColor"
-                                                  height="24"
-                                                  role="img"
-                                                  viewBox="0 0 24 24"
-                                                  width="24"
-                                                >
-                                                  <title>돌아가기</title>
-                                                  <line
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth="2"
-                                                    x1="2.909"
-                                                    x2="22.001"
-                                                    y1="12.004"
-                                                    y2="12.004"
-                                                  ></line>
-                                                  <polyline
-                                                    fill="none"
-                                                    points="9.276 4.726 2.001 12.004 9.276 19.274"
-                                                    stroke="currentColor"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth="2"
-                                                  ></polyline>
-                                                </svg>
-                                              </span>
-                                            </div>
+                                                <title>돌아가기</title>
+                                                <line
+                                                  fill="none"
+                                                  stroke="currentColor"
+                                                  strokeLinecap="round"
+                                                  strokeLinejoin="round"
+                                                  strokeWidth="2"
+                                                  x1="2.909"
+                                                  x2="22.001"
+                                                  y1="12.004"
+                                                  y2="12.004"
+                                                ></line>
+                                                <polyline
+                                                  fill="none"
+                                                  points="9.276 4.726 2.001 12.004 9.276 19.274"
+                                                  stroke="currentColor"
+                                                  strokeLinecap="round"
+                                                  strokeLinejoin="round"
+                                                  strokeWidth="2"
+                                                ></polyline>
+                                              </svg>
+                                            </span>
                                           </div>
                                         </div>
-                                      )}
-                                    </div>
-                                    <div className={styles.Underright}>
-                                      {preview.length > 0 && (
-                                        <div className={styles.NextBtn}>
-                                          <div
-                                            className={styles.NextBtn2}
-                                            onClick={onSubmit}
-                                          >
-                                            공유하기
-                                          </div>
+                                      </div>
+                                    )}
+                                  </div>
+                                  <div className={styles.Underright}>
+                                    {preview.length > 0 && (
+                                      <div className={styles.NextBtn}>
+                                        <div
+                                          className={styles.NextBtn2}
+                                          onClick={onSubmit}
+                                        >
+                                          공유하기
                                         </div>
-                                      )}
-                                    </div>
+                                      </div>
+                                    )}
                                   </div>
                                 </div>
                               </div>
                             </div>
+                          </div>
+                          {isLoading ? (
+                            <div
+                              className={styles.ModalBody}
+                              style={{
+                                width: isDesktop
+                                  ? "1195px"
+                                  : isTablet
+                                  ? "898px"
+                                  : "378px",
+                                height: isDesktop
+                                  ? "700px"
+                                  : isTablet
+                                  ? "558px"
+                                  : "378px",
+                                justifyContent: "center" /* 수평 중앙 정렬 */,
+                                alignItems: "center" /* 수직 중앙 정렬 */,
+                              }}
+                            >
+                              <div className="loading">
+                                <LoadingComponent />
+                              </div>
+                            </div>
+                          ) : (
                             <div
                               className={styles.ModalBody}
                               style={{
@@ -1182,7 +1200,9 @@ export default function NewPost() {
                                                         className={
                                                           styles.EmoDiv1
                                                         }
-                                                        style={{ left: "10px" }}
+                                                        style={{
+                                                          left: "10px",
+                                                        }}
                                                       ></div>
                                                       <div
                                                         className={
@@ -2071,12 +2091,12 @@ export default function NewPost() {
                                 </div>
                               </div>
                             </div>
-                          </div>
+                          )}
                         </div>
                       </div>
                     </div>
                   </div>
-                )}
+                </div>
               </div>
             </div>
           </div>

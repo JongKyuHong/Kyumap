@@ -467,6 +467,13 @@
   flex-grow: 1;
 }
 
+.loading {
+  display: flex;
+  justify-content: center; /* 수평 중앙 정렬 */
+  align-items: center; /* 수직 중앙 정렬 */
+  width: 100%;
+  height: 100%;
+}
 .ModalBodyDiv {
   width: calc(100% - var(--creation-settings-width));
   height: 100%;
