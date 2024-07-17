@@ -2,7 +2,14 @@ import styles from "./loading.module.css";
 
 export default function LoadingComponent() {
   return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        position: "relative",
+      }}
+    >
       <svg
         className={styles.loader}
         height="100%"
