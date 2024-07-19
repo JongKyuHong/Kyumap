@@ -97,9 +97,9 @@ export default function MyMap({ userEmail }: Props) {
                 lat: parseFloat(v.position.lat),
                 lng: parseFloat(v.position.lng),
               }}
-              nickname={v.User.nickname}
+              storeTitle={v.title}
               content={v.content}
-              imgsrc={v.Images[0]}
+              imgsrc={v.thumbnail || v.Images[0]}
               id={index}
             ></KMapMarker>
           ))}

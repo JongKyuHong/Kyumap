@@ -51,12 +51,14 @@ export async function POST(req: NextRequest) {
   const userEmail = reqBody.get("userEmail");
   const userImage = reqBody.get("userImage");
   const userName = reqBody.get("userName");
+  const title = reqBody.get("title");
   const content = reqBody.get("content");
   const lat = reqBody.get("lat");
   const lng = reqBody.get("lng");
   const isHideInfo = reqBody.get("isHideInfo") === "true";
   const isHideComments = reqBody.get("isHideComments") === "true";
   const reels = reqBody.get("reels") === "true";
+  const thumbnail = reqBody.get("thumbnail");
 
   let images = [];
   const imagesString = reqBody.get("images");
@@ -91,9 +93,11 @@ export async function POST(req: NextRequest) {
       image: userImage,
       nickname: userName,
     },
+    title: title,
     content: content,
     Images: images,
     altTexts: altTexts,
+    thumbnail: thumbnail,
     Hearts: [],
     Comments: [],
     hideLikesAndViews: isHideInfo,

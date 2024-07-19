@@ -3,9 +3,6 @@
 import React, {
   ChangeEventHandler,
   ChangeEvent,
-  ReactEventHandler,
-  FormEventHandler,
-  useCallback,
   useRef,
   useState,
   useEffect,
@@ -14,11 +11,7 @@ import React, {
 } from "react";
 import styles from "./newpost.module.css";
 import { useRouter } from "next/navigation";
-import {
-  useMutation,
-  useQueryClient,
-  InfiniteData,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useDeviceSize from "../../../_component/useDeviceSize";
 import { IPost } from "@/model/Post";
 import Image from "next/image";
@@ -51,6 +44,7 @@ export default function NewPost() {
   const [altTexts, setAltTexts] = useState(preview.map(() => "")); // 대체 텍스트
   const [darktheme, setTheme] = useState<boolean>(false);
   const [location, setLocation] = useState<string>("");
+  const [storeTitle, setTitle] = useState<string>("");
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -85,8 +79,11 @@ export default function NewPost() {
       let lastType = "";
       const urlformLst = [];
       const altTextsLst = [];
+      let thumbnailUrl = ""; // 단일 섬네일 URL
+
+      console.log(preview, "preview");
       for (let idx = 0; idx < preview.length; idx++) {
-        const { file, type } = preview[idx];
+        const { dataUrl, file, type } = preview[idx];
         let filename = encodeURIComponent(file.name);
         let result_url: any = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/image/upload?file=${filename}&type=${type}`
@@ -106,6 +103,28 @@ export default function NewPost() {
         let url = uploadResult.url + `/${type}/` + filename;
         urlformLst.push(url);
         altTextsLst.push(altTexts[idx]);
+
+        if (type === "video" && !thumbnailUrl) {
+          // 섬네일에 대한 presigned URL 생성
+          const thumbnailFilename = `${filename}-thumbnail.png`;
+          let thumbnailResultUrl: any = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/image/upload?file=${thumbnailFilename}&type=image`
+          );
+          thumbnailResultUrl = await thumbnailResultUrl.json();
+          const ThumbnailFormData = new FormData();
+          const blob = await fetch(dataUrl).then((res) => res.blob());
+          Object.entries({ ...thumbnailResultUrl.fields, file: blob }).forEach(
+            ([key, value]) => {
+              ThumbnailFormData.append(key, value as string);
+            }
+          );
+          await fetch(thumbnailResultUrl.url, {
+            method: "POST",
+            body: ThumbnailFormData,
+          });
+          thumbnailUrl = thumbnailResultUrl.url + `/image/${thumbnailFilename}`;
+        }
+
         lastType = type;
       }
 
@@ -118,6 +137,7 @@ export default function NewPost() {
 
       postFormData.append("images", JSON.stringify(urlformLst));
       postFormData.append("altTexts", JSON.stringify(altTextsLst));
+      postFormData.append("thumbnail", thumbnailUrl); // 단일 섬네일 URL 추가
       postFormData.append("isHideInfo", isArticleInfoHide.toString());
       postFormData.append("isHideComments", isCommentHide.toString());
 
@@ -138,6 +158,7 @@ export default function NewPost() {
         postFormData.append("userName", session.user.name);
       if (session?.user?.image)
         postFormData.append("userImage", session.user.image);
+      postFormData.append("title", storeTitle);
       postFormData.append("content", content);
 
       return fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posts`, {
@@ -185,8 +206,15 @@ export default function NewPost() {
   });
 
   const onSubmit = (e: FormEvent) => {
+    e.preventDefault();
     if (isPending) return;
-    mutate(e);
+    if (!storeTitle) {
+      alert("가게 이름을 입력해 주세요");
+    } else if (!location) {
+      alert("주소를 입력해 주세요");
+    } else {
+      mutate(e);
+    }
   };
 
   const generateVideoThumbnail = (file: File): Promise<string> => {
@@ -230,7 +258,7 @@ export default function NewPost() {
   const onUpload: ChangeEventHandler<HTMLInputElement> = async (e) => {
     e.preventDefault();
     if (e.target.files && e.target.files.length > 0) {
-      let newPreviews: PreviewItem[] = [...preview]; // 변경 사항 없음
+      let newPreviews: PreviewItem[] = [...preview];
 
       const filePromises = Array.from(e.target.files).map(async (file) => {
         if (file.type.startsWith("video")) {
@@ -1637,12 +1665,43 @@ export default function NewPost() {
                                         </div>
                                         <div className={styles.locationDiv}>
                                           <div className={styles.locationDiv2}>
+                                            <div
+                                              className={styles.locationDiv2}
+                                            >
+                                              <label
+                                                className={styles.locationDiv3}
+                                                style={{ height: "auto" }}
+                                              >
+                                                <label
+                                                  className={styles.titleLabel}
+                                                >
+                                                  가게 이름
+                                                </label>
+                                                <textarea
+                                                  autoComplete="off"
+                                                  spellCheck="true"
+                                                  name="creation-title-input"
+                                                  className={
+                                                    styles.locationInput
+                                                  }
+                                                  value={storeTitle}
+                                                  onChange={(e) =>
+                                                    setTitle(e.target.value)
+                                                  }
+                                                />
+                                              </label>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div className={styles.locationDiv}>
+                                          <div className={styles.locationDiv2}>
                                             <MapComponent
                                               location={location}
                                               setLocation={setLocation}
                                             />
                                           </div>
                                         </div>
+
                                         <div
                                           className={styles.AccessibilityDiv}
                                         >
