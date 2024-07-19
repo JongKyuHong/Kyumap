@@ -4,6 +4,7 @@ import styles from "./login.module.css";
 import { ChangeEventHandler, FormEventHandler, useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import LoadingComponent from "@/app/_component/LoadingComponent";
 
 export default function LoginModal() {
   const [id, setId] = useState("");
@@ -62,35 +63,7 @@ export default function LoginModal() {
           <div>로그인하세요.</div>
         </div>
         {isLoading ? (
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <svg
-              className={styles.loader}
-              height="100%"
-              viewBox="0 0 32 32"
-              width={40}
-            >
-              <circle
-                cx="16"
-                cy="16"
-                fill="none"
-                r="14"
-                strokeWidth="4"
-                style={{ stroke: "rgb(29, 155, 240)", opacity: 0.2 }}
-              ></circle>
-              <circle
-                cx="16"
-                cy="16"
-                fill="none"
-                r="14"
-                strokeWidth="4"
-                style={{
-                  stroke: "rgb(29, 155, 240)",
-                  strokeDasharray: 80,
-                  strokeDashoffset: 60,
-                }}
-              ></circle>
-            </svg>
-          </div>
+          <LoadingComponent />
         ) : (
           <form onSubmit={onSubmit}>
             <div className={styles.modalBody}>

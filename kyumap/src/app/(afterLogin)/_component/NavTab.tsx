@@ -16,6 +16,7 @@ import { IUser } from "../../../model/User";
 import { getUser } from "@/app/(afterLogin)/_lib/getUser";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
+import LoadingComponent from "@/app/_component/LoadingComponent";
 
 type Props = {
   session: any;
@@ -102,37 +103,7 @@ export default function NavTab({ session }: Props) {
   });
 
   if (userLoading) {
-    return (
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <svg
-          className={styles.loader}
-          height="100%"
-          viewBox="0 0 32 32"
-          width={40}
-        >
-          <circle
-            cx="16"
-            cy="16"
-            fill="none"
-            r="14"
-            strokeWidth="4"
-            style={{ stroke: "rgb(29, 155, 240)", opacity: 0.2 }}
-          ></circle>
-          <circle
-            cx="16"
-            cy="16"
-            fill="none"
-            r="14"
-            strokeWidth="4"
-            style={{
-              stroke: "rgb(29, 155, 240)",
-              strokeDasharray: 80,
-              strokeDashoffset: 60,
-            }}
-          ></circle>
-        </svg>
-      </div>
-    );
+    return <LoadingComponent />;
   }
 
   const onClickDark = () => {
