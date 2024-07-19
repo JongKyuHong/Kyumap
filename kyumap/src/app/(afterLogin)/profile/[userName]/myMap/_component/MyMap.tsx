@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Map, useKakaoLoader } from "react-kakao-maps-sdk";
-import styles from "./MyMap.module.css";
+import { Map } from "react-kakao-maps-sdk";
 import KMapMarker from "./kMapMarker";
+import LoadingComponent from "@/app/_component/LoadingComponent";
+import useKakaoLoader from "./useKakaoLoader";
 
 type Props = {
   userEmail: String;
@@ -12,11 +13,22 @@ type Props = {
 export default function MyMap({ userEmail }: Props) {
   // 여기서 await로 음식점 데이터만 골라서 가져옴
   const [mapData, setMapData] = useState<any[]>([]);
+  const [userLocation, setUserLocation] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
+  const [loadingState, setLoadingState] = useState<boolean>(false);
+  const [errorState, setErrorState] = useState<ErrorEvent>();
 
-  const KaKaoLoader = useKakaoLoader({
-    appkey: process.env.NEXT_PUBLIC_API_KAKAO_KEY as string,
-    libraries: ["clusterer", "drawing", "services"],
-  });
+  // const [loading, error] = useKakaoLoader({
+  //   appkey: process.env.NEXT_PUBLIC_API_KAKAO_KEY as string,
+  //   libraries: ["clusterer", "drawing", "services"],
+  // });
+
+  // useEffect(() => {
+  //   setLoadingState(loading);
+  //   setErrorState(error);
+  // }, [loading, error]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,8 +44,32 @@ export default function MyMap({ userEmail }: Props) {
     };
 
     fetchData();
-    KaKaoLoader;
-  }, [userEmail, KaKaoLoader]);
+  }, [userEmail]);
+  useKakaoLoader();
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error("Error getting user location:", error);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+    }
+  }, []);
+
+  // console.log(loading, error, "error");
+  // if (loadingState) return <LoadingComponent />;
+  // if (errorState) return <div>Error loading map: {errorState.message}</div>;
+
+  const center = userLocation || { lat: 37.5666612, lng: 126.9783785 };
 
   return (
     // <div className={styles.divStyle}>
@@ -50,7 +86,8 @@ export default function MyMap({ userEmail }: Props) {
         }}
       >
         <Map
-          center={{ lat: 37.5666612, lng: 126.9783785 }}
+          // center={{ lat: 37.5666612, lng: 126.9783785 }}
+          center={center}
           style={{ width: "100%", height: "100%" }}
         >
           {mapData.map((v, index) => (
@@ -60,9 +97,9 @@ export default function MyMap({ userEmail }: Props) {
                 lat: parseFloat(v.position.lat),
                 lng: parseFloat(v.position.lng),
               }}
-              nickname={v.User.nickname}
+              storeTitle={v.title}
               content={v.content}
-              imgsrc={v.Images[0]}
+              imgsrc={v.thumbnail || v.Images[0]}
               id={index}
             ></KMapMarker>
           ))}

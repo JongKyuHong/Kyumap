@@ -89,11 +89,11 @@ export default function MapComponent({ location, setLocation }: Props) {
     <>
       <div className={styles.locationDiv2}>
         <label className={styles.locationDiv3} style={{ height: "auto" }}>
+          <label className={styles.titleLabel}>위치 추가</label>
           <textarea
             autoComplete="off"
             spellCheck="true"
             name="creation-location-input"
-            placeholder="위치 추가"
             className={styles.locationInput}
             value={location}
             readOnly

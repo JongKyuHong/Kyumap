@@ -1,8 +1,7 @@
-import React from "react";
+import NewPost from "../@modal/(.)AddPost/_component/NewPost";
 import Home from "../home/page";
-import NewPost from "./_component/NewPost";
 
-export default async function page() {
+export default function page() {
   return (
     <>
       <Home />

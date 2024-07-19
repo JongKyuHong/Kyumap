@@ -19,6 +19,8 @@ type Props = {
   userEmail: string;
 };
 
+const videoExtensions = [".mp4", ".avi", ".mov", ".wmv", ".flv", ".mkv"];
+
 export default function UserPosts({ userEmail }: Props) {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -66,6 +68,10 @@ export default function UserPosts({ userEmail }: Props) {
     router.push(`/AddPost`);
   };
 
+  const isVideo = (url: string) => {
+    return videoExtensions.some((ext) => url.toLowerCase().endsWith(ext));
+  };
+
   if (!user) return null;
 
   return (
@@ -93,14 +99,18 @@ export default function UserPosts({ userEmail }: Props) {
                     >
                       <div className={styles.LinkDiv}>
                         <div className={styles.LinkDiv2}>
-                          {rdata.Images[0].endsWith(".mp4") ? (
-                            <video
+                          {isVideo(rdata.Images[0]) ? (
+                            <Image
+                              width={0}
+                              height={0}
+                              sizes="100vw"
                               style={{
                                 objectFit: "cover",
                               }}
-                              src={`${rdata.Images[0]}`}
+                              src={`${rdata.thumbnail}`}
                               className={styles.ImageLink}
-                            ></video>
+                              alt={`${rdata.content}`}
+                            />
                           ) : (
                             <Image
                               style={{

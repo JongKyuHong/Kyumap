@@ -9,6 +9,7 @@ interface UserID {
 export interface IPost extends Document {
   postId: number;
   User: IUser;
+  title: string;
   content: string;
   createdAt: Date;
   Images: string[];
@@ -21,6 +22,7 @@ export interface IPost extends Document {
     lat: string;
     lng: string;
   };
+  thumbnail: string; // 섬네일 추가
   _count: {
     Hearts: number;
     Comments: number;
@@ -35,6 +37,10 @@ const postSchema: Schema = new mongoose.Schema({
   },
   User: {
     type: userSchema,
+    required: true,
+  },
+  title: {
+    type: String,
     required: true,
   },
   content: {
@@ -74,6 +80,9 @@ const postSchema: Schema = new mongoose.Schema({
   position: {
     lat: { type: String, default: "" },
     lng: { type: String, default: "" },
+  },
+  thumbnail: {
+    type: String, // 섬네일 추가
   },
   _count: {
     Hearts: { type: Number, default: 0 },
