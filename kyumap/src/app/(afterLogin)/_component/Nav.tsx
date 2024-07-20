@@ -1,8 +1,3 @@
-import {
-  HydrationBoundary,
-  QueryClient,
-  dehydrate,
-} from "@tanstack/react-query";
 import NavTab from "./NavTab";
 
 type Props = {
@@ -10,12 +5,5 @@ type Props = {
 };
 
 export default async function Nav({ me }: Props) {
-  const queryClient = new QueryClient();
-  const dehydrateState = dehydrate(queryClient);
-
-  return (
-    <HydrationBoundary state={dehydrateState}>
-      <NavTab session={me} />
-    </HydrationBoundary>
-  );
+  return <NavTab session={me} />;
 }

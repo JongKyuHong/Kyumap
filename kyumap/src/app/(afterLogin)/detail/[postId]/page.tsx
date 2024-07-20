@@ -21,44 +21,47 @@ type Props = {
 
 export default async function Page({ params }: Props) {
   const session = await auth();
-  const post = await getPost({ queryKey: ["posts", params.postId] });
   return (
-    <div>
-      <div>
-        <div className={styles.rootDiv}>
-          <div className={styles.rootDivInner}>
-            <div className={styles.rootDivInner2}></div>
-          </div>
-        </div>
-        <div className={styles.rootBody} style={{ left: "0px" }}>
-          <div className={styles.rootChild}>
-            <div className={styles.leafParent}>
-              <div className={styles.leafChild}>
-                <div className={styles.container} style={{ height: "100%" }}>
-                  {session?.user && (
-                    <>
-                      <NavTab session={session} />
-                      <div className={styles.rightSectionWrapper}>
-                        <section className={styles.rootSection}>
-                          <main className={styles.rootMain}>
-                            <div className={styles.mainrootDiv}>
-                              <Home />
-                            </div>
-                          </main>
-                        </section>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-            <div>
-              <div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <DetailPage post={post} />
-    </div>
+    // <div>
+    //   <div>
+    //     <div className={styles.rootDiv}>
+    //       <div className={styles.rootDivInner}>
+    //         <div className={styles.rootDivInner2}></div>
+    //       </div>
+    //     </div>
+    //     <div className={styles.rootBody} style={{ left: "0px" }}>
+    //       <div className={styles.rootChild}>
+    //         <div className={styles.leafParent}>
+    //           <div className={styles.leafChild}>
+    //             <div className={styles.container} style={{ height: "100%" }}>
+    //               {session?.user && (
+    //                 <>
+    //                   <NavTab session={session} />
+    //                   <div className={styles.rightSectionWrapper}>
+    //                     <section className={styles.rootSection}>
+    //                       <main className={styles.rootMain}>
+    //                         <div className={styles.mainrootDiv}>
+    //                           <Home />
+    //                         </div>
+    //                       </main>
+    //                     </section>
+    //                   </div>
+    //                 </>
+    //               )}
+    //             </div>
+    //           </div>
+    //         </div>
+    //         <div>
+    //           <div></div>
+    //         </div>
+    //       </div>
+    //     </div>
+    //   </div>
+    //   <DetailPage postId={params.postId} />
+    // </div>
+    <>
+      <Home />
+      <DetailPage postId={params.postId} />
+    </>
   );
 }

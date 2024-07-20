@@ -81,7 +81,6 @@ export default function NewPost() {
       const altTextsLst = [];
       let thumbnailUrl = ""; // 단일 섬네일 URL
 
-      console.log(preview, "preview");
       for (let idx = 0; idx < preview.length; idx++) {
         const { dataUrl, file, type } = preview[idx];
         let filename = encodeURIComponent(file.name);
