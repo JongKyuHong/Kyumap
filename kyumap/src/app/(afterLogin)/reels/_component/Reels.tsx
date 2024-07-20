@@ -350,7 +350,9 @@ export default function Reels({ post }: Props) {
                       className={styles.heartsCnt4}
                       style={{ lineHeight: "16px" }}
                     >
-                      <span className={styles.heartsCnt5}>{"하트갯수"}</span>
+                      <span className={styles.heartsCnt5}>
+                        {post._count.Hearts}
+                      </span>
                     </span>
                   </div>
                 </div>
@@ -385,7 +387,7 @@ export default function Reels({ post }: Props) {
                         dir="auto"
                       >
                         <span className={styles.commentsCnt4}>
-                          {"코멘트 갯수"}
+                          {post._count.Comments}
                         </span>
                       </span>
                     </div>

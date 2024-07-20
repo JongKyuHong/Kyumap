@@ -22,17 +22,12 @@ interface Props {
   post: IPost;
 }
 
-interface PostData {
-  _count: {
-    Comments: number;
-  };
-}
-
 export default function ActionButtons({ post }: Props) {
   const queryClient = useQueryClient();
   const { data: session } = useSession();
   const [CommentText, setComment] = useState("");
   const [isLiked, setLiked] = useState(false);
+  const [isLiking, setIsLiking] = useState(false);
   const [commentCount, setCommentCount] = useState(0);
   const [isSaved, setSaved] = useState(false);
 
@@ -55,9 +50,8 @@ export default function ActionButtons({ post }: Props) {
       setLiked(liked);
       setSaved(ssave);
     };
+    console.log(queryClient, "hi");
     fetchData();
-    // const liked = !!post?.Hearts?.find((v) => v.email === session?.user?.email);
-    // setLiked(liked);
   }, [post, session, queryClient]);
 
   const router = useRouter();
@@ -75,7 +69,10 @@ export default function ActionButtons({ post }: Props) {
         }
       );
     },
-    onMutate() {
+    onMutate: async () => {
+      if (isLiking) return; // 이미 요청 중이면 아무 작업도 하지 않음
+      setIsLiking(true); // 요청 시작 시 상태 업데이트
+
       const queryCache = queryClient.getQueryCache();
       const queryKeys = queryCache.getAll().map((cache) => cache.queryKey);
       queryKeys.forEach((queryKey) => {
@@ -85,7 +82,6 @@ export default function ActionButtons({ post }: Props) {
           if (value && "pages" in value) {
             const obj = value.pages.flat().find((v) => v.postId === postId);
             if (obj) {
-              // 존재는 하는지
               const pageIndex = value.pages.findIndex((page) =>
                 page.includes(obj)
               );
@@ -106,7 +102,6 @@ export default function ActionButtons({ post }: Props) {
               queryClient.setQueryData(queryKey, shallow);
             }
           } else if (value) {
-            // 싱글 포스트인 경우
             if (value.postId === postId) {
               const shallow = {
                 ...value,
@@ -122,61 +117,12 @@ export default function ActionButtons({ post }: Props) {
         }
       });
     },
-    onSuccess() {
+    onError: () => {
       queryClient.invalidateQueries({ queryKey: ["post", postId] });
     },
-    onError() {
-      const queryCache = queryClient.getQueryCache();
-      const queryKeys = queryCache.getAll().map((cache) => cache.queryKey);
-      queryKeys.forEach((queryKey) => {
-        if (queryKey[0] === "posts") {
-          const value: IPost | InfiniteData<IPost[]> | undefined =
-            queryClient.getQueryData(queryKey);
-          if (value && "pages" in value) {
-            const obj = value.pages.flat().find((v) => v.postId === postId);
-            if (obj) {
-              // 존재는 하는지
-              const pageIndex = value.pages.findIndex((page) =>
-                page.includes(obj)
-              );
-              const index = value.pages[pageIndex].findIndex(
-                (v) => v.postId === postId
-              );
-              const shallow: any = { ...value };
-              value.pages = { ...value.pages };
-              value.pages[pageIndex] = [...value.pages[pageIndex]];
-              shallow.pages[pageIndex][index] = {
-                ...shallow.pages[pageIndex][index],
-                Hearts: shallow.pages[pageIndex][index].Hearts.filter(
-                  (v: any) => v.email !== session?.user?.email
-                ),
-                _count: {
-                  ...shallow.pages[pageIndex][index]._count,
-                  Hearts: shallow.pages[pageIndex][index]._count.Hearts - 1,
-                },
-              };
-              queryClient.setQueryData(queryKey, shallow);
-            }
-          } else if (value) {
-            // 싱글 포스트인 경우
-            if (value.postId === postId) {
-              const shallow = {
-                ...value,
-                Hearts: value.Hearts.filter(
-                  (v) => v.email !== session?.user?.email
-                ),
-                _count: {
-                  ...value._count,
-                  Hearts: value._count.Hearts - 1,
-                },
-              };
-              queryClient.setQueryData(queryKey, shallow);
-            }
-          }
-        }
-      });
+    onSettled: () => {
+      setIsLiking(false);
     },
-    onSettled() {},
   });
 
   const unheart = useMutation({
@@ -190,7 +136,10 @@ export default function ActionButtons({ post }: Props) {
         }
       );
     },
-    onMutate() {
+    onMutate: async () => {
+      if (isLiking) return; // 이미 요청 중이면 아무 작업도 하지 않음
+      setIsLiking(true); // 요청 시작 시 상태 업데이트
+
       const queryCache = queryClient.getQueryCache();
       const queryKeys = queryCache.getAll().map((cache) => cache.queryKey);
       queryKeys.forEach((queryKey) => {
@@ -200,7 +149,6 @@ export default function ActionButtons({ post }: Props) {
           if (value && "pages" in value) {
             const obj = value.pages.flat().find((v) => v.postId === postId);
             if (obj) {
-              // 존재는 하는지
               const pageIndex = value.pages.findIndex((page) =>
                 page.includes(obj)
               );
@@ -223,7 +171,6 @@ export default function ActionButtons({ post }: Props) {
               queryClient.setQueryData(queryKey, shallow);
             }
           } else if (value) {
-            // 싱글 포스트인 경우
             if (value.postId === postId) {
               const shallow = {
                 ...value,
@@ -241,57 +188,12 @@ export default function ActionButtons({ post }: Props) {
         }
       });
     },
-    onSuccess() {
-      queryClient.refetchQueries({ queryKey: ["post", "recommends"] });
+    onError: () => {
+      queryClient.invalidateQueries({ queryKey: ["post", postId] });
     },
-    onError() {
-      const queryCache = queryClient.getQueryCache();
-      const queryKeys = queryCache.getAll().map((cache) => cache.queryKey);
-      queryKeys.forEach((queryKey) => {
-        if (queryKey[0] === "posts") {
-          const value: IPost | InfiniteData<IPost[]> | undefined =
-            queryClient.getQueryData(queryKey);
-          if (value && "pages" in value) {
-            const obj = value.pages.flat().find((v) => v.postId === postId);
-            if (obj) {
-              // 존재는 하는지
-              const pageIndex = value.pages.findIndex((page) =>
-                page.includes(obj)
-              );
-              const index = value.pages[pageIndex].findIndex(
-                (v) => v.postId === postId
-              );
-              const shallow: any = { ...value };
-              value.pages = { ...value.pages };
-              value.pages[pageIndex] = [...value.pages[pageIndex]];
-              shallow.pages[pageIndex][index] = {
-                ...shallow.pages[pageIndex][index],
-                Hearts: [{ email: session?.user?.email as string }],
-                _count: {
-                  ...shallow.pages[pageIndex][index]._count,
-                  Hearts: shallow.pages[pageIndex][index]._count.Hearts + 1,
-                },
-              };
-              queryClient.setQueryData(queryKey, shallow);
-            }
-          } else if (value) {
-            // 싱글 포스트인 경우
-            if (value.postId === postId) {
-              const shallow = {
-                ...value,
-                Hearts: [{ email: session?.user?.email as string }],
-                _count: {
-                  ...value._count,
-                  Hearts: value._count.Hearts + 1,
-                },
-              };
-              queryClient.setQueryData(queryKey, shallow);
-            }
-          }
-        }
-      });
+    onSettled: () => {
+      setIsLiking(false);
     },
-    onSettled() {},
   });
 
   const saved = useMutation({
@@ -431,6 +333,7 @@ export default function ActionButtons({ post }: Props) {
   // 하트를 클릭했을때
   const onClickHeart: MouseEventHandler<HTMLDivElement> = (e) => {
     e.stopPropagation();
+    if (isLiking) return;
     if (isLiked) {
       // 이미 좋아요를 눌렀으면
       unheart.mutate();
@@ -442,6 +345,7 @@ export default function ActionButtons({ post }: Props) {
   // 저장됨 클릭
   const onClickSaved: MouseEventHandler<HTMLDivElement> = (e) => {
     e.stopPropagation();
+
     if (isSaved) {
       // 이미 저장함
       unsaved.mutate();
