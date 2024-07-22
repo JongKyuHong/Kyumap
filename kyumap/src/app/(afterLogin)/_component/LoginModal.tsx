@@ -22,8 +22,8 @@ export default function LoginModal() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const queryClient = useQueryClient();
 
+  // 다크모드 설정
   useEffect(() => {
     const savedDarkMode = localStorage.getItem("darkMode");
     if (savedDarkMode !== null) {
@@ -36,10 +36,12 @@ export default function LoginModal() {
     }
   }, []);
 
+  // 비밀번호 표시 버튼 클릭 시 상태 변경
   const onClickPBtn = () => {
     setViewPassword(!viewPassword);
   };
 
+  // 모달 닫기
   const onClickXbox = () => {
     router.back();
   };
@@ -48,13 +50,6 @@ export default function LoginModal() {
     e.preventDefault();
     setMessage("");
     try {
-      // await signOut({ callbackUrl: "/" }).then(() => {
-      //   fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/logout`, {
-      //     method: "post",
-      //     credentials: "include",
-      //   });
-      // });
-
       const signInResponse = await signIn("credentials", {
         email: id,
         password,
@@ -254,7 +249,9 @@ export default function LoginModal() {
                                                 type="button"
                                                 onClick={onClickPBtn}
                                               >
-                                                {"비밀번호 표시"}
+                                                {viewPassword
+                                                  ? "비밀번호 숨기기"
+                                                  : "비밀번호 표시"}
                                               </button>
                                             </div>
                                           </div>
@@ -319,6 +316,11 @@ export default function LoginModal() {
                                     </Link>
                                     <div className={styles.Blank}></div>
                                   </form>
+                                  {message && (
+                                    <div className={styles.ErrorMessage}>
+                                      {message}
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                             </div>

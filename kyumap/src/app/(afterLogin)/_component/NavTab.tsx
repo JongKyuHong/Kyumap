@@ -23,26 +23,26 @@ type Props = {
 };
 
 export default function NavTab({ session }: Props) {
-  const pathname = usePathname();
+  const pathname = usePathname(); // 현재 경로 가져옴
   const [isEx, setEx] = useState(false);
   const [clickedMenu, setMenu] = useState(false);
   const [isMounted, setMounted] = useState(true);
   const [isDark, setDark] = useState<boolean>(false);
   const [isHome, setHome] = useState<boolean>(
     pathname === "/home" ? true : false
-  );
+  ); // 현재 경로가 홈인지
   const [isReels, setReels] = useState<boolean>(
     pathname === "/reels" ? true : false
-  );
+  ); // 현재 경로가 릴즈인지
   const [isProfile, setProfile] = useState<boolean>(
     pathname.startsWith("/profile") ? true : false
-  );
+  ); // 현재 경로가 프로필인지
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
-  // const { data: session } = useSession();
 
   const userEmail = session?.user?.email;
   const queryClient = useQueryClient();
 
+  // 검색창 표시 여부
   const onClickEx = () => {
     if (isEx) {
       setEx(false);
@@ -56,10 +56,12 @@ export default function NavTab({ session }: Props) {
     setMounted(false);
   };
 
+  // 메뉴 클릭 상태
   const onClickMenu = () => {
     setMenu(!clickedMenu);
   };
 
+  // 다크모드
   useEffect(() => {
     setMounted(true);
     const savedDarkMode = localStorage.getItem("darkMode");
@@ -73,19 +75,23 @@ export default function NavTab({ session }: Props) {
     }
   }, []);
 
+  // 경로가 변경될때마다 상태 변경
   useEffect(() => {
     setHome(pathname === "/home" ? true : false);
     setReels(pathname === "/reels" ? true : false);
     setProfile(pathname.startsWith("/profile") ? true : false);
   }, [pathname]);
 
+  // 사용자가 바뀌거나 쿼리 변경점이있을때
   useEffect(() => {
+    // 쿼리 최신화함
     const invalidateQuery = async () => {
       await queryClient.invalidateQueries({ queryKey: ["users", userEmail] });
     };
     invalidateQuery();
   }, [queryClient, userEmail]);
 
+  // 다크모드 로컬스토리지에서 가져오기
   useEffect(() => {
     localStorage.setItem("darkMode", JSON.stringify(isDark));
   }, [isDark]);
@@ -106,6 +112,7 @@ export default function NavTab({ session }: Props) {
     return <LoadingComponent />;
   }
 
+  // 다크모드 토글
   const onClickDark = () => {
     if (isDark) {
       document.documentElement.setAttribute("color-theme", "light");

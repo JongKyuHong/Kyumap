@@ -23,14 +23,18 @@ export default function MenuDetail({ darkMode, onClickDark }: Props) {
     setClicked((clicked) => !clicked);
   };
 
+  // 로그아웃 버튼 클릭 시 처리하는 함수
   const onClickLogOut = () => {
+    // 포스트 및 유저 관련 쿼리를 무효화하여 최신 데이터를 가져오도록 함
     queryClient.invalidateQueries({
       queryKey: ["posts"],
     });
     queryClient.invalidateQueries({
       queryKey: ["users"],
     });
+    // 로그아웃 후 콜백 URL로 이동
     signOut({ callbackUrl: "/" }).then(() => {
+      // 서버 로그아웃 API 호출
       fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/logout`, {
         method: "post",
         credentials: "include",

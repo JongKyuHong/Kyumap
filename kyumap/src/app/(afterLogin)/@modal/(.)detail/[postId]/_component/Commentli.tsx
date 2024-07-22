@@ -53,6 +53,7 @@ export default function Commentli({
     ReplyInfo(comment.User.nickname, parentId, false);
   };
 
+  // 댓글 좋아요 mutation
   const commentHeart = useMutation({
     mutationFn: async (commentData: {
       postId: string;
@@ -78,6 +79,7 @@ export default function Commentli({
 
       return response.json();
     },
+    // 낙관적 업데이트를 위해 캐시 데이터 미리 수정
     onMutate: async (commentData) => {
       await queryClient.cancelQueries({
         queryKey: ["posts", commentData.postId, "comments"],

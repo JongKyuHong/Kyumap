@@ -85,6 +85,7 @@ export default function DetailPage({ postId }: Props) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
+  // 좋아요 저장됨 상태 업데이트
   useEffect(() => {
     const abortController = new AbortController();
     const fetchData = async () => {
@@ -108,6 +109,7 @@ export default function DetailPage({ postId }: Props) {
     fetchData();
   }, [post, session, queryClient]);
 
+  // 비디오 일시정지/재생 토글
   const onClickVideo = () => {
     if (videoRef.current) {
       if (videoRef.current.paused) {
@@ -120,6 +122,7 @@ export default function DetailPage({ postId }: Props) {
     }
   };
 
+  // 음소거 토글
   const toggleMute = () => {
     setMuted(!isMuted);
     if (videoRef.current) {
@@ -127,13 +130,15 @@ export default function DetailPage({ postId }: Props) {
     }
   };
 
+  // 파일확장자
   const getFileExtension = (url: any) => {
     return url?.split(".").pop();
   };
 
-  const currentFile = post?.Images[currentNumber];
-  const fileExtension = getFileExtension(currentFile);
+  const currentFile = post?.Images[currentNumber]; // 현재 파일
+  const fileExtension = getFileExtension(currentFile); // 파일 확장자
 
+  // 이미지인지 동영상인지 판단
   useEffect(() => {
     if (post && post.Images && post.Images[currentNumber]) {
       if (post.Images[currentNumber].endsWith(".mp4")) {
@@ -144,6 +149,7 @@ export default function DetailPage({ postId }: Props) {
     }
   }, [post, currentNumber]);
 
+  // 좋아요
   const heart = useMutation({
     mutationFn: () => {
       return fetch(
@@ -195,6 +201,7 @@ export default function DetailPage({ postId }: Props) {
     },
   });
 
+  // 좋아요 취소
   const unheart = useMutation({
     mutationFn: () => {
       return fetch(
@@ -245,6 +252,7 @@ export default function DetailPage({ postId }: Props) {
     },
   });
 
+  // 댓글 달기
   const addComment = useMutation({
     mutationFn: async (commentData: {
       postId: String;

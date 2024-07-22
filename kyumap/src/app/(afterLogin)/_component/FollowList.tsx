@@ -22,6 +22,7 @@ export default function FollowList({ user }: Props) {
     const isFollowed = !!user.Followers?.find(
       (v) => v.email === session?.user?.email
     );
+    // 팔로우가 이미 되어있는지 확인
     setFollowed(isFollowed);
   }, [user, session]);
 
@@ -39,6 +40,7 @@ export default function FollowList({ user }: Props) {
       );
     },
     onMutate(userEmail: string) {
+      // 추천 팔로우 목록 상태 업데이트
       const value: IUser[] | undefined = queryClient.getQueryData([
         "users",
         "followRecommends",
@@ -56,6 +58,7 @@ export default function FollowList({ user }: Props) {
         };
         queryClient.setQueryData(["users", "followRecommends"], shallow);
       }
+      // 해당 유저 상태 업데이트
       const value2: IUser | undefined = queryClient.getQueryData([
         "users",
         userEmail,
@@ -116,6 +119,7 @@ export default function FollowList({ user }: Props) {
       });
     },
   });
+
   const unfollow = useMutation({
     mutationFn: (userEmail: string) => {
       return fetch(
@@ -205,6 +209,7 @@ export default function FollowList({ user }: Props) {
       });
     },
   });
+
   const onFollow: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
     e.preventDefault();
