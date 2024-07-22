@@ -17,19 +17,8 @@ export default function MyMap({ userEmail }: Props) {
     lat: number;
     lng: number;
   } | null>(null);
-  const [loadingState, setLoadingState] = useState<boolean>(false);
-  const [errorState, setErrorState] = useState<ErrorEvent>();
 
-  // const [loading, error] = useKakaoLoader({
-  //   appkey: process.env.NEXT_PUBLIC_API_KAKAO_KEY as string,
-  //   libraries: ["clusterer", "drawing", "services"],
-  // });
-
-  // useEffect(() => {
-  //   setLoadingState(loading);
-  //   setErrorState(error);
-  // }, [loading, error]);
-
+  // 맛집 정보 가져오기
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -47,6 +36,7 @@ export default function MyMap({ userEmail }: Props) {
   }, [userEmail]);
   useKakaoLoader();
 
+  // 사용자 위치정보 받기
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -65,14 +55,9 @@ export default function MyMap({ userEmail }: Props) {
     }
   }, []);
 
-  // console.log(loading, error, "error");
-  // if (loadingState) return <LoadingComponent />;
-  // if (errorState) return <div>Error loading map: {errorState.message}</div>;
-
   const center = userLocation || { lat: 37.5666612, lng: 126.9783785 };
 
   return (
-    // <div className={styles.divStyle}>
     <div>
       <div
         style={{
@@ -85,11 +70,7 @@ export default function MyMap({ userEmail }: Props) {
           height: "70vh",
         }}
       >
-        <Map
-          // center={{ lat: 37.5666612, lng: 126.9783785 }}
-          center={center}
-          style={{ width: "100%", height: "100%" }}
-        >
+        <Map center={center} style={{ width: "100%", height: "100%" }}>
           {mapData.map((v, index) => (
             <KMapMarker
               key={`EventMarkerContainer-${v.position.lat}-${v.position.lng}`}

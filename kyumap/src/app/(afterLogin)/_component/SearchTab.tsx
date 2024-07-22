@@ -6,18 +6,19 @@ import Link from "next/link";
 import Image from "next/image";
 import { IUser } from "../../../model/User";
 import SearchResult from "./SearchResult";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type Props = {
   onClickMounted: () => void;
 };
 
+// 검색 기록 저장
 const saveSearchHistory = (user: IUser) => {
   const searchHistoryString = localStorage.getItem("searchHistory");
   let searchHistory: IUser[] = searchHistoryString
     ? JSON.parse(searchHistoryString)
     : [];
 
+  // 중복된 기록 제거하고 맨 앞에 추가
   searchHistory = searchHistory.filter(
     (item) => item.nickname !== user.nickname
   );
@@ -26,10 +27,12 @@ const saveSearchHistory = (user: IUser) => {
   localStorage.setItem("searchHistory", JSON.stringify(searchHistory));
 };
 
+// 검색 기록을 가져오는 함수
 const getSearchHistory = (): IUser[] => {
   const searchHistoryString = localStorage.getItem("searchHistory");
   return searchHistoryString ? JSON.parse(searchHistoryString) : [];
 };
+
 
 export default function SearchTab({ onClickMounted }: Props) {
   const [isSearchHistory, setSearchHistory] = useState(true);

@@ -45,6 +45,7 @@ export default function ProfileSection({ userEmail, userName }: Props) {
     gcTime: 300 * 1000,
   });
 
+  // 페이지 경로에 따라 강조 주기 위해 state설정
   useEffect(() => {
     if (segment === "saved") {
       setNum(3);
@@ -57,6 +58,7 @@ export default function ProfileSection({ userEmail, userName }: Props) {
     }
   }, [segment]);
 
+  // 팔로우 여부 확인
   useEffect(() => {
     const isFollowed = !!userData?.Followers?.find(
       (v) => v.email === session?.user?.email
@@ -64,6 +66,7 @@ export default function ProfileSection({ userEmail, userName }: Props) {
     setFollowed(isFollowed);
   }, [userData, session]);
 
+  // 자기 자신인지 확인
   useEffect(() => {
     if (session) {
       if (userEmail === session?.user!.email) {
@@ -72,10 +75,7 @@ export default function ProfileSection({ userEmail, userName }: Props) {
     }
   }, [userEmail, session]);
 
-  // const followed = !!userData?.Followers?.find(
-  //   (v) => v.email === session?.user?.email
-  // );
-
+  // 팔로우 요청 처리
   const follow = useMutation({
     mutationFn: (userEmail: string) => {
       return fetch(
@@ -165,6 +165,7 @@ export default function ProfileSection({ userEmail, userName }: Props) {
     },
   });
 
+  // 팔로우 취소
   const unfollow = useMutation({
     mutationFn: (userEmail: string) => {
       return fetch(
@@ -254,6 +255,7 @@ export default function ProfileSection({ userEmail, userName }: Props) {
     },
   });
 
+  // 팔로우/언팔로우 버튼 클릭
   const onFollow: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
     e.preventDefault();
@@ -359,6 +361,8 @@ export default function ProfileSection({ userEmail, userName }: Props) {
                       }}
                       type="button"
                       onClick={onFollow}
+                      onMouseEnter={() => setHovered(true)}
+                      onMouseLeave={() => setHovered(false)}
                     >
                       <div
                         className={styles.HeaderSectionFollowBtn5}
@@ -367,8 +371,6 @@ export default function ProfileSection({ userEmail, userName }: Props) {
                         <div
                           className={styles.HeaderSectionFollowBtn6}
                           dir="auto"
-                          onMouseEnter={() => setHovered(true)}
-                          onMouseLeave={() => setHovered(false)}
                         >
                           {followed
                             ? hovered

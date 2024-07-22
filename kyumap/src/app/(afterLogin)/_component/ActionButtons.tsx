@@ -23,12 +23,13 @@ interface Props {
 }
 
 export default function ActionButtons({ post }: Props) {
+  // Post의 버튼들을 따로 다루는 컴포넌트
   const queryClient = useQueryClient();
   const { data: session } = useSession();
   const [CommentText, setComment] = useState("");
   const [isLiked, setLiked] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
-  const [commentCount, setCommentCount] = useState(0);
+  // 좋아요 중복 방지용 state
   const [isSaved, setSaved] = useState(false);
 
   useEffect(() => {
@@ -40,6 +41,7 @@ export default function ActionButtons({ post }: Props) {
         signal: abortController.signal,
         meta: undefined,
       });
+      // 유저정보를 가져오고
       const ssave = !!user?.Saved.find(
         (v: any) => v.id === post.postId.toString()
       );
@@ -47,11 +49,13 @@ export default function ActionButtons({ post }: Props) {
       const liked = !!post?.Hearts?.find(
         (v) => v.email === session?.user?.email
       );
+
+      // 가져온 유저정보를 통해 해당게시글을 저장했는지 좋아요눌렀는지 확인하고 state업데이트
       setLiked(liked);
       setSaved(ssave);
     };
-    console.log(queryClient, "hi");
     fetchData();
+    // post가 바뀌거나 사용자가 바뀌거나 react query에 변경점이 있을경우 재실행
   }, [post, session, queryClient]);
 
   const router = useRouter();
@@ -75,22 +79,28 @@ export default function ActionButtons({ post }: Props) {
 
       const queryCache = queryClient.getQueryCache();
       const queryKeys = queryCache.getAll().map((cache) => cache.queryKey);
+      // 인피니트 쿼리로 가져오기때문에 필터링이 필요하다
       queryKeys.forEach((queryKey) => {
         if (queryKey[0] === "posts") {
+          // posts로 시작하는 쿼리키 인경우
           const value: IPost | InfiniteData<IPost[]> | undefined =
-            queryClient.getQueryData(queryKey);
+            queryClient.getQueryData(queryKey); // 쿼리데이터를 가져오고
           if (value && "pages" in value) {
-            const obj = value.pages.flat().find((v) => v.postId === postId);
+            const obj = value.pages.flat().find((v) => v.postId === postId); // postId와 일치하는 포스트를 가져옴
             if (obj) {
-              const pageIndex = value.pages.findIndex((page) =>
-                page.includes(obj)
+              const pageIndex = value.pages.findIndex(
+                (page) => page.includes(obj) // 해당 포스트를 가지고있는 페이지 인덱스를 찾음
               );
               const index = value.pages[pageIndex].findIndex(
-                (v) => v.postId === postId
+                (v) => v.postId === postId // 페이지 인덱스 내에서 포스트 인덱스 찾기
               );
+
+              // 얕은 복사 준비
               const shallow: any = { ...value };
               value.pages = [...value.pages];
               value.pages[pageIndex] = [...value.pages[pageIndex]];
+
+              // 포스트 데이터 업데이트
               shallow.pages[pageIndex][index] = {
                 ...shallow.pages[pageIndex][index],
                 Hearts: [{ email: session?.user?.email as string }],
@@ -99,9 +109,12 @@ export default function ActionButtons({ post }: Props) {
                   Hearts: shallow.pages[pageIndex][index]._count.Hearts + 1,
                 },
               };
+
+              // 캐시 업데이트
               queryClient.setQueryData(queryKey, shallow);
             }
           } else if (value) {
+            // 단일 포스트면
             if (value.postId === postId) {
               const shallow = {
                 ...value,
@@ -121,6 +134,7 @@ export default function ActionButtons({ post }: Props) {
       queryClient.invalidateQueries({ queryKey: ["post", postId] });
     },
     onSettled: () => {
+      // 중복 방지를 위한 state false로
       setIsLiking(false);
     },
   });
@@ -210,18 +224,18 @@ export default function ActionButtons({ post }: Props) {
       );
     },
     onMutate: async () => {
-      await queryClient.cancelQueries({
-        queryKey: ["users", session!.user!.email],
-      });
+      // 사용자 정보를 가져옴
       const previousUserData = queryClient.getQueryData([
         "user",
         session!.user!.email,
       ]);
 
+      // 낙관적으로 업데이트함 Saved에 postId 업데이트
       queryClient.setQueryData(
         ["users", session!.user!.email],
         (oldData: any) => {
           if (!oldData) {
+            // 기존 데이터가 없다면 기본 데이터 생성
             return {
               email: session!.user!.email,
               nickname: session!.user!.name, // 기본 닉네임 (필요에 따라 수정)
@@ -240,7 +254,7 @@ export default function ActionButtons({ post }: Props) {
               },
             };
           }
-
+          // 이전 데이터 있다면 Saved변경
           return {
             ...oldData,
             Saved: oldData.Saved
@@ -253,6 +267,7 @@ export default function ActionButtons({ post }: Props) {
       return { previousUserData };
     },
     onError: (err, variables, context) => {
+      // 오류 발생 시 이전 데이터로 롤백
       if (context && context.previousUserData) {
         queryClient.setQueryData(
           ["user", session!.user!.email],
@@ -260,10 +275,8 @@ export default function ActionButtons({ post }: Props) {
         );
       }
     },
-    onSuccess() {
-      setSaved(true);
-    },
     onSettled: () => {
+      // 요청 완료 후 쿼리 무효화해서 최신 데이터를 가져옴 ( 안정성을 위해서 해주는게 좋음 )
       queryClient.invalidateQueries({
         queryKey: ["user", session!.user!.email],
       });
@@ -288,14 +301,12 @@ export default function ActionButtons({ post }: Props) {
         throw new Error("Session or user information is missing");
       }
 
-      await queryClient.cancelQueries({
-        queryKey: ["user", session!.user!.email],
-      });
       const previousUserData = queryClient.getQueryData([
         "user",
         session!.user!.email,
       ]);
 
+      // 낙관적 업데이트
       queryClient.setQueryData(
         ["user", session!.user!.email],
         (oldData: any) => {
@@ -312,16 +323,13 @@ export default function ActionButtons({ post }: Props) {
       return { previousUserData };
     },
     onError: (err, variables, context) => {
-      console.log(err, "err");
+      // 오류시 이전데이터 적용
       if (context && context.previousUserData) {
         queryClient.setQueryData(
           ["user", session!.user!.email],
           context.previousUserData
         );
       }
-    },
-    onSuccess() {
-      setSaved(false);
     },
     onSettled: () => {
       queryClient.invalidateQueries({
@@ -358,6 +366,7 @@ export default function ActionButtons({ post }: Props) {
     setComment(event.target.value);
   };
 
+  // 게시를 클릭하면 디테일 페이지로 이동하게
   const onSubmitComment = () => {
     if (!session) {
       return null;

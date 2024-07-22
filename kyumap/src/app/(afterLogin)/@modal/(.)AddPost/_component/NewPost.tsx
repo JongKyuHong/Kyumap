@@ -74,16 +74,19 @@ export default function NewPost() {
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (e: FormEvent) => {
-      e.preventDefault();
-      setLoading(true);
-      let lastType = "";
-      const urlformLst = [];
-      const altTextsLst = [];
+      e.preventDefault(); // 기본 폼 제출 동작 방지
+      setLoading(true); // 로딩 상태 설정
+      let lastType = ""; // 마지막 파일 타입
+      const urlformLst = []; // 업로드된 파일 URL 리스트
+      const altTextsLst = []; // 대체 텍스트 리스트
       let thumbnailUrl = ""; // 단일 섬네일 URL
 
+      // 모든 미리보기 파일을 순회하면서 업로드 처리
       for (let idx = 0; idx < preview.length; idx++) {
         const { dataUrl, file, type } = preview[idx];
         let filename = encodeURIComponent(file.name);
+
+        // 파일 업로드 URL 요청
         let result_url: any = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/image/upload?file=${filename}&type=${type}`
         );
@@ -95,6 +98,8 @@ export default function NewPost() {
             ImageFormData.append(key, value as string);
           }
         );
+
+        // 파일 업로드
         let uploadResult = await fetch(result_url.url, {
           method: "POST",
           body: ImageFormData,
@@ -127,6 +132,7 @@ export default function NewPost() {
         lastType = type;
       }
 
+      // 포스트 데이터 준비
       const postFormData = new FormData();
       if (urlformLst.length === 1 && lastType === "video") {
         postFormData.append("reels", true.toString());
@@ -218,24 +224,26 @@ export default function NewPost() {
 
   const generateVideoThumbnail = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
-      const video = document.createElement("video");
-      const canvas = document.createElement("canvas");
-      const context = canvas.getContext("2d");
-      const reader = new FileReader();
+      const video = document.createElement("video"); // 비디오 엘리먼트 생성
+      const canvas = document.createElement("canvas"); // 캔버스 엘리먼트 생성
+      const context = canvas.getContext("2d"); // 캔버스 컨텍스트 가져오기
+      const reader = new FileReader(); // 파일 리더 생성
 
+      // 파일 리더가 파일을 성공적으로 읽었을 때 호출되는 함수
       reader.onload = (event) => {
-        video.src = event.target?.result as string;
+        video.src = event.target?.result as string; // 비디오 소스 설정
+        // 비디오 데이터가 로드되었을 때 호출되는 함수
         video.onloadeddata = () => {
-          canvas.width = video.videoWidth;
-          canvas.height = video.videoHeight;
+          canvas.width = video.videoWidth; // 캔버스 너비 설정
+          canvas.height = video.videoHeight; // 캔버스 높이 설정
           video.currentTime = 1; // 첫 번째 초의 프레임을 사용
         };
 
         video.onseeked = () => {
           if (context) {
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            const thumbnailUrl = canvas.toDataURL("image/png");
-            resolve(thumbnailUrl);
+            context.drawImage(video, 0, 0, canvas.width, canvas.height); // 비디오 프레임을 캔버스에 그림
+            const thumbnailUrl = canvas.toDataURL("image/png"); // 캔버스를 데이터 URL로 변환
+            resolve(thumbnailUrl); // 썸네일 URL 반환
           } else {
             reject("캔버스 컨텍스트를 가져올 수 없습니다.");
           }
@@ -250,46 +258,49 @@ export default function NewPost() {
         reject("파일 읽기 중 오류 발생: " + error.message);
       };
 
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(file); // 파일을 데이터 URL로 읽음
     });
   };
 
   const onUpload: ChangeEventHandler<HTMLInputElement> = async (e) => {
     e.preventDefault();
     if (e.target.files && e.target.files.length > 0) {
-      let newPreviews: PreviewItem[] = [...preview];
+      let newPreviews: PreviewItem[] = [...preview]; // 기존 미리보기 배열 복사
 
+      // 파일 배열을 순회하며 처리
       const filePromises = Array.from(e.target.files).map(async (file) => {
         if (file.type.startsWith("video")) {
+          // 파일이 비디오인지 확인
           try {
-            const thumbnailUrl = await generateVideoThumbnail(file);
+            const thumbnailUrl = await generateVideoThumbnail(file); // 비디오 썸네일 생성
             newPreviews = [
               ...newPreviews,
-              { dataUrl: thumbnailUrl, file, type: "video" },
+              { dataUrl: thumbnailUrl, file, type: "video" }, // 비디오 파일과 썸네일 추가
             ];
           } catch (error) {
             console.error("동영상 섬네일 생성 중 오류 발생:", error);
           }
         } else {
-          const reader = new FileReader();
+          const reader = new FileReader(); // 파일 리더 생성
           const fileLoadPromise = new Promise<void>((resolve) => {
             reader.onloadend = () => {
               newPreviews = [
                 ...newPreviews,
-                { dataUrl: reader.result as string, file, type: "image" },
+                { dataUrl: reader.result as string, file, type: "image" }, // 이미지 파일과 데이터 URL 추가
               ];
               resolve();
             };
           });
-          reader.readAsDataURL(file);
-          await fileLoadPromise;
+          reader.readAsDataURL(file); // 파일을 데이터 URL로 읽음
+          await fileLoadPromise; // 파일 로드 완료 대기
         }
       });
 
-      await Promise.all(filePromises);
-      setPreview(newPreviews);
+      await Promise.all(filePromises); // 모든 파일 처리 완료 대기
+      setPreview(newPreviews); // 미리보기 상태 업데이트
     }
   };
+
   const calculateSize = () => {
     if (isMobile) {
       // setWidth(378);

@@ -30,6 +30,7 @@ export default function Page({ params }: Props) {
     postInfo();
   }, [postId]);
 
+  // 텍스트 복사
   const handleCopy = () => {
     const textToCopy = `${process.env.NEXT_PUBLIC_BASE_URL}/detail/${postId}`;
 
@@ -45,6 +46,7 @@ export default function Page({ params }: Props) {
     router.back();
   };
 
+  // 게시글 삭제하기
   const deletePost = useMutation({
     mutationFn: () => {
       return fetch(`/api/posts/${postId}`, {
@@ -93,6 +95,7 @@ export default function Page({ params }: Props) {
     onSettled: () => {},
   });
 
+  // 게시글 삭제
   const onClickArticleDelete = async () => {
     deletePost.mutate();
     router.back();

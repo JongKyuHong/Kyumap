@@ -10,7 +10,6 @@ import { useSession } from "next-auth/react";
 
 export default function MainSection({ session }: any) {
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
-  // const { data: session } = useSession();
 
   if (!session) return null;
   return (

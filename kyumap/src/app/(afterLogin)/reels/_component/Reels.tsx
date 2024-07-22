@@ -5,11 +5,8 @@ import styles from "./reels.module.css";
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 
-import { useRouter } from "next/navigation";
-
 type Props = {
   post: any;
-  // main: boolean;
 };
 
 export default function Reels({ post }: Props) {
@@ -18,7 +15,6 @@ export default function Reels({ post }: Props) {
   const [isPlaying, setIsPlaying] = useState(true);
 
   const videoRef = useRef<HTMLVideoElement>(null);
-  const router = useRouter();
 
   const isHearts = false;
   const isFollowed = false;
