@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 
 export default function Page() {
   const router = useRouter();
+  console.log("hi");
   useEffect(() => {
     router.replace("/reels");
-  }, [router]);
+  }, []);
   return null;
 }

@@ -2,23 +2,75 @@
 
 import Link from "next/link";
 import styles from "./reels.module.css";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { getUser } from "@/app/(afterLogin)/_lib/getUser"; // 유저 정보를 가져오는 함수
+import MoreInfoOverlay from "./MoreInfoOverlay";
+import { useRouter, usePathname } from "next/navigation";
 
 type Props = {
   post: any;
 };
 
 export default function Reels({ post }: Props) {
+  const { data: session } = useSession();
   const [isMuted, setMuted] = useState(true);
   const [isMoreInfo, setMoreInfo] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
+  const [isHearts, setHearts] = useState(false);
+  const [isFollowed, setFollowed] = useState(false);
+  const [isSaved, setSaved] = useState(false);
+  const [isMenu, setIsMenu] = useState(false);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const isHearts = false;
-  const isFollowed = false;
-  const isSaved = false;
+  const handleRouteChange = useCallback(() => {
+    setIsMenu(false);
+  }, []);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userEmail = session?.user?.email;
+      if (userEmail) {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
+        try {
+          const userData = await getUser({
+            queryKey: ["users", userEmail],
+            signal: signal,
+            meta: undefined,
+          });
+
+          // 유저가 해당 포스트를 좋아요 했는지 여부 확인
+          const liked = post.Hearts?.some(
+            (heart: any) => heart.email === userEmail
+          );
+          setHearts(liked);
+
+          // 유저가 해당 포스트를 저장했는지 여부 확인
+          const saved = userData.Saved?.some(
+            (savedPost: any) => savedPost.id === post.postId
+          );
+          setSaved(saved);
+
+          // 유저가 해당 작성자를 팔로우했는지 여부 확인
+          const followed = userData.Followings?.some(
+            (follow: any) => follow.email === post.User.email
+          );
+          setFollowed(followed);
+        } catch (error) {
+          console.error("유저 데이터를 가져오는 중 오류 발생:", error);
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [session, post]);
 
   const onClickVideo = () => {
     if (videoRef.current) {
@@ -44,6 +96,54 @@ export default function Reels({ post }: Props) {
     }
   };
 
+  const onClickMenu = () => {
+    setMenu(true);
+  };
+
+  const closeMenu = () => {
+    setIsMenu(false);
+  };
+
+  useEffect(() => {
+    window.addEventListener("popstate", handleRouteChange);
+    return () => {
+      window.removeEventListener("popstate", handleRouteChange);
+    };
+  }, [handleRouteChange]);
+
+  const onOpenDetail = useCallback(() => {
+    setIsDetailOpen(true);
+    router.push(`/detail/${post.postId}`);
+  }, [router, post.postId]);
+
+  const onCloseDetail = useCallback(() => {
+    setIsDetailOpen(false);
+    router.back();
+  }, [router]);
+
+  useEffect(() => {
+    const handleRouteChange = () => {
+      setIsMenu(false);
+      setIsDetailOpen(false);
+    };
+
+    const handlePopState = () => {
+      setIsDetailOpen(false);
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [router]);
+
+  useEffect(() => {
+    if (pathname.startsWith("/reels") && isMenu) {
+      setIsMenu(false);
+    }
+  }, [pathname]);
+
   return (
     <>
       <div className={styles.rootDiv2}>
@@ -53,8 +153,6 @@ export default function Reels({ post }: Props) {
             style={{ height: "820px", width: "461px" }}
           >
             <div className={styles.rootDiv6}>
-              {/* <Image></Image> */}
-
               <div className={styles.rootDiv7}>
                 <div className={styles.rootDiv8}>
                   <div className={styles.rootDiv9}>
@@ -202,6 +300,7 @@ export default function Reels({ post }: Props) {
                                           </span>
                                         </div>
                                       ) : (
+                                        // <MoreInfoOverlay postId={post.postId} />
                                         <div
                                           role="button"
                                           style={{ cursor: "pointer" }}
@@ -356,39 +455,41 @@ export default function Reels({ post }: Props) {
             </div>
             <div className={styles.comments}>
               <div className={styles.comments2}>
-                <div className={styles.comments3}>
-                  <svg
-                    aria-label="댓글"
-                    className={styles.commentsSvg}
-                    fill="currentColor"
-                    height="24"
-                    role="img"
-                    viewBox="0 0 24 24"
-                    width="24"
-                  >
-                    <title>댓글</title>
-                    <path
-                      d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                    ></path>
-                  </svg>
-                  <div className={styles.commentsCnt}>
-                    <div className={styles.commentsCnt2}>
-                      <span
-                        className={styles.commentsCnt3}
-                        style={{ lineHeight: "16px" }}
-                        dir="auto"
-                      >
-                        <span className={styles.commentsCnt4}>
-                          {post._count.Comments}
+                <Link href={`/detail/${post.postId}`}>
+                  <div className={styles.comments3}>
+                    <svg
+                      aria-label="댓글"
+                      className={styles.commentsSvg}
+                      fill="currentColor"
+                      height="24"
+                      role="img"
+                      viewBox="0 0 24 24"
+                      width="24"
+                    >
+                      <title>댓글</title>
+                      <path
+                        d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                      ></path>
+                    </svg>
+                    <div className={styles.commentsCnt}>
+                      <div className={styles.commentsCnt2}>
+                        <span
+                          className={styles.commentsCnt3}
+                          style={{ lineHeight: "16px" }}
+                          dir="auto"
+                        >
+                          <span className={styles.commentsCnt4}>
+                            {post._count.Comments}
+                          </span>
                         </span>
-                      </span>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               </div>
             </div>
             <div className={styles.saved}>
@@ -440,7 +541,11 @@ export default function Reels({ post }: Props) {
               </div>
             </div>
             <div className={styles.threeDotInfo}>
-              <div className={styles.threeDotInfo2} role="button">
+              <div
+                className={styles.threeDotInfo2}
+                role="button"
+                onClick={onClickMenu}
+              >
                 <div className={styles.threeDotInfo3}>
                   <svg
                     aria-label="더 보기"
@@ -488,6 +593,7 @@ export default function Reels({ post }: Props) {
         className={styles.underDiv}
         style={{ height: "16px", width: "100%" }}
       ></div>
+      {isMenu && <MoreInfoOverlay postId={post.postId} onClose={closeMenu} />}
     </>
   );
 }
