@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "./detail.module.css";
+import styles from "./comment.module.css";
 import Reply from "./Reply";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";

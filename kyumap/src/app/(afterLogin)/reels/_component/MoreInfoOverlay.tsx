@@ -11,9 +11,14 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 type Props = {
   postId: number;
   onClose: () => void;
+  onOpenDetail: () => void;
 };
 
-export default function MoreInfoOverlay({ postId, onClose }: Props) {
+export default function MoreInfoOverlay({
+  postId,
+  onClose,
+  onOpenDetail,
+}: Props) {
   const [post, setPost] = useState<IPost | null>(null);
   const router = useRouter();
   const { data: session } = useSession();
@@ -42,7 +47,7 @@ export default function MoreInfoOverlay({ postId, onClose }: Props) {
         console.error("텍스트 복사 실패:", err);
       });
 
-    router.back();
+    // router.back();
   };
 
   const deletePost = useMutation({
@@ -130,7 +135,10 @@ export default function MoreInfoOverlay({ postId, onClose }: Props) {
                               <button className={styles.menuBtn2}>
                                 댓글 기능 설정
                               </button>
-                              <button className={styles.menuBtn2}>
+                              <button
+                                className={styles.menuBtn2}
+                                onClick={onOpenDetail}
+                              >
                                 게시물로 이동
                               </button>
                               <button
@@ -148,7 +156,7 @@ export default function MoreInfoOverlay({ postId, onClose }: Props) {
                               </button>
                               <button
                                 className={styles.menuBtn2}
-                                onClick={() => router.push(`/detail/${postId}`)}
+                                onClick={onOpenDetail}
                               >
                                 게시물로 이동
                               </button>
