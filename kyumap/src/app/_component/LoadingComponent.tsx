@@ -1,6 +1,7 @@
 import styles from "./loading.module.css";
 
 export default function LoadingComponent() {
+  // 로딩스피너
   return (
     <div
       style={{

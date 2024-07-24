@@ -29,10 +29,10 @@ export default function Post({ post }: Props) {
   const [isMenu, setMenu] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const { data: session } = useSession();
   const router = useRouter();
   const imgArticle = [];
 
+  // IntersectionObserver콜백 함수
   const handleIntersection = useCallback(
     (entries: IntersectionObserverEntry[]) => {
       const entry = entries[0];
@@ -53,6 +53,7 @@ export default function Post({ post }: Props) {
     [isPlaying, isUserPaused]
   );
 
+  // IntersectionObserver 설정
   useEffect(() => {
     const observer = new IntersectionObserver(handleIntersection, {
       threshold: 0.5, // 비디오의 50%가 보일 때 트리거
@@ -70,22 +71,25 @@ export default function Post({ post }: Props) {
     };
   }, [handleIntersection]);
 
+  // 다음 이미지
   const onClickNextBtn = () => {
     setNumber(currentNumber + 1);
   };
 
+  // 이전 이미지
   const onClickPrevBtn = () => {
     setNumber(currentNumber - 1);
   };
 
+  // 확장자 가져오기
   const getFileExtension = (url: any) => {
     return url.split(".").pop();
   };
 
-  const currentFile = post.Images[currentNumber];
+  const currentFile = post.Images[currentNumber]; // 현재 파일
+  const fileExtension = getFileExtension(currentFile); // 현재 파일의 확장자 가져오기
 
-  const fileExtension = getFileExtension(currentFile);
-
+  // 비디오 클릭시 재생/일시정지 토글
   const onClickVideo = () => {
     if (videoRef.current) {
       if (videoRef.current.paused) {
@@ -100,6 +104,7 @@ export default function Post({ post }: Props) {
     }
   };
 
+  // 음소거 토글
   const toggleMute = () => {
     setMuted(!isMuted);
     if (videoRef.current) {
@@ -107,6 +112,7 @@ export default function Post({ post }: Props) {
     }
   };
 
+  // 이미지가 여러개인지
   useEffect(() => {
     if (post && post.Images.length > 1) {
       setMultiImg(true);

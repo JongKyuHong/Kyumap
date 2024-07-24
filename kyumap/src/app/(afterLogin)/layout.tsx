@@ -4,6 +4,8 @@ import RQProvider from "./_component/RQProvider";
 import Nav from "./_component/Nav";
 import { auth } from "@/auth";
 
+import { getPostRecommends } from "./_lib/getPostRecommends";
+
 type Props = { children: ReactNode; modal: ReactNode };
 
 export default async function RootLayout({ children, modal }: Props) {

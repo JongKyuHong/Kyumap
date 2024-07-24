@@ -69,14 +69,6 @@ export default function Saved({ userEmail, userName }: Props) {
   const chunkSize = 3;
   const UserPost = [];
 
-  // if (status === "loading") return; // 세션 상태를 로딩 중인 경우 대기
-  // if (!session) {
-  //   router.push("/login"); // 로그인 페이지로 리다이렉트
-  // } else if (session && session!.user!.email !== userEmail) {
-  //   // router.push(`/profile/${userName}`);
-  //   redirect(`/profile/${userName}`);
-  // }
-
   if (data && data.pages) {
     const platData = data.pages.flat();
     for (let i = 0; i < platData.length; i += chunkSize) {

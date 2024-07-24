@@ -19,12 +19,14 @@ type Props = {
   userEmail: string;
 };
 
+// 비디오 확장자 목록
 const videoExtensions = [".mp4", ".avi", ".mov", ".wmv", ".flv", ".mkv"];
 
 export default function UserPosts({ userEmail }: Props) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { data: session } = useSession();
+  // 무한 스크롤 위한 인피니티쿼리
   const { data, fetchNextPage, hasNextPage, isFetching, error } =
     useInfiniteQuery<
       IPost[],
@@ -41,19 +43,24 @@ export default function UserPosts({ userEmail }: Props) {
       gcTime: 300 * 1000,
     });
 
+  // 쿼리로부터 유저정보 가져옴
   const user = queryClient.getQueryData(["users", userEmail]);
 
+  // 다음 페이지를 가져오기 위한 Intersection Observer 설정
   const { ref, inView } = useInView({
-    threshold: 0,
-    delay: 0,
+    threshold: 0, // 요소가 뷰포트에 0% 보일 때 트리거
+    delay: 0, // 트리거 지연 시간 설정
   });
 
+  // inView 상태가 변경될 때마다 호출되는 useEffect
   useEffect(() => {
     if (inView) {
-      !isFetching && hasNextPage && fetchNextPage();
+      // 요소가 뷰포트에 보일 때
+      !isFetching && hasNextPage && fetchNextPage(); // 다음 페이지를 가져오지 않는 상태에서 다음 페이지가 존재하면 fetchNextPage 호출
     }
   }, [inView, isFetching, hasNextPage, fetchNextPage]);
 
+  // 유저 게시글을 3개씩 나누어서 저장
   const chunkSize = 3;
   const UserPost = [];
 
@@ -68,6 +75,7 @@ export default function UserPosts({ userEmail }: Props) {
     router.push(`/AddPost`);
   };
 
+  // 파일이 동영상인지 확인
   const isVideo = (url: string) => {
     return videoExtensions.some((ext) => url.toLowerCase().endsWith(ext));
   };

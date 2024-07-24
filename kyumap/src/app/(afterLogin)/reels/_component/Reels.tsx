@@ -2,27 +2,70 @@
 
 import Link from "next/link";
 import styles from "./reels.module.css";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
-
-import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { getUser } from "@/app/(afterLogin)/_lib/getUser"; // 유저 정보를 가져오는 함수
+import MoreInfoOverlay from "./MoreInfoOverlay";
+import { useRouter, usePathname } from "next/navigation";
 
 type Props = {
   post: any;
-  // main: boolean;
 };
 
 export default function Reels({ post }: Props) {
+  const { data: session } = useSession();
   const [isMuted, setMuted] = useState(true);
   const [isMoreInfo, setMoreInfo] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
+  const [isHearts, setHearts] = useState(false);
+  const [isFollowed, setFollowed] = useState(false);
+  const [isSaved, setSaved] = useState(false);
+  const [isMenu, setIsMenu] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const router = useRouter();
+  const pathname = usePathname();
 
-  const isHearts = false;
-  const isFollowed = false;
-  const isSaved = false;
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userEmail = session?.user?.email;
+      if (userEmail) {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
+        try {
+          const userData = await getUser({
+            queryKey: ["users", userEmail],
+            signal: signal,
+            meta: undefined,
+          });
+
+          // 유저가 해당 포스트를 좋아요 했는지 여부 확인
+          const liked = post.Hearts?.some(
+            (heart: any) => heart.email === userEmail
+          );
+          setHearts(liked);
+
+          // 유저가 해당 포스트를 저장했는지 여부 확인
+          const saved = userData.Saved?.some(
+            (savedPost: any) => savedPost.id === post.postId
+          );
+          setSaved(saved);
+
+          // 유저가 해당 작성자를 팔로우했는지 여부 확인
+          const followed = userData.Followings?.some(
+            (follow: any) => follow.email === post.User.email
+          );
+          setFollowed(followed);
+        } catch (error) {
+          console.error("유저 데이터를 가져오는 중 오류 발생:", error);
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [session, post]);
 
   const onClickVideo = () => {
     if (videoRef.current) {
@@ -48,6 +91,25 @@ export default function Reels({ post }: Props) {
     }
   };
 
+  const onClickMenu = () => {
+    setIsMenu(true);
+  };
+
+  const closeMenu = () => {
+    setIsMenu(false);
+  };
+
+  const onOpenDetail = useCallback(() => {
+    setIsMenu(false);
+    router.push(`/reel/${post.postId}`);
+  }, [router, post.postId]);
+
+  useEffect(() => {
+    if (pathname.startsWith("/reels") && isMenu) {
+      setIsMenu(false);
+    }
+  }, [pathname, isMenu]);
+
   return (
     <>
       <div className={styles.rootDiv2}>
@@ -57,8 +119,6 @@ export default function Reels({ post }: Props) {
             style={{ height: "820px", width: "461px" }}
           >
             <div className={styles.rootDiv6}>
-              {/* <Image></Image> */}
-
               <div className={styles.rootDiv7}>
                 <div className={styles.rootDiv8}>
                   <div className={styles.rootDiv9}>
@@ -206,6 +266,7 @@ export default function Reels({ post }: Props) {
                                           </span>
                                         </div>
                                       ) : (
+                                        // <MoreInfoOverlay postId={post.postId} />
                                         <div
                                           role="button"
                                           style={{ cursor: "pointer" }}
@@ -350,7 +411,9 @@ export default function Reels({ post }: Props) {
                       className={styles.heartsCnt4}
                       style={{ lineHeight: "16px" }}
                     >
-                      <span className={styles.heartsCnt5}>{"하트갯수"}</span>
+                      <span className={styles.heartsCnt5}>
+                        {post._count.Hearts}
+                      </span>
                     </span>
                   </div>
                 </div>
@@ -385,7 +448,7 @@ export default function Reels({ post }: Props) {
                         dir="auto"
                       >
                         <span className={styles.commentsCnt4}>
-                          {"코멘트 갯수"}
+                          {post._count.Comments}
                         </span>
                       </span>
                     </div>
@@ -442,7 +505,11 @@ export default function Reels({ post }: Props) {
               </div>
             </div>
             <div className={styles.threeDotInfo}>
-              <div className={styles.threeDotInfo2} role="button">
+              <div
+                className={styles.threeDotInfo2}
+                role="button"
+                onClick={onClickMenu}
+              >
                 <div className={styles.threeDotInfo3}>
                   <svg
                     aria-label="더 보기"
@@ -490,6 +557,13 @@ export default function Reels({ post }: Props) {
         className={styles.underDiv}
         style={{ height: "16px", width: "100%" }}
       ></div>
+      {isMenu && (
+        <MoreInfoOverlay
+          postId={post.postId}
+          onClose={closeMenu}
+          onOpenDetail={onOpenDetail}
+        />
+      )}
     </>
   );
 }
