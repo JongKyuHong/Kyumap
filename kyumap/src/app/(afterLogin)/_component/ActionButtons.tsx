@@ -17,24 +17,22 @@ import styles from "./post.module.css";
 import { IPost } from "@/model/Post";
 import { useRouter } from "next/navigation";
 import { getUser } from "../_lib/getUser";
+import { IComment } from "@/model/Comment";
 
 interface Props {
   post: IPost;
 }
 
-interface PostData {
-  _count: {
-    Comments: number;
-  };
-}
-
 export default function ActionButtons({ post }: Props) {
+  // Post의 버튼들을 따로 다루는 컴포넌트
   const queryClient = useQueryClient();
   const { data: session } = useSession();
   const [CommentText, setComment] = useState("");
   const [isLiked, setLiked] = useState(false);
-  const [commentCount, setCommentCount] = useState(0);
+  const [isLiking, setIsLiking] = useState(false);
+  // 좋아요 중복 방지용 state
   const [isSaved, setSaved] = useState(false);
+  const [isPosting, setIsPosting] = useState(false);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -45,6 +43,7 @@ export default function ActionButtons({ post }: Props) {
         signal: abortController.signal,
         meta: undefined,
       });
+      // 유저정보를 가져오고
       const ssave = !!user?.Saved.find(
         (v: any) => v.id === post.postId.toString()
       );
@@ -52,12 +51,13 @@ export default function ActionButtons({ post }: Props) {
       const liked = !!post?.Hearts?.find(
         (v) => v.email === session?.user?.email
       );
+
+      // 가져온 유저정보를 통해 해당게시글을 저장했는지 좋아요눌렀는지 확인하고 state업데이트
       setLiked(liked);
       setSaved(ssave);
     };
     fetchData();
-    // const liked = !!post?.Hearts?.find((v) => v.email === session?.user?.email);
-    // setLiked(liked);
+    // post가 바뀌거나 사용자가 바뀌거나 react query에 변경점이 있을경우 재실행
   }, [post, session, queryClient]);
 
   const router = useRouter();
@@ -75,26 +75,34 @@ export default function ActionButtons({ post }: Props) {
         }
       );
     },
-    onMutate() {
+    onMutate: async () => {
+      if (isLiking) return; // 이미 요청 중이면 아무 작업도 하지 않음
+      setIsLiking(true); // 요청 시작 시 상태 업데이트
+
       const queryCache = queryClient.getQueryCache();
       const queryKeys = queryCache.getAll().map((cache) => cache.queryKey);
+      // 인피니트 쿼리로 가져오기때문에 필터링이 필요하다
       queryKeys.forEach((queryKey) => {
         if (queryKey[0] === "posts") {
+          // posts로 시작하는 쿼리키 인경우
           const value: IPost | InfiniteData<IPost[]> | undefined =
-            queryClient.getQueryData(queryKey);
+            queryClient.getQueryData(queryKey); // 쿼리데이터를 가져오고
           if (value && "pages" in value) {
-            const obj = value.pages.flat().find((v) => v.postId === postId);
+            const obj = value.pages.flat().find((v) => v.postId === postId); // postId와 일치하는 포스트를 가져옴
             if (obj) {
-              // 존재는 하는지
-              const pageIndex = value.pages.findIndex((page) =>
-                page.includes(obj)
+              const pageIndex = value.pages.findIndex(
+                (page) => page.includes(obj) // 해당 포스트를 가지고있는 페이지 인덱스를 찾음
               );
               const index = value.pages[pageIndex].findIndex(
-                (v) => v.postId === postId
+                (v) => v.postId === postId // 페이지 인덱스 내에서 포스트 인덱스 찾기
               );
+
+              // 얕은 복사 준비
               const shallow: any = { ...value };
               value.pages = [...value.pages];
               value.pages[pageIndex] = [...value.pages[pageIndex]];
+
+              // 포스트 데이터 업데이트
               shallow.pages[pageIndex][index] = {
                 ...shallow.pages[pageIndex][index],
                 Hearts: [{ email: session?.user?.email as string }],
@@ -103,10 +111,12 @@ export default function ActionButtons({ post }: Props) {
                   Hearts: shallow.pages[pageIndex][index]._count.Hearts + 1,
                 },
               };
+
+              // 캐시 업데이트
               queryClient.setQueryData(queryKey, shallow);
             }
           } else if (value) {
-            // 싱글 포스트인 경우
+            // 단일 포스트면
             if (value.postId === postId) {
               const shallow = {
                 ...value,
@@ -122,61 +132,13 @@ export default function ActionButtons({ post }: Props) {
         }
       });
     },
-    onSuccess() {
+    onError: () => {
       queryClient.invalidateQueries({ queryKey: ["post", postId] });
     },
-    onError() {
-      const queryCache = queryClient.getQueryCache();
-      const queryKeys = queryCache.getAll().map((cache) => cache.queryKey);
-      queryKeys.forEach((queryKey) => {
-        if (queryKey[0] === "posts") {
-          const value: IPost | InfiniteData<IPost[]> | undefined =
-            queryClient.getQueryData(queryKey);
-          if (value && "pages" in value) {
-            const obj = value.pages.flat().find((v) => v.postId === postId);
-            if (obj) {
-              // 존재는 하는지
-              const pageIndex = value.pages.findIndex((page) =>
-                page.includes(obj)
-              );
-              const index = value.pages[pageIndex].findIndex(
-                (v) => v.postId === postId
-              );
-              const shallow: any = { ...value };
-              value.pages = { ...value.pages };
-              value.pages[pageIndex] = [...value.pages[pageIndex]];
-              shallow.pages[pageIndex][index] = {
-                ...shallow.pages[pageIndex][index],
-                Hearts: shallow.pages[pageIndex][index].Hearts.filter(
-                  (v: any) => v.email !== session?.user?.email
-                ),
-                _count: {
-                  ...shallow.pages[pageIndex][index]._count,
-                  Hearts: shallow.pages[pageIndex][index]._count.Hearts - 1,
-                },
-              };
-              queryClient.setQueryData(queryKey, shallow);
-            }
-          } else if (value) {
-            // 싱글 포스트인 경우
-            if (value.postId === postId) {
-              const shallow = {
-                ...value,
-                Hearts: value.Hearts.filter(
-                  (v) => v.email !== session?.user?.email
-                ),
-                _count: {
-                  ...value._count,
-                  Hearts: value._count.Hearts - 1,
-                },
-              };
-              queryClient.setQueryData(queryKey, shallow);
-            }
-          }
-        }
-      });
+    onSettled: () => {
+      // 중복 방지를 위한 state false로
+      setIsLiking(false);
     },
-    onSettled() {},
   });
 
   const unheart = useMutation({
@@ -190,7 +152,10 @@ export default function ActionButtons({ post }: Props) {
         }
       );
     },
-    onMutate() {
+    onMutate: async () => {
+      if (isLiking) return; // 이미 요청 중이면 아무 작업도 하지 않음
+      setIsLiking(true); // 요청 시작 시 상태 업데이트
+
       const queryCache = queryClient.getQueryCache();
       const queryKeys = queryCache.getAll().map((cache) => cache.queryKey);
       queryKeys.forEach((queryKey) => {
@@ -200,7 +165,6 @@ export default function ActionButtons({ post }: Props) {
           if (value && "pages" in value) {
             const obj = value.pages.flat().find((v) => v.postId === postId);
             if (obj) {
-              // 존재는 하는지
               const pageIndex = value.pages.findIndex((page) =>
                 page.includes(obj)
               );
@@ -223,7 +187,6 @@ export default function ActionButtons({ post }: Props) {
               queryClient.setQueryData(queryKey, shallow);
             }
           } else if (value) {
-            // 싱글 포스트인 경우
             if (value.postId === postId) {
               const shallow = {
                 ...value,
@@ -241,57 +204,12 @@ export default function ActionButtons({ post }: Props) {
         }
       });
     },
-    onSuccess() {
-      queryClient.refetchQueries({ queryKey: ["post", "recommends"] });
+    onError: () => {
+      queryClient.invalidateQueries({ queryKey: ["post", postId] });
     },
-    onError() {
-      const queryCache = queryClient.getQueryCache();
-      const queryKeys = queryCache.getAll().map((cache) => cache.queryKey);
-      queryKeys.forEach((queryKey) => {
-        if (queryKey[0] === "posts") {
-          const value: IPost | InfiniteData<IPost[]> | undefined =
-            queryClient.getQueryData(queryKey);
-          if (value && "pages" in value) {
-            const obj = value.pages.flat().find((v) => v.postId === postId);
-            if (obj) {
-              // 존재는 하는지
-              const pageIndex = value.pages.findIndex((page) =>
-                page.includes(obj)
-              );
-              const index = value.pages[pageIndex].findIndex(
-                (v) => v.postId === postId
-              );
-              const shallow: any = { ...value };
-              value.pages = { ...value.pages };
-              value.pages[pageIndex] = [...value.pages[pageIndex]];
-              shallow.pages[pageIndex][index] = {
-                ...shallow.pages[pageIndex][index],
-                Hearts: [{ email: session?.user?.email as string }],
-                _count: {
-                  ...shallow.pages[pageIndex][index]._count,
-                  Hearts: shallow.pages[pageIndex][index]._count.Hearts + 1,
-                },
-              };
-              queryClient.setQueryData(queryKey, shallow);
-            }
-          } else if (value) {
-            // 싱글 포스트인 경우
-            if (value.postId === postId) {
-              const shallow = {
-                ...value,
-                Hearts: [{ email: session?.user?.email as string }],
-                _count: {
-                  ...value._count,
-                  Hearts: value._count.Hearts + 1,
-                },
-              };
-              queryClient.setQueryData(queryKey, shallow);
-            }
-          }
-        }
-      });
+    onSettled: () => {
+      setIsLiking(false);
     },
-    onSettled() {},
   });
 
   const saved = useMutation({
@@ -308,18 +226,18 @@ export default function ActionButtons({ post }: Props) {
       );
     },
     onMutate: async () => {
-      await queryClient.cancelQueries({
-        queryKey: ["users", session!.user!.email],
-      });
+      // 사용자 정보를 가져옴
       const previousUserData = queryClient.getQueryData([
         "user",
         session!.user!.email,
       ]);
 
+      // 낙관적으로 업데이트함 Saved에 postId 업데이트
       queryClient.setQueryData(
         ["users", session!.user!.email],
         (oldData: any) => {
           if (!oldData) {
+            // 기존 데이터가 없다면 기본 데이터 생성
             return {
               email: session!.user!.email,
               nickname: session!.user!.name, // 기본 닉네임 (필요에 따라 수정)
@@ -338,7 +256,7 @@ export default function ActionButtons({ post }: Props) {
               },
             };
           }
-
+          // 이전 데이터 있다면 Saved변경
           return {
             ...oldData,
             Saved: oldData.Saved
@@ -351,6 +269,7 @@ export default function ActionButtons({ post }: Props) {
       return { previousUserData };
     },
     onError: (err, variables, context) => {
+      // 오류 발생 시 이전 데이터로 롤백
       if (context && context.previousUserData) {
         queryClient.setQueryData(
           ["user", session!.user!.email],
@@ -358,10 +277,8 @@ export default function ActionButtons({ post }: Props) {
         );
       }
     },
-    onSuccess() {
-      setSaved(true);
-    },
     onSettled: () => {
+      // 요청 완료 후 쿼리 무효화해서 최신 데이터를 가져옴 ( 안정성을 위해서 해주는게 좋음 )
       queryClient.invalidateQueries({
         queryKey: ["user", session!.user!.email],
       });
@@ -386,14 +303,12 @@ export default function ActionButtons({ post }: Props) {
         throw new Error("Session or user information is missing");
       }
 
-      await queryClient.cancelQueries({
-        queryKey: ["user", session!.user!.email],
-      });
       const previousUserData = queryClient.getQueryData([
         "user",
         session!.user!.email,
       ]);
 
+      // 낙관적 업데이트
       queryClient.setQueryData(
         ["user", session!.user!.email],
         (oldData: any) => {
@@ -410,16 +325,13 @@ export default function ActionButtons({ post }: Props) {
       return { previousUserData };
     },
     onError: (err, variables, context) => {
-      console.log(err, "err");
+      // 오류시 이전데이터 적용
       if (context && context.previousUserData) {
         queryClient.setQueryData(
           ["user", session!.user!.email],
           context.previousUserData
         );
       }
-    },
-    onSuccess() {
-      setSaved(false);
     },
     onSettled: () => {
       queryClient.invalidateQueries({
@@ -428,9 +340,144 @@ export default function ActionButtons({ post }: Props) {
     },
   });
 
+  const addComment = useMutation({
+    mutationFn: async (commentData: {
+      postId: String;
+      CommentText: string;
+      userSession: any;
+    }) => {
+      return await fetch(
+        `${
+          process.env.NEXT_PUBLIC_BASE_URL
+        }/api/posts/${postId.toString()}/comments`,
+        {
+          credentials: "include",
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            comment: commentData.CommentText,
+            User: commentData.userSession,
+          }),
+        }
+      );
+    },
+    onMutate: async (commentData) => {
+      if (isPosting) return; // 이미 요청 중이면 아무 작업도 하지 않음
+      setIsPosting(true); // 요청 시작 시 상태 업데이트
+
+      // Optimistic Update: 임시로 캐시 업데이트
+      const previousComments = queryClient.getQueryData<IComment[]>([
+        "posts",
+        postId.toString(),
+        "comments",
+      ]);
+      queryClient.setQueryData(
+        ["posts", postId.toString(), "comments"],
+        (old: any) => {
+          if (!old) return old;
+
+          return [
+            ...old,
+            {
+              comment: commentData.CommentText,
+              User: commentData.userSession,
+            },
+          ];
+        }
+      );
+
+      const previousPost = queryClient.getQueryData<IPost>([
+        "posts",
+        postId.toString(),
+      ]);
+      queryClient.setQueryData(["posts", postId.toString()], (old: any) => {
+        if (!old) return old;
+
+        return {
+          ...old,
+          _count: {
+            ...old._count,
+            Comments: old._count.Comments + 1,
+          },
+        };
+      });
+
+      return { previousComments, previousPost };
+    },
+    onError: (err, variables, context) => {
+      // 에러 발생 시 이전 상태로 롤백
+      if (context?.previousComments) {
+        queryClient.setQueryData(
+          ["posts", postId.toString(), "comments"],
+          context.previousComments
+        );
+      }
+      if (context?.previousPost) {
+        queryClient.setQueryData(
+          ["posts", postId.toString()],
+          context.previousPost
+        );
+      }
+    },
+    onSuccess: (data, commentData) => {
+      // 성공 시 캐시를 무효화하여 최신 댓글 목록을 가져옵니다.
+      const previousComments = queryClient.getQueryData<IComment[]>([
+        "posts",
+        postId.toString(),
+        "comments",
+      ]);
+
+      // 게시물의 현재 정보를 가져옵니다.
+      const post = queryClient.getQueryData<IPost>([
+        "posts",
+        postId.toString(),
+      ]);
+
+      if (previousComments && post) {
+        // 댓글 배열을 업데이트합니다.
+        queryClient.setQueryData(
+          ["posts", postId.toString(), "comments"],
+          [
+            ...previousComments,
+            {
+              comment: commentData.CommentText,
+              User: commentData.userSession,
+            }, // 임시 댓글 객체
+          ]
+        );
+
+        // 게시물의 댓글 수를 1 증가시킵니다.
+        const updatedPost = {
+          ...post,
+          _count: {
+            ...post._count,
+            Comments: post._count.Comments + 1,
+          },
+        };
+
+        // 업데이트된 게시물 정보를 캐시에 저장합니다.
+        queryClient.setQueryData(["posts", postId.toString()], updatedPost);
+      }
+
+      queryClient.invalidateQueries({
+        queryKey: ["posts", postId.toString(), "comments"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["posts", postId.toString()],
+      });
+    },
+    onSettled: () => {
+      setIsPosting(false); // 요청 완료 후 상태 업데이트
+      setComment("");
+    },
+  });
+
   // 하트를 클릭했을때
   const onClickHeart: MouseEventHandler<HTMLDivElement> = (e) => {
     e.stopPropagation();
+    if (isLiking) return;
     if (isLiked) {
       // 이미 좋아요를 눌렀으면
       unheart.mutate();
@@ -442,6 +489,7 @@ export default function ActionButtons({ post }: Props) {
   // 저장됨 클릭
   const onClickSaved: MouseEventHandler<HTMLDivElement> = (e) => {
     e.stopPropagation();
+
     if (isSaved) {
       // 이미 저장함
       unsaved.mutate();
@@ -454,11 +502,16 @@ export default function ActionButtons({ post }: Props) {
     setComment(event.target.value);
   };
 
+  // 게시를 클릭하면 디테일 페이지로 이동하게
   const onSubmitComment = () => {
+    // router.push(`/detail/${postId}`);
     if (!session) {
       return null;
     }
-    router.push(`/detail/${postId}`);
+    console.log(session, "session");
+    const userSession = session.user;
+    const postId = post.postId.toString();
+    addComment.mutate({ postId, CommentText, userSession });
   };
 
   return (
@@ -703,10 +756,8 @@ export default function ActionButtons({ post }: Props) {
                         placeholder="댓글 달기..."
                         autoComplete="off"
                         autoCorrect="off"
+                        value={CommentText}
                         onChange={handleTextareaChange}
-                        // style={{
-                        //   height: "18px!important",
-                        // }}
                       ></textarea>
                       {CommentText ? (
                         <div className={styles.EnterBtn}>

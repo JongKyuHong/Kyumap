@@ -158,8 +158,6 @@
 }
 
 .ModalInnerDiv9 {
-  /* overflow-x: auto;
-  overflow-y: auto; */
   overflow-x: hidden;
   overflow-y: hidden;
   max-height: calc(100vh - 40px);
@@ -461,10 +459,11 @@
 }
 
 .ModalBody {
-  flex-shrink: 1;
+  /* flex-shrink: 1;
   flex-basis: auto;
   display: flex;
-  flex-grow: 1;
+  flex-grow: 1; */
+  overflow-y: auto;
 }
 
 .loading {
@@ -474,8 +473,10 @@
   width: 100%;
   height: 100%;
 }
+
 .ModalBodyDiv {
-  width: calc(100% - var(--creation-settings-width));
+  /* width: calc(100% - var(--creation-settings-width)); */
+  /* width: var(--creation-settings-width); */
   height: 100%;
   justify-content: center;
   display: flex;
@@ -1207,7 +1208,8 @@
 }
 
 .rightBody {
-  width: var(--creation-settings-width);
+  /* width: var(--creation-settings-width); */
+  width: 100%;
   border-left-width: 1px;
   border-left-color: rgb(var(--ig-elevated-separator));
   box-sizing: border-box;
@@ -1217,7 +1219,7 @@
 }
 
 .rightBody2 {
-  overflow-y: visible;
+  overflow-y: auto;
   min-width: 0;
   min-height: 0;
   overflow-x: visible;
@@ -1240,7 +1242,7 @@
 .rightBody3 {
   max-height: 100%;
   min-height: 99%;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .bodyInnerText {

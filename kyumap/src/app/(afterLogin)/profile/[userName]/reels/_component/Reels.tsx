@@ -23,6 +23,8 @@ export default function Reels({ userEmail }: Props) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { data: session } = useSession();
+
+  // 인피니티 쿼리로 불러온다.
   const { data, fetchNextPage, hasNextPage, isFetching, error } =
     useInfiniteQuery<
       IPost[],
@@ -39,8 +41,10 @@ export default function Reels({ userEmail }: Props) {
       gcTime: 300 * 1000,
     });
 
+  // 유저정보 가져오기
   const user = queryClient.getQueryData(["users", userEmail]);
 
+  // 다음 페이지 위한 inview
   const { ref, inView } = useInView({
     threshold: 0,
     delay: 0,

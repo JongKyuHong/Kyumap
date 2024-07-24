@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import styles from "./detail.module.css";
+import styles from "./comment.module.css";
 import Link from "next/link";
 import Image from "next/image";
 import dayjs from "dayjs";
@@ -15,24 +15,25 @@ import {
   useQueryClient,
   InfiniteData,
 } from "@tanstack/react-query";
+import { IReply } from "@/model/Reply";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
 
 type Props = {
-  comment: IComment;
+  parentId: string;
+  comment: IReply;
   ReplyInfo: Function;
   onClickExitBtn: Function;
   postId: string;
-  parentId: string;
 };
 
-export default function Commentli({
+export default function Reply({
+  parentId,
   comment,
   ReplyInfo,
   onClickExitBtn,
   postId,
-  parentId,
 }: Props) {
   const [isCommentLiked, setCommentLiked] = useState(false);
   const [isReply, setReply] = useState(false);
@@ -44,9 +45,6 @@ export default function Commentli({
       (v) => v.email === session?.user?.email
     );
     setCommentLiked(liked);
-
-    const isitReply = comment.hasOwnProperty("parent");
-    setReply(isitReply);
   }, [comment, session]);
 
   const onClickReply = () => {
@@ -60,7 +58,7 @@ export default function Commentli({
       userSession: any;
     }) => {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${commentData.postId}/${commentData.commentId}/heart`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${commentData.postId}/${commentData.commentId}/reply/heart`,
         {
           credentials: "include",
           method: "POST",
@@ -138,7 +136,7 @@ export default function Commentli({
       userSession: any;
     }) => {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${commentData.postId}/${commentData.commentId}/heart`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${commentData.postId}/${commentData.commentId}/reply/heart`,
         {
           credentials: "include",
           method: "DELETE",
@@ -212,15 +210,13 @@ export default function Commentli({
 
   const onClickCommentHeart = (comment_id: string) => {
     // 댓글에 좋아요
-    if (isCommentLiked) {
-      // 이미 댓글 좋아요를 눌렀으면
-      if (session) {
+    if (session) {
+      if (isCommentLiked) {
+        // 이미 댓글 좋아요를 눌렀으면
         const commentId = comment_id;
         const userSession = session.user;
         commentUnheart.mutate({ postId, commentId, userSession });
-      }
-    } else {
-      if (session) {
+      } else {
         const commentId = comment_id;
         const userSession = session.user;
         commentHeart.mutate({ postId, commentId, userSession });
@@ -229,6 +225,7 @@ export default function Commentli({
   };
 
   if (!comment) return null;
+
   let parts: any[] = [];
   if (comment && comment.content) {
     parts = comment.content.split(/(@\w+)/g);

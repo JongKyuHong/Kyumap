@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { MapMarker } from "react-kakao-maps-sdk";
-import { Card } from "react-bootstrap";
 import styles from "./MyMap.module.css";
 import Link from "next/link";
 import Image from "next/image";
@@ -20,7 +19,7 @@ type Props = {
 
 const KMapMarker = ({ position, storeTitle, content, imgsrc, id }: Props) => {
   const [isVisible, setVisible] = useState<boolean>();
-  // nickname추후에 가게이름으로 변경하기를
+
   const linkStyle = {
     textDecoration: "none",
     color: "gray",
@@ -52,17 +51,6 @@ const KMapMarker = ({ position, storeTitle, content, imgsrc, id }: Props) => {
           as="/Detail"
           style={linkStyle}
         >
-          {/* <Card>
-            <Card.Img
-              variant="top"
-              src={imgsrc}
-              style={{ width: "100%", height: "100px" }}
-            />
-            <Card.Body>
-              <Card.Title>{storeTitle}</Card.Title>
-              <Card.Text>{content}</Card.Text>
-            </Card.Body>
-          </Card> */}
           <div className={styles.card}>
             <Image
               src={imgsrc}

@@ -2,14 +2,13 @@ import React from "react";
 import MainSection from "../_component/MainSection";
 import styles from "../layout.module.css";
 import FollowRecommendSection from "../_component/FollowRecommendSection";
+import { auth } from "@/auth";
 import {
   HydrationBoundary,
   QueryClient,
   dehydrate,
 } from "@tanstack/react-query";
 import { getPostRecommends } from "../_lib/getPostRecommends";
-import { getUser } from "../_lib/getUser";
-import { auth } from "@/auth";
 
 export default async function Home() {
   const session = await auth();
@@ -20,16 +19,9 @@ export default async function Home() {
     initialPageParam: 0,
   });
 
-  // const email = session!.user!.email?.toString();
-  // await queryClient.prefetchQuery({
-  //   queryKey: ["users", email!],
-  //   queryFn: getUser,
-  // });
-
-  const dehydrateState = dehydrate(queryClient);
-
+  const dehydratedState = dehydrate(queryClient);
   return (
-    <HydrationBoundary state={dehydrateState}>
+    <HydrationBoundary state={dehydratedState}>
       <div className={styles.mainrootDiv}>
         <MainSection session={session} />
         <FollowRecommendSection session={session} />

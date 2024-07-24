@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "./detail.module.css";
+import styles from "./comment.module.css";
 import Reply from "./Reply";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
@@ -32,6 +32,7 @@ export default function Comment({
   const [isClickedReply, setClickedReply] = useState(false);
   const { data: session } = useSession();
 
+  // 댓글에 답글이 있는지 확인하고 상태를 업데이트
   useEffect(() => {
     const has = comment?._count?.Comments > 0 ? true : false;
     setHasReply(has);

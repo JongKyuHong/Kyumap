@@ -15,19 +15,22 @@ export default function PostRecommends() {
     [_1: string, _2: string],
     number
   >({
-    queryKey: ["posts", "recommends"],
-    queryFn: getPostRecommends,
-    initialPageParam: 0,
-    getNextPageParam: (lastPage) => lastPage.at(-1)?.postId,
-    staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
-    gcTime: 300 * 1000,
-    refetchOnWindowFocus: true,
-  });
-  const { ref, inView } = useInView({
-    threshold: 0,
-    delay: 0,
+    queryKey: ["posts", "recommends"], // 쿼리 키 설정
+    queryFn: getPostRecommends, // 데이터 페칭 함수
+    initialPageParam: 0, // 초기 페이지 파라미터
+    getNextPageParam: (lastPage) => lastPage.at(-1)?.postId, // 다음 페이지 파라미터 설정
+    staleTime: 60 * 1000, // 데이터가 신선함을 유지하는 시간 (1분)
+    gcTime: 300 * 1000, // 가비지 컬렉션 시간 (5분)
+    refetchOnWindowFocus: true, // 윈도우 포커스 시 다시 페칭
   });
 
+  // useInView 훅을 사용하여 요소가 뷰포트에 들어왔는지 감지
+  const { ref, inView } = useInView({
+    threshold: 0, // 요소가 뷰포트에 들어오자마자 트리거
+    delay: 0, // 지연 시간 없음
+  });
+
+  // 요소가 뷰포트에 들어왔을 때 데이터 페칭
   useEffect(() => {
     if (inView) {
       !isFetching && hasNextPage && fetchNextPage();

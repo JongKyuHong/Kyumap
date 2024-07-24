@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import styles from "./detail.module.css";
+import styles from "./comment.module.css";
 import Link from "next/link";
 import Image from "next/image";
 import dayjs from "dayjs";
@@ -15,25 +15,24 @@ import {
   useQueryClient,
   InfiniteData,
 } from "@tanstack/react-query";
-import { IReply } from "@/model/Reply";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
 
 type Props = {
-  parentId: string;
-  comment: IReply;
+  comment: IComment;
   ReplyInfo: Function;
   onClickExitBtn: Function;
   postId: string;
+  parentId: string;
 };
 
-export default function Reply({
-  parentId,
+export default function Commentli({
   comment,
   ReplyInfo,
   onClickExitBtn,
   postId,
+  parentId,
 }: Props) {
   const [isCommentLiked, setCommentLiked] = useState(false);
   const [isReply, setReply] = useState(false);
@@ -45,12 +44,16 @@ export default function Reply({
       (v) => v.email === session?.user?.email
     );
     setCommentLiked(liked);
+
+    const isitReply = comment.hasOwnProperty("parent");
+    setReply(isitReply);
   }, [comment, session]);
 
   const onClickReply = () => {
     ReplyInfo(comment.User.nickname, parentId, false);
   };
 
+  // 댓글 좋아요 mutation
   const commentHeart = useMutation({
     mutationFn: async (commentData: {
       postId: string;
@@ -58,7 +61,7 @@ export default function Reply({
       userSession: any;
     }) => {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${commentData.postId}/${commentData.commentId}/reply/heart`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${commentData.postId}/${commentData.commentId}/heart`,
         {
           credentials: "include",
           method: "POST",
@@ -76,6 +79,7 @@ export default function Reply({
 
       return response.json();
     },
+    // 낙관적 업데이트를 위해 캐시 데이터 미리 수정
     onMutate: async (commentData) => {
       await queryClient.cancelQueries({
         queryKey: ["posts", commentData.postId, "comments"],
@@ -136,7 +140,7 @@ export default function Reply({
       userSession: any;
     }) => {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${commentData.postId}/${commentData.commentId}/reply/heart`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${commentData.postId}/${commentData.commentId}/heart`,
         {
           credentials: "include",
           method: "DELETE",
@@ -210,13 +214,15 @@ export default function Reply({
 
   const onClickCommentHeart = (comment_id: string) => {
     // 댓글에 좋아요
-    if (session) {
-      if (isCommentLiked) {
-        // 이미 댓글 좋아요를 눌렀으면
+    if (isCommentLiked) {
+      // 이미 댓글 좋아요를 눌렀으면
+      if (session) {
         const commentId = comment_id;
         const userSession = session.user;
         commentUnheart.mutate({ postId, commentId, userSession });
-      } else {
+      }
+    } else {
+      if (session) {
         const commentId = comment_id;
         const userSession = session.user;
         commentHeart.mutate({ postId, commentId, userSession });
@@ -225,7 +231,6 @@ export default function Reply({
   };
 
   if (!comment) return null;
-
   let parts: any[] = [];
   if (comment && comment.content) {
     parts = comment.content.split(/(@\w+)/g);

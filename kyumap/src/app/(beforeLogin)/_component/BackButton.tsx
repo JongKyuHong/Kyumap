@@ -2,12 +2,33 @@
 
 import styles from "./signup.module.css";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function BackButton() {
   const router = useRouter();
+  const [shouldCheckPath, setShouldCheckPath] = useState(false);
+
+  useEffect(() => {
+    if (shouldCheckPath) {
+      const currentPath = window.location.pathname;
+
+      // 일정 시간 뒤에 현재 경로를 확인하고 /home이 아니면 /home으로 이동
+      const timeoutId = setTimeout(() => {
+        const newPath = window.location.pathname;
+        if (newPath === currentPath) {
+          router.push("/home");
+        }
+      }, 100); // 100ms 정도의 딜레이를 주어 뒤로가기가 완료되었는지 확인
+
+      return () => clearTimeout(timeoutId); // 타임아웃 정리
+    }
+  }, [shouldCheckPath, router]);
+
   const onClickClose = () => {
+    // 뒤로가기 실행
     router.back();
-    // TODO: 뒤로가기가 /home이 아니면 /home으로 보내기
+    // 상태 업데이트로 경로 확인 트리거
+    setShouldCheckPath(true);
   };
 
   return (

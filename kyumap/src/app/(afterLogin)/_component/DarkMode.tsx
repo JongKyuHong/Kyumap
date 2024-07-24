@@ -1,7 +1,6 @@
 "use client";
 
 import styles from "./menudetail.module.css";
-import { useState, useCallback, useEffect } from "react";
 
 type Props = {
   darkMode: boolean;

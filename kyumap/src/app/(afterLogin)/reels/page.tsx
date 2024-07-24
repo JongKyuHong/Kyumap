@@ -16,8 +16,5 @@ export default async function Page() {
   });
 
   const dehydrateState = dehydrate(queryClient);
-  return (
-    // <HydrationBoundary state={dehydrateState}></HydrationBoundary>
-    <ReelsParent />
-  );
+  return <ReelsParent />;
 }

@@ -19,6 +19,7 @@ export default function Page() {
   const [introduce, setIntro] = useState("");
   const [infowebsite, setWebsite] = useState("");
 
+  // 유저정보 불러오기
   useEffect(() => {
     const getUserData = async () => {
       if (session && session?.user!.email) {
@@ -57,6 +58,7 @@ export default function Page() {
     setWebsite(value);
   };
 
+  // 유저 정보 변경
   const { mutate: submitInfo, isPending } = useMutation({
     mutationFn: () => {
       const data = {
@@ -81,6 +83,7 @@ export default function Page() {
         session!.user!.email,
       ]);
 
+      // 캐시 변경
       queryClient.setQueryData(
         ["users", session!.user!.email],
         (oldData: any) => ({
@@ -94,6 +97,7 @@ export default function Page() {
       return { previousUserData };
     },
     onError: (error, variables, context) => {
+      // 에러 발생시 이전으로 돌리기
       if (context?.previousUserData) {
         queryClient.setQueryData(
           ["users", session!.user!.email],

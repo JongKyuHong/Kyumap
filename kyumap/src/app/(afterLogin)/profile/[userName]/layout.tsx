@@ -45,7 +45,6 @@ export default async function ProfileLayout({
     <HydrationBoundary state={dehydrateState}>
       <div className={styles.MainDiv}>
         <ProfileSection userEmail={userEmail} userName={userName} />
-        {/* <UserPosts userEmail={userEmail} /> */}
         {children}
       </div>
     </HydrationBoundary>
