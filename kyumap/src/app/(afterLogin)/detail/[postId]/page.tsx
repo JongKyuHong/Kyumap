@@ -10,6 +10,7 @@ type Props = {
 
 export default async function Page({ params }: Props) {
   const session = await auth();
+  console.log("설마 여기 들리지는 않지?");
   return (
     <>
       <Home />

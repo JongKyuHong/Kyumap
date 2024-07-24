@@ -16,29 +16,22 @@ import { useRouter } from "next/navigation";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { IPost } from "@/model/Post";
 import { IComment } from "@/model/Comment";
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-  InfiniteData,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getComments } from "@/app/(afterLogin)/_lib/getComments";
 import { getPost } from "@/app/(afterLogin)/_lib/getPost";
 import useDeviceSize from "@/app/(afterLogin)/_component/useDeviceSize";
 import { useSession } from "next-auth/react";
-import Comment from "./Comment";
+import Comment from "../../../../_component/Comment";
 import { getUser } from "../../../../_lib/getUser";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
 
-// type Props = {
-//   post: IPost;
-// };
-
 type Props = {
   postId: string;
 };
+
+const videoExtensions = [".mp4", ".avi", ".mov", ".wmv", ".flv", ".mkv"];
 
 export default function DetailPage({ postId }: Props) {
   const [isLiked, setLiked] = useState(false);
@@ -138,16 +131,9 @@ export default function DetailPage({ postId }: Props) {
   const currentFile = post?.Images[currentNumber]; // 현재 파일
   const fileExtension = getFileExtension(currentFile); // 파일 확장자
 
-  // 이미지인지 동영상인지 판단
-  useEffect(() => {
-    if (post && post.Images && post.Images[currentNumber]) {
-      if (post.Images[currentNumber].endsWith(".mp4")) {
-        setImg(false);
-      } else {
-        setImg(true);
-      }
-    }
-  }, [post, currentNumber]);
+  const isVideo = (url: string) => {
+    return videoExtensions.some((ext) => url.toLowerCase().endsWith(ext));
+  };
 
   // 좋아요
   const heart = useMutation({
@@ -715,9 +701,9 @@ export default function DetailPage({ postId }: Props) {
     }
   }, [post, currentNumber]);
 
-  const onClickXbox = useCallback(() => {
+  const onClickXbox = () => {
     router.back();
-  }, [router]);
+  };
 
   const onClickNextBtn = () => {
     setNumber(currentNumber + 1);
@@ -985,8 +971,11 @@ export default function DetailPage({ postId }: Props) {
                                                           paddingBottom: "75%",
                                                         }}
                                                       >
-                                                        {!isImg ? (
-                                                          // 확장자가 mp4, avi, mov인 경우 동영상으로 간주
+                                                        {isVideo(
+                                                          post.Images[
+                                                            currentNumber
+                                                          ]
+                                                        ) ? (
                                                           <div
                                                             className={
                                                               styles.videoDiv
@@ -1138,24 +1127,23 @@ export default function DetailPage({ postId }: Props) {
                                                             </div>
                                                           </div>
                                                         ) : (
-                                                          <></>
-                                                          // <Image
-                                                          //   width={0}
-                                                          //   height={0}
-                                                          //   sizes="100vw"
-                                                          //   alt="Photo by"
-                                                          //   className={
-                                                          //     styles.ArticleImage
-                                                          //   }
-                                                          //   object-fit="cover"
-                                                          //   crossOrigin="anonymous"
-                                                          //   decoding="auto"
-                                                          //   src={
-                                                          //     post.Images[
-                                                          //       currentNumber
-                                                          //     ]
-                                                          //   }
-                                                          // />
+                                                          <Image
+                                                            alt="Photo by"
+                                                            width={0}
+                                                            height={0}
+                                                            sizes="100vw"
+                                                            className={
+                                                              styles.ArticleImage
+                                                            }
+                                                            object-fit="cover"
+                                                            crossOrigin="anonymous"
+                                                            decoding="auto"
+                                                            src={
+                                                              post.Images[
+                                                                currentNumber
+                                                              ]
+                                                            }
+                                                          />
                                                         )}
                                                       </div>
                                                     </div>
@@ -1186,17 +1174,26 @@ export default function DetailPage({ postId }: Props) {
                                               onClick={onClickPrevBtn}
                                             >
                                               <svg
-                                                className={styles.arrow}
-                                                viewBox="0 0 24 24"
-                                                focusable="false"
-                                                height="18"
-                                                width="18"
+                                                width="30"
+                                                height="34"
+                                                viewBox="0 0 30 34"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
                                               >
+                                                <circle
+                                                  cx="15"
+                                                  cy="17"
+                                                  r="14"
+                                                  fill="rgba(240, 240, 240, 0.8)"
+                                                  stroke="lightgray"
+                                                  strokeWidth="2"
+                                                />
                                                 <path
-                                                  d="M0 0h24v24H0z"
+                                                  d="M18 11l-6 6 6 6"
+                                                  stroke="gray"
+                                                  strokeWidth="2"
                                                   fill="none"
-                                                ></path>
-                                                <path d="M16.41 5.41L15 4l-8 8 8 8 1.41-1.41L9.83 12"></path>
+                                                />
                                               </svg>
                                             </div>
                                           </button>
@@ -1223,17 +1220,26 @@ export default function DetailPage({ postId }: Props) {
                                               onClick={onClickNextBtn}
                                             >
                                               <svg
-                                                className={styles.arrow}
-                                                viewBox="0 0 24 24"
-                                                focusable="false"
-                                                height="18"
-                                                width="18"
+                                                width="30"
+                                                height="34"
+                                                viewBox="0 0 30 34"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
                                               >
+                                                <circle
+                                                  cx="15"
+                                                  cy="17"
+                                                  r="14"
+                                                  fill="rgba(240, 240, 240, 0.8)"
+                                                  stroke="lightgray"
+                                                  strokeWidth="2"
+                                                />
                                                 <path
-                                                  d="M0 0h24v24H0z"
+                                                  d="M12 11l6 6-6 6"
+                                                  stroke="gray"
+                                                  strokeWidth="2"
                                                   fill="none"
-                                                ></path>
-                                                <path d="M7.59 18.41L9 20l8-8-8-8-1.41 1.41L14.17 12"></path>
+                                                />
                                               </svg>
                                             </div>
                                           </button>
@@ -1559,7 +1565,11 @@ export default function DetailPage({ postId }: Props) {
                                                           paddingBottom: "75%",
                                                         }}
                                                       >
-                                                        {!isImg ? (
+                                                        {isVideo(
+                                                          post.Images[
+                                                            currentNumber
+                                                          ]
+                                                        ) ? (
                                                           // 확장자가 mp4, avi, mov인 경우 동영상으로 간주
                                                           <div
                                                             className={
@@ -1759,17 +1769,26 @@ export default function DetailPage({ postId }: Props) {
                                               onClick={onClickPrevBtn}
                                             >
                                               <svg
-                                                className={styles.arrow}
-                                                viewBox="0 0 24 24"
-                                                focusable="false"
-                                                height="18"
-                                                width="18"
+                                                width="30"
+                                                height="34"
+                                                viewBox="0 0 30 34"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
                                               >
+                                                <circle
+                                                  cx="15"
+                                                  cy="17"
+                                                  r="14"
+                                                  fill="rgba(240, 240, 240, 0.8)"
+                                                  stroke="lightgray"
+                                                  strokeWidth="2"
+                                                />
                                                 <path
-                                                  d="M0 0h24v24H0z"
+                                                  d="M18 11l-6 6 6 6"
+                                                  stroke="gray"
+                                                  strokeWidth="2"
                                                   fill="none"
-                                                ></path>
-                                                <path d="M16.41 5.41L15 4l-8 8 8 8 1.41-1.41L9.83 12"></path>
+                                                />
                                               </svg>
                                             </div>
                                           </button>
@@ -1796,17 +1815,26 @@ export default function DetailPage({ postId }: Props) {
                                               onClick={onClickNextBtn}
                                             >
                                               <svg
-                                                className={styles.arrow}
-                                                viewBox="0 0 24 24"
-                                                focusable="false"
-                                                height="18"
-                                                width="18"
+                                                width="30"
+                                                height="34"
+                                                viewBox="0 0 30 34"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
                                               >
+                                                <circle
+                                                  cx="15"
+                                                  cy="17"
+                                                  r="14"
+                                                  fill="rgba(240, 240, 240, 0.8)"
+                                                  stroke="lightgray"
+                                                  strokeWidth="2"
+                                                />
                                                 <path
-                                                  d="M0 0h24v24H0z"
+                                                  d="M12 11l6 6-6 6"
+                                                  stroke="gray"
+                                                  strokeWidth="2"
                                                   fill="none"
-                                                ></path>
-                                                <path d="M7.59 18.41L9 20l8-8-8-8-1.41 1.41L14.17 12"></path>
+                                                />
                                               </svg>
                                             </div>
                                           </button>

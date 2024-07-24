@@ -17,6 +17,7 @@ import styles from "./post.module.css";
 import { IPost } from "@/model/Post";
 import { useRouter } from "next/navigation";
 import { getUser } from "../_lib/getUser";
+import { IComment } from "@/model/Comment";
 
 interface Props {
   post: IPost;
@@ -31,6 +32,7 @@ export default function ActionButtons({ post }: Props) {
   const [isLiking, setIsLiking] = useState(false);
   // 좋아요 중복 방지용 state
   const [isSaved, setSaved] = useState(false);
+  const [isPosting, setIsPosting] = useState(false);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -338,6 +340,140 @@ export default function ActionButtons({ post }: Props) {
     },
   });
 
+  const addComment = useMutation({
+    mutationFn: async (commentData: {
+      postId: String;
+      CommentText: string;
+      userSession: any;
+    }) => {
+      return await fetch(
+        `${
+          process.env.NEXT_PUBLIC_BASE_URL
+        }/api/posts/${postId.toString()}/comments`,
+        {
+          credentials: "include",
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            comment: commentData.CommentText,
+            User: commentData.userSession,
+          }),
+        }
+      );
+    },
+    onMutate: async (commentData) => {
+      if (isPosting) return; // 이미 요청 중이면 아무 작업도 하지 않음
+      setIsPosting(true); // 요청 시작 시 상태 업데이트
+
+      // Optimistic Update: 임시로 캐시 업데이트
+      const previousComments = queryClient.getQueryData<IComment[]>([
+        "posts",
+        postId.toString(),
+        "comments",
+      ]);
+      queryClient.setQueryData(
+        ["posts", postId.toString(), "comments"],
+        (old: any) => {
+          if (!old) return old;
+
+          return [
+            ...old,
+            {
+              comment: commentData.CommentText,
+              User: commentData.userSession,
+            },
+          ];
+        }
+      );
+
+      const previousPost = queryClient.getQueryData<IPost>([
+        "posts",
+        postId.toString(),
+      ]);
+      queryClient.setQueryData(["posts", postId.toString()], (old: any) => {
+        if (!old) return old;
+
+        return {
+          ...old,
+          _count: {
+            ...old._count,
+            Comments: old._count.Comments + 1,
+          },
+        };
+      });
+
+      return { previousComments, previousPost };
+    },
+    onError: (err, variables, context) => {
+      // 에러 발생 시 이전 상태로 롤백
+      if (context?.previousComments) {
+        queryClient.setQueryData(
+          ["posts", postId.toString(), "comments"],
+          context.previousComments
+        );
+      }
+      if (context?.previousPost) {
+        queryClient.setQueryData(
+          ["posts", postId.toString()],
+          context.previousPost
+        );
+      }
+    },
+    onSuccess: (data, commentData) => {
+      // 성공 시 캐시를 무효화하여 최신 댓글 목록을 가져옵니다.
+      const previousComments = queryClient.getQueryData<IComment[]>([
+        "posts",
+        postId.toString(),
+        "comments",
+      ]);
+
+      // 게시물의 현재 정보를 가져옵니다.
+      const post = queryClient.getQueryData<IPost>([
+        "posts",
+        postId.toString(),
+      ]);
+
+      if (previousComments && post) {
+        // 댓글 배열을 업데이트합니다.
+        queryClient.setQueryData(
+          ["posts", postId.toString(), "comments"],
+          [
+            ...previousComments,
+            {
+              comment: commentData.CommentText,
+              User: commentData.userSession,
+            }, // 임시 댓글 객체
+          ]
+        );
+
+        // 게시물의 댓글 수를 1 증가시킵니다.
+        const updatedPost = {
+          ...post,
+          _count: {
+            ...post._count,
+            Comments: post._count.Comments + 1,
+          },
+        };
+
+        // 업데이트된 게시물 정보를 캐시에 저장합니다.
+        queryClient.setQueryData(["posts", postId.toString()], updatedPost);
+      }
+
+      queryClient.invalidateQueries({
+        queryKey: ["posts", postId.toString(), "comments"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["posts", postId.toString()],
+      });
+    },
+    onSettled: () => {
+      setIsPosting(false); // 요청 완료 후 상태 업데이트
+      setComment("");
+    },
+  });
+
   // 하트를 클릭했을때
   const onClickHeart: MouseEventHandler<HTMLDivElement> = (e) => {
     e.stopPropagation();
@@ -368,10 +504,14 @@ export default function ActionButtons({ post }: Props) {
 
   // 게시를 클릭하면 디테일 페이지로 이동하게
   const onSubmitComment = () => {
+    // router.push(`/detail/${postId}`);
     if (!session) {
       return null;
     }
-    router.push(`/detail/${postId}`);
+    console.log(session, "session");
+    const userSession = session.user;
+    const postId = post.postId.toString();
+    addComment.mutate({ postId, CommentText, userSession });
   };
 
   return (
@@ -616,10 +756,8 @@ export default function ActionButtons({ post }: Props) {
                         placeholder="댓글 달기..."
                         autoComplete="off"
                         autoCorrect="off"
+                        value={CommentText}
                         onChange={handleTextareaChange}
-                        // style={{
-                        //   height: "18px!important",
-                        // }}
                       ></textarea>
                       {CommentText ? (
                         <div className={styles.EnterBtn}>

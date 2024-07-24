@@ -22,15 +22,10 @@ export default function Reels({ post }: Props) {
   const [isFollowed, setFollowed] = useState(false);
   const [isSaved, setSaved] = useState(false);
   const [isMenu, setIsMenu] = useState(false);
-  const [isDetailOpen, setIsDetailOpen] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const router = useRouter();
   const pathname = usePathname();
-
-  const handleRouteChange = useCallback(() => {
-    setIsMenu(false);
-  }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -97,46 +92,17 @@ export default function Reels({ post }: Props) {
   };
 
   const onClickMenu = () => {
-    setMenu(true);
+    setIsMenu(true);
   };
 
   const closeMenu = () => {
     setIsMenu(false);
   };
 
-  useEffect(() => {
-    window.addEventListener("popstate", handleRouteChange);
-    return () => {
-      window.removeEventListener("popstate", handleRouteChange);
-    };
-  }, [handleRouteChange]);
-
   const onOpenDetail = useCallback(() => {
-    setIsDetailOpen(true);
-    router.push(`/detail/${post.postId}`);
+    setIsMenu(false);
+    router.push(`/reel/${post.postId}`);
   }, [router, post.postId]);
-
-  const onCloseDetail = useCallback(() => {
-    setIsDetailOpen(false);
-    router.back();
-  }, [router]);
-
-  useEffect(() => {
-    const handleRouteChange = () => {
-      setIsMenu(false);
-      setIsDetailOpen(false);
-    };
-
-    const handlePopState = () => {
-      setIsDetailOpen(false);
-    };
-
-    window.addEventListener("popstate", handlePopState);
-
-    return () => {
-      window.removeEventListener("popstate", handlePopState);
-    };
-  }, [router]);
 
   useEffect(() => {
     if (pathname.startsWith("/reels") && isMenu) {
@@ -455,41 +421,39 @@ export default function Reels({ post }: Props) {
             </div>
             <div className={styles.comments}>
               <div className={styles.comments2}>
-                <Link href={`/detail/${post.postId}`}>
-                  <div className={styles.comments3}>
-                    <svg
-                      aria-label="댓글"
-                      className={styles.commentsSvg}
-                      fill="currentColor"
-                      height="24"
-                      role="img"
-                      viewBox="0 0 24 24"
-                      width="24"
-                    >
-                      <title>댓글</title>
-                      <path
-                        d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                      ></path>
-                    </svg>
-                    <div className={styles.commentsCnt}>
-                      <div className={styles.commentsCnt2}>
-                        <span
-                          className={styles.commentsCnt3}
-                          style={{ lineHeight: "16px" }}
-                          dir="auto"
-                        >
-                          <span className={styles.commentsCnt4}>
-                            {post._count.Comments}
-                          </span>
+                <div className={styles.comments3}>
+                  <svg
+                    aria-label="댓글"
+                    className={styles.commentsSvg}
+                    fill="currentColor"
+                    height="24"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="24"
+                  >
+                    <title>댓글</title>
+                    <path
+                      d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                    ></path>
+                  </svg>
+                  <div className={styles.commentsCnt}>
+                    <div className={styles.commentsCnt2}>
+                      <span
+                        className={styles.commentsCnt3}
+                        style={{ lineHeight: "16px" }}
+                        dir="auto"
+                      >
+                        <span className={styles.commentsCnt4}>
+                          {post._count.Comments}
                         </span>
-                      </div>
+                      </span>
                     </div>
                   </div>
-                </Link>
+                </div>
               </div>
             </div>
             <div className={styles.saved}>
@@ -593,7 +557,13 @@ export default function Reels({ post }: Props) {
         className={styles.underDiv}
         style={{ height: "16px", width: "100%" }}
       ></div>
-      {isMenu && <MoreInfoOverlay postId={post.postId} onClose={closeMenu} />}
+      {isMenu && (
+        <MoreInfoOverlay
+          postId={post.postId}
+          onClose={closeMenu}
+          onOpenDetail={onOpenDetail}
+        />
+      )}
     </>
   );
 }

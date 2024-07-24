@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import styles from "./detail.module.css";
+import styles from "./comment.module.css";
 import Link from "next/link";
 import Image from "next/image";
 import dayjs from "dayjs";
