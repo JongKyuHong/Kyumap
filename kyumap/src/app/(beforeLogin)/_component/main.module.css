@@ -1,213 +1,73 @@
 .container {
   display: flex;
   flex-direction: column;
-  background-color: var(rgb(--ig-primary-background));
-  width: 100dvw;
-  height: 100dvh;
+  background-color: var(--ig-primary-background);
+  width: 100vw;
+  height: 100vh;
 }
-/* .mainDiv {
-  min-height: auto;
-  flex-direction: row-reverse;
-  flex: 1 1 auto;
-  align-items: stretch;
-  background-color: var(rgb(--ig-primary-background));
-  border: 0 solid black;
-  box-sizing: border-box;
-  display: flex;
-  flex-basis: auto;
-  flex-direction: column;
-  flex-shrink: 0;
-  list-style: none;
-  margin: 0px;
-  min-height: 0px;
-  min-width: 0px;
-  padding: 0px;
-  position: relative;
-  text-decoration: none;
-  z-index: 0;
-} */
 
 .left {
-  min-height: 45vh;
   justify-content: center;
-  padding: 0px;
-  overflow-x: hidden;
-  overflow-y: hidden;
+  align-items: center;
   flex: 1;
-  align-items: stretch;
-  background-color: var(rgb(--ig-primary-background));
-  border: 0 solid black;
-  box-sizing: border-box;
+  background-color: var(--ig-primary-background);
   display: flex;
-  flex-direction: column;
-  list-style: none;
-  margin: 0px;
-  min-width: 0px;
-  position: relative;
-  text-decoration: none;
-  z-index: 0;
+  padding: 16px;
 }
 
 .left2 {
-  right: 0px;
-  position: absolute;
-  top: 0px;
-  bottom: 0px;
-  left: 0px;
-  justify-content: center;
-  flex: 1;
-  align-items: stretch;
-  background-color: rgba(0, 0, 0, 0);
-  border: 0 solid black;
-  box-sizing: border-box;
   display: flex;
-  flex-direction: column;
-  list-style: none;
-  margin: 0px;
-  min-height: 0px;
-  min-width: 0px;
-  padding: 0px;
-  text-decoration: none;
-  z-index: 0;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 .leftImg {
   max-height: 380px;
-  height: 50%;
-  fill: currentcolor;
-  vertical-align: text-bottom;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
   max-width: 100%;
-  position: relative;
-  color: rgba(231, 233, 234, 1);
-  justify-content: center;
-  padding: 32px;
-  display: inline-block;
+  height: auto;
+  width: auto;
 }
 
 .right {
-  min-width: 45vw;
   justify-content: center;
+  align-items: center;
+  flex: 1;
   padding: 16px;
-  align-items: stretch;
-  border: 0 solid black;
-  box-sizing: border-box;
   display: flex;
-  flex-basis: auto;
-  flex-direction: column;
-  flex-shrink: 0;
-  list-style: none;
-  margin: 0px;
-  min-height: 0px;
-  min-width: 0px;
-  padding: 0px;
-  position: relative;
-  text-decoration: none;
-  z-index: 0;
 }
 
 .right2 {
-  min-width: 437px;
-  max-width: 760px;
   width: 100%;
+  max-width: 500px;
   padding: 20px;
-  align-items: stretch;
-  background-color: rgba(0, 0, 0, 0);
-  border: 0 solid black;
-  box-sizing: border-box;
   display: flex;
-  flex-basis: auto;
   flex-direction: column;
-  flex-shrink: 0;
-  list-style: none;
-  margin: 0px;
-  min-height: 0px;
-  position: relative;
-  text-decoration: none;
-  z-index: 0;
+  align-items: center;
 }
 
 .rightDiv {
   flex: 1;
   display: flex;
   flex-direction: column;
-  line-height: 84px;
-  letter-spacing: -1.2px;
-  font-size: 32px !important;
-  font-weight: 700 !important;
+  align-items: center;
+  line-height: 1.5;
+  font-size: 28px;
+  font-weight: 700;
   word-wrap: break-word;
   font-family: "TwitterChirpExtendedHeavy", "Verdana", -apple-system,
     BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  min-width: 0px;
-  text-align: inherit;
-  margin-bottom: 48px;
-  margin-top: 48px;
-  background-color: rgba(0, 0, 0, 0);
-  border: 0 solid black;
-  box-sizing: border-box;
-  display: inline;
-  font: 14px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif;
-  list-style: none;
-  margin: 0px;
-  padding: 0px;
-  position: relative;
-  text-decoration: none;
-  white-space: pre-wrap;
+  margin: 24px 0;
 }
 
 .rightSpan {
-  word-wrap: break-word;
-  font-family: inherit;
-  min-width: 0px;
-  text-align: inherit;
-  background-color: rgba(0, 0, 0, 0);
-  border: 0 solid black;
-  box-sizing: border-box;
-  color: inherit;
-  display: inline;
-  font: inherit;
-  list-style: none;
-  margin: 0px;
-  padding: 0px;
-  position: relative;
-  text-align: inherit;
-  text-decoration: none;
-  white-space: inherit;
-  word-wrap: break-word;
-}
-
-/* .right span {
-  font-weight: bold;
-  font-size: 30px;
-  margin: 48px 0;
-} */
-
-@media all and (min-width: 1000px) {
-  .container {
-    flex-direction: row;
-    padding: 0;
-  }
-  .left {
-    flex: 1;
-    justify-content: center;
-  }
-  .left img {
-    width: 920px;
-    height: 420px;
-  }
-  .right {
-    justify-content: center;
-  }
-  .rightDiv {
-    font-size: 64px !important;
-  }
+  text-align: center;
+  white-space: nowrap;
 }
 
 .signup {
-  width: 300px;
+  width: 100%;
+  max-width: 300px;
   height: 40px;
   border-radius: 20px;
   padding: 0 16px;
@@ -218,12 +78,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 12px 0;
+  text-decoration: none;
 }
 .signup:hover {
   background-color: rgb(26, 140, 216);
 }
 .login {
-  width: 300px;
+  width: 100%;
+  max-width: 300px;
   height: 40px;
   border-radius: 20px;
   padding: 0 16px;
@@ -233,7 +96,45 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 12px 0;
+  text-decoration: none;
 }
 .login:hover {
   background-color: rgba(29, 155, 240, 0.1);
+}
+
+@media (min-width: 768px) {
+  .container {
+    flex-direction: row;
+  }
+
+  .left {
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .right {
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .rightDiv {
+    font-size: 32px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .rightDiv {
+    font-size: 48px;
+  }
+
+  .rightSpan {
+    white-space: nowrap;
+  }
+
+  .leftImg {
+    max-height: 500px;
+  }
 }
