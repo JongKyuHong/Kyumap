@@ -558,7 +558,7 @@
 }
 
 .ModalBodyInnerSpan {
-  line-height: "25px";
+  line-height: 25px;
   overflow-y: visible;
   min-width: 0;
   margin-bottom: 0 !important;
