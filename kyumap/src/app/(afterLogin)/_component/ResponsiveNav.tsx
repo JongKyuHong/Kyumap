@@ -78,7 +78,7 @@ export default function ResponsiveNav() {
                       <span aria-describedby=":r12:" className={styles.MSpan}>
                         <div className={styles.MDiv15}>
                           <Link
-                            href="/create/style"
+                            href={`/AddPost`}
                             role="link"
                             tabIndex={0}
                             className={styles.MLink}

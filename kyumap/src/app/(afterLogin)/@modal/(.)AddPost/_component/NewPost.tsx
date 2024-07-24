@@ -2197,9 +2197,7 @@ export default function NewPost() {
                                                 styles.ModalBodyInnerSpan
                                               }
                                             >
-                                              {
-                                                "사진과 동영상을 여기에 끌어다 놓으세요"
-                                              }
+                                              {"사진, 동영상을 여기에 놓으세요"}
                                             </span>
                                           </div>
                                           <div
