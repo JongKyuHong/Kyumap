@@ -720,7 +720,7 @@ export default function ReelPost({ postId }: Props) {
                                               </Link>
                                             </div>
                                           </span>
-                                          "&nbsp;"
+                                          &nbsp;
                                           <span
                                             className={styles.contentDivSpan5}
                                             style={{ lineHeight: "18px" }}

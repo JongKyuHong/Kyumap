@@ -7,6 +7,6 @@ export default function Page() {
   const router = useRouter();
   useEffect(() => {
     router.replace("/reels");
-  }, []);
+  }, [router]);
   return null;
 }
