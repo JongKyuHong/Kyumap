@@ -108,7 +108,7 @@ export default function Reels({ post }: Props) {
     if (pathname.startsWith("/reels") && isMenu) {
       setIsMenu(false);
     }
-  }, [pathname]);
+  }, [pathname, isMenu]);
 
   return (
     <>
