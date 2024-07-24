@@ -6,6 +6,7 @@
     transform: rotate(360deg);
   }
 }
+
 .loader {
   animation: rotating 2s linear infinite;
 }
@@ -15,109 +16,148 @@
   height: 100%;
   display: flex;
   justify-content: center;
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.4);
+  align-items: center;
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.6);
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+  backdrop-filter: blur(5px);
 }
 
 .modal {
   background: #ffffff;
   position: relative;
-  top: 5%;
-  max-width: 80vw;
-  min-width: 600px;
+  max-width: 90vw;
+  width: 100%;
+  max-height: 90vh;
+  height: auto;
   border-radius: 16px;
   display: flex;
   flex-direction: column;
-  height: 450px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 20px;
 }
 
 .modalHeader {
-  padding: 36px 80px 20px;
-  font-size: 31px;
+  padding: 20px;
+  font-size: 24px;
   font-weight: bold;
-}
-
-.modal form {
   display: flex;
-  flex-direction: column;
-  flex: 1;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .modalBody {
+  padding: 20px;
   flex: 1;
-  padding: 0 80px;
+  overflow-y: auto;
 }
 
 .inputDiv {
   display: flex;
   flex-direction: column;
-  height: 56px;
   position: relative;
   margin: 12px 0;
 }
+
 .inputLabel {
-  width: 100%;
-  display: inline-block;
-  position: absolute;
-  top: 0;
-  border: 1px solid rgb(207, 217, 222);
-  border-radius: 4px;
-  font-size: 13px;
-  height: 56px;
-  padding: 8px 8px 0;
-  color: rgb(83, 100, 113);
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: #333;
 }
-.inputLabel:focus-within {
-  color: red;
-}
+
 .input {
   width: 100%;
-  border: none;
-  font-size: 17px;
-  margin-top: 16px;
-  padding: 12px 8px 8px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  padding: 12px;
   outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
 }
 
 .modalFooter {
-  padding: 24px 80px;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  border-top: 1px solid #e0e0e0;
 }
 
 .actionButton {
   width: 100%;
+  max-width: 300px;
   height: 50px;
   border-radius: 25px;
-  background-color: rgb(15, 20, 25);
+  background-color: #007bff;
   color: white;
   font-size: 17px;
   cursor: pointer;
   border: none;
+  transition: background-color 0.3s, transform 0.3s;
 }
+
 .actionButton:disabled {
   opacity: 0.5;
+  cursor: not-allowed;
 }
-.actionButton:hover {
-  background-color: rgb(39, 44, 48);
+
+.actionButton:hover:not(:disabled) {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+.actionButton:active:not(:disabled) {
+  background-color: #004085;
+  transform: translateY(0);
 }
 
 .closeButton {
   width: 34px;
   height: 34px;
-  border-radius: 17px;
+  border-radius: 50%;
   border: none;
   cursor: pointer;
-  background-color: #fff;
-  position: absolute;
-  left: 16px;
-  top: 16px;
+  background-color: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background-color 0.3s;
 }
+
 .closeButton:hover {
-  background-color: rgba(15, 20, 25, 0.1);
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.message {
+  color: red;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+@media (min-width: 768px) {
+  .modal {
+    max-width: 600px;
+  }
+
+  .modalHeader {
+    padding: 24px;
+    font-size: 28px;
+  }
+
+  .modalBody {
+    padding: 24px;
+  }
+
+  .modalFooter {
+    padding: 24px;
+  }
 }
