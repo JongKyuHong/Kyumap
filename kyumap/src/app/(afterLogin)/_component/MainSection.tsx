@@ -44,7 +44,6 @@ export default function MainSection({ session }: any) {
             </div>
           </main>
           <div className={style.MDiv}></div>
-          <ResponsiveNav />
         </section>
       ) : (
         <div

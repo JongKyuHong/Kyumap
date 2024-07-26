@@ -277,6 +277,9 @@ export default function ActionButtons({ post }: Props) {
         );
       }
     },
+    onSuccess: () => {
+      setSaved(true);
+    },
     onSettled: () => {
       // 요청 완료 후 쿼리 무효화해서 최신 데이터를 가져옴 ( 안정성을 위해서 해주는게 좋음 )
       queryClient.invalidateQueries({
@@ -332,6 +335,9 @@ export default function ActionButtons({ post }: Props) {
           context.previousUserData
         );
       }
+    },
+    onSuccess: () => {
+      setSaved(false);
     },
     onSettled: () => {
       queryClient.invalidateQueries({

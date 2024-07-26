@@ -3,8 +3,7 @@ import styles from "./layout.module.css";
 import RQProvider from "./_component/RQProvider";
 import Nav from "./_component/Nav";
 import { auth } from "@/auth";
-
-import { getPostRecommends } from "./_lib/getPostRecommends";
+import ClientComponent from "./_component/ClientComponent";
 
 type Props = { children: ReactNode; modal: ReactNode };
 
@@ -35,6 +34,7 @@ export default async function RootLayout({ children, modal }: Props) {
                               style={{ height: "90vh", overflowY: "auto" }}
                               role="main"
                             >
+                              <ClientComponent />
                               {children}
                             </main>
                           </section>
