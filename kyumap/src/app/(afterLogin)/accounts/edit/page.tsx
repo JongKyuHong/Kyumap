@@ -10,6 +10,8 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import useDeviceSize from "../../_component/useDeviceSize";
+import ResponsiveNav from "../../_component/ResponsiveNav";
 
 export default function Page() {
   const { data: session, status } = useSession();
@@ -18,6 +20,8 @@ export default function Page() {
   const [gender, setGender] = useState("");
   const [introduce, setIntro] = useState("");
   const [infowebsite, setWebsite] = useState("");
+
+  const { isMobile } = useDeviceSize();
 
   // 유저정보 불러오기
   useEffect(() => {
@@ -122,157 +126,159 @@ export default function Page() {
   }
 
   return (
-    <div className={styles.rootDiv} style={{ height: "100vh" }}>
-      <div
-        className={styles.rootDiv2}
-        style={{
-          maxWidth: "706px",
-          minHeight: "calc(-135px + 100vh)",
-          width: "100%",
-        }}
-      >
-        <div className={styles.rootDiv3}>
-          <div className={styles.rootDiv4}>
-            <h2 className={styles.editH2} style={{ lineHeight: "25px" }}>
-              {"프로필 편집"}
-            </h2>
-          </div>
-          <div className={styles.rootDiv5}>
-            <div className={styles.rootDiv6}>
-              <div className={styles.rootDiv7}>
-                <span className={styles.rootSpan}>
-                  <div className={styles.spanInnerDiv}>
-                    <button className={styles.profileImageEditBtn}>
-                      <Image
-                        width={0}
-                        height={0}
-                        layout="fill"
-                        alt={`${session?.user!.name}님의 프로필`}
-                        src={`${session?.user!.image}`}
-                      />
-                    </button>
-                    <div>
-                      <form
-                        className={styles.rootForm}
-                        encType="multipart/form-data"
-                        method="POST"
-                        role="presentation"
-                      >
-                        <input
-                          className={styles.formInput}
-                          accept="image/jpeg, image/png"
-                          type="file"
+    <>
+      <div className={styles.rootDiv} style={{ height: "100vh" }}>
+        <div
+          className={styles.rootDiv2}
+          style={{
+            maxWidth: "706px",
+            minHeight: "calc(-135px + 100vh)",
+            width: "100%",
+          }}
+        >
+          <div className={styles.rootDiv3}>
+            <div className={styles.rootDiv4}>
+              <h2 className={styles.editH2} style={{ lineHeight: "25px" }}>
+                {"프로필 편집"}
+              </h2>
+            </div>
+            <div className={styles.rootDiv5}>
+              <div className={styles.rootDiv6}>
+                <div className={styles.rootDiv7}>
+                  <span className={styles.rootSpan}>
+                    <div className={styles.spanInnerDiv}>
+                      <button className={styles.profileImageEditBtn}>
+                        <Image
+                          width={0}
+                          height={0}
+                          layout="fill"
+                          alt={`${session?.user!.name}님의 프로필`}
+                          src={`${session?.user!.image}`}
                         />
-                      </form>
+                      </button>
+                      <div>
+                        <form
+                          className={styles.rootForm}
+                          encType="multipart/form-data"
+                          method="POST"
+                          role="presentation"
+                        >
+                          <input
+                            className={styles.formInput}
+                            accept="image/jpeg, image/png"
+                            type="file"
+                          />
+                        </form>
+                      </div>
                     </div>
+                  </span>
+                  <div className={styles.rootDiv8}>
+                    <span
+                      className={styles.divUserEmail}
+                      style={{ lineHeight: "20px" }}
+                      dir="auto"
+                    >
+                      {session?.user!.email}
+                    </span>
+                    <span
+                      className={styles.divUserName}
+                      style={{ lineHeight: "18px" }}
+                      dir="auto"
+                    >
+                      {session?.user!.name}
+                    </span>
                   </div>
+                </div>
+                <div className={styles.rootDiv9}>
+                  <div className={styles.rootDiv10} role="button">
+                    {"사진 변경"}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className={styles.rootDiv11}>
+              <div className={styles.rootDiv12}>
+                <span
+                  className={styles.rootDivSpan}
+                  style={{ lineHeight: "20px" }}
+                >
+                  {"웹사이트"}
                 </span>
-                <div className={styles.rootDiv8}>
-                  <span
-                    className={styles.divUserEmail}
-                    style={{ lineHeight: "20px" }}
-                    dir="auto"
-                  >
-                    {session?.user!.email}
-                  </span>
-                  <span
-                    className={styles.divUserName}
-                    style={{ lineHeight: "18px" }}
-                    dir="auto"
-                  >
-                    {session?.user!.name}
-                  </span>
-                </div>
               </div>
-              <div className={styles.rootDiv9}>
-                <div className={styles.rootDiv10} role="button">
-                  {"사진 변경"}
-                </div>
-              </div>
+              <input
+                className={styles.rootDivInput}
+                placeholder={infowebsite || "웹사이트"}
+                type="text"
+                value={infowebsite}
+                onChange={handleSiteChange}
+              />
             </div>
-          </div>
-          <div className={styles.rootDiv11}>
-            <div className={styles.rootDiv12}>
-              <span
-                className={styles.rootDivSpan}
-                style={{ lineHeight: "20px" }}
-              >
-                {"웹사이트"}
-              </span>
-            </div>
-            <input
-              className={styles.rootDivInput}
-              placeholder={infowebsite || "웹사이트"}
-              type="text"
-              value={infowebsite}
-              onChange={handleSiteChange}
-            />
-          </div>
-          <form className={styles.rootForm} method="POST">
-            {/* 소개칸 */}
-            <div className={styles.formDiv}>
-              <div className={styles.formDiv2}>
-                <label className={styles.formLabel}>
-                  <div className={styles.formDiv3}>
+            <form className={styles.rootForm} method="POST">
+              {/* 소개칸 */}
+              <div className={styles.formDiv}>
+                <div className={styles.formDiv2}>
+                  <label className={styles.formLabel}>
+                    <div className={styles.formDiv3}>
+                      <span
+                        className={styles.formDivSpan}
+                        dir="auto"
+                        style={{ lineHeight: "20px" }}
+                      >
+                        {"소개"}
+                      </span>
+                    </div>
+                  </label>
+                  <textarea
+                    className={styles.formDivTextArea}
+                    placeholder={"소개"}
+                    onChange={handleTextAreaChange}
+                    value={introduce}
+                  ></textarea>
+                  <div className={styles.formDiv4}>
                     <span
-                      className={styles.formDivSpan}
-                      dir="auto"
-                      style={{ lineHeight: "20px" }}
+                      className={styles.formDivSpan2}
+                      style={{ lineHeight: "16px" }}
                     >
-                      {"소개"}
+                      {introduce.length} / 150
                     </span>
                   </div>
-                </label>
-                <textarea
-                  className={styles.formDivTextArea}
-                  placeholder={"소개"}
-                  onChange={handleTextAreaChange}
-                  value={introduce}
-                ></textarea>
-                <div className={styles.formDiv4}>
-                  <span
-                    className={styles.formDivSpan2}
-                    style={{ lineHeight: "16px" }}
-                  >
-                    {introduce.length} / 150
-                  </span>
                 </div>
               </div>
-            </div>
-            <div className={styles.formDiv5}>
-              <div className={styles.formDiv2}>
-                <label className={styles.formLabel}>
-                  <div className={styles.formDiv3}>
-                    <span
-                      className={styles.formDivSpan}
-                      dir="auto"
-                      style={{ lineHeight: "20px" }}
-                    >
-                      {"성별"}
-                    </span>
-                  </div>
-                </label>
-                <input
-                  className={styles.rootDivInput}
-                  placeholder={"성별"}
-                  type="text"
-                  onChange={handleGenderChange}
-                  value={gender}
-                />
+              <div className={styles.formDiv5}>
+                <div className={styles.formDiv2}>
+                  <label className={styles.formLabel}>
+                    <div className={styles.formDiv3}>
+                      <span
+                        className={styles.formDivSpan}
+                        dir="auto"
+                        style={{ lineHeight: "20px" }}
+                      >
+                        {"성별"}
+                      </span>
+                    </div>
+                  </label>
+                  <input
+                    className={styles.rootDivInput}
+                    placeholder={"성별"}
+                    type="text"
+                    onChange={handleGenderChange}
+                    value={gender}
+                  />
+                </div>
               </div>
-            </div>
-            <div className={styles.formDiv12}>
-              <div
-                className={styles.formDiv13}
-                role="button"
-                onClick={submitForm}
-              >
-                {isPending ? <div className={styles.spinner}></div> : "제출"}
+              <div className={styles.formDiv12}>
+                <div
+                  className={styles.formDiv13}
+                  role="button"
+                  onClick={submitForm}
+                >
+                  {isPending ? <div className={styles.spinner}></div> : "제출"}
+                </div>
               </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

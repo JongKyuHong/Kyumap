@@ -2,12 +2,20 @@
 
 import Link from "next/link";
 import styles from "./reels.module.css";
-import { useState, useRef, useEffect, useCallback } from "react";
+import {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  MouseEventHandler,
+} from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { getUser } from "@/app/(afterLogin)/_lib/getUser"; // 유저 정보를 가져오는 함수
 import MoreInfoOverlay from "./MoreInfoOverlay";
 import { useRouter, usePathname } from "next/navigation";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { IPost } from "@/model/Post";
 
 type Props = {
   post: any;
@@ -18,54 +26,311 @@ export default function Reels({ post }: Props) {
   const [isMuted, setMuted] = useState(true);
   const [isMoreInfo, setMoreInfo] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [isHearts, setHearts] = useState(false);
   const [isFollowed, setFollowed] = useState(false);
   const [isSaved, setSaved] = useState(false);
   const [isMenu, setIsMenu] = useState(false);
+  const [isLiked, setLiked] = useState(false);
+  const [isLiking, setIsLiking] = useState(false);
+  const [HeartsCount, setHeartsCount] = useState(0);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const router = useRouter();
-  const pathname = usePathname();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      const userEmail = session?.user?.email;
-      if (userEmail) {
-        const controller = new AbortController();
-        const signal = controller.signal;
+    const abortController = new AbortController();
+    const fetchData = async () => {
+      if (!session?.user?.email) return;
+      const user = await getUser({
+        queryKey: ["users", session.user.email],
+        signal: abortController.signal,
+        meta: undefined,
+      });
+      const ssave = !!user?.Saved.find(
+        (v: any) => v.id === post?.postId.toString()
+      );
 
-        try {
-          const userData = await getUser({
-            queryKey: ["users", userEmail],
-            signal: signal,
-            meta: undefined,
-          });
-
-          // 유저가 해당 포스트를 좋아요 했는지 여부 확인
-          const liked = post.Hearts?.some(
-            (heart: any) => heart.email === userEmail
-          );
-          setHearts(liked);
-
-          // 유저가 해당 포스트를 저장했는지 여부 확인
-          const saved = userData.Saved?.some(
-            (savedPost: any) => savedPost.id === post.postId
-          );
-          setSaved(saved);
-
-          // 유저가 해당 작성자를 팔로우했는지 여부 확인
-          const followed = userData.Followings?.some(
-            (follow: any) => follow.email === post.User.email
-          );
-          setFollowed(followed);
-        } catch (error) {
-          console.error("유저 데이터를 가져오는 중 오류 발생:", error);
-        }
-      }
+      const liked = !!post?.Hearts?.find(
+        (v: any) => v.email === session?.user?.email
+      );
+      setLiked(liked);
+      setSaved(ssave);
+      setHeartsCount(post._count.Hearts);
     };
 
-    fetchUserData();
-  }, [session, post]);
+    fetchData();
+  }, [session, post, queryClient]);
+
+  const heart = useMutation({
+    mutationFn: () => {
+      return fetch(
+        `${
+          process.env.NEXT_PUBLIC_BASE_URL
+        }/api/posts/${post.postId.toString()}/heart`,
+        {
+          method: "post",
+          credentials: "include",
+          body: JSON.stringify(session),
+        }
+      );
+    },
+    onMutate: async () => {
+      if (isLiking) return; // 이미 요청 중이면 아무 작업도 하지 않음
+      setIsLiking(true); // 요청 시작 시 상태 업데이트
+      // setLiked(true); // Optimistic update: 즉시 좋아요 상태 변경
+
+      // 현재 캐시된 포스트 데이터를 가져옵니다.
+      await queryClient.cancelQueries({
+        queryKey: ["posts", post.postId.toString()],
+      });
+      const previousPost = queryClient.getQueryData<IPost>([
+        "posts",
+        post.postId.toString(),
+      ]);
+
+      // 새로운 포스트 데이터를 만들어 캐시를 업데이트합니다.
+      if (previousPost) {
+        const updatedPost = {
+          ...previousPost,
+          Hearts: [
+            ...previousPost.Hearts,
+            { email: session?.user?.email as string },
+          ],
+          _count: {
+            ...previousPost._count,
+            Hearts: previousPost._count.Hearts + 1,
+          },
+        };
+        queryClient.setQueryData(
+          ["posts", post.postId.toString()],
+          updatedPost
+        );
+      }
+
+      return { previousPost };
+    },
+    onError: (error, variables, context) => {
+      // 에러가 발생하면 이전 포스트 데이터로 롤백합니다.
+      if (context?.previousPost) {
+        queryClient.setQueryData(
+          ["posts", post.postId.toString()],
+          context.previousPost
+        );
+        // setLiked(false); // 롤백 시 좋아요 상태도 롤백
+      }
+    },
+    onSuccess: () => {
+      setLiked(true);
+      setHeartsCount(HeartsCount + 1);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["posts", post.postId.toString()],
+      });
+      setIsLiking(false);
+    },
+  });
+
+  // 좋아요 취소
+  const unheart = useMutation({
+    mutationFn: () => {
+      return fetch(
+        `${
+          process.env.NEXT_PUBLIC_BASE_URL
+        }/api/posts/${post.postId.toString()}/heart`,
+        {
+          method: "delete",
+          credentials: "include",
+          body: JSON.stringify(session),
+        }
+      );
+    },
+    onMutate: async () => {
+      if (isLiking) return; // 이미 요청 중이면 아무 작업도 하지 않음
+      setIsLiking(true); // 요청 시작 시 상태 업데이트
+      // setLiked(false); // Optimistic update: 즉시 좋아요 취소 상태 변경
+
+      // 현재 캐시된 포스트 데이터를 가져옵니다.
+      await queryClient.cancelQueries({
+        queryKey: ["posts", post.postId.toString()],
+      });
+      const previousPost = queryClient.getQueryData<IPost>([
+        "posts",
+        post.postId.toString(),
+      ]);
+
+      // 새로운 포스트 데이터를 만들어 캐시를 업데이트합니다.
+      if (previousPost) {
+        const updatedPost = {
+          ...previousPost,
+          Hearts: previousPost.Hearts.filter(
+            (v: any) => v.email !== session?.user?.email
+          ),
+          _count: {
+            ...previousPost._count,
+            Hearts: previousPost._count.Hearts - 1,
+          },
+        };
+        queryClient.setQueryData(
+          ["posts", post.postId.toString()],
+          updatedPost
+        );
+      }
+
+      return { previousPost };
+    },
+    onError: (error, variables, context) => {
+      // 에러가 발생하면 이전 포스트 데이터로 롤백합니다.
+      if (context?.previousPost) {
+        queryClient.setQueryData(
+          ["posts", post.postId.toString()],
+          context.previousPost
+        );
+        // setLiked(true); // 롤백 시 좋아요 상태도 롤백
+      }
+    },
+    onSuccess: () => {
+      setLiked(false);
+      setHeartsCount(HeartsCount - 1);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["posts", post.postId.toString()],
+      });
+      setIsLiking(false);
+    },
+  });
+
+  const saved = useMutation({
+    mutationFn: () => {
+      return fetch(
+        `${
+          process.env.NEXT_PUBLIC_BASE_URL
+        }/api/posts/${post.postId.toString()}/save`,
+        {
+          method: "post",
+          credentials: "include",
+          body: JSON.stringify(session),
+        }
+      );
+    },
+    onMutate: async () => {
+      await queryClient.cancelQueries({
+        queryKey: ["user", session!.user!.email],
+      });
+      const previousUserData = queryClient.getQueryData([
+        "user",
+        session!.user!.email,
+      ]);
+
+      queryClient.setQueryData(
+        ["user", session!.user!.email],
+        (oldData: any) => {
+          if (!oldData) {
+            return {
+              email: session!.user!.email,
+              nickname: session!.user!.name, // 기본 닉네임 (필요에 따라 수정)
+              image: session!.user!.image, // 기본 이미지 (필요에 따라 수정)
+              Saved: [post.postId.toString()],
+              Followers: [],
+              Followings: [],
+              _count: {
+                Followers: 0,
+                Followings: 0,
+              },
+            };
+          }
+
+          return {
+            ...oldData,
+            Saved: oldData.Saved
+              ? [...oldData.Saved, post.postId.toString()]
+              : [post.postId.toString()],
+          };
+        }
+      );
+
+      return { previousUserData };
+    },
+    onError: (err, variables, context) => {
+      if (context && context.previousUserData) {
+        queryClient.setQueryData(
+          ["user", session!.user!.email],
+          context.previousUserData
+        );
+      }
+    },
+    onSuccess() {
+      setSaved(true);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["user", session!.user!.email],
+      });
+    },
+  });
+
+  const unsaved = useMutation({
+    mutationFn: () => {
+      return fetch(
+        `${
+          process.env.NEXT_PUBLIC_BASE_URL
+        }/api/posts/${post.postId.toString()}/save`,
+        {
+          method: "delete",
+          credentials: "include",
+          body: JSON.stringify(session),
+        }
+      );
+    },
+    onMutate: async () => {
+      if (!session || !session.user || !session.user.email) {
+        throw new Error("Session or user information is missing");
+      }
+
+      await queryClient.cancelQueries({
+        queryKey: ["user", session!.user!.email],
+      });
+      const previousUserData = queryClient.getQueryData([
+        "user",
+        session!.user!.email,
+      ]);
+
+      queryClient.setQueryData(
+        ["user", session!.user!.email],
+        (oldData: any) => {
+          if (!oldData || !oldData.Saved) {
+            return oldData;
+          }
+          return {
+            ...oldData,
+            Saved: oldData.Saved.filter(
+              (v: any) => v.id !== post.postId.toString()
+            ),
+          };
+        }
+      );
+
+      return { previousUserData };
+    },
+    onError: (err, variables, context) => {
+      console.log(err, "err");
+      if (context && context.previousUserData) {
+        queryClient.setQueryData(
+          ["user", session!.user!.email],
+          context.previousUserData
+        );
+      }
+    },
+    onSuccess() {
+      setSaved(false);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["user", session!.user!.email],
+      });
+    },
+  });
 
   const onClickVideo = () => {
     if (videoRef.current) {
@@ -92,6 +357,7 @@ export default function Reels({ post }: Props) {
   };
 
   const onClickMenu = () => {
+    console.log(isMenu, "hi");
     setIsMenu(true);
   };
 
@@ -104,11 +370,26 @@ export default function Reels({ post }: Props) {
     router.push(`/reel/${post.postId}`);
   }, [router, post.postId]);
 
-  useEffect(() => {
-    if (pathname.startsWith("/reels") && isMenu) {
-      setIsMenu(false);
+  const onClickHeart: MouseEventHandler<HTMLDivElement> = (e) => {
+    e.stopPropagation();
+    if (isLiking) return;
+    if (isLiked) {
+      // 이미 좋아요를 눌렀으면
+      unheart.mutate();
+    } else {
+      heart.mutate();
     }
-  }, [pathname, isMenu]);
+  };
+
+  const onClickSaved: MouseEventHandler<HTMLDivElement> = (e) => {
+    e.stopPropagation();
+    if (isSaved) {
+      // 이미 저장함
+      unsaved.mutate();
+    } else {
+      saved.mutate();
+    }
+  };
 
   return (
     <>
@@ -368,9 +649,13 @@ export default function Reels({ post }: Props) {
           <div className={styles.rootDiv5}>
             <div className={styles.hearts}>
               <span>
-                <div className={styles.hearts2} role="button">
+                <div
+                  className={styles.hearts2}
+                  role="button"
+                  onClick={onClickHeart}
+                >
                   <div className={styles.hearts3}>
-                    {isHearts ? (
+                    {isLiked ? (
                       <span className={styles.heartsSpan}>
                         <svg
                           aria-label="좋아요 취소"
@@ -411,9 +696,7 @@ export default function Reels({ post }: Props) {
                       className={styles.heartsCnt4}
                       style={{ lineHeight: "16px" }}
                     >
-                      <span className={styles.heartsCnt5}>
-                        {post._count.Hearts}
-                      </span>
+                      <span className={styles.heartsCnt5}>{HeartsCount}</span>
                     </span>
                   </div>
                 </div>
@@ -462,6 +745,7 @@ export default function Reels({ post }: Props) {
                   style={{ cursor: "pointer" }}
                   role="button"
                   aria-disabled="false"
+                  onClick={onClickSaved}
                 >
                   <div className={styles.savedDiv}>
                     <div className={styles.savedDiv2}>
