@@ -21,7 +21,7 @@ export async function GET(req: NextRequest, { params }: Props) {
       ],
     });
 
-    return NextResponse.json({ data: users, status: 200 });
+    return NextResponse.json(users, { status: 200 });
   } catch (error) {
     return NextResponse.json({
       error: "데이터를 가져오는 데 실패했습니다.",
