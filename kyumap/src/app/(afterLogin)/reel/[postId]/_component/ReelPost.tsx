@@ -645,6 +645,38 @@ export default function ReelPost({ postId }: Props) {
                                 </div>
                               </div>
                             </div>
+                            <div className={styles.contentDivProfile}>
+                              <div
+                                className={styles.contentDivProfile2}
+                                style={{ width: "100%" }}
+                              >
+                                <div className={styles.contentDivProfile3}>
+                                  <div>
+                                    <div className={styles.contentDivProfile4}>
+                                      <span
+                                        className={styles.contentDivProfile5}
+                                        style={{ lineHeight: "18px" }}
+                                      >
+                                        <span
+                                          className={styles.contentDivProfile6}
+                                        >
+                                          <div>
+                                            <Link
+                                              className={
+                                                styles.contentDivProfile7
+                                              }
+                                              href={`/profile/${post.User.nickname}`}
+                                            >
+                                              {post.User.nickname}
+                                            </Link>
+                                          </div>
+                                        </span>
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
                         <hr className={styles.contentHr}></hr>
