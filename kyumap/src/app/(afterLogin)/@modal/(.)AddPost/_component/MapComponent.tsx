@@ -19,85 +19,62 @@ export default function MapComponent({ location, setLocation }: Props) {
   const postcodeRef = useRef<any>(null); // 다중 Postcode 객체 참조 추가
 
   useEffect(() => {
-    const loadKakaoMapScript = () => {
-      return new Promise<void>((resolve, reject) => {
-        if (typeof window.kakao !== "undefined" && window.kakao.maps) {
-          // 이미 스크립트가 로드된 경우 초기화 함수 호출
-          resolve();
-        } else {
-          const script = document.createElement("script");
-          script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY}&libraries=services&autoload=false`;
-          script.async = true;
-          script.onload = () => {
-            if (window.kakao && window.kakao.maps) {
-              window.kakao.maps.load(() => resolve());
-            } else {
-              reject(new Error("Kakao maps failed to load."));
-            }
-          };
-          script.onerror = () => reject(new Error("Kakao maps script error."));
-          document.head.appendChild(script);
-        }
-      });
-    };
-
     const initMap = () => {
       if (!mapContainer.current) return;
 
-      const mapOption = {
-        center: new window.kakao.maps.LatLng(37.537187, 127.005476),
-        level: 5,
-      };
-      const map = new window.kakao.maps.Map(mapContainer.current, mapOption);
-      const geocoder = new window.kakao.maps.services.Geocoder();
-      const marker = new window.kakao.maps.Marker({
-        position: new window.kakao.maps.LatLng(37.537187, 127.005476),
-        map: map,
-      });
+      window.kakao.maps.load(() => {
+        const mapOption = {
+          center: new window.kakao.maps.LatLng(37.537187, 127.005476),
+          level: 5,
+        };
+        const map = new window.kakao.maps.Map(mapContainer.current, mapOption);
+        const geocoder = new window.kakao.maps.services.Geocoder();
+        const marker = new window.kakao.maps.Marker({
+          position: new window.kakao.maps.LatLng(37.537187, 127.005476),
+          map: map,
+        });
 
-      window.sample5_execDaumPostcode = () => {
-        postcodeRef.current = new window.daum.Postcode({
-          oncomplete: function (data: any) {
-            const addr = data.address;
-            setLocation(addr);
-            if (addr) {
-              geocoder.addressSearch(
-                data.address,
-                function (results: any, status: any) {
-                  if (status === window.kakao.maps.services.Status.OK) {
-                    const result = results[0];
-                    const coords = new window.kakao.maps.LatLng(
-                      result.y,
-                      result.x
-                    );
-                    if (mapContainer.current) {
-                      mapContainer.current.style.display = "block";
+        window.sample5_execDaumPostcode = () => {
+          postcodeRef.current = new window.daum.Postcode({
+            oncomplete: function (data: any) {
+              const addr = data.address;
+              setLocation(addr);
+              if (addr) {
+                geocoder.addressSearch(
+                  data.address,
+                  function (results: any, status: any) {
+                    if (status === window.kakao.maps.services.Status.OK) {
+                      const result = results[0];
+                      const coords = new window.kakao.maps.LatLng(
+                        result.y,
+                        result.x
+                      );
+                      if (mapContainer.current) {
+                        mapContainer.current.style.display = "block";
+                      }
+                      map.relayout();
+                      map.setCenter(coords);
+                      marker.setPosition(coords);
+                      postcodeRef.current?.close(); // 주소 선택 후 창 닫기
                     }
-                    map.relayout();
-                    map.setCenter(coords);
-                    marker.setPosition(coords);
-                    postcodeRef.current?.close(); // 주소 선택 후 창 닫기
                   }
-                }
-              );
-            }
-          },
-          onclose: function () {
-            postcodeRef.current = null; // 창이 닫히면 참조 해제
-          },
-        }).open();
-      };
-    };
-
-    loadKakaoMapScript()
-      .then(initMap)
-      .catch((error) => {
-        console.error(error);
+                );
+              }
+            },
+            onclose: function () {
+              postcodeRef.current = null; // 창이 닫히면 참조 해제
+            },
+          }).open();
+        };
       });
-
-    return () => {
-      window.removeEventListener("load", initMap);
     };
+
+    if (document.readyState === "complete") {
+      initMap();
+    } else {
+      window.addEventListener("load", initMap);
+      return () => window.removeEventListener("load", initMap);
+    }
   }, [setLocation]);
 
   const handleLocationClick = () => {
