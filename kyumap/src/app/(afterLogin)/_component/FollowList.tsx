@@ -254,7 +254,7 @@ export default function FollowList({ user }: Props) {
                         className={styles.ImageDiv2Canvas}
                       ></canvas>
                       <Link
-                        href={`${user?.nickname}`}
+                        href={`/profile/${user?.nickname}`}
                         role="link"
                         tabIndex={0}
                         style={{

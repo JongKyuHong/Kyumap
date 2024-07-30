@@ -54,7 +54,7 @@ export default function FollowRecommendSection({ session }: Props) {
                             }}
                           ></canvas>
                           <Link
-                            href={`/profile/${session?.user?.email}`}
+                            href={`/profile/${session?.user?.name}`}
                             className={styles.ImageLink}
                             style={{ height: "44px", width: "44px" }}
                             tabIndex={0}
@@ -78,7 +78,7 @@ export default function FollowRecommendSection({ session }: Props) {
                         <div className={styles.MyAccountInfoInnerDiv}>
                           <div className={styles.MyAccountInfoId}>
                             <Link
-                              href={`/profile/${session?.user?.email}`}
+                              href={`/profile/${session?.user?.name}`}
                               className={styles.IdLink}
                               tabIndex={0}
                               role="link"
