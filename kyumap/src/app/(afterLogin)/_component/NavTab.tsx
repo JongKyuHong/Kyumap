@@ -18,12 +18,14 @@ import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import LoadingComponent from "@/app/_component/LoadingComponent";
 
-type Props = {
-  session: any;
-};
+// type Props = {
+//   session: any;
+// };
 
-export default function NavTab({ session }: Props) {
+// export default function NavTab({ session }: Props) {
+export default function NavTab() {
   const pathname = usePathname(); // 현재 경로 가져옴
+  const { data: session } = useSession();
   const [isEx, setEx] = useState(false);
   const [clickedMenu, setMenu] = useState(false);
   const [isMounted, setMounted] = useState(true);
@@ -38,7 +40,7 @@ export default function NavTab({ session }: Props) {
     pathname.startsWith("/profile") ? true : false
   ); // 현재 경로가 프로필인지
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
-
+  console.log(session, "session");
   const userEmail = session?.user?.email;
   const queryClient = useQueryClient();
 
@@ -77,19 +79,18 @@ export default function NavTab({ session }: Props) {
 
   // 경로가 변경될때마다 상태 변경
   useEffect(() => {
-    setHome(pathname === "/home" ? true : false);
-    setReels(pathname === "/reels" ? true : false);
-    setProfile(pathname.startsWith("/profile") ? true : false);
+    setHome(pathname === "/home");
+    setReels(pathname === "/reels");
+    setProfile(pathname.startsWith("/profile"));
   }, [pathname]);
 
   // 사용자가 바뀌거나 쿼리 변경점이있을때
   useEffect(() => {
     // 쿼리 최신화함
-    const invalidateQuery = async () => {
-      await queryClient.invalidateQueries({ queryKey: ["users", userEmail] });
-    };
-    invalidateQuery();
-  }, [queryClient, userEmail]);
+    if (userEmail) {
+      queryClient.invalidateQueries({ queryKey: ["users", userEmail] });
+    }
+  }, [session, queryClient, userEmail]);
 
   // 다크모드 로컬스토리지에서 가져오기
   useEffect(() => {
