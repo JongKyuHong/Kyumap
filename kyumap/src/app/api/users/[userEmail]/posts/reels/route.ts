@@ -38,7 +38,7 @@ export async function GET(req: NextRequest, { params }: Props) {
     }
 
     let query: { [key: string]: any } = {
-      "User.email": userEmail,
+      userEmail: userEmail,
       reels: true,
     };
 

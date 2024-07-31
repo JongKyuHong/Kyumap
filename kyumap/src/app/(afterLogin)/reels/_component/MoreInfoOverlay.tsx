@@ -120,7 +120,7 @@ export default function MoreInfoOverlay({
                     <div className={styles.menuDiv4}>
                       <div className={styles.menuDiv5}>
                         <div className={styles.menuDiv6}>
-                          {post.User.email === session?.user!.email ? (
+                          {post.userEmail === session?.user!.email ? (
                             <>
                               <button
                                 className={styles.menuBtn}

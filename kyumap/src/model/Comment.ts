@@ -1,10 +1,11 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { IUser } from "./User";
 import { IReply, replySchema } from "./Reply";
 
 export interface IComment extends Document {
   postId: number;
-  User: IUser;
+  userNickname: string;
+  userImage: string;
+  userEmail: string;
   content: string;
   createdAt: Date;
   Hearts: { email: string }[];
@@ -20,10 +21,17 @@ const commentSchema: Schema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  User: {
-    nickname: { type: String, required: true },
-    email: { type: String, required: true },
-    image: { type: String, required: true },
+  userNickname: {
+    type: String,
+    required: true,
+  },
+  userEmail: {
+    type: String,
+    required: true,
+  },
+  userImage: {
+    type: String,
+    required: true,
   },
   content: {
     type: String,

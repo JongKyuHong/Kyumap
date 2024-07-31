@@ -23,5 +23,7 @@ export const getComments: QueryFunction<
     throw new Error("Failed to fetch data");
   }
 
-  return res.json();
+  const data = await res.json();
+
+  return data;
 };

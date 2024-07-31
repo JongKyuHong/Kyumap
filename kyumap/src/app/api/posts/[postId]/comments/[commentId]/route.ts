@@ -25,7 +25,7 @@ export async function DELETE(req: NextRequest, { params }: Props) {
       return NextResponse.json({ error: "Comment not found" }, { status: 404 });
     }
     if (comment) {
-      if (comment.User.email !== userSession.email) {
+      if (comment.userEmail !== userSession.email) {
         return NextResponse.json(
           { error: "You are not authorized to delete this comment" },
           { status: 403 }
@@ -38,7 +38,7 @@ export async function DELETE(req: NextRequest, { params }: Props) {
         { new: true }
       );
     } else if (reply) {
-      if (reply.User.email !== userSession.email) {
+      if (reply.userEmail !== userSession.email) {
         return NextResponse.json(
           { error: "You are not authorized to delete this reply" },
           { status: 403 }

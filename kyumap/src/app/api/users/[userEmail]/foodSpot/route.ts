@@ -11,7 +11,7 @@ type Props = {
 export async function GET(req: NextRequest, { params }: Props) {
   await dbConnect();
   const data = await Post.find({
-    "User.email": params.userEmail,
+    userEmail: params.userEmail,
     "position.lat": { $ne: "" },
     "position.lng": { $ne: "" },
   });

@@ -22,7 +22,7 @@ export async function GET(req: NextRequest, { params }: Props) {
   }
 
   try {
-    let query: { [key: string]: any } = { "User.email": userEmail };
+    let query: { [key: string]: any } = { userEmail: userEmail };
 
     // 커서(ID)가 있다면, 해당 ID 이후의 게시물을 조회하는 쿼리를 생성합니다.
     if (cursor !== undefined) {
