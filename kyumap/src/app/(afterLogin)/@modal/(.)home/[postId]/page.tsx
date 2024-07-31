@@ -137,7 +137,7 @@ export default function Page({ params }: Props) {
                         >
                           <div className={styles.menuDiv5}>
                             <div className={styles.menuDiv6}>
-                              {post.User.email === session?.user!.email ? (
+                              {post.userEmail === session?.user!.email ? (
                                 <>
                                   <button
                                     className={styles.menuBtn}

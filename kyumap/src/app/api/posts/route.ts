@@ -88,11 +88,9 @@ export async function POST(req: NextRequest) {
 
   const data = {
     postId: postId,
-    User: {
-      email: userEmail,
-      image: userImage,
-      nickname: userName,
-    },
+    userEmail: userEmail,
+    userImage: userImage,
+    userNickname: userName,
     title: title,
     content: content,
     Images: images,

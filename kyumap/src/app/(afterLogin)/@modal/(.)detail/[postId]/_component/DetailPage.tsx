@@ -280,8 +280,18 @@ export default function DetailPage({ postId }: Props) {
           return [
             ...old,
             {
-              comment: commentData.CommentText,
-              User: commentData.userSession,
+              postId: Number(commentData.postId),
+              userNickname: commentData.userSession.name,
+              userEmail: commentData.userSession.email,
+              userImage: commentData.userSession.image,
+              content: commentData.CommentText,
+              Hearts: [],
+              _count: {
+                Hearts: 0,
+                Comments: 0,
+              },
+              reply: [],
+              createdAt: new Date(),
             },
           ];
         }
@@ -341,9 +351,19 @@ export default function DetailPage({ postId }: Props) {
           [
             ...previousComments,
             {
-              comment: commentData.CommentText,
-              User: commentData.userSession,
-            }, // 임시 댓글 객체
+              postId: Number(commentData.postId),
+              userNickname: commentData.userSession.name,
+              userEmail: commentData.userSession.email,
+              userImage: commentData.userSession.image,
+              content: commentData.CommentText,
+              Hearts: [],
+              _count: {
+                Hearts: 0,
+                Comments: 0,
+              },
+              reply: [],
+              createdAt: new Date(),
+            },
           ]
         );
 
@@ -366,10 +386,10 @@ export default function DetailPage({ postId }: Props) {
       queryClient.invalidateQueries({
         queryKey: ["posts", postId.toString()],
       });
-      setComment("");
     },
     onSettled: () => {
       setIsPosting(false); // 요청 완료 후 상태 업데이트
+      setComment("");
     },
   });
 
@@ -503,8 +523,18 @@ export default function DetailPage({ postId }: Props) {
           return [
             ...old,
             {
-              comment: commentData.CommentText,
-              User: commentData.userSession,
+              postId: commentData.postId,
+              userNickname: commentData.userSession.name,
+              userEmail: commentData.userSession.email,
+              userImage: commentData.userSession.image,
+              content: commentData.CommentText,
+              Hearts: [],
+              _count: {
+                Hearts: 0,
+                Comments: 0,
+              },
+              reply: [],
+              createdAt: new Date().toISOString(),
             },
           ];
         }
@@ -898,7 +928,7 @@ export default function DetailPage({ postId }: Props) {
                                                   height={0}
                                                   sizes="100vw"
                                                   alt={`${
-                                                    post!.User.nickname
+                                                    post!.userNickname
                                                   }님이 올린 사진`}
                                                   src={
                                                     post.Images[currentNumber]
@@ -1903,7 +1933,7 @@ export default function DetailPage({ postId }: Props) {
                                                         width={0}
                                                         sizes="100vw"
                                                         src={`${
-                                                          post!.User.image
+                                                          post!.userImage
                                                         }`}
                                                         alt="profile"
                                                         className={
@@ -1957,8 +1987,8 @@ export default function DetailPage({ postId }: Props) {
                                                               tabIndex={0}
                                                             >
                                                               {
-                                                                post!.User
-                                                                  .nickname
+                                                                post!
+                                                                  .userNickname
                                                               }
                                                             </Link>
                                                           </div>
@@ -2293,11 +2323,11 @@ export default function DetailPage({ postId }: Props) {
                                                               height={0}
                                                               sizes="100vw"
                                                               src={
-                                                                post!.User.image
+                                                                post!.userImage
                                                               }
                                                               alt={`${
-                                                                post!.User
-                                                                  .nickname
+                                                                post!
+                                                                  .userNickname
                                                               }님의 프로필사진`}
                                                               className={
                                                                 styles.ContentProfileImageCanvasImage
@@ -2340,8 +2370,8 @@ export default function DetailPage({ postId }: Props) {
                                                                 }
                                                               >
                                                                 {
-                                                                  post!.User
-                                                                    .nickname
+                                                                  post!
+                                                                    .userNickname
                                                                 }
                                                               </Link>
                                                             </div>

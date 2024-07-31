@@ -4,13 +4,6 @@ interface UserID {
   email: string;
 }
 
-// interface Image {
-//   size: number;
-//   type: string;
-//   name: string;
-//   lastModified: number;
-// }
-
 export interface IUser extends Document {
   email: string;
   nickname: string;

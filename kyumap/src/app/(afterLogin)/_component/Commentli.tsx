@@ -50,7 +50,7 @@ export default function Commentli({
   }, [comment, session]);
 
   const onClickReply = () => {
-    ReplyInfo(comment.User.nickname, parentId, false);
+    ReplyInfo(comment.userNickname, parentId, false);
   };
 
   // 댓글 좋아요 mutation
@@ -269,8 +269,8 @@ export default function Commentli({
                     className={styles.CommentUserProfileLink}
                   >
                     <Image
-                      alt={`${comment.User.nickname}님의 프로필 사진`}
-                      src={`${comment.User.image}`}
+                      alt={`${comment.userNickname}님의 프로필 사진`}
+                      src={`${comment.userImage}`}
                       width={0}
                       height={0}
                       sizes="100vw"
@@ -292,7 +292,7 @@ export default function Commentli({
                         role="link"
                         tabIndex={0}
                         className={styles.CommentUserNameLink}
-                      >{`${comment.User.nickname}`}</Link>
+                      >{`${comment.userNickname}`}</Link>
                     </div>
                   </span>
                 </div>

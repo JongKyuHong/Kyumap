@@ -24,11 +24,9 @@ export async function POST(req: NextRequest, { params }: Props) {
 
     const inputData = {
       postId: postId,
-      User: {
-        nickname: data.User.name,
-        email: data.User.email,
-        image: data.User.image,
-      },
+      userNickname: data.User.name,
+      userEmail: data.User.email,
+      userImage: data.User.image,
       content: data.comment,
     };
 

@@ -25,8 +25,6 @@ export async function POST(req: Request) {
     };
 
     const newUser = await User.create(data);
-    console.log("New user created:", newUser);
-
     return NextResponse.json(newUser, { status: 201 });
   } catch (error) {
     console.error(error); // 오류 로깅

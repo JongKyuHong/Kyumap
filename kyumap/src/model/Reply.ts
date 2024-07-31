@@ -3,7 +3,9 @@ import { IUser } from "./User";
 
 export interface IReply extends Document {
   parent: string;
-  User: IUser;
+  userNickname: string;
+  userImage: string;
+  userEmail: string;
   content: string;
   createdAt: Date;
   Hearts: { email: string }[];
@@ -17,10 +19,17 @@ export const replySchema: Schema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  User: {
-    nickname: { type: String, required: true },
-    email: { type: String, required: true },
-    image: { type: String, required: true },
+  userNickname: {
+    type: String,
+    required: true,
+  },
+  userEmail: {
+    type: String,
+    required: true,
+  },
+  userImage: {
+    type: String,
+    required: true,
   },
   content: {
     type: String,
