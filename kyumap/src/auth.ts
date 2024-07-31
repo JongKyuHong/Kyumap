@@ -1,6 +1,5 @@
 import NextAuth, { CredentialsSignin } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import cookie from "cookie";
 
@@ -17,13 +16,9 @@ export const {
     jwt({ token }) {
       return token;
     },
-    session({ session, newSession, user }) {
+    session({ session, user }) {
       return session;
     },
-  },
-  events: {
-    signOut(data) {},
-    session(data) {},
   },
   providers: [
     CredentialsProvider({
@@ -37,18 +32,12 @@ export const {
             },
             body: JSON.stringify({
               email: credentials.email,
-              // nickname: credentials.nickname,
               password: credentials.password,
             }),
           }
         );
 
-        let setCookie = authResponse.headers.get("Set-Cookie");
-        if (setCookie) {
-          const parsed = cookie.parse(setCookie);
-          cookies().set("connect.sid", parsed["connect.sid"], parsed); // 브라우저에 쿠키를 심어주는 것
-        }
-
+        // 로그인 실패 시 오류를 던짐
         if (!authResponse.ok) {
           const credentialsSignin = new CredentialsSignin();
           if (authResponse.status === 404) {
@@ -60,6 +49,19 @@ export const {
         }
 
         const user = await authResponse.json();
+
+        // 서버가 유효한 사용자 정보를 반환하지 않으면 오류를 던짐
+        if (!user || !user.email) {
+          throw new Error("Invalid user data received from server.");
+        }
+
+        // 서버로부터 받은 Set-Cookie 헤더를 파싱해서 쿠키 설정
+        let setCookie = authResponse.headers.get("Set-Cookie");
+        if (setCookie) {
+          const parsed = cookie.parse(setCookie);
+          cookies().set("connect.sid", parsed["connect.sid"], parsed);
+        }
+
         return {
           email: user.email,
           name: user.nickname,
