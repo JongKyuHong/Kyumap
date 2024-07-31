@@ -4,10 +4,6 @@ type Props = {
   me: any;
 };
 
-// export default async function Nav({ me }: Props) {
-//   return <NavTab session={me} />;
-// }
-
-export default async function Nav() {
-  return <NavTab />;
+export default async function Nav({ me }: Props) {
+  return <NavTab session={me} />;
 }

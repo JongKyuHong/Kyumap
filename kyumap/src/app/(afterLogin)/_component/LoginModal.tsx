@@ -55,10 +55,12 @@ export default function LoginModal() {
         redirect: false,
       });
       if (signInResponse?.error) {
+        alert("로그인 실패: 아이디 또는 비밀번호가 올바르지 않습니다.");
         throw new Error(signInResponse.error);
       }
       if (signInResponse!.ok) {
         router.replace("/home");
+        router.refresh();
       }
 
       // router.refresh();
