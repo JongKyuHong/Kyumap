@@ -1,5 +1,4 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { userSchema, IUser } from "./User";
 import getNextSequenceValue from "./getNextSequenceValue";
 
 interface UserID {
@@ -8,7 +7,9 @@ interface UserID {
 
 export interface IPost extends Document {
   postId: number;
-  User: IUser;
+  userEmail: string;
+  userImage: string;
+  userNickname: string;
   title: string;
   content: string;
   createdAt: Date;
@@ -35,8 +36,16 @@ const postSchema: Schema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  User: {
-    type: userSchema,
+  userEmail: {
+    type: String,
+    required: true,
+  },
+  userImage: {
+    type: String,
+    required: true,
+  },
+  userNickname: {
+    type: String,
     required: true,
   },
   title: {

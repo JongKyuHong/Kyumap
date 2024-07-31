@@ -659,11 +659,11 @@ export default function ReelPost({ postId }: Props) {
                                       role="link"
                                     >
                                       <Image
-                                        alt={`${post?.User.nickname}님의 프로필`}
+                                        alt={`${post?.userNickname}님의 프로필`}
                                         className={styles.Image}
                                         crossOrigin="anonymous"
                                         draggable="false"
-                                        src={`${post?.User.image}`}
+                                        src={`${post?.userImage}`}
                                         width={0}
                                         height={0}
                                         sizes="100vw"
@@ -693,9 +693,9 @@ export default function ReelPost({ postId }: Props) {
                                               className={
                                                 styles.contentDivProfile7
                                               }
-                                              href={`/profile/${post.User.nickname}`}
+                                              href={`/profile/${post.userNickname}`}
                                             >
-                                              {post.User.nickname}
+                                              {post.userNickname}
                                             </Link>
                                           </div>
                                         </span>
@@ -765,7 +765,7 @@ export default function ReelPost({ postId }: Props) {
                                     <div>
                                       <Link
                                         className={styles.contentLink}
-                                        href={`/profile/${post.User.nickname}`}
+                                        href={`/profile/${post.userNickname}`}
                                         role="link"
                                         tabIndex={0}
                                         style={{
@@ -777,8 +777,8 @@ export default function ReelPost({ postId }: Props) {
                                           className={styles.contentLinkImage}
                                           crossOrigin="anonymous"
                                           draggable="false"
-                                          src={`${post.User.image}`}
-                                          alt={`${post.User.nickname}의 프로필 사진`}
+                                          src={`${post.userImage}`}
+                                          alt={`${post.userNickname}의 프로필 사진`}
                                           width={0}
                                           height={0}
                                           sizes="100vw"
@@ -801,7 +801,7 @@ export default function ReelPost({ postId }: Props) {
                                             <div>
                                               <Link
                                                 className={styles.contentLink2}
-                                                href={`/profile/${post.User.nickname}`}
+                                                href={`/profile/${post.userNickname}`}
                                                 role="link"
                                                 tabIndex={0}
                                               >
@@ -821,7 +821,7 @@ export default function ReelPost({ postId }: Props) {
                                                       }
                                                       dir="auto"
                                                     >
-                                                      {post.User.nickname}
+                                                      {post.userNickname}
                                                     </span>
                                                   </div>
                                                 </div>
