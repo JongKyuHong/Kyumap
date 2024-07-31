@@ -13,7 +13,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn, signOut } from "next-auth/react";
-import { useQueryClient } from "@tanstack/react-query";
 
 export default function LoginModal() {
   const [viewPassword, setViewPassword] = useState(false);
