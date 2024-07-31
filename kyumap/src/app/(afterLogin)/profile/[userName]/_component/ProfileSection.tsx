@@ -341,48 +341,77 @@ export default function ProfileSection({ userEmail, userName }: Props) {
           </div>
         </div>
         <section className={styles.HeaderSection}>
-          <div className={styles.HeaderSectionNameDiv}>
-            <Link href="#" role="link" tabIndex={0}>
-              <h2 className={styles.NameH2} dir="auto" tabIndex={-1}>
-                {`${userData?.email}`}
-              </h2>
-            </Link>
-            <div className={styles.HeaderSectionEmo}>
-              <div className={styles.HeaderSectionFollowBtn}>
-                <div className={styles.HeaderSectionFollowBtn2} tabIndex={0}>
-                  {!isMe && (
-                    <button
-                      className={styles.HeaderSectionFollowBtn4}
-                      style={{
-                        backgroundColor: followed
-                          ? "rgb(239, 239, 239)"
-                          : "rgb(0, 149, 246)",
-                        color: followed ? "rgb(0,0,0)" : "rgb(255,255,255)",
-                      }}
-                      type="button"
-                      onClick={onFollow}
-                      onMouseEnter={() => setHovered(true)}
-                      onMouseLeave={() => setHovered(false)}
-                    >
-                      <div
-                        className={styles.HeaderSectionFollowBtn5}
-                        style={{ height: "100%" }}
-                      >
-                        <div
-                          className={styles.HeaderSectionFollowBtn6}
-                          dir="auto"
-                        >
-                          {followed
-                            ? hovered
-                              ? "팔로우 취소"
-                              : "팔로잉"
-                            : "팔로우"}
-                        </div>
-                      </div>
-                    </button>
-                  )}
+          <div>
+            <div className={styles.HeaderSectionNameDiv}>
+              <div className={styles.HeaderSectionNameDiv2}>
+                <div className={styles.HeaderSectionNameDiv3}>
+                  <Link
+                    href="#"
+                    role="link"
+                    tabIndex={0}
+                    className={styles.HeaderSectionNameDiv4}
+                  >
+                    <h2 className={styles.NameH2} dir="auto" tabIndex={-1}>
+                      {`${userData?.nickname}`}
+                    </h2>
+                  </Link>
                 </div>
               </div>
+              {!isMe ? (
+                <div className={styles.HeaderSectionEmo}>
+                  <div className={styles.HeaderSectionFollowBtn}>
+                    <div
+                      className={styles.HeaderSectionFollowBtn2}
+                      tabIndex={0}
+                    >
+                      <button
+                        className={styles.HeaderSectionFollowBtn4}
+                        style={{
+                          backgroundColor: followed
+                            ? "rgb(239, 239, 239)"
+                            : "rgb(0, 149, 246)",
+                          color: followed ? "rgb(0,0,0)" : "rgb(255,255,255)",
+                        }}
+                        type="button"
+                        onClick={onFollow}
+                        onMouseEnter={() => setHovered(true)}
+                        onMouseLeave={() => setHovered(false)}
+                      >
+                        <div
+                          className={styles.HeaderSectionFollowBtn5}
+                          style={{ height: "100%" }}
+                        >
+                          <div
+                            className={styles.HeaderSectionFollowBtn6}
+                            dir="auto"
+                          >
+                            {followed
+                              ? hovered
+                                ? "팔로우 취소"
+                                : "팔로잉"
+                              : "팔로우"}
+                          </div>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className={styles.HeaderSectionProfileEdit}>
+                  <div className={styles.HeaderSectionProfileEdit2}>
+                    <div className={styles.HeaderSectionProfileEdit3}>
+                      <Link
+                        href={"/accounts/edit"}
+                        className={styles.HeaderSectionProfileEdit4}
+                        role="link"
+                        tabIndex={0}
+                      >
+                        {"프로필 편집"}
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
           <div className={styles.HeaderSectionBlank}>
