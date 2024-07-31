@@ -22,7 +22,7 @@ export async function DELETE(req: NextRequest, { params }: Props) {
     const userEmail = await req.json();
     const post = await Post.findOneAndDelete({
       postId: postId,
-      "User.email": userEmail,
+      userEmail: userEmail,
     });
     if (!post) {
       return NextResponse.json({

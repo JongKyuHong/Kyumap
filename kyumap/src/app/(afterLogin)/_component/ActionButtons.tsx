@@ -387,8 +387,18 @@ export default function ActionButtons({ post }: Props) {
           return [
             ...old,
             {
-              comment: commentData.CommentText,
-              User: commentData.userSession,
+              postId: Number(commentData.postId),
+              userNickname: commentData.userSession.name,
+              userEmail: commentData.userSession.email,
+              userImage: commentData.userSession.image,
+              content: commentData.CommentText,
+              Hearts: [],
+              _count: {
+                Hearts: 0,
+                Comments: 0,
+              },
+              reply: [],
+              createdAt: new Date(),
             },
           ];
         }
@@ -448,9 +458,19 @@ export default function ActionButtons({ post }: Props) {
           [
             ...previousComments,
             {
-              comment: commentData.CommentText,
-              User: commentData.userSession,
-            }, // 임시 댓글 객체
+              postId: Number(commentData.postId),
+              userNickname: commentData.userSession.name,
+              userEmail: commentData.userSession.email,
+              userImage: commentData.userSession.image,
+              content: commentData.CommentText,
+              Hearts: [],
+              _count: {
+                Hearts: 0,
+                Comments: 0,
+              },
+              reply: [],
+              createdAt: new Date(),
+            },
           ]
         );
 
@@ -514,7 +534,6 @@ export default function ActionButtons({ post }: Props) {
     if (!session) {
       return null;
     }
-    console.log(session, "session");
     const userSession = session.user;
     const postId = post.postId.toString();
     addComment.mutate({ postId, CommentText, userSession });
@@ -676,12 +695,12 @@ export default function ActionButtons({ post }: Props) {
               <span className={styles.postUserNameSpan}>
                 <div>
                   <Link
-                    href={`/profile/${post.User.nickname}`}
+                    href={`/profile/${post.userNickname}`}
                     className={styles.postUserProfile}
                     role="link"
                     tabIndex={0}
                   >
-                    {post.User.nickname}
+                    {post.userNickname}
                   </Link>
                 </div>
               </span>

@@ -14,17 +14,20 @@ export async function POST(req: NextRequest, { params }: Props) {
   await dbConnect();
   const data = await req.json();
 
-  const user = {
-    nickname: data.User.name,
-    email: data.User.email,
-    image: data.User.image,
-  };
+  const userName = data.User.name;
+  const userEmail = data.User.email;
+  const userImage = data.User.image;
   const commentid = new ObjectId(params.commentId);
   const comment = await Comment.findOneAndUpdate(
     { _id: commentid },
     {
       $addToSet: {
-        reply: { User: user, content: data.comment },
+        reply: {
+          userName: userName,
+          userEmail: userEmail,
+          userImage: userImage,
+          content: data.comment,
+        },
       },
       $inc: { "_count.Comments": 1 },
     },

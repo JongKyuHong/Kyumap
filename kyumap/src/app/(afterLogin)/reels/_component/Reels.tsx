@@ -357,7 +357,6 @@ export default function Reels({ post }: Props) {
   };
 
   const onClickMenu = () => {
-    console.log(isMenu, "hi");
     setIsMenu(true);
   };
 
@@ -478,8 +477,8 @@ export default function Reels({ post }: Props) {
                                     >
                                       <div className={styles.bodyHeader}>
                                         <Link
-                                          aria-label={`${post.User.nickname}님의 릴스`}
-                                          href={`/profile/${post.User.nickname}`}
+                                          aria-label={`${post.userNickname}님의 릴스`}
+                                          href={`/profile/${post.userNickname}`}
                                           className={styles.profileLink}
                                         >
                                           <div className={styles.profileLink2}>
@@ -500,8 +499,8 @@ export default function Reels({ post }: Props) {
                                                     width={0}
                                                     height={0}
                                                     sizes="100vw"
-                                                    alt={`${post.User.nickname}님의 프로필`}
-                                                    src={`${post.User.image}`}
+                                                    alt={`${post.userNickname}님의 프로필`}
+                                                    src={`${post.userImage}`}
                                                     className={
                                                       styles.profileImage2
                                                     }
@@ -513,7 +512,7 @@ export default function Reels({ post }: Props) {
                                               className={styles.bodyHeader2}
                                               style={{ lineHeight: "18px" }}
                                             >
-                                              {post.User.nickname}
+                                              {post.userNickname}
                                             </span>
                                           </div>
                                         </Link>
@@ -814,7 +813,7 @@ export default function Reels({ post }: Props) {
             </div>
             <div className={styles.profileImg}>
               <Link
-                href={`/profile/${post.User.nickname}`}
+                href={`/profile/${post.userNickname}`}
                 className={styles.profileImgLink}
               >
                 <div className={styles.profileImg2}>
@@ -822,8 +821,8 @@ export default function Reels({ post }: Props) {
                     <Image
                       className={styles.profileImg5}
                       style={{ objectFit: "cover" }}
-                      src={`${post.User.image}`}
-                      alt={`${post.User.nickname}님의 프로필`}
+                      src={`${post.userImage}`}
+                      alt={`${post.userNickname}님의 프로필`}
                       width={0}
                       height={0}
                       sizes="100vw"

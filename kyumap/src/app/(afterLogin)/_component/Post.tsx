@@ -29,7 +29,7 @@ export default function Post({ post }: Props) {
 
   const router = useRouter();
   const imgArticle = [];
-  
+
   // IntersectionObserver콜백 함수
   const handleIntersection = useCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -164,13 +164,13 @@ export default function Post({ post }: Props) {
                         }}
                       ></canvas>
                       <Link
-                        href={`/profile/${post?.User?.nickname}`}
+                        href={`/profile/${post?.userNickname}`}
                         style={{ height: "32px", width: "32px" }}
                         className={styles.articleUserSpan}
                       >
                         <Image
                           alt="프로필 사진"
-                          src={`${post.User.image}`}
+                          src={`${post.userImage}`}
                           width={32}
                           height={32}
                           className={styles.articleUserProfileImage}
@@ -195,13 +195,13 @@ export default function Post({ post }: Props) {
                             <span className={styles.nameInnerSpan2}>
                               <div>
                                 <Link
-                                  href={`/profile/${post?.User?.nickname}`}
+                                  href={`/profile/${post?.userNickname}`}
                                   className={styles.nameLink}
                                 >
                                   <div className={styles.linkInnerDiv}>
                                     <div className={styles.linkInnerDiv2}>
                                       <span className={styles.linkInnerSpan}>
-                                        {post.User.nickname}
+                                        {post.userNickname}
                                       </span>
                                     </div>
                                   </div>
