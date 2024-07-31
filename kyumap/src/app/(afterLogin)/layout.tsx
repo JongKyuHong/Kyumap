@@ -26,7 +26,8 @@ export default async function RootLayout({ children, modal }: Props) {
                   <div className={styles.container} style={{ height: "100%" }}>
                     {session && session.user && (
                       <>
-                        <Nav me={session} />
+                        {/* <Nav me={session} /> */}
+                        <Nav />
                         <div className={styles.rightSectionWrapper}>
                           <section className={styles.rootSection}>
                             <main
