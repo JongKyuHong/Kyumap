@@ -9,8 +9,6 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/ko";
 import { IPost } from "@/model/Post";
 import ActionButtons from "./ActionButtons";
-import { useSession } from "next-auth/react";
-import PostMenu from "./PostMenu";
 import { useRouter } from "next/navigation";
 
 dayjs.locale("ko");
@@ -31,7 +29,7 @@ export default function Post({ post }: Props) {
 
   const router = useRouter();
   const imgArticle = [];
-
+  
   // IntersectionObserver콜백 함수
   const handleIntersection = useCallback(
     (entries: IntersectionObserverEntry[]) => {
