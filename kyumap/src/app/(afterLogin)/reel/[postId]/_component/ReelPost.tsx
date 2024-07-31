@@ -705,6 +705,54 @@ export default function ReelPost({ postId }: Props) {
                                 </div>
                               </div>
                             </div>
+                            <div className={styles.contentDivDot}>
+                              <div className={styles.contentDivDot2}>
+                                <div
+                                  className={styles.contentDivDot3}
+                                  role="button"
+                                  tabIndex={0}
+                                >
+                                  <Link href={`/home/${postId}`}>
+                                    <div className={styles.contentDivDot4}>
+                                      <div
+                                        className={styles.contentDivDot5}
+                                        style={{
+                                          width: "24px",
+                                          height: "24px",
+                                        }}
+                                      >
+                                        <svg
+                                          aria-label="옵션 더 보기"
+                                          className={styles.contentDivDot6}
+                                          fill="currentColor"
+                                          height="24"
+                                          role="img"
+                                          viewBox="0 0 24 24"
+                                          width="24"
+                                        >
+                                          <title>옵션 더 보기</title>
+                                          <circle
+                                            cx="12"
+                                            cy="12"
+                                            r="1.5"
+                                          ></circle>
+                                          <circle
+                                            cx="6"
+                                            cy="12"
+                                            r="1.5"
+                                          ></circle>
+                                          <circle
+                                            cx="18"
+                                            cy="12"
+                                            r="1.5"
+                                          ></circle>
+                                        </svg>
+                                      </div>
+                                    </div>
+                                  </Link>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
                         <hr className={styles.contentHr}></hr>
