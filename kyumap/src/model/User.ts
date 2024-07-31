@@ -14,6 +14,7 @@ interface UserID {
 export interface IUser extends Document {
   email: string;
   nickname: string;
+  password: string;
   image: string;
   Followers: UserID[];
   Followings: UserID[];
@@ -36,6 +37,10 @@ export const userSchema: Schema = new mongoose.Schema({
     required: true,
   },
   nickname: {
+    type: String,
+    required: true,
+  },
+  password: {
     type: String,
     required: true,
   },

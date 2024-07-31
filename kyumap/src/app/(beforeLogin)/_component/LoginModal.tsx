@@ -22,17 +22,22 @@ export default function LoginModal() {
     e.preventDefault();
     setIsLoading(true);
     setMessage("");
-    try {
-      await signIn("credentials", {
-        email: id,
-        password,
-        redirect: false,
-      });
-      setIsLoading(false);
-      router.replace("/home");
-    } catch (error) {
-      console.error(error);
+    const signInResponse = await signIn("credentials", {
+      email: id,
+      password,
+      redirect: false,
+    });
+
+    setIsLoading(false);
+
+    if (signInResponse?.error) {
+      // signIn이 성공적으로 작동했지만 인증에 실패한 경우 오류 메시지를 설정
       setMessage("아이디와 비밀번호가 일치하지 않습니다.");
+      setIsLoading(false);
+    } else {
+      // 성공적으로 로그인되면 홈으로 이동
+      router.replace("/home");
+      setIsLoading(false);
     }
   };
 
