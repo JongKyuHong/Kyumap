@@ -1,0 +1,330 @@
+.root {
+  align-items: center;
+  background-color: rgb(var(--ig-primary-background));
+  border-bottom: 1px solid rgb(var(--ig-elevated-separator));
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: var(--desktop-nav-height);
+  position: fixed;
+  top: 0;
+  transition: height 0.2s ease-in-out;
+  width: 100%;
+  z-index: 3;
+}
+
+.root2 {
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+  height: var(--desktop-nav-height);
+  justify-content: center;
+  max-width: calc(935px + 40px);
+  padding: 0 20px;
+  transition: height 0.2s ease-in-out;
+  width: 100%;
+  z-index: 10;
+}
+
+.logo {
+  flex: 1 0 127px;
+}
+
+.logo2 {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  flex-direction: row;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.logo3 {
+  text-decoration: none;
+  color: rgb(var(--ig-link));
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-top-width: 0;
+  border-bottom-style: none;
+  border-bottom-width: 0;
+  border-top-style: none;
+  padding-bottom: 0;
+  display: inline;
+  border-left-width: 0;
+  padding-left: 0;
+  background-color: transparent;
+  touch-action: manipulation;
+  border-right-style: none;
+  border-right-width: 0;
+  box-sizing: border-box;
+  padding-right: 0;
+  cursor: pointer;
+  margin-left: 0;
+  -webkit-tap-highlight-color: transparent;
+  border-left-style: none;
+  text-align: inherit;
+  margin-right: 0;
+  list-style: none;
+  outline: none;
+}
+
+.logo4 {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  flex-direction: row;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.logo5 {
+  align-items: stretch;
+  border: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  font: inherit;
+  font-size: 100%;
+  margin: 0;
+  margin-top: 7px;
+  padding: 0;
+  position: relative;
+  transition: opacity 0.1s ease-out;
+  vertical-align: baseline;
+}
+
+.image {
+  color: rgb(var(--ig-primary-text));
+  position: relative;
+  display: block;
+}
+
+.buttonDiv {
+  flex: 1 0 127px;
+  position: relative;
+  align-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.buttonDiv2 {
+  align-items: stretch;
+  border: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+  font: inherit;
+  font-size: 100%;
+  margin: 0;
+  padding: 0;
+  padding-left: 24px;
+  position: relative;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+
+.buttonDiv3 {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  flex-direction: row;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.buttonDiv4 {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  margin-left: 16px;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.loginBtn {
+  border-bottom-color: var(--always-dark-overlay);
+  border-top-color: var(--always-dark-overlay);
+  padding-top: 0;
+  min-width: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-top-width: 0;
+  min-height: 0;
+  border-bottom-style: none;
+  border-bottom-width: 0;
+  border-top-style: none;
+  padding-bottom: 0;
+  width: auto;
+  height: 32px;
+  font-weight: var(--font-weight-system-semibold);
+  border-left-width: 0;
+  text-overflow: ellipsis;
+  justify-content: center;
+  appearance: none;
+  border-top-right-radius: 8px;
+  touch-action: manipulation;
+  flex-basis: auto;
+  border-right-style: none;
+  border-right-width: 0;
+  border-right-color: var(--always-dark-overlay);
+  border-bottom-left-radius: 8px;
+  box-sizing: border-box;
+  color: rgb(var(--web-always-white));
+  user-select: none;
+  align-items: center;
+  display: inline-flex;
+  border-bottom-right-radius: 8px;
+  flex-shrink: 0;
+  border-left-color: var(--always-dark-overlay);
+  text-align: center;
+  cursor: pointer;
+  background-color: rgb(var(--ig-primary-button));
+  outline-style: none;
+  padding-left: 16px;
+  flex-direction: row;
+  padding-right: 16px;
+  position: relative;
+  margin-left: 0;
+  border-top-left-radius: 8px;
+  z-index: 0;
+  -webkit-tap-highlight-color: transparent;
+  font-family: var(--font-family-system);
+  font-size: 0.875rem;
+  line-height: var(--system-14-line-height);
+  border-left-style: none;
+  margin-right: 0;
+  list-style: none;
+  text-decoration: none;
+  outline: none;
+}
+
+.buttonDiv5 {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  margin-left: 16px;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.signup {
+  color: rgb(var(--ig-primary-button));
+  text-decoration: none;
+  height: auto;
+  border-bottom-color: var(--always-dark-overlay);
+  border-top-color: var(--always-dark-overlay);
+  padding-top: 0;
+  min-width: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-top-width: 0;
+  min-height: 0;
+  border-bottom-style: none;
+  border-bottom-width: 0;
+  border-top-style: none;
+  padding-bottom: 0;
+  width: auto;
+  font-weight: var(--font-weight-system-semibold);
+  border-top-left-radius: 2px;
+  border-left-width: 0;
+  text-overflow: ellipsis;
+  justify-content: center;
+  padding-left: 0;
+  appearance: none;
+  background-color: transparent;
+  touch-action: manipulation;
+  flex-basis: auto;
+  border-right-style: none;
+  border-right-width: 0;
+  border-right-color: var(--always-dark-overlay);
+  box-sizing: border-box;
+  user-select: none;
+  align-items: center;
+  padding-right: 0;
+  display: inline-flex;
+  flex-shrink: 0;
+  border-left-color: var(--always-dark-overlay);
+  text-align: center;
+  cursor: pointer;
+  border-top-right-radius: 2px;
+  outline-style: none;
+  flex-direction: row;
+  position: relative;
+  margin-left: 0;
+  z-index: 0;
+  -webkit-tap-highlight-color: transparent;
+  font-family: var(--font-family-system);
+  font-size: 0.875rem;
+  line-height: var(--system-14-line-height);
+  border-left-style: none;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  margin-right: 0;
+  list-style: none;
+  outline: none;
+}

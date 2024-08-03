@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./ReelPost.module.css";
 import Image from "next/image";
 import dayjs from "dayjs";
@@ -19,6 +19,7 @@ import ActionButtons from "@/app/(afterLogin)/_component/ActionButtons";
 import useDeviceSize from "@/app/(afterLogin)/_component/useDeviceSize";
 import Post from "@/app/(afterLogin)/_component/Post";
 import ResponsiveNav from "@/app/(afterLogin)/_component/ResponsiveNav";
+import MoreInfoOverlay from "@/app/(afterLogin)/reels/_component/MoreInfoOverlay";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -40,6 +41,7 @@ export default function ReelPost({ postId }: Props) {
   const [isCtype, setCType] = useState(true); // comment라면 true, reply라면 false
   const [isPosting, setIsPosting] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
+  const [isMenu, setIsMenu] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
@@ -486,6 +488,15 @@ export default function ReelPost({ postId }: Props) {
       addComment.mutate({ postId, CommentText, userSession });
     }
   };
+
+  const closeMenu = () => {
+    setIsMenu(false);
+  };
+
+  const onOpenDetail = useCallback(() => {
+    setIsMenu(false);
+    router.push(`/detailInfo/${postId}`);
+  }, [router, postId]);
 
   if (!post) return null;
 
@@ -949,6 +960,13 @@ export default function ReelPost({ postId }: Props) {
                 </div>
               </div>
             </div>
+          )}
+          {isMenu && (
+            <MoreInfoOverlay
+              postId={Number(postId)}
+              onClose={closeMenu}
+              onOpenDetail={onOpenDetail}
+            />
           )}
         </>
       )}

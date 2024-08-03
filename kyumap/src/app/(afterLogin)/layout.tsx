@@ -4,6 +4,7 @@ import RQProvider from "./_component/RQProvider";
 import Nav from "./_component/Nav";
 import { auth } from "@/auth";
 import ClientComponent from "./_component/ClientComponent";
+import BeforeLoginNav from "./_component/BeforeLoginNav";
 
 type Props = { children: ReactNode; modal: ReactNode };
 
@@ -24,23 +25,27 @@ export default async function RootLayout({ children, modal }: Props) {
               <div className={styles.leafParent}>
                 <div className={styles.leafChild}>
                   <div className={styles.container} style={{ height: "100%" }}>
-                    {session && session.user && (
-                      <>
-                        <Nav me={session} />
-                        <div className={styles.rightSectionWrapper}>
-                          <section className={styles.rootSection}>
-                            <main
-                              className={styles.rootMain}
-                              style={{ height: "90vh", overflowY: "auto" }}
-                              role="main"
-                            >
-                              <ClientComponent />
-                              {children}
-                            </main>
-                          </section>
-                        </div>
-                      </>
-                    )}
+                    <>
+                      {session ? <Nav /> : <BeforeLoginNav />}
+                      <div className={styles.rightSectionWrapper}>
+                        <section className={styles.rootSection}>
+                          <main
+                            className={styles.rootMain}
+                            style={{
+                              height: "90vh",
+                              overflowY: "auto",
+                              paddingTop: !session
+                                ? "var(--desktop-nav-height)"
+                                : "0",
+                            }}
+                            role="main"
+                          >
+                            <ClientComponent />
+                            {children}
+                          </main>
+                        </section>
+                      </div>
+                    </>
                   </div>
                 </div>
               </div>

@@ -11,5 +11,5 @@ export async function middleware() {
 }
 
 export const config = {
-  matcher: ["/home"],
+  matcher: ["/home", "/reels", "/accounts/edit"],
 };

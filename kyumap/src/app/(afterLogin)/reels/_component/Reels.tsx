@@ -366,7 +366,7 @@ export default function Reels({ post }: Props) {
 
   const onOpenDetail = useCallback(() => {
     setIsMenu(false);
-    router.push(`/reel/${post.postId}`);
+    router.push(`/detailInfo/${post.postId}`);
   }, [router, post.postId]);
 
   const onClickHeart: MouseEventHandler<HTMLDivElement> = (e) => {
