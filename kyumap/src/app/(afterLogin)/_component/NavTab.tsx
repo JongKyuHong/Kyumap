@@ -108,9 +108,9 @@ export default function NavTab({ session }: Props) {
     enabled: !!userEmail,
   });
 
-  if (userLoading) {
-    return <LoadingComponent />;
-  }
+  // if (userLoading) {
+  //   return <LoadingComponent />;
+  // }
 
   // 다크모드 토글
   const onClickDark = () => {

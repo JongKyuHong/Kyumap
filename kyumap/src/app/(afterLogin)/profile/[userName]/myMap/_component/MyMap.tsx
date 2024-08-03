@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { Map } from "react-kakao-maps-sdk";
 import KMapMarker from "./kMapMarker";
-import LoadingComponent from "@/app/_component/LoadingComponent";
 import useKakaoLoader from "./useKakaoLoader";
 
 type Props = {

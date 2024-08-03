@@ -32,23 +32,15 @@ export default function MenuDetail({ darkMode, onClickDark }: Props) {
     queryClient.invalidateQueries({
       queryKey: ["users"],
     });
-    // // 로그아웃 후 콜백 URL로 이동
-    // signOut({ callbackUrl: "/" }).then(() => {
-    //   // 서버 로그아웃 API 호출
-    //   fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/logout`, {
-    //     method: "post",
-    //     credentials: "include",
-    //   });
-    // });
     try {
       // 로그아웃 후 콜백 URL로 이동
       await signOut({ callbackUrl: "/" });
-
       // 서버 로그아웃 API 호출
       await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/logout`, {
         method: "post",
         credentials: "include",
       });
+      router.refresh();
     } catch (error) {
       console.error("로그아웃 중 오류 발생:", error);
     }

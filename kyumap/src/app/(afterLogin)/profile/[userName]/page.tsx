@@ -1,21 +1,20 @@
-import {
-  QueryClient,
-  dehydrate,
-  HydrationBoundary,
-} from "@tanstack/react-query";
-import { getUser } from "@/app/(afterLogin)/_lib/getUser";
-import { getUserPosts } from "@/app/(afterLogin)/_lib/getUserPosts";
-import ProfileSection from "./_component/ProfileSection";
 import UserPosts from "./_component/UserPosts";
 import { getUserEmail } from "../../_lib/getUserEmail";
-import { IPost } from "../../../../model/Post";
-import styles from "./profile.module.css";
+import { Metadata } from "next";
 
 type Props = {
   params: {
     userName: string;
   };
 };
+
+export async function generateMetadata({ params }: Props) {
+  const userEmail = await getUserEmail(params.userName);
+  return {
+    title: `${params.userName}(@${userEmail}) / Kyumap 사진 및 동영상`,
+    description: `${params.userName}님의 Kyumap 프로필에서 사진과 동영상을 확인하세요.`,
+  };
+}
 
 export default async function page({ params }: Props) {
   const { userName } = params;
