@@ -5,5 +5,6 @@ import useDeviceSize from "./useDeviceSize";
 
 export default function ClientComponent() {
   const { isMobile } = useDeviceSize();
+
   return <>{isMobile && <ResponsiveNav />}</>;
 }
