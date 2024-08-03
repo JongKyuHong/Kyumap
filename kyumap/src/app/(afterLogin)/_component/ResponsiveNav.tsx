@@ -7,11 +7,13 @@ import smallLogodark from "../../../../public/smallLogodark.png";
 import Image from "next/image";
 import Link from "next/link";
 import useDeviceSize from "./useDeviceSize";
+import { useSession } from "next-auth/react";
 
 export default function ResponsiveNav() {
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
   const [clickedAddPost, setAddPost] = useState(false);
   const [isDark, setDark] = useState<boolean>(false);
+  const { data: session } = useSession();
 
   useEffect(() => {
     const savedDarkMode = localStorage.getItem("darkMode");
@@ -28,6 +30,8 @@ export default function ResponsiveNav() {
   const onClickAddpost = () => {
     setAddPost(!clickedAddPost);
   };
+
+  if (!session) return null;
 
   return (
     <>

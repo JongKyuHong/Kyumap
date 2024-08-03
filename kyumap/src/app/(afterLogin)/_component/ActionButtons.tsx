@@ -532,7 +532,7 @@ export default function ActionButtons({ post }: Props) {
   const onSubmitComment = () => {
     // router.push(`/detail/${postId}`);
     if (!session) {
-      return null;
+      return router.push(`/NewLogin`);
     }
     const userSession = session.user;
     const postId = post.postId.toString();

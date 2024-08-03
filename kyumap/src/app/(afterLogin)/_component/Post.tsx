@@ -10,6 +10,7 @@ import "dayjs/locale/ko";
 import { IPost } from "@/model/Post";
 import ActionButtons from "./ActionButtons";
 import { useRouter } from "next/navigation";
+import MoreInfoOverlay from "../reels/_component/MoreInfoOverlay";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -24,7 +25,7 @@ export default function Post({ post }: Props) {
   const [isMuted, setMuted] = useState(true);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isUserPaused, setIsUserPaused] = useState(false); // 사용자가 직접 일시정지했는지 여부
-  const [isMenu, setMenu] = useState(false);
+  const [isMenu, setIsMenu] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const router = useRouter();
@@ -129,12 +130,14 @@ export default function Post({ post }: Props) {
     );
   }
 
-  const onClickMenu = () => {
-    // setMenu(!isMenu);
-    router.push(`/home/${post.postId}`);
+  const closeMenu = () => {
+    setIsMenu(false);
   };
 
-  const onClickRemoveComment = () => {};
+  const onOpenDetail = useCallback(() => {
+    setIsMenu(false);
+    router.push(`/detailInfo/${post.postId}`);
+  }, [router, post.postId]);
 
   if (!post) return null;
 
@@ -235,33 +238,31 @@ export default function Post({ post }: Props) {
                 <div className={styles.articleMoreInfo2}>
                   <div
                     className={styles.articleMoreInfo3}
-                    // onClick={onClickMenu}
+                    onClick={() => setIsMenu(!isMenu)}
                   >
-                    <Link href={`/home/${post.postId}`}>
-                      <div className={styles.articleMoreInfo4}>
-                        <div
-                          className={styles.articleMoreInfo5}
+                    <div className={styles.articleMoreInfo4}>
+                      <div
+                        className={styles.articleMoreInfo5}
+                        style={{
+                          width: "24px",
+                          height: "24px",
+                        }}
+                      >
+                        <svg
+                          className={styles.articleMoreInfoSvg}
                           style={{
+                            fill: "currentcolor",
                             width: "24px",
                             height: "24px",
                           }}
                         >
-                          <svg
-                            className={styles.articleMoreInfoSvg}
-                            style={{
-                              fill: "currentcolor",
-                              width: "24px",
-                              height: "24px",
-                            }}
-                          >
-                            <title>옵션 더 보기</title>
-                            <circle cx="12" cy="12" r="1.5"></circle>
-                            <circle cx="6" cy="12" r="1.5"></circle>
-                            <circle cx="18" cy="12" r="1.5"></circle>
-                          </svg>
-                        </div>
+                          <title>옵션 더 보기</title>
+                          <circle cx="12" cy="12" r="1.5"></circle>
+                          <circle cx="6" cy="12" r="1.5"></circle>
+                          <circle cx="18" cy="12" r="1.5"></circle>
+                        </svg>
                       </div>
-                    </Link>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -710,7 +711,13 @@ export default function Post({ post }: Props) {
           <ActionButtons post={post} />
         </div>
       </article>
-      {/* {isMenu && <PostMenu post={post}  onClickMenu={onClickMenu} />} */}
+      {isMenu && (
+        <MoreInfoOverlay
+          postId={Number(post.postId)}
+          onClose={closeMenu}
+          onOpenDetail={onOpenDetail}
+        />
+      )}
     </>
   );
 }

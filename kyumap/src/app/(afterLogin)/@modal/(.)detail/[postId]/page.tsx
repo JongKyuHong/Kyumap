@@ -15,22 +15,21 @@ type Props = {
 
 export default async function page({ params }: Props) {
   const { postId } = params;
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery({
-    queryKey: ["posts", postId, "comments"],
-    queryFn: getComments,
-  });
+  // const queryClient = new QueryClient();
+  // await queryClient.prefetchQuery({
+  //   queryKey: ["posts", postId, "comments"],
+  //   queryFn: getComments,
+  // });
 
-  await queryClient.prefetchQuery({
-    queryKey: ["posts", postId],
-    queryFn: getPost,
-  });
+  // await queryClient.prefetchQuery({
+  //   queryKey: ["posts", postId],
+  //   queryFn: getPost,
+  // });
 
-  const dehydrateState = dehydrate(queryClient);
+  // const dehydrateState = dehydrate(queryClient);
 
   return (
-    <HydrationBoundary state={dehydrateState}>
-      <DetailPage postId={postId} />
-    </HydrationBoundary>
+    // <HydrationBoundary state={dehydrateState}></HydrationBoundary>
+    <DetailPage postId={postId} />
   );
 }
