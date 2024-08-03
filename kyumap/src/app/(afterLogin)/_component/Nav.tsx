@@ -1,9 +1,10 @@
 import NavTab from "./NavTab";
+import { auth } from "@/auth";
 
-type Props = {
-  me: any;
-};
+export default async function Nav() {
+  const session = await auth();
 
-export default async function Nav({ me }: Props) {
-  return <NavTab session={me} />;
+  if (!session) return null;
+
+  return <NavTab session={session} />;
 }

@@ -6,8 +6,8 @@ import { getRandomReels } from "../../_lib/getRandomReels";
 import { IPost } from "../../../../model/Post";
 import styles from "./reels.module.css";
 import Reels from "./Reels";
-import Loading from "../../home/loading";
 import crypto from "crypto";
+import LoadingComponent from "@/app/_component/LoadingComponent";
 
 export default function ReelsParent() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -107,8 +107,10 @@ export default function ReelsParent() {
   }, [handleScroll]);
 
   if (isFetching) {
-    return <Loading />;
+    return <LoadingComponent />;
   }
+
+  console.log(data, "data");
 
   return (
     <div className={`${styles.rootDiv}`} tabIndex={0}>

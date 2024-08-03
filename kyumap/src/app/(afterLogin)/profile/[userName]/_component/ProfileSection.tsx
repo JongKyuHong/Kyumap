@@ -60,15 +60,17 @@ export default function ProfileSection({ userEmail, userName }: Props) {
 
   // 팔로우 여부 확인
   useEffect(() => {
-    const isFollowed = !!userData?.Followers?.find(
-      (v) => v.email === session?.user?.email
-    );
-    setFollowed(isFollowed);
+    if (session) {
+      const isFollowed = !!userData?.Followers?.find(
+        (v) => v.email === session?.user?.email
+      );
+      setFollowed(isFollowed);
+    }
   }, [userData, session]);
 
   // 자기 자신인지 확인
   useEffect(() => {
-    if (session) {
+    if (session && session.user) {
       if (userEmail === session?.user!.email) {
         setMe(true);
       }
@@ -283,7 +285,7 @@ export default function ProfileSection({ userEmail, userName }: Props) {
                   style={{ lineHeight: "20px" }}
                   className={styles.errorSpan2}
                 >
-                  {"클릭사힌 링크가 잘못되었거나 페이지가 삭제되었습니다."}
+                  {"클릭하신 링크가 잘못되었거나 페이지가 삭제되었습니다."}
                   <Link
                     href="/home"
                     role="link"
@@ -364,35 +366,37 @@ export default function ProfileSection({ userEmail, userName }: Props) {
                       className={styles.HeaderSectionFollowBtn2}
                       tabIndex={0}
                     >
-                      <button
-                        className={styles.HeaderSectionFollowBtn4}
-                        style={{
-                          backgroundColor: followed
-                            ? "rgb(239, 239, 239)"
-                            : "rgb(0, 149, 246)",
-                          color: followed ? "rgb(0,0,0)" : "rgb(255,255,255)",
-                        }}
-                        type="button"
-                        onClick={onFollow}
-                        onMouseEnter={() => setHovered(true)}
-                        onMouseLeave={() => setHovered(false)}
-                      >
-                        <div
-                          className={styles.HeaderSectionFollowBtn5}
-                          style={{ height: "100%" }}
+                      {session && (
+                        <button
+                          className={styles.HeaderSectionFollowBtn4}
+                          style={{
+                            backgroundColor: followed
+                              ? "rgb(239, 239, 239)"
+                              : "rgb(0, 149, 246)",
+                            color: followed ? "rgb(0,0,0)" : "rgb(255,255,255)",
+                          }}
+                          type="button"
+                          onClick={onFollow}
+                          onMouseEnter={() => setHovered(true)}
+                          onMouseLeave={() => setHovered(false)}
                         >
                           <div
-                            className={styles.HeaderSectionFollowBtn6}
-                            dir="auto"
+                            className={styles.HeaderSectionFollowBtn5}
+                            style={{ height: "100%" }}
                           >
-                            {followed
-                              ? hovered
-                                ? "팔로우 취소"
-                                : "팔로잉"
-                              : "팔로우"}
+                            <div
+                              className={styles.HeaderSectionFollowBtn6}
+                              dir="auto"
+                            >
+                              {followed
+                                ? hovered
+                                  ? "팔로우 취소"
+                                  : "팔로잉"
+                                : "팔로우"}
+                            </div>
                           </div>
-                        </div>
-                      </button>
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
