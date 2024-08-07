@@ -20,6 +20,7 @@ import useDeviceSize from "@/app/(afterLogin)/_component/useDeviceSize";
 import Post from "@/app/(afterLogin)/_component/Post";
 import ResponsiveNav from "@/app/(afterLogin)/_component/ResponsiveNav";
 import MoreInfoOverlay from "@/app/(afterLogin)/reels/_component/MoreInfoOverlay";
+import { IUser } from "@/model/User";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -65,20 +66,24 @@ export default function ReelPost({ postId }: Props) {
     gcTime: 300 * 1000,
   });
   const { data: session } = useSession();
+  const {
+    data: userData,
+    error: userError,
+    isLoading: userLoading,
+  } = useQuery<IUser, Object, IUser, [string, string]>({
+    queryKey: ["users", session?.user?.email as string],
+    queryFn: getUser,
+    staleTime: 5 * 60 * 1000, // fresh -> stale, 5분이라는 기준
+    gcTime: 10 * 60 * 1000,
+  });
+
   const router = useRouter();
   const queryClient = useQueryClient();
 
   // 좋아요 저장됨 상태 업데이트
   useEffect(() => {
-    const abortController = new AbortController();
-    const fetchData = async () => {
-      if (!session?.user?.email) return;
-      const user = await getUser({
-        queryKey: ["users", session.user.email],
-        signal: abortController.signal,
-        meta: undefined,
-      });
-      const ssave = !!user?.Saved.find(
+    if (userData) {
+      const ssave = !!userData?.Saved.find(
         (v: any) => v.id === post?.postId.toString()
       );
 
@@ -87,10 +92,8 @@ export default function ReelPost({ postId }: Props) {
       );
       setLiked(liked);
       setSaved(ssave);
-    };
-
-    fetchData();
-  }, [post, session, queryClient]);
+    }
+  }, [userData]);
 
   const addComment = useMutation({
     mutationFn: async (commentData: {

@@ -37,6 +37,7 @@ export default function BeforeLoginNav() {
                       width={103}
                       height={29}
                       className={styles.image}
+                      priority={true}
                     />
                   ) : (
                     <Image
@@ -46,6 +47,7 @@ export default function BeforeLoginNav() {
                       width={103}
                       height={29}
                       className={styles.image}
+                      priority={true}
                     />
                   )}
                 </div>

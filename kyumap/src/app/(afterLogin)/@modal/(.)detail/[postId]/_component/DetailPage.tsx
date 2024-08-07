@@ -1501,6 +1501,7 @@ export default function DetailPage({ postId }: Props) {
                                                   </div>
                                                 </div>
                                                 <textarea
+                                                  name="comment"
                                                   className={
                                                     styles.ModalCommentTextAreaW
                                                   }
@@ -2550,8 +2551,8 @@ export default function DetailPage({ postId }: Props) {
                                                     </div>
                                                   </div>
                                                 </div>
-
                                                 <textarea
+                                                  name="comment"
                                                   onChange={onChangeTextArea}
                                                   aria-label="댓글 달기..."
                                                   placeholder="댓글 달기..."
@@ -2562,7 +2563,6 @@ export default function DetailPage({ postId }: Props) {
                                                   }
                                                   value={CommentText}
                                                 />
-
                                                 <div
                                                   className={
                                                     styles.CommentFormEnter

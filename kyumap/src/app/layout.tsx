@@ -18,11 +18,11 @@ export default function RootLayout({ children }: Props) {
         <AuthSession>{children}</AuthSession>
       </body>
       <script
-        src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
+        src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
         async
       />
       <script
-        src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.KAKAO_JS_API_KEY}&libraries=services&autoload=false`}
+        src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.KAKAO_JS_API_KEY}&libraries=services&autoload=false`}
         async
       />
     </html>

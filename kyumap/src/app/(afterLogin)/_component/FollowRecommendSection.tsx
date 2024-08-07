@@ -82,6 +82,7 @@ export default function FollowRecommendSection({ session }: Props) {
                               className={styles.IdLink}
                               tabIndex={0}
                               role="link"
+                              aria-label="idLink"
                             ></Link>
                           </div>
                           <span className={styles.MyAccountSpan}>
