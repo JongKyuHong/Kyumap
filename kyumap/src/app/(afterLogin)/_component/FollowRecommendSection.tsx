@@ -10,26 +10,27 @@ import Link from "next/link";
 import Image from "next/image";
 import LoadingComponent from "@/app/_component/LoadingComponent";
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 type Props = {
   session: any;
 };
 
-// { session }: Props
+export default function FollowRecommendSection({ session }: Props) {
+  const [desktop, setDesktop] = useState(false);
+  const { isDesktop } = useDeviceSize();
+  useEffect(() => {
+    setDesktop(isDesktop);
+  }, [isDesktop]);
 
-export default function FollowRecommendSection() {
-  const { isDesktop, isTablet, isMobile } = useDeviceSize();
-  const { data: session } = useSession();
   const { data: RecommendsData, isLoading } = useQuery<IUser[]>({
     queryKey: ["users", "followRecommends", session?.user!.email],
     queryFn: () => getFollowRecommends(session?.user!.email as string),
     staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
     gcTime: 300 * 1000,
   });
-  if (isLoading) {
-    return <LoadingComponent />;
-  }
-  if (!isDesktop || !session) return null;
+
+  if (!desktop || !session) return null;
 
   return (
     <div className={styles.FollowList}>

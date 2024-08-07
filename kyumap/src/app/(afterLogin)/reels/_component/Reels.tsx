@@ -63,7 +63,7 @@ export default function Reels({ post }: Props) {
       setSaved(ssave);
       setHeartsCount(post._count.Hearts);
     }
-  }, [userData, post]);
+  }, [userData, post, session?.user?.email]);
 
   const heart = useMutation({
     mutationFn: () => {

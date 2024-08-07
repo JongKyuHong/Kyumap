@@ -9,8 +9,7 @@ import BeforeLoginNav from "./_component/BeforeLoginNav";
 type Props = { children: ReactNode; modal: ReactNode };
 
 export default async function RootLayout({ children, modal }: Props) {
-  // const session = await auth();s
-
+  const session = await auth();
   return (
     <div>
       <RQProvider>
@@ -26,8 +25,7 @@ export default async function RootLayout({ children, modal }: Props) {
                 <div className={styles.leafChild}>
                   <div className={styles.container} style={{ height: "100%" }}>
                     <>
-                      {/* {session ? <Nav /> : <BeforeLoginNav />} */}
-                      <Nav />
+                      {session ? <Nav session={session} /> : <BeforeLoginNav />}
                       <div className={styles.rightSectionWrapper}>
                         <section className={styles.rootSection}>
                           <main
@@ -35,9 +33,9 @@ export default async function RootLayout({ children, modal }: Props) {
                             style={{
                               height: "90vh",
                               overflowY: "auto",
-                              // paddingTop: !session
-                              //   ? "var(--desktop-nav-height)"
-                              //   : "0",
+                              paddingTop: !session
+                                ? "var(--desktop-nav-height)"
+                                : "0",
                             }}
                             role="main"
                           >

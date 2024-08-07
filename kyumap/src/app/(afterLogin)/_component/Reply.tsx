@@ -16,6 +16,7 @@ import {
   InfiniteData,
 } from "@tanstack/react-query";
 import { IReply } from "@/model/Reply";
+import LoadingComponent from "@/app/_component/LoadingComponent";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);

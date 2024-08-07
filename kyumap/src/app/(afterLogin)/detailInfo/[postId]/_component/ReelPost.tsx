@@ -43,9 +43,10 @@ export default function ReelPost({ postId }: Props) {
   const [isPosting, setIsPosting] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMenu, setIsMenu] = useState(false);
+  const [mobile, setMobile] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { isDesktop, isTablet, isMobile } = useDeviceSize();
+  const { isMobile } = useDeviceSize();
 
   const { data: comments } = useQuery<
     IComment[],
@@ -93,7 +94,11 @@ export default function ReelPost({ postId }: Props) {
       setLiked(liked);
       setSaved(ssave);
     }
-  }, [userData]);
+  }, [userData, post?.postId, post?.Hearts, session?.user?.email]);
+
+  useEffect(() => {
+    setMobile(isMobile);
+  }, [isMobile]);
 
   const addComment = useMutation({
     mutationFn: async (commentData: {
@@ -505,7 +510,7 @@ export default function ReelPost({ postId }: Props) {
 
   return (
     <>
-      {isMobile ? (
+      {mobile ? (
         <>
           <Post post={post} />
           <ResponsiveNav />
