@@ -271,7 +271,7 @@ export default function FollowList({ user }: Props) {
                           width={44}
                           height={44}
                           className={styles.ImageLink2Image}
-                        ></Image>
+                        />
                       </Link>
                     </div>
                   </div>

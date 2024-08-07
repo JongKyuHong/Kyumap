@@ -13,6 +13,16 @@ export async function generateMetadata({ params }: Props) {
   return {
     title: `${params.userName}(@${userEmail}) / Kyumap 사진 및 동영상`,
     description: `${params.userName}님의 Kyumap 프로필에서 사진과 동영상을 확인하세요.`,
+    openGraph: {
+      title: `${params.userName}(@${userEmail}) / Kyumap 사진 및 동영상`,
+      description: `${params.userName}님의 Kyumap 프로필에서 사진과 동영상을 확인하세요.`,
+      images: [
+        {
+          url: "/smallLogo2.png",
+          alt: "Kyumap",
+        },
+      ],
+    },
   };
 }
 

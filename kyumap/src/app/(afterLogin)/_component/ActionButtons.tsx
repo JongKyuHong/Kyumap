@@ -35,6 +35,7 @@ export default function ActionButtons({ post }: Props) {
   // 좋아요 중복 방지용 state
   const [isSaved, setSaved] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
+
   const {
     data: user,
     isLoading,

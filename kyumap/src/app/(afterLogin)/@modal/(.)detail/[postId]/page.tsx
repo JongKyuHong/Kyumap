@@ -27,9 +27,6 @@ export default async function page({ params }: Props) {
   // });
 
   // const dehydrateState = dehydrate(queryClient);
-
-  return (
-    // <HydrationBoundary state={dehydrateState}></HydrationBoundary>
-    <DetailPage postId={postId} />
-  );
+  // <HydrationBoundary state={dehydrateState}></HydrationBoundary>
+  return <DetailPage postId={postId} />;
 }

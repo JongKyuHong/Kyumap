@@ -508,7 +508,7 @@ export default function Reels({ post }: Props) {
                                                     className={
                                                       styles.profileImage2
                                                     }
-                                                  ></Image>
+                                                  />
                                                 </span>
                                               </div>
                                             </div>
@@ -831,7 +831,7 @@ export default function Reels({ post }: Props) {
                       height={0}
                       sizes="100vw"
                       crossOrigin="anonymous"
-                    ></Image>
+                    />
                   </div>
                   <div className={styles.profileImg4}></div>
                 </div>
