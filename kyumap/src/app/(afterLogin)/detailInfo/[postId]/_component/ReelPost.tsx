@@ -796,7 +796,7 @@ export default function ReelPost({ postId }: Props) {
                                           width={0}
                                           height={0}
                                           sizes="100vw"
-                                        ></Image>
+                                        />
                                       </Link>
                                     </div>
                                   </div>

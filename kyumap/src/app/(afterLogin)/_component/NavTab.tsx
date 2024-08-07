@@ -17,6 +17,7 @@ import { getUser } from "@/app/(afterLogin)/_lib/getUser";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import LoadingComponent from "@/app/_component/LoadingComponent";
+import BeforeLoginNav from "./BeforeLoginNav";
 
 type Props = {
   session: any;
@@ -486,7 +487,7 @@ export default function NavTab({ session }: Props) {
                                           />
                                           <Image
                                             className={styles.logo}
-                                            src={smallLogodark2}
+                                            src={smallLogodark2.src}
                                             alt="logo"
                                             width={24}
                                             height={24}
@@ -503,7 +504,7 @@ export default function NavTab({ session }: Props) {
                                           />
                                           <Image
                                             className={styles.logo}
-                                            src={smallLogo2}
+                                            src={smallLogo2.src}
                                             alt="logo"
                                             width={24}
                                             height={29}
@@ -537,7 +538,7 @@ export default function NavTab({ session }: Props) {
                                       />
                                       <Image
                                         className={styles.logo}
-                                        src={smallLogodark}
+                                        src={smallLogodark.src}
                                         alt="logo"
                                         width={103}
                                         height={29}
@@ -554,7 +555,7 @@ export default function NavTab({ session }: Props) {
                                       />
                                       <Image
                                         className={styles.logo}
-                                        src={smallLogo}
+                                        src={smallLogo.src}
                                         alt="logo"
                                         width={103}
                                         height={29}
@@ -1068,7 +1069,7 @@ export default function NavTab({ session }: Props) {
                                             className={styles.ProfileImageImage}
                                             width={24}
                                             height={24}
-                                          ></Image>
+                                          />
                                         </span>
                                       </div>
                                     </div>

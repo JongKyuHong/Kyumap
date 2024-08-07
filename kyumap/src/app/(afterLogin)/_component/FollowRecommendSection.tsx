@@ -9,13 +9,17 @@ import useDeviceSize from "./useDeviceSize";
 import Link from "next/link";
 import Image from "next/image";
 import LoadingComponent from "@/app/_component/LoadingComponent";
+import { useSession } from "next-auth/react";
 
 type Props = {
   session: any;
 };
 
-export default function FollowRecommendSection({ session }: Props) {
+// { session }: Props
+
+export default function FollowRecommendSection() {
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
+  const { data: session } = useSession();
   const { data: RecommendsData, isLoading } = useQuery<IUser[]>({
     queryKey: ["users", "followRecommends", session?.user!.email],
     queryFn: () => getFollowRecommends(session?.user!.email as string),
@@ -68,7 +72,7 @@ export default function FollowRecommendSection({ session }: Props) {
                               height={44}
                               alt={`${session?.user?.name}님의 프로필`}
                               src={`${session?.user?.image}`}
-                            ></Image>
+                            />
                           </Link>
                         </div>
                       </div>

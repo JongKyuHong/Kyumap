@@ -1,10 +1,14 @@
+"use client";
+
 import NavTab from "./NavTab";
 import { auth } from "@/auth";
+import BeforeLoginNav from "./BeforeLoginNav";
+import { useSession } from "next-auth/react";
 
-export default async function Nav() {
-  const session = await auth();
+export default function Nav() {
+  // const session = await auth();
+  const { data: session } = useSession();
+  // if (!session) return <BeforeLoginNav />;
 
-  if (!session) return null;
-
-  return <NavTab session={session} />;
+  return session ? <NavTab session={session} /> : <BeforeLoginNav />;
 }

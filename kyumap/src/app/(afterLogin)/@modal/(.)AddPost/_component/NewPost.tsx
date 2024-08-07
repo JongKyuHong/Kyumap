@@ -728,7 +728,6 @@ export default function NewPost() {
                                                               crossOrigin="anonymous"
                                                               draggable="false"
                                                               priority={true}
-                                                              // src={"/chi.png"}
                                                             />
                                                           </span>
                                                         </div>
@@ -1458,8 +1457,6 @@ export default function NewPost() {
                                                                   styles.AccExpandImg
                                                                 }
                                                                 style={{
-                                                                  // height: "44px",
-                                                                  // width: "66.7586px",
                                                                   transform:
                                                                     "translateX(0px) translateY(0px) scale(1)",
                                                                   transition:

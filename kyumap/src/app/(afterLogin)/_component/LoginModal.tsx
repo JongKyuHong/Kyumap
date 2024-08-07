@@ -156,7 +156,7 @@ export default function LoginModal() {
                                   >
                                     {isDark ? (
                                       <Image
-                                        src={smallLogodark}
+                                        src={smallLogodark.src}
                                         alt="logo"
                                         style={{
                                           backgroundPosition: "0px -52px",
@@ -167,10 +167,10 @@ export default function LoginModal() {
                                           display: "inline-block",
                                         }}
                                         priority={true}
-                                      ></Image>
+                                      />
                                     ) : (
                                       <Image
-                                        src={smallLogo}
+                                        src={smallLogo.src}
                                         alt="logo"
                                         style={{
                                           backgroundPosition: "0px -52px",
@@ -181,7 +181,7 @@ export default function LoginModal() {
                                           display: "inline-block",
                                         }}
                                         priority={true}
-                                      ></Image>
+                                      />
                                     )}
                                   </div>
                                 </div>

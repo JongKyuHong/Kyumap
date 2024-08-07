@@ -10,7 +10,7 @@ import useDeviceSize from "./useDeviceSize";
 import { useSession } from "next-auth/react";
 
 export default function ResponsiveNav() {
-  const { isDesktop, isTablet, isMobile } = useDeviceSize();
+  const { isMobile } = useDeviceSize();
   const [clickedAddPost, setAddPost] = useState(false);
   const [isDark, setDark] = useState<boolean>(false);
   const { data: session } = useSession();
@@ -31,7 +31,7 @@ export default function ResponsiveNav() {
     setAddPost(!clickedAddPost);
   };
 
-  if (!session) return null;
+  if (!session || !isMobile) return null;
 
   return (
     <>
