@@ -30,6 +30,15 @@ const nextConfig = {
           },
         ],
       },
+      {
+        source: "/(.*)",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;",
+          },
+        ],
+      },
     ];
   },
 };

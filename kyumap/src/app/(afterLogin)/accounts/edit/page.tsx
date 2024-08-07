@@ -16,7 +16,7 @@ import ResponsiveNav from "../../_component/ResponsiveNav";
 import { IUser } from "@/model/User";
 
 export default function Page() {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const queryClient = useQueryClient();
   const [textAreaValue, setTextAreaValue] = useState("");
   const [gender, setGender] = useState("");
@@ -120,10 +120,6 @@ export default function Page() {
   const submitForm = () => {
     submitInfo();
   };
-
-  if (status === "loading") {
-    return <div>로딩중...</div>;
-  }
 
   return (
     <>

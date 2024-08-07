@@ -24,7 +24,7 @@ export default async function Page({ params }: Props) {
   const dehydrateState = dehydrate(queryClient);
   return (
     <HydrationBoundary state={dehydrateState}>
-      <ReelPost postId={params.postId} />;
+      <ReelPost postId={params.postId} />
     </HydrationBoundary>
   );
 }

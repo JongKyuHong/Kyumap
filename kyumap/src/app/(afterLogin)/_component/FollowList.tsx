@@ -16,7 +16,7 @@ type Props = {
 
 export default function FollowList({ user }: Props) {
   const [followed, setFollowed] = useState(false);
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   useEffect(() => {
     const isFollowed = !!user.Followers?.find(

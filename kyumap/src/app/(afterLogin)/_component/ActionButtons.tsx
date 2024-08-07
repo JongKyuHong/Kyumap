@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 import { getUser } from "../_lib/getUser";
 import { IComment } from "@/model/Comment";
 import { IUser } from "@/model/User";
+import LoadingComponent from "@/app/_component/LoadingComponent";
 
 interface Props {
   post: IPost;
@@ -56,7 +57,7 @@ export default function ActionButtons({ post }: Props) {
 
     setLiked(liked);
     setSaved(ssave);
-  }, [user, post]);
+  }, [user, post, session?.user?.email]);
 
   const router = useRouter();
 

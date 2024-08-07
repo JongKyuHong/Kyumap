@@ -15,6 +15,7 @@ import {
   useQueryClient,
   InfiniteData,
 } from "@tanstack/react-query";
+import LoadingComponent from "@/app/_component/LoadingComponent";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -36,7 +37,7 @@ export default function Commentli({
 }: Props) {
   const [isCommentLiked, setCommentLiked] = useState(false);
   const [isReply, setReply] = useState(false);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const queryClient = useQueryClient();
 
   useEffect(() => {

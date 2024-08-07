@@ -51,10 +51,15 @@ export default function DetailPage({ postId }: Props) {
   const [isImg, setImg] = useState(true);
   const [isPosting, setIsPosting] = useState(false);
   const [isSaved, setSaved] = useState(false);
+  const [mobile, setMobile] = useState(false);
 
   const { data: session } = useSession();
 
-  const { isDesktop, isTablet, isMobile } = useDeviceSize();
+  const { isMobile } = useDeviceSize();
+
+  useEffect(() => {
+    setMobile(isMobile);
+  }, [isMobile]);
 
   const { data: comments } = useQuery<
     IComment[],
@@ -885,7 +890,7 @@ export default function DetailPage({ postId }: Props) {
                             maxWidth: "100%",
                           }}
                         >
-                          {isMobile ? (
+                          {mobile ? (
                             <article
                               className={styles.DetailModalRootArticleW}
                               role="presentation"
@@ -953,7 +958,7 @@ export default function DetailPage({ postId }: Props) {
                                       <div
                                         className={styles.DetailImageDivInner3}
                                         style={{
-                                          paddingBottom: !isMobile
+                                          paddingBottom: !mobile
                                             ? "75%"
                                             : "100%",
                                         }}
@@ -1548,7 +1553,7 @@ export default function DetailPage({ postId }: Props) {
                                       <div
                                         className={styles.DetailImageDivInner3}
                                         style={{
-                                          paddingBottom: !isMobile
+                                          paddingBottom: !mobile
                                             ? "75%"
                                             : "100%",
                                         }}
