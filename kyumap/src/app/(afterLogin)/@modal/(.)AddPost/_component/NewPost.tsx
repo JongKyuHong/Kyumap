@@ -2238,6 +2238,7 @@ export default function NewPost() {
                                       type="file"
                                       ref={imgRef}
                                       onChange={onUpload}
+                                      name="fileUpload"
                                     ></input>
                                   </form>
                                 </div>

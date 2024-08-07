@@ -59,6 +59,7 @@ export default function ResponsiveNav() {
                                 aria-label="Kyumap"
                                 width={103}
                                 height={29}
+                                priority={true}
                               />
                             ) : (
                               <Image
@@ -67,6 +68,7 @@ export default function ResponsiveNav() {
                                 aria-label="Kyumap"
                                 width={103}
                                 height={29}
+                                priority={true}
                               />
                             )}
                           </div>

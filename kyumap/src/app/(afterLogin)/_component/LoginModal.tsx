@@ -166,6 +166,7 @@ export default function LoginModal() {
                                           backgroundRepeat: "no-repeat",
                                           display: "inline-block",
                                         }}
+                                        priority={true}
                                       ></Image>
                                     ) : (
                                       <Image
@@ -179,6 +180,7 @@ export default function LoginModal() {
                                           backgroundRepeat: "no-repeat",
                                           display: "inline-block",
                                         }}
+                                        priority={true}
                                       ></Image>
                                     )}
                                   </div>
@@ -209,7 +211,7 @@ export default function LoginModal() {
                                               type="text"
                                               value={id}
                                               onChange={onChangeId}
-                                              name="username"
+                                              name="email"
                                             ></input>
                                           </label>
                                           <div

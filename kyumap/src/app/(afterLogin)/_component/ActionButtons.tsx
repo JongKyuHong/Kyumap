@@ -10,6 +10,7 @@ import {
   useMutation,
   useQueryClient,
   InfiniteData,
+  useQuery,
 } from "@tanstack/react-query";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
@@ -18,6 +19,7 @@ import { IPost } from "@/model/Post";
 import { useRouter } from "next/navigation";
 import { getUser } from "../_lib/getUser";
 import { IComment } from "@/model/Comment";
+import { IUser } from "@/model/User";
 
 interface Props {
   post: IPost;
@@ -33,32 +35,27 @@ export default function ActionButtons({ post }: Props) {
   // 좋아요 중복 방지용 state
   const [isSaved, setSaved] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
+  const {
+    data: user,
+    isLoading,
+    error,
+  } = useQuery<IUser, Object, IUser, [string, string]>({
+    queryKey: ["users", session?.user?.email as string],
+    queryFn: getUser,
+    enabled: !!session?.user?.email, // session과 email이 있을 때만 쿼리 실행
+  });
 
   useEffect(() => {
-    const abortController = new AbortController();
-    const fetchData = async () => {
-      if (!session?.user?.email) return;
-      const user = await getUser({
-        queryKey: ["users", session.user.email],
-        signal: abortController.signal,
-        meta: undefined,
-      });
-      // 유저정보를 가져오고
-      const ssave = !!user?.Saved.find(
-        (v: any) => v.id === post.postId.toString()
-      );
+    if (!user) return;
+    const ssave = !!user?.Saved.find(
+      (v: any) => v.id === post.postId.toString()
+    );
 
-      const liked = !!post?.Hearts?.find(
-        (v) => v.email === session?.user?.email
-      );
+    const liked = !!post?.Hearts?.find((v) => v.email === session?.user?.email);
 
-      // 가져온 유저정보를 통해 해당게시글을 저장했는지 좋아요눌렀는지 확인하고 state업데이트
-      setLiked(liked);
-      setSaved(ssave);
-    };
-    fetchData();
-    // post가 바뀌거나 사용자가 바뀌거나 react query에 변경점이 있을경우 재실행
-  }, [post, session, queryClient]);
+    setLiked(liked);
+    setSaved(ssave);
+  }, [user, post]);
 
   const router = useRouter();
 
@@ -776,6 +773,7 @@ export default function ActionButtons({ post }: Props) {
                         </div>
                       </div>
                       <textarea
+                        name="comment"
                         aria-label="댓글 달기..."
                         className={styles.formInputTextArea}
                         placeholder="댓글 달기..."

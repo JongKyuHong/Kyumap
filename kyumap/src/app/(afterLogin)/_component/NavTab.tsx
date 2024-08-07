@@ -103,8 +103,8 @@ export default function NavTab({ session }: Props) {
   } = useQuery<IUser, Object, IUser, [string, string]>({
     queryKey: ["users", userEmail as string],
     queryFn: getUser,
-    staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
-    gcTime: 300 * 1000,
+    staleTime: 5 * 60 * 1000, // fresh -> stale, 5분이라는 기준
+    gcTime: 10 * 60 * 1000,
     enabled: !!userEmail,
   });
 
@@ -490,6 +490,7 @@ export default function NavTab({ session }: Props) {
                                             alt="logo"
                                             width={24}
                                             height={24}
+                                            priority={true}
                                           />
                                         </picture>
                                       ) : (
@@ -506,6 +507,7 @@ export default function NavTab({ session }: Props) {
                                             alt="logo"
                                             width={24}
                                             height={29}
+                                            priority={true}
                                           />
                                         </picture>
                                       )}
@@ -539,6 +541,7 @@ export default function NavTab({ session }: Props) {
                                         alt="logo"
                                         width={103}
                                         height={29}
+                                        priority={true}
                                       />
                                     </picture>
                                   ) : (
@@ -555,6 +558,7 @@ export default function NavTab({ session }: Props) {
                                         alt="logo"
                                         width={103}
                                         height={29}
+                                        priority={true}
                                       />
                                     </picture>
                                   )}
@@ -1056,7 +1060,9 @@ export default function NavTab({ session }: Props) {
                                         >
                                           <Image
                                             src={`${userData!.image}`} // me?.user?.image
-                                            alt="프로필"
+                                            alt={`${
+                                              userData!.nickname
+                                            }님의 프로필`}
                                             crossOrigin="anonymous"
                                             draggable="false"
                                             className={styles.ProfileImageImage}

@@ -8,10 +8,12 @@ import { getUser } from "../../_lib/getUser";
 import {
   QueryClient,
   useMutation,
+  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import useDeviceSize from "../../_component/useDeviceSize";
 import ResponsiveNav from "../../_component/ResponsiveNav";
+import { IUser } from "@/model/User";
 
 export default function Page() {
   const { data: session, status } = useSession();
@@ -21,29 +23,27 @@ export default function Page() {
   const [introduce, setIntro] = useState("");
   const [infowebsite, setWebsite] = useState("");
 
+  const {
+    data: userData,
+    error: userError,
+    isLoading: userLoading,
+  } = useQuery<IUser, Object, IUser, [string, string]>({
+    queryKey: ["users", session?.user?.email as string],
+    queryFn: getUser,
+    staleTime: 5 * 60 * 1000, // fresh -> stale, 5분이라는 기준
+    gcTime: 10 * 60 * 1000,
+  });
+
   const { isMobile } = useDeviceSize();
 
   // 유저정보 불러오기
   useEffect(() => {
-    const getUserData = async () => {
-      if (session && session?.user!.email) {
-        const controller = new AbortController();
-        const signal = controller.signal;
-
-        const userData = await getUser({
-          queryKey: ["users", session?.user!.email],
-          signal: signal,
-          meta: undefined,
-        });
-
-        setGender(userData.Info.gender);
-        setIntro(userData.Info.intro);
-        setWebsite(userData.Info.website);
-      }
-    };
-
-    getUserData();
-  }, [session]);
+    if (userData) {
+      setGender(userData.Info.gender);
+      setIntro(userData.Info.intro);
+      setWebsite(userData.Info.website);
+    }
+  }, [userData]);
 
   const handleTextAreaChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const value = event.target.value;
@@ -167,6 +167,7 @@ export default function Page() {
                             className={styles.formInput}
                             accept="image/jpeg, image/png"
                             type="file"
+                            name="file"
                           />
                         </form>
                       </div>
@@ -211,6 +212,7 @@ export default function Page() {
                 type="text"
                 value={infowebsite}
                 onChange={handleSiteChange}
+                name="website"
               />
             </div>
             <form className={styles.rootForm} method="POST">
@@ -233,6 +235,7 @@ export default function Page() {
                     placeholder={"소개"}
                     onChange={handleTextAreaChange}
                     value={introduce}
+                    name="intro"
                   ></textarea>
                   <div className={styles.formDiv4}>
                     <span
@@ -263,6 +266,7 @@ export default function Page() {
                     type="text"
                     onChange={handleGenderChange}
                     value={gender}
+                    name="gender"
                   />
                 </div>
               </div>
