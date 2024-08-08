@@ -47,6 +47,9 @@ export default function NewPost() {
   const [storeTitle, setTitle] = useState<string>("");
   const [isLoading, setLoading] = useState(false);
   const [isRightBody, setRightBody] = useState(false);
+  const [desktop, setDesktop] = useState(false);
+  const [tablet, setTablet] = useState(false);
+  const [mobile, setMobile] = useState(false);
 
   useEffect(() => {
     const rootElement = document.documentElement;
@@ -62,6 +65,12 @@ export default function NewPost() {
   const imgRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
   const { isDesktop, isTablet, isMobile } = useDeviceSize();
+
+  useEffect(() => {
+    setDesktop(isDesktop);
+    setTablet(isTablet);
+    setMobile(isMobile);
+  }, [isDesktop, isTablet, isMobile]);
 
   const onClickBackBtn = () => {
     router.back();
@@ -162,8 +171,6 @@ export default function NewPost() {
         postFormData.append("userEmail", session.user.email);
       if (session?.user?.name)
         postFormData.append("userName", session.user.name);
-      if (session?.user?.image)
-        postFormData.append("userImage", session.user.image);
       postFormData.append("title", storeTitle);
       postFormData.append("content", content);
 
@@ -306,34 +313,6 @@ export default function NewPost() {
     }
   };
 
-  const calculateSize = () => {
-    if (isMobile) {
-      return {
-        maxHeight: "420px",
-        maxWidth: "378px",
-        minHeight: "292px",
-        minWidth: "250px",
-        width: "378px",
-      };
-    } else if (isTablet) {
-      return {
-        maxHeight: "600px",
-        maxWidth: "558px",
-        minHeight: "420px",
-        minWidth: "378px",
-        width: "558px",
-      };
-    } else if (isDesktop) {
-      return {
-        maxHeight: "897px",
-        maxWidth: "855px",
-        minHeight: "600px",
-        minWidth: "558px",
-        width: "855px",
-      };
-    }
-  };
-
   const calculateImgSize = () => {
     if (isMobile) {
       return {
@@ -343,7 +322,7 @@ export default function NewPost() {
         minWidth: "330px",
         width: "330px",
       };
-    } else if (isTablet) {
+    } else if (tablet) {
       return {
         maxHeight: "500px",
         maxWidth: "700px",
@@ -351,7 +330,7 @@ export default function NewPost() {
         minWidth: "700px",
         width: "700px",
       };
-    } else if (isDesktop) {
+    } else if (desktop) {
       return {
         maxHeight: "700px",
         maxWidth: "1000px",
@@ -630,14 +609,14 @@ export default function NewPost() {
                             <div
                               className={styles.ModalBody}
                               style={{
-                                width: isDesktop
+                                width: desktop
                                   ? "1000px"
-                                  : isTablet
+                                  : tablet
                                   ? "700px"
                                   : "330px",
-                                height: isDesktop
+                                height: desktop
                                   ? "700px"
-                                  : isTablet
+                                  : tablet
                                   ? "500px"
                                   : "300px",
                                 justifyContent: "center" /* 수평 중앙 정렬 */,
@@ -652,14 +631,14 @@ export default function NewPost() {
                             <div
                               className={styles.ModalBody}
                               style={{
-                                width: isDesktop
+                                width: desktop
                                   ? "1000px"
-                                  : isTablet
+                                  : tablet
                                   ? "700px"
                                   : "330px",
-                                height: isDesktop
+                                height: desktop
                                   ? "700px"
-                                  : isTablet
+                                  : tablet
                                   ? "500px"
                                   : "300px",
                               }}
@@ -728,7 +707,6 @@ export default function NewPost() {
                                                               crossOrigin="anonymous"
                                                               draggable="false"
                                                               priority={true}
-                                                              // src={"/chi.png"}
                                                             />
                                                           </span>
                                                         </div>
@@ -1458,8 +1436,6 @@ export default function NewPost() {
                                                                   styles.AccExpandImg
                                                                 }
                                                                 style={{
-                                                                  // height: "44px",
-                                                                  // width: "66.7586px",
                                                                   transform:
                                                                     "translateX(0px) translateY(0px) scale(1)",
                                                                   transition:
@@ -2238,6 +2214,7 @@ export default function NewPost() {
                                       type="file"
                                       ref={imgRef}
                                       onChange={onUpload}
+                                      name="fileUpload"
                                     ></input>
                                   </form>
                                 </div>

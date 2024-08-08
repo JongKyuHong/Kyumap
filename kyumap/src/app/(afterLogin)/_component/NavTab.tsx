@@ -17,6 +17,7 @@ import { getUser } from "@/app/(afterLogin)/_lib/getUser";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import LoadingComponent from "@/app/_component/LoadingComponent";
+import BeforeLoginNav from "./BeforeLoginNav";
 
 type Props = {
   session: any;
@@ -37,7 +38,14 @@ export default function NavTab({ session }: Props) {
   const [isProfile, setProfile] = useState<boolean>(
     pathname.startsWith("/profile") ? true : false
   ); // 현재 경로가 프로필인지
-  const { isDesktop, isTablet, isMobile } = useDeviceSize();
+  const [desktop, setDesktop] = useState(false);
+  const [mobile, setMobile] = useState(false);
+  const { isDesktop, isMobile } = useDeviceSize();
+
+  useEffect(() => {
+    setDesktop(isDesktop);
+    setMobile(isMobile);
+  }, [isDesktop, isMobile]);
 
   const userEmail = session?.user?.email;
   const queryClient = useQueryClient();
@@ -103,8 +111,8 @@ export default function NavTab({ session }: Props) {
   } = useQuery<IUser, Object, IUser, [string, string]>({
     queryKey: ["users", userEmail as string],
     queryFn: getUser,
-    staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
-    gcTime: 300 * 1000,
+    staleTime: 5 * 60 * 1000, // fresh -> stale, 5분이라는 기준
+    gcTime: 10 * 60 * 1000,
     enabled: !!userEmail,
   });
 
@@ -205,7 +213,7 @@ export default function NavTab({ session }: Props) {
                         >
                           <div className={styles.MHomeDiv}>
                             <Link
-                              href="#" // /explore/
+                              href="/explore/search" // /explore/
                               role="link"
                               tabIndex={0}
                               className={styles.MHomeLink}
@@ -461,7 +469,7 @@ export default function NavTab({ session }: Props) {
                   >
                     <div className={styles.logoOuter}>
                       <div className={styles.logoInner}>
-                        {isEx || !isDesktop ? (
+                        {isEx || !desktop ? (
                           <div style={{ transform: "scale(1)" }}>
                             <span
                               className={styles.spanS}
@@ -486,10 +494,11 @@ export default function NavTab({ session }: Props) {
                                           />
                                           <Image
                                             className={styles.logo}
-                                            src={smallLogodark2}
+                                            src={smallLogodark2.src}
                                             alt="logo"
                                             width={24}
                                             height={24}
+                                            priority={true}
                                           />
                                         </picture>
                                       ) : (
@@ -502,10 +511,11 @@ export default function NavTab({ session }: Props) {
                                           />
                                           <Image
                                             className={styles.logo}
-                                            src={smallLogo2}
+                                            src={smallLogo2.src}
                                             alt="logo"
                                             width={24}
                                             height={29}
+                                            priority={true}
                                           />
                                         </picture>
                                       )}
@@ -535,10 +545,11 @@ export default function NavTab({ session }: Props) {
                                       />
                                       <Image
                                         className={styles.logo}
-                                        src={smallLogodark}
+                                        src={smallLogodark.src}
                                         alt="logo"
                                         width={103}
                                         height={29}
+                                        priority={true}
                                       />
                                     </picture>
                                   ) : (
@@ -551,10 +562,11 @@ export default function NavTab({ session }: Props) {
                                       />
                                       <Image
                                         className={styles.logo}
-                                        src={smallLogo}
+                                        src={smallLogo.src}
                                         alt="logo"
                                         width={103}
                                         height={29}
+                                        priority={true}
                                       />
                                     </picture>
                                   )}
@@ -568,7 +580,7 @@ export default function NavTab({ session }: Props) {
                     <div className={styles.nav}>
                       <div>
                         <div
-                          className={isDesktop ? styles.navDiv : styles.navDivW}
+                          className={desktop ? styles.navDiv : styles.navDivW}
                         >
                           <span
                             aria-describedby=":r2:"
@@ -576,7 +588,7 @@ export default function NavTab({ session }: Props) {
                           >
                             <div
                               className={
-                                isEx || !isDesktop
+                                isEx || !desktop
                                   ? styles.navSpanDivEx
                                   : styles.navSpanDiv
                               }
@@ -589,7 +601,7 @@ export default function NavTab({ session }: Props) {
                               >
                                 <div
                                   className={
-                                    isEx || !isDesktop
+                                    isEx || !desktop
                                       ? styles.LinkDivExHome
                                       : styles.LinkDivHome
                                   }
@@ -633,7 +645,7 @@ export default function NavTab({ session }: Props) {
                                       </div>
                                     </div>
                                   </div>
-                                  {isEx || !isDesktop ? null : (
+                                  {isEx || !desktop ? null : (
                                     <div
                                       style={{ opacity: "1" }}
                                       className={styles.navTitle}
@@ -658,9 +670,7 @@ export default function NavTab({ session }: Props) {
                       </div>
                       <div>
                         <div
-                          className={
-                            !isDesktop ? styles.navDivW : styles.navDiv
-                          }
+                          className={!desktop ? styles.navDivW : styles.navDiv}
                         >
                           <span
                             aria-describedby=":r3:"
@@ -669,7 +679,7 @@ export default function NavTab({ session }: Props) {
                           >
                             <div
                               className={
-                                isEx || !isDesktop
+                                isEx || !desktop
                                   ? styles.navSpanDivEx
                                   : styles.navSpanDiv
                               }
@@ -682,7 +692,7 @@ export default function NavTab({ session }: Props) {
                               >
                                 <div
                                   className={
-                                    isEx || !isDesktop
+                                    isEx || !desktop
                                       ? styles.LinkDivExHome
                                       : styles.LinkDivHome
                                   }
@@ -756,11 +766,11 @@ export default function NavTab({ session }: Props) {
                                       </div>
                                     </div>
                                   </div>
-                                  {isEx || !isDesktop ? null : (
+                                  {isEx || !desktop ? null : (
                                     <div
                                       className={styles.navTitle}
                                       style={{
-                                        display: isDesktop ? "" : "none ",
+                                        display: desktop ? "" : "none ",
                                       }}
                                     >
                                       <div style={{ width: "100%" }}>
@@ -782,9 +792,7 @@ export default function NavTab({ session }: Props) {
                       </div>
                       <div>
                         <div
-                          className={
-                            !isDesktop ? styles.navDivW : styles.navDiv
-                          }
+                          className={!desktop ? styles.navDivW : styles.navDiv}
                         >
                           <span
                             aria-describedby=":r3:"
@@ -792,7 +800,7 @@ export default function NavTab({ session }: Props) {
                           >
                             <div
                               className={
-                                isEx || !isDesktop
+                                isEx || !desktop
                                   ? styles.navSpanDivEx
                                   : styles.navSpanDiv
                               }
@@ -805,7 +813,7 @@ export default function NavTab({ session }: Props) {
                               >
                                 <div
                                   className={
-                                    isEx || !isDesktop
+                                    isEx || !desktop
                                       ? styles.LinkDivExHome
                                       : styles.LinkDivHome
                                   }
@@ -889,11 +897,11 @@ export default function NavTab({ session }: Props) {
                                       </div>
                                     </div>
                                   </div>
-                                  {isEx || !isDesktop ? null : (
+                                  {isEx || !desktop ? null : (
                                     <div
                                       className={styles.navTitle}
                                       style={{
-                                        display: isDesktop ? "" : "none ",
+                                        display: desktop ? "" : "none ",
                                       }}
                                     >
                                       <div style={{ width: "100%" }}>
@@ -915,9 +923,7 @@ export default function NavTab({ session }: Props) {
                       </div>
                       <div>
                         <div
-                          className={
-                            !isDesktop ? styles.navDivW : styles.navDiv
-                          }
+                          className={!desktop ? styles.navDivW : styles.navDiv}
                         >
                           <span
                             className={styles.navSpan}
@@ -925,7 +931,7 @@ export default function NavTab({ session }: Props) {
                           >
                             <div
                               className={
-                                isEx || !isDesktop
+                                isEx || !desktop
                                   ? styles.navSpanDivEx
                                   : styles.navSpanDiv
                               }
@@ -940,7 +946,7 @@ export default function NavTab({ session }: Props) {
                               >
                                 <div
                                   className={
-                                    isEx || !isDesktop
+                                    isEx || !desktop
                                       ? styles.LinkDivExHome
                                       : styles.LinkDivHome
                                   }
@@ -992,7 +998,7 @@ export default function NavTab({ session }: Props) {
                                       </div>
                                     </div>
                                   </div>
-                                  {isEx || !isDesktop ? null : (
+                                  {isEx || !desktop ? null : (
                                     <div className={styles.navTitle}>
                                       <div className={styles.titleOuter}>
                                         <span className={styles.titleInner}>
@@ -1011,7 +1017,7 @@ export default function NavTab({ session }: Props) {
                       </div>
                       <div>
                         <div
-                          className={isDesktop ? styles.navDiv : styles.navDivW}
+                          className={desktop ? styles.navDiv : styles.navDivW}
                         >
                           <span
                             aria-describedby=":r2:"
@@ -1019,7 +1025,7 @@ export default function NavTab({ session }: Props) {
                           >
                             <div
                               className={
-                                isEx || !isDesktop
+                                isEx || !desktop
                                   ? styles.navSpanDivEx
                                   : styles.navSpanDiv
                               }
@@ -1032,7 +1038,7 @@ export default function NavTab({ session }: Props) {
                               >
                                 <div
                                   className={
-                                    isEx || !isDesktop
+                                    isEx || !desktop
                                       ? styles.LinkDivExHome
                                       : styles.LinkDivHome
                                   }
@@ -1056,18 +1062,20 @@ export default function NavTab({ session }: Props) {
                                         >
                                           <Image
                                             src={`${userData!.image}`} // me?.user?.image
-                                            alt="프로필"
+                                            alt={`${
+                                              userData!.nickname
+                                            }님의 프로필`}
                                             crossOrigin="anonymous"
                                             draggable="false"
                                             className={styles.ProfileImageImage}
                                             width={24}
                                             height={24}
-                                          ></Image>
+                                          />
                                         </span>
                                       </div>
                                     </div>
                                   </div>
-                                  {isEx || !isDesktop ? null : (
+                                  {isEx || !desktop ? null : (
                                     <div className={styles.navTitle}>
                                       <div className={styles.titleOuter}>
                                         <span className={styles.titleInner}>
@@ -1111,7 +1119,7 @@ export default function NavTab({ session }: Props) {
                               <div
                                 className={styles.menuTitleOuter}
                                 style={{
-                                  display: isDesktop ? "" : "none ",
+                                  display: desktop ? "" : "none ",
                                 }}
                               >
                                 <div style={{ width: "100%" }}>

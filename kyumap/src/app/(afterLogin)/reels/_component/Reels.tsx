@@ -14,8 +14,10 @@ import { useSession } from "next-auth/react";
 import { getUser } from "@/app/(afterLogin)/_lib/getUser"; // 유저 정보를 가져오는 함수
 import MoreInfoOverlay from "./MoreInfoOverlay";
 import { useRouter, usePathname } from "next/navigation";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { IPost } from "@/model/Post";
+import { IUser } from "@/model/User";
+import LoadingComponent from "@/app/_component/LoadingComponent";
 
 type Props = {
   post: any;
@@ -37,16 +39,21 @@ export default function Reels({ post }: Props) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
+  const {
+    data: userData,
+    error: userError,
+    isLoading: userLoading,
+  } = useQuery<IUser, Object, IUser, [string, string]>({
+    queryKey: ["users", session?.user?.email as string],
+    queryFn: getUser,
+    staleTime: 5 * 60 * 1000, // fresh -> stale, 5분이라는 기준
+    gcTime: 10 * 60 * 1000,
+  });
+
+  // 좋아요 저장됨 상태 업데이트
   useEffect(() => {
-    const abortController = new AbortController();
-    const fetchData = async () => {
-      if (!session?.user?.email) return;
-      const user = await getUser({
-        queryKey: ["users", session.user.email],
-        signal: abortController.signal,
-        meta: undefined,
-      });
-      const ssave = !!user?.Saved.find(
+    if (userData) {
+      const ssave = !!userData?.Saved.find(
         (v: any) => v.id === post?.postId.toString()
       );
 
@@ -56,10 +63,8 @@ export default function Reels({ post }: Props) {
       setLiked(liked);
       setSaved(ssave);
       setHeartsCount(post._count.Hearts);
-    };
-
-    fetchData();
-  }, [session, post, queryClient]);
+    }
+  }, [userData, post, session?.user?.email]);
 
   const heart = useMutation({
     mutationFn: () => {
@@ -390,6 +395,8 @@ export default function Reels({ post }: Props) {
     }
   };
 
+  if (userLoading) return <LoadingComponent />;
+
   return (
     <>
       <div className={styles.rootDiv2}>
@@ -500,11 +507,11 @@ export default function Reels({ post }: Props) {
                                                     height={0}
                                                     sizes="100vw"
                                                     alt={`${post.userNickname}님의 프로필`}
-                                                    src={`${post.userImage}`}
+                                                    src={`${userData!.image}`}
                                                     className={
                                                       styles.profileImage2
                                                     }
-                                                  ></Image>
+                                                  />
                                                 </span>
                                               </div>
                                             </div>
@@ -821,13 +828,13 @@ export default function Reels({ post }: Props) {
                     <Image
                       className={styles.profileImg5}
                       style={{ objectFit: "cover" }}
-                      src={`${post.userImage}`}
+                      src={`${userData!.image}`}
                       alt={`${post.userNickname}님의 프로필`}
                       width={0}
                       height={0}
                       sizes="100vw"
                       crossOrigin="anonymous"
-                    ></Image>
+                    />
                   </div>
                   <div className={styles.profileImg4}></div>
                 </div>

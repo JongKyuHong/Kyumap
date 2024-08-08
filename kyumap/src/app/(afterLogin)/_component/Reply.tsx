@@ -16,6 +16,9 @@ import {
   InfiniteData,
 } from "@tanstack/react-query";
 import { IReply } from "@/model/Reply";
+import LoadingComponent from "@/app/_component/LoadingComponent";
+import { IUser } from "@/model/User";
+import { getUser } from "../_lib/getUser";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -39,6 +42,16 @@ export default function Reply({
   const [isReply, setReply] = useState(false);
   const { data: session } = useSession();
   const queryClient = useQueryClient();
+
+  const { data: user, isLoading } = useQuery<
+    IUser,
+    Object,
+    IUser,
+    [string, string]
+  >({
+    queryKey: ["users", comment?.userEmail as string],
+    queryFn: getUser,
+  });
 
   useEffect(() => {
     const liked = !!comment?.Hearts?.find(
@@ -224,6 +237,7 @@ export default function Reply({
     }
   };
 
+  if (isLoading) return <LoadingComponent />;
   if (!comment) return null;
 
   let parts: any[] = [];
@@ -264,8 +278,8 @@ export default function Reply({
                     className={styles.CommentUserProfileLink}
                   >
                     <Image
-                      alt={`${comment.userNickname}님의 프로필 사진`}
-                      src={`${comment.userImage}`}
+                      alt={`${user!.nickname}님의 프로필 사진`}
+                      src={`${user!.image}`}
                       width={0}
                       height={0}
                       sizes="100vw"
@@ -287,7 +301,7 @@ export default function Reply({
                         role="link"
                         tabIndex={0}
                         className={styles.CommentUserNameLink}
-                      >{`${comment.userNickname}`}</Link>
+                      >{`${user!.nickname}`}</Link>
                     </div>
                   </span>
                 </div>

@@ -16,7 +16,6 @@ export async function POST(req: NextRequest, { params }: Props) {
 
   const userName = data.User.name;
   const userEmail = data.User.email;
-  const userImage = data.User.image;
   const commentid = new ObjectId(params.commentId);
   const comment = await Comment.findOneAndUpdate(
     { _id: commentid },
@@ -25,7 +24,6 @@ export async function POST(req: NextRequest, { params }: Props) {
         reply: {
           userName: userName,
           userEmail: userEmail,
-          userImage: userImage,
           content: data.comment,
         },
       },

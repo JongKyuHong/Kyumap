@@ -156,6 +156,9 @@ export default function LoginModal() {
                                   >
                                     {isDark ? (
                                       <Image
+                                        width={0}
+                                        height={0}
+                                        sizes="100vw"
                                         src={smallLogodark}
                                         alt="logo"
                                         style={{
@@ -166,9 +169,13 @@ export default function LoginModal() {
                                           backgroundRepeat: "no-repeat",
                                           display: "inline-block",
                                         }}
-                                      ></Image>
+                                        priority={true}
+                                      />
                                     ) : (
                                       <Image
+                                        width={0}
+                                        height={0}
+                                        sizes="100vw"
                                         src={smallLogo}
                                         alt="logo"
                                         style={{
@@ -179,7 +186,8 @@ export default function LoginModal() {
                                           backgroundRepeat: "no-repeat",
                                           display: "inline-block",
                                         }}
-                                      ></Image>
+                                        priority={true}
+                                      />
                                     )}
                                   </div>
                                 </div>
@@ -209,7 +217,7 @@ export default function LoginModal() {
                                               type="text"
                                               value={id}
                                               onChange={onChangeId}
-                                              name="username"
+                                              name="email"
                                             ></input>
                                           </label>
                                           <div

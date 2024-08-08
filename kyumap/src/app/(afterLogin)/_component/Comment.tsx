@@ -9,6 +9,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { useSession } from "next-auth/react";
 import { IComment } from "@/model/Comment";
 import Commentli from "./Commentli";
+import LoadingComponent from "@/app/_component/LoadingComponent";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);

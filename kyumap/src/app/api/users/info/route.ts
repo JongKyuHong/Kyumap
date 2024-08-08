@@ -7,13 +7,19 @@ export async function POST(req: NextRequest) {
     await dbConnect();
     const data = await req.json();
 
+    const updateFields: any = {
+      "Info.intro": data.intro,
+      "Info.website": data.website,
+      "Info.gender": data.gender,
+    };
+
+    if (data.profileImageUrl) {
+      updateFields["image"] = data.profileImageUrl;
+    }
+
     const user = await User.findOneAndUpdate(
       { email: data.email },
-      {
-        "Info.intro": data.intro,
-        "Info.website": data.website,
-        "Info.gender": data.gender,
-      },
+      updateFields,
       { new: true }
     );
 

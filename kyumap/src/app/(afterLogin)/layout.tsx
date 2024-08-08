@@ -10,7 +10,6 @@ type Props = { children: ReactNode; modal: ReactNode };
 
 export default async function RootLayout({ children, modal }: Props) {
   const session = await auth();
-
   return (
     <div>
       <RQProvider>
@@ -26,7 +25,7 @@ export default async function RootLayout({ children, modal }: Props) {
                 <div className={styles.leafChild}>
                   <div className={styles.container} style={{ height: "100%" }}>
                     <>
-                      {session ? <Nav /> : <BeforeLoginNav />}
+                      {session ? <Nav session={session} /> : <BeforeLoginNav />}
                       <div className={styles.rightSectionWrapper}>
                         <section className={styles.rootSection}>
                           <main

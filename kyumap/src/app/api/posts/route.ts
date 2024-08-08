@@ -49,7 +49,6 @@ export async function POST(req: NextRequest) {
   }
 
   const userEmail = reqBody.get("userEmail");
-  const userImage = reqBody.get("userImage");
   const userName = reqBody.get("userName");
   const title = reqBody.get("title");
   const content = reqBody.get("content");
@@ -89,7 +88,6 @@ export async function POST(req: NextRequest) {
   const data = {
     postId: postId,
     userEmail: userEmail,
-    userImage: userImage,
     userNickname: userName,
     title: title,
     content: content,

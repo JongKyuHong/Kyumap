@@ -71,14 +71,11 @@ const signup = async (prevState: any, formData: FormData) => {
         }
       );
 
-      shouldRedirect = true;
-      await signIn("credentials", {
-        email: formData.get("id"),
-        nickname: formData.get("name"),
-        password: formData.get("password"),
-        redirect: false,
-      });
-      await auth();
+      if (response.ok) {
+        return { message: "signup_success" };
+      } else {
+        return { message: "signup_failed" };
+      }
     } else {
       return { message: "img_upload_error" };
     }
@@ -86,11 +83,6 @@ const signup = async (prevState: any, formData: FormData) => {
     console.error(err);
     return { message: null };
   }
-
-  if (shouldRedirect) {
-    redirect("/home"); // try/catch문 안에서 X
-  }
-  return { message: null };
 };
 
 export default signup;

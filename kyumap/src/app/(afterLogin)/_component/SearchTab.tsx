@@ -33,7 +33,6 @@ const getSearchHistory = (): IUser[] => {
   return searchHistoryString ? JSON.parse(searchHistoryString) : [];
 };
 
-
 export default function SearchTab({ onClickMounted }: Props) {
   const [isSearchHistory, setSearchHistory] = useState(true);
   const [historyInfo, setHistory] = useState<IUser[]>(getSearchHistory());

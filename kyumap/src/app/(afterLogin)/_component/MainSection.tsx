@@ -1,16 +1,24 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./mainsection.module.css";
 import style from "./msection.module.css";
 import PostRecommends from "./PostRecommends";
 import ResponsiveNav from "./ResponsiveNav";
 import useDeviceSize from "./useDeviceSize";
+import { useSession } from "next-auth/react";
+import LoadingComponent from "@/app/_component/LoadingComponent";
 
-export default function MainSection({ session }: any) {
-  const { isDesktop, isTablet, isMobile } = useDeviceSize();
+// { session }: any
+export default function MainSection() {
+  const [isLoading, setLoading] = useState(true);
+  const { isMobile } = useDeviceSize();
 
-  if (!session) return null;
+  useEffect(() => {
+    setLoading(false);
+  }, [isMobile]);
+  if (isLoading) return <LoadingComponent />;
+
   return (
     <>
       {isMobile ? (

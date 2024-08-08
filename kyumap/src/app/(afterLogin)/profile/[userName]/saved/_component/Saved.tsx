@@ -23,19 +23,15 @@ type Props = {
 export default function Saved({ userEmail, userName }: Props) {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   useEffect(() => {
-    if (status === "loading") {
-      return; // 세션 상태를 로딩 중인 경우 효과 실행 중지
-    }
-
     if (!session) {
       router.push("/login"); // 로그인 페이지로 리다이렉트
     } else if (session && session!.user!.email !== userEmail) {
       redirect(`/profile/${userName}`);
     }
-  }, [status, session, userEmail, router, userName]);
+  }, [session, userEmail, router, userName]);
 
   const { data, fetchNextPage, hasNextPage, isFetching, error } =
     useInfiniteQuery<
