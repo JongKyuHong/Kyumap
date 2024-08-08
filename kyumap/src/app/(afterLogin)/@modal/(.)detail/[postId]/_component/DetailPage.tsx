@@ -23,6 +23,8 @@ import useDeviceSize from "@/app/(afterLogin)/_component/useDeviceSize";
 import { useSession } from "next-auth/react";
 import Comment from "../../../../_component/Comment";
 import { getUser } from "../../../../_lib/getUser";
+import { IUser } from "@/model/User";
+import LoadingComponent from "@/app/_component/LoadingComponent";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -51,10 +53,15 @@ export default function DetailPage({ postId }: Props) {
   const [isImg, setImg] = useState(true);
   const [isPosting, setIsPosting] = useState(false);
   const [isSaved, setSaved] = useState(false);
+  const [mobile, setMobile] = useState(false);
 
   const { data: session } = useSession();
 
-  const { isDesktop, isTablet, isMobile } = useDeviceSize();
+  const { isMobile } = useDeviceSize();
+
+  useEffect(() => {
+    setMobile(isMobile);
+  }, [isMobile]);
 
   const { data: comments } = useQuery<
     IComment[],
@@ -75,32 +82,31 @@ export default function DetailPage({ postId }: Props) {
     gcTime: 300 * 1000,
   });
 
+  const { data: user, isLoading } = useQuery<
+    IUser,
+    Object,
+    IUser,
+    [string, string]
+  >({
+    queryKey: ["users", post?.userEmail as string],
+    queryFn: getUser,
+    enabled: !!post,
+  });
+
   const router = useRouter();
   const queryClient = useQueryClient();
 
   // 좋아요 저장됨 상태 업데이트
   useEffect(() => {
-    const abortController = new AbortController();
-    const fetchData = async () => {
-      if (!session?.user?.email) return;
-      const user = await getUser({
-        queryKey: ["users", session.user.email],
-        signal: abortController.signal,
-        meta: undefined,
-      });
-      const ssave = !!user?.Saved.find(
-        (v: any) => v.id === post?.postId.toString()
-      );
+    if (!user) return;
+    const ssave = !!user?.Saved.find(
+      (v: any) => v.id === post?.postId.toString()
+    );
 
-      const liked = !!post?.Hearts?.find(
-        (v) => v.email === session?.user?.email
-      );
-      setLiked(liked);
-      setSaved(ssave);
-    };
-
-    fetchData();
-  }, [post, session, queryClient]);
+    const liked = !!post?.Hearts?.find((v) => v.email === session?.user?.email);
+    setLiked(liked);
+    setSaved(ssave);
+  }, [post, session?.user?.email, user]);
 
   // 비디오 일시정지/재생 토글
   const onClickVideo = () => {
@@ -283,7 +289,7 @@ export default function DetailPage({ postId }: Props) {
               postId: Number(commentData.postId),
               userNickname: commentData.userSession.name,
               userEmail: commentData.userSession.email,
-              userImage: commentData.userSession.image,
+              // userImage: commentData.userSession.image,
               content: commentData.CommentText,
               Hearts: [],
               _count: {
@@ -354,7 +360,7 @@ export default function DetailPage({ postId }: Props) {
               postId: Number(commentData.postId),
               userNickname: commentData.userSession.name,
               userEmail: commentData.userSession.email,
-              userImage: commentData.userSession.image,
+              // userImage: commentData.userSession.image,
               content: commentData.CommentText,
               Hearts: [],
               _count: {
@@ -526,7 +532,7 @@ export default function DetailPage({ postId }: Props) {
               postId: commentData.postId,
               userNickname: commentData.userSession.name,
               userEmail: commentData.userSession.email,
-              userImage: commentData.userSession.image,
+              // userImage: commentData.userSession.image,
               content: commentData.CommentText,
               Hearts: [],
               _count: {
@@ -817,6 +823,7 @@ export default function DetailPage({ postId }: Props) {
     }
   };
 
+  if (isLoading) return <LoadingComponent />;
   if (!post) return null;
 
   return (
@@ -1501,6 +1508,7 @@ export default function DetailPage({ postId }: Props) {
                                                   </div>
                                                 </div>
                                                 <textarea
+                                                  name="comment"
                                                   className={
                                                     styles.ModalCommentTextAreaW
                                                   }
@@ -1932,9 +1940,7 @@ export default function DetailPage({ postId }: Props) {
                                                         height={0}
                                                         width={0}
                                                         sizes="100vw"
-                                                        src={`${
-                                                          post!.userImage
-                                                        }`}
+                                                        src={`${user!.image}`}
                                                         alt="profile"
                                                         className={
                                                           styles.ProfileImage
@@ -2322,9 +2328,7 @@ export default function DetailPage({ postId }: Props) {
                                                               width={0}
                                                               height={0}
                                                               sizes="100vw"
-                                                              src={
-                                                                post!.userImage
-                                                              }
+                                                              src={user!.image}
                                                               alt={`${
                                                                 post!
                                                                   .userNickname
@@ -2550,8 +2554,8 @@ export default function DetailPage({ postId }: Props) {
                                                     </div>
                                                   </div>
                                                 </div>
-
                                                 <textarea
+                                                  name="comment"
                                                   onChange={onChangeTextArea}
                                                   aria-label="댓글 달기..."
                                                   placeholder="댓글 달기..."
@@ -2562,7 +2566,6 @@ export default function DetailPage({ postId }: Props) {
                                                   }
                                                   value={CommentText}
                                                 />
-
                                                 <div
                                                   className={
                                                     styles.CommentFormEnter

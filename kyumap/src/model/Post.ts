@@ -8,7 +8,7 @@ interface UserID {
 export interface IPost extends Document {
   postId: number;
   userEmail: string;
-  userImage: string;
+  // userImage: string;
   userNickname: string;
   title: string;
   content: string;
@@ -40,10 +40,10 @@ const postSchema: Schema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  userImage: {
-    type: String,
-    required: true,
-  },
+  // userImage: {
+  //   type: String,
+  //   required: true,
+  // },
   userNickname: {
     type: String,
     required: true,

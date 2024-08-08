@@ -20,6 +20,8 @@ import useDeviceSize from "@/app/(afterLogin)/_component/useDeviceSize";
 import Post from "@/app/(afterLogin)/_component/Post";
 import ResponsiveNav from "@/app/(afterLogin)/_component/ResponsiveNav";
 import MoreInfoOverlay from "@/app/(afterLogin)/reels/_component/MoreInfoOverlay";
+import { IUser } from "@/model/User";
+import LoadingComponent from "@/app/_component/LoadingComponent";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -42,9 +44,10 @@ export default function ReelPost({ postId }: Props) {
   const [isPosting, setIsPosting] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMenu, setIsMenu] = useState(false);
+  const [mobile, setMobile] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { isDesktop, isTablet, isMobile } = useDeviceSize();
+  const { isMobile } = useDeviceSize();
 
   const { data: comments } = useQuery<
     IComment[],
@@ -65,20 +68,24 @@ export default function ReelPost({ postId }: Props) {
     gcTime: 300 * 1000,
   });
   const { data: session } = useSession();
+  const {
+    data: userData,
+    error: userError,
+    isLoading: userLoading,
+  } = useQuery<IUser, Object, IUser, [string, string]>({
+    queryKey: ["users", session?.user?.email as string],
+    queryFn: getUser,
+    staleTime: 5 * 60 * 1000, // fresh -> stale, 5분이라는 기준
+    gcTime: 10 * 60 * 1000,
+  });
+
   const router = useRouter();
   const queryClient = useQueryClient();
 
   // 좋아요 저장됨 상태 업데이트
   useEffect(() => {
-    const abortController = new AbortController();
-    const fetchData = async () => {
-      if (!session?.user?.email) return;
-      const user = await getUser({
-        queryKey: ["users", session.user.email],
-        signal: abortController.signal,
-        meta: undefined,
-      });
-      const ssave = !!user?.Saved.find(
+    if (userData) {
+      const ssave = !!userData?.Saved.find(
         (v: any) => v.id === post?.postId.toString()
       );
 
@@ -87,10 +94,12 @@ export default function ReelPost({ postId }: Props) {
       );
       setLiked(liked);
       setSaved(ssave);
-    };
+    }
+  }, [userData, post?.postId, post?.Hearts, session?.user?.email]);
 
-    fetchData();
-  }, [post, session, queryClient]);
+  useEffect(() => {
+    setMobile(isMobile);
+  }, [isMobile]);
 
   const addComment = useMutation({
     mutationFn: async (commentData: {
@@ -498,6 +507,7 @@ export default function ReelPost({ postId }: Props) {
     router.push(`/detailInfo/${postId}`);
   }, [router, postId]);
 
+  if (userLoading) return <LoadingComponent />;
   if (!post) return null;
 
   return (
@@ -674,7 +684,7 @@ export default function ReelPost({ postId }: Props) {
                                         className={styles.Image}
                                         crossOrigin="anonymous"
                                         draggable="false"
-                                        src={`${post?.userImage}`}
+                                        src={`${userData!.image}`}
                                         width={0}
                                         height={0}
                                         sizes="100vw"
@@ -788,12 +798,12 @@ export default function ReelPost({ postId }: Props) {
                                           className={styles.contentLinkImage}
                                           crossOrigin="anonymous"
                                           draggable="false"
-                                          src={`${post.userImage}`}
+                                          src={`${userData!.image}`}
                                           alt={`${post.userNickname}의 프로필 사진`}
                                           width={0}
                                           height={0}
                                           sizes="100vw"
-                                        ></Image>
+                                        />
                                       </Link>
                                     </div>
                                   </div>

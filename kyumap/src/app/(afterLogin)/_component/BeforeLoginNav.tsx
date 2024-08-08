@@ -31,21 +31,23 @@ export default function BeforeLoginNav() {
                 <div className={styles.logo5}>
                   {isDark ? (
                     <Image
-                      alt="Kyumap"
+                      alt="logo"
                       src={smallLogodark}
                       aria-label="Kyumap"
                       width={103}
                       height={29}
                       className={styles.image}
+                      priority={true}
                     />
                   ) : (
                     <Image
-                      alt="Kyumap"
+                      alt="logo"
                       src={smallLogo}
                       aria-label="Kyumap"
                       width={103}
                       height={29}
                       className={styles.image}
+                      priority={true}
                     />
                   )}
                 </div>

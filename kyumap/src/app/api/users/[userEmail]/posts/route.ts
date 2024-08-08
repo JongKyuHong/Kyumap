@@ -29,7 +29,7 @@ export async function GET(req: NextRequest, { params }: Props) {
       query["postId"] = { $gt: cursor };
     }
     // limit을 설정하여 한 번에 로드할 게시물 수를 제한합니다.
-    const posts = await Post.find(query).limit(21).sort({ postId: 1 });
+    const posts = await Post.find(query).limit(5).sort({ postId: 1 });
     return NextResponse.json(posts);
   } catch (error) {
     console.error(error);

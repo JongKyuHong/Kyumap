@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "../profile.module.css";
+import styles from "./profilesection.module.css";
 import { useEffect, useReducer, useState } from "react";
 import Link from "next/link";
 import { IUser } from "@/model/User";
@@ -15,6 +15,7 @@ import UserPosts from "./UserPosts";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSelectedLayoutSegment } from "next/navigation";
+import useDeviceSize from "@/app/(afterLogin)/_component/useDeviceSize";
 
 type Props = {
   userEmail: string;
@@ -29,6 +30,7 @@ export default function ProfileSection({ userEmail, userName }: Props) {
   const router = useRouter();
   const segment = useSelectedLayoutSegment();
   // userData나 session이 변경될 때마다 팔로우 상태를 업데이트
+  const { isMobile } = useDeviceSize();
 
   const { data: session } = useSession();
 
@@ -305,89 +307,64 @@ export default function ProfileSection({ userEmail, userName }: Props) {
 
   return (
     <>
-      <header className={styles.MainDivHeader}>
-        <div className={styles.HeaderProfile}>
-          <div
-            className={styles.HeaderProfileDiv}
-            aria-disabled="false"
-            role="button"
-            tabIndex={0}
-          >
-            <canvas
-              className={styles.ProfileCanvas}
-              style={{
-                left: "-9px",
-                position: "absolute",
-                top: "-9px",
-                height: "168px",
-                width: "168px",
-              }}
-            ></canvas>
-            <span
-              className={styles.ProfileSpan}
-              role="link"
-              tabIndex={-1}
-              style={{ height: "150px", width: "150px" }}
-            >
-              <Image
-                width={0}
-                height={0}
-                sizes="100vw"
-                src={`${userData?.image}`}
-                alt={`${userData?.nickname}의 프로필 사진 `}
-                crossOrigin="anonymous"
-                draggable="false"
-                className={styles.ProfileImage}
-              />
-            </span>
-          </div>
-        </div>
-        <section className={styles.HeaderSection}>
-          <div>
-            <div className={styles.HeaderSectionNameDiv}>
-              <div className={styles.HeaderSectionNameDiv2}>
-                <div className={styles.HeaderSectionNameDiv3}>
-                  <Link
-                    href="#"
-                    role="link"
-                    tabIndex={0}
-                    className={styles.HeaderSectionNameDiv4}
-                  >
-                    <h2 className={styles.NameH2} dir="auto" tabIndex={-1}>
-                      {`${userData?.nickname}`}
-                    </h2>
-                  </Link>
+      {isMobile ? (
+        <>
+          <header className={styles.MMainDivHeader}>
+            <section className={styles.MMsection}>
+              <div className={styles.MMsectionDiv}>
+                <div className={styles.MMsectionDiv2}>
+                  <canvas className={styles.Mcanvas}></canvas>
+                  <span className={styles.MMSpan}>
+                    <Image
+                      src={userData.image}
+                      className={styles.MMImage}
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      alt={`${userData.nickname}님의 프로필`}
+                    />
+                  </span>
                 </div>
               </div>
-              {!isMe ? (
-                <div className={styles.HeaderSectionEmo}>
-                  <div className={styles.HeaderSectionFollowBtn}>
-                    <div
-                      className={styles.HeaderSectionFollowBtn2}
-                      tabIndex={0}
-                    >
-                      {session && (
+            </section>
+            <section className={styles.MMsection2}>
+              <div>
+                <div className={styles.MProfileSectionDiv}>
+                  <div className={styles.MProfileSectionDiv2}>
+                    <div className={styles.MProfileSectionDiv3}>
+                      <Link href="#" className={styles.MProfileSectionLink}>
+                        <h2 className={styles.MProfileSectionLinkH2}>
+                          <span
+                            className={styles.MProfileSectionLinkSpan}
+                          ></span>
+                        </h2>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+                <div className={styles.MProfileSectionBtn}>
+                  <div className={styles.MProfileSectionBtn2}>
+                    <div className={styles.MProfileSectionBtn3}>
+                      {isMe ? (
+                        <button className={styles.MProfileSectionBtn4}>
+                          <div className={styles.MProfileSectionDivBtn5}>
+                            <Link
+                              href="/accounts/edit"
+                              className={styles.MProfileSectionDiv6}
+                            >
+                              프로필 편집
+                            </Link>
+                          </div>
+                        </button>
+                      ) : (
                         <button
-                          className={styles.HeaderSectionFollowBtn4}
-                          style={{
-                            backgroundColor: followed
-                              ? "rgb(239, 239, 239)"
-                              : "rgb(0, 149, 246)",
-                            color: followed ? "rgb(0,0,0)" : "rgb(255,255,255)",
-                          }}
-                          type="button"
+                          className={styles.MProfileSectionBtn4}
                           onClick={onFollow}
                           onMouseEnter={() => setHovered(true)}
                           onMouseLeave={() => setHovered(false)}
                         >
-                          <div
-                            className={styles.HeaderSectionFollowBtn5}
-                            style={{ height: "100%" }}
-                          >
-                            <div
-                              className={styles.HeaderSectionFollowBtn6}
-                              dir="auto"
-                            >
+                          <div className={styles.MProfileSectionDivBtn5}>
+                            <div className={styles.MProfileSectionDiv6}>
                               {followed
                                 ? hovered
                                   ? "팔로우 취소"
@@ -400,83 +377,61 @@ export default function ProfileSection({ userEmail, userName }: Props) {
                     </div>
                   </div>
                 </div>
-              ) : (
-                <div className={styles.HeaderSectionProfileEdit}>
-                  <div className={styles.HeaderSectionProfileEdit2}>
-                    <div className={styles.HeaderSectionProfileEdit3}>
-                      <Link
-                        href={"/accounts/edit"}
-                        className={styles.HeaderSectionProfileEdit4}
-                        role="link"
-                        tabIndex={0}
-                      >
-                        {"프로필 편집"}
-                      </Link>
-                    </div>
+              </div>
+            </section>
+            <section className={styles.MMsection3}>
+              <ul className={styles.Mul}>
+                <li className={styles.Mli}>
+                  <div>
+                    <span className={styles.MliSpan}>
+                      {"게시물"}
+                      <span className={styles.MliSpan2}>
+                        <span className={styles.MliSpan3}>
+                          {userData._count.posts || 0}
+                        </span>
+                      </span>
+                    </span>
                   </div>
+                </li>
+                <li className={styles.Mli}>
+                  <div>
+                    <span className={styles.MliSpan}>
+                      {"팔로워"}
+                      <span className={styles.MliSpan2}>
+                        <span className={styles.MliSpan3}>
+                          {userData._count.Followers || 0}
+                        </span>
+                      </span>
+                    </span>
+                  </div>
+                </li>
+                <li className={styles.Mli}>
+                  <div>
+                    <span className={styles.MliSpan}>
+                      {"팔로우"}
+                      <span className={styles.MliSpan2}>
+                        <span className={styles.MliSpan3}>
+                          {userData._count.Followings || 0}
+                        </span>
+                      </span>
+                    </span>
+                  </div>
+                </li>
+              </ul>
+            </section>
+            <section className={styles.MMsection4}>
+              <div className={styles.MMsectionDiv3}>
+                <div className={styles.MMsectionDiv4}>
+                  <span className={styles.MMsectionDivSpan}>
+                    {userData.Info.intro}
+                  </span>
                 </div>
-              )}
-            </div>
-          </div>
-          <div className={styles.HeaderSectionBlank}>
-            <div></div>
-          </div>
-          <ul className={styles.ProfileInfo}>
-            <li className={styles.InfoLi}>
-              {"게시글 "}
-              <span className={styles.InfoSpan}>
-                <span className={styles.InfoInnerSpan}>
-                  {userData._count.posts || 0}
-                </span>
-              </span>
-            </li>
-            <li className={styles.InfoLi}>
-              {"팔로워 "}
-              <span className={styles.InfoSpan}>
-                <span className={styles.InfoInnerSpan}>{`${
-                  userData?._count?.Followers || 0
-                }`}</span>
-              </span>
-            </li>
-            <li className={styles.InfoLi}>
-              {"팔로우 "}
-              <span className={styles.InfoSpan}>
-                <span className={styles.InfoInnerSpan}>{`${
-                  userData?._count?.Followings || 0
-                }`}</span>
-              </span>
-            </li>
-          </ul>
-          <div className={styles.ProfileContent}>
-            <div className={styles.ProfileContentId}>
-              <span className={styles.ProfileContentIdSpan}>
-                {`${userData?.nickname}`}
-              </span>
-            </div>
-            <div className={styles.ProfileContentType}>
-              {/* <div className={styles.ProfileContentType2} dir="auto">
-                {"교육"}
-              </div> */}
-            </div>
-            <h1 className={styles.ProfileContentInfo} dir="auto">
-              {`${userData.Info.intro}`}
-              <br />
-              {/* <Link
-                href="#"
-                className={styles.InfoLink}
-                tabIndex={0}
-                role="link"
-              >
-                {"자기가 태그한 사람~~~"}
-              </Link> */}
-            </h1>
-            <button className={styles.ProfileContentBtn} type="button">
-              {userData?.Info.website && (
-                <div className={styles.ProfileBtnLink}>
-                  <span className={styles.LinkSvgSpan}>
+                <div className={styles.MMsectionDiv5}></div>
+                <div className={styles.MMsectionDiv6}>
+                  <span className={styles.MMsectionDivSpan2}>
                     <svg
                       aria-label="링크 아이콘"
-                      className={styles.LinkSvg}
+                      className={styles.linkSvg2}
                       fill="currentColor"
                       height="12"
                       role="img"
@@ -488,16 +443,16 @@ export default function ProfileSection({ userEmail, userName }: Props) {
                         d="m9.726 5.123 1.228-1.228a6.47 6.47 0 0 1 9.15 9.152l-1.227 1.227m-4.603 4.603-1.228 1.228a6.47 6.47 0 0 1-9.15-9.152l1.227-1.227"
                         fill="none"
                         stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
                       ></path>
                       <line
                         fill="none"
                         stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
                         x1="8.471"
                         x2="15.529"
                         y1="15.529"
@@ -505,256 +460,678 @@ export default function ProfileSection({ userEmail, userName }: Props) {
                       ></line>
                     </svg>
                   </span>
-                  <div className={styles.ProfileLinkDiv} dir="auto">
-                    <Link
-                      href={`${
-                        userData?.Info.website.startsWith("http://") ||
-                        userData?.Info.website.startsWith("https://")
-                          ? userData.Info.website
-                          : `https://${userData?.Info.website}`
-                      }`}
-                    >
-                      {`${userData?.Info.website}`}
-                    </Link>
+                  <div className={styles.MMsectionDiv7}>
+                    {userData.Info.website && (
+                      <Link
+                        href={`${userData.Info.website}`}
+                        className={styles.MMsectionDivLink}
+                      >
+                        <span className={styles.MMsectionLinkSpan}>
+                          <span className={styles.MMsectionLinkSpan2}></span>
+                        </span>
+                      </Link>
+                    )}
                   </div>
                 </div>
-              )}
-            </button>
-          </div>
-        </section>
-      </header>
-      {/* <div className={styles.}></div>  인스타로 치면 스토리 부분 일단 보류*/}
-      <div className={styles.PostType} role="tablist">
-        <Link
-          href={`/profile/${userName}/`}
-          role="tab"
-          tabIndex={0}
-          className={styles.PostLink}
-          onClick={() => setNum(0)}
-          style={{
-            color:
-              tabNum === 0
-                ? "rgb(var(--ig-primary-text))"
-                : "rgb(115, 115, 115)",
-            borderTop:
-              tabNum === 0 ? "1px solid rgb(var(--ig-primary-text))" : "0",
-          }}
-        >
-          <div className={styles.PostLinkDiv}>
-            <svg
-              className={styles.PostLinkSvg}
-              fill="currentColor"
-              height="12"
-              role="img"
-              viewBox="0 0 24 24"
-              width="12"
+              </div>
+            </section>
+            <section className={styles.MMSection5}></section>
+            <section className={styles.MMSection6}>
+              <div role="menu"></div>
+            </section>
+            <section className={styles.MMSection7}></section>
+          </header>
+          <div className={styles.MMDiv}>
+            <Link
+              href={`/profile/${userName}/`}
+              className={styles.MMLink}
+              onClick={() => setNum(0)}
+              style={{
+                borderTop:
+                  tabNum === 0 ? "1px solid rgb(var(--ig-primary-text))" : "0",
+              }}
             >
-              <title></title>
-              <rect
-                fill="none"
-                height="18"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                width="18"
-                x="3"
-                y="3"
-              ></rect>
-              <line
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                x1="9.015"
-                x2="9.015"
-                y1="3"
-                y2="21"
-              ></line>
-              <line
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                x1="14.985"
-                x2="14.985"
-                y1="3"
-                y2="21"
-              ></line>
-              <line
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                x1="21"
-                x2="3"
-                y1="9.015"
-                y2="9.015"
-              ></line>
-              <line
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                x1="21"
-                x2="3"
-                y1="14.985"
-                y2="14.985"
-              ></line>
-            </svg>
-            <span className={styles.PostLinkSpan}>게시글</span>
-          </div>
-        </Link>
-        <Link
-          aria-selected="false"
-          className={styles.PostVideoLink}
-          href={`/profile/${userName}/reels`}
-          role="tab"
-          tabIndex={0}
-          onClick={() => setNum(1)}
-          style={{
-            color:
-              tabNum === 1
-                ? "rgb(var(--ig-primary-text))"
-                : "rgb(115, 115, 115)",
-            borderTop:
-              tabNum === 1 ? "1px solid rgb(var(--ig-primary-text))" : "0",
-          }}
-        >
-          <div className={styles.PostLinkDiv}>
-            <svg
-              aria-label=""
-              className={styles.PostLinkSvg}
-              fill="currentColor"
-              height="12"
-              role="img"
-              viewBox="0 0 24 24"
-              width="12"
-            >
-              <title></title>
-              <line
-                fill="none"
-                stroke="currentColor"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                x1="2.049"
-                x2="21.95"
-                y1="7.002"
-                y2="7.002"
-              ></line>
-              <line
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                x1="13.504"
-                x2="16.362"
-                y1="2.001"
-                y2="7.002"
-              ></line>
-              <line
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                x1="7.207"
-                x2="10.002"
-                y1="2.11"
-                y2="7.002"
-              ></line>
-              <path
-                d="M2 12.001v3.449c0 2.849.698 4.006 1.606 4.945.94.908 2.098 1.607 4.946 1.607h6.896c2.848 0 4.006-.699 4.946-1.607.908-.939 1.606-2.096 1.606-4.945V8.552c0-2.848-.698-4.006-1.606-4.945C19.454 2.699 18.296 2 15.448 2H8.552c-2.848 0-4.006.699-4.946 1.607C2.698 4.546 2 5.704 2 8.552Z"
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-              ></path>
-              <path
-                d="M9.763 17.664a.908.908 0 0 1-.454-.787V11.63a.909.909 0 0 1 1.364-.788l4.545 2.624a.909.909 0 0 1 0 1.575l-4.545 2.624a.91.91 0 0 1-.91 0Z"
-                fillRule="evenodd"
-              ></path>
-            </svg>
-            <span className={styles.PostLinkSpan}>릴스</span>
-          </div>
-        </Link>
-        <Link
-          aria-selected="false"
-          className={styles.PostVideoLink}
-          href={`/profile/${userName}/myMap`}
-          role="tab"
-          tabIndex={0}
-          onClick={() => setNum(2)}
-          style={{
-            color:
-              tabNum === 2
-                ? "rgb(var(--ig-primary-text))"
-                : "rgb(115, 115, 115)",
-            borderTop:
-              tabNum === 2 ? "1px solid rgb(var(--ig-primary-text))" : "0",
-          }}
-        >
-          <div className={styles.PostLinkDiv}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-            >
-              <path d="M10.567 0c-3.235 0-5.868 2.626-5.868 5.868 0 .878.361 2.036.879 3.353s1.202 2.78 1.884 4.148c1.365 2.732 2.732 5.086 2.732 5.086.416.768 1.779.768 2.195 0 0 0 1.367-2.354 2.732-5.086.682-1.368 1.202-2.78 1.884-4.148.518-1.317.879-2.475.879-3.353C16.435 2.626 13.802 0 10.567 0zM10.567 2.283c1.534 0 2.782 1.248 2.782 2.782 0 1.534-1.248 2.782-2.782 2.782-1.534 0-2.782-1.248-2.782-2.782 0-1.534 1.248-2.782 2.782-2.782zm-5.795 13.046L.638 18.119v6.945l4.234-1.861zm15.631 0L16.269 18.119v6.945l4.234-1.861zm-10.832.568v6.364l4.234 1.861v-6.363c-.459.848-.789 1.42-.789 1.42-.362.625-1.34.625-1.702 0C9.569 17.515 9.15 16.551 8.571 15.897z" />
-            </svg>
-
-            <span className={styles.PostLinkSpan}>지도보기</span>
-          </div>
-        </Link>
-        {session && userName === session?.user!.name && (
-          <Link
-            aria-selected="false"
-            className={styles.PostSavedLink}
-            href={`/profile/${userName}/saved`}
-            role="tab"
-            tabIndex={0}
-            onClick={() => setNum(3)}
-            style={{
-              color:
-                tabNum === 3
-                  ? "rgb(var(--ig-primary-text))"
-                  : "rgb(115, 115, 115)",
-              borderTop:
-                tabNum === 3 ? "1px solid rgb(var(--ig-primary-text))" : "0",
-            }}
-          >
-            <div className={styles.PostLinkDiv}>
               <svg
-                aria-label=""
-                className={styles.PostLinkSvg}
-                height="12"
+                aria-label="게시물"
+                className={styles.postssvg}
+                fill="currentColor"
+                height="24"
                 role="img"
                 viewBox="0 0 24 24"
-                width="12"
+                width="24"
               >
-                <title></title>
-                <polygon
+                <title>게시물</title>
+                <rect
                   fill="none"
-                  points="20 21 12 13.44 4 21 4 3 20 3 20 21"
+                  height="18"
                   stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                ></polygon>
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  width="18"
+                  x="3"
+                  y="3"
+                ></rect>
+                <line
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  x1="9.015"
+                  x2="9.015"
+                  y1="3"
+                  y2="21"
+                ></line>
+                <line
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  x1="14.985"
+                  x2="14.985"
+                  y1="3"
+                  y2="21"
+                ></line>
+                <line
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  x1="21"
+                  x2="3"
+                  y1="9.015"
+                  y2="9.015"
+                ></line>
+                <line
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  x1="21"
+                  x2="3"
+                  y1="14.985"
+                  y2="14.985"
+                ></line>
               </svg>
-              <span className={styles.PostLinkSpan}>저장됨</span>
+            </Link>
+            <Link
+              className={styles.MMLink}
+              href={`/profile/${userName}/reels`}
+              onClick={() => setNum(1)}
+              style={{
+                borderTop:
+                  tabNum === 1 ? "1px solid rgb(var(--ig-primary-text))" : "0",
+              }}
+            >
+              <svg
+                aria-label="릴스"
+                className={styles.postssvg}
+                fill="currentColor"
+                height="24"
+                role="img"
+                viewBox="0 0 24 24"
+                width="24"
+              >
+                <title>릴스</title>
+                <line
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  x1="2.049"
+                  x2="21.95"
+                  y1="7.002"
+                  y2="7.002"
+                ></line>
+                <line
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  x1="13.504"
+                  x2="16.362"
+                  y1="2.001"
+                  y2="7.002"
+                ></line>
+                <line
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  x1="7.207"
+                  x2="10.002"
+                  y1="2.11"
+                  y2="7.002"
+                ></line>
+                <path
+                  d="M2 12.001v3.449c0 2.849.698 4.006 1.606 4.945.94.908 2.098 1.607 4.946 1.607h6.896c2.848 0 4.006-.699 4.946-1.607.908-.939 1.606-2.096 1.606-4.945V8.552c0-2.848-.698-4.006-1.606-4.945C19.454 2.699 18.296 2 15.448 2H8.552c-2.848 0-4.006.699-4.946 1.607C2.698 4.546 2 5.704 2 8.552Z"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                ></path>
+                <path
+                  d="M9.763 17.664a.908.908 0 0 1-.454-.787V11.63a.909.909 0 0 1 1.364-.788l4.545 2.624a.909.909 0 0 1 0 1.575l-4.545 2.624a.91.91 0 0 1-.91 0Z"
+                  fill-rule="evenodd"
+                ></path>
+              </svg>
+            </Link>
+            <Link
+              className={styles.MMLink}
+              href={`/profile/${userName}/myMap`}
+              onClick={() => setNum(2)}
+              style={{
+                borderTop:
+                  tabNum === 2 ? "1px solid rgb(var(--ig-primary-text))" : "0",
+              }}
+            >
+              <svg
+                className={styles.postssvg}
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+              >
+                <path d="M10.567 0c-3.235 0-5.868 2.626-5.868 5.868 0 .878.361 2.036.879 3.353s1.202 2.78 1.884 4.148c1.365 2.732 2.732 5.086 2.732 5.086.416.768 1.779.768 2.195 0 0 0 1.367-2.354 2.732-5.086.682-1.368 1.202-2.78 1.884-4.148.518-1.317.879-2.475.879-3.353C16.435 2.626 13.802 0 10.567 0zM10.567 2.283c1.534 0 2.782 1.248 2.782 2.782 0 1.534-1.248 2.782-2.782 2.782-1.534 0-2.782-1.248-2.782-2.782 0-1.534 1.248-2.782 2.782-2.782zm-5.795 13.046L.638 18.119v6.945l4.234-1.861zm15.631 0L16.269 18.119v6.945l4.234-1.861zm-10.832.568v6.364l4.234 1.861v-6.363c-.459.848-.789 1.42-.789 1.42-.362.625-1.34.625-1.702 0C9.569 17.515 9.15 16.551 8.571 15.897z" />
+              </svg>
+            </Link>
+            {session && userName === session?.user!.name && (
+              <Link
+                className={styles.MMLink}
+                href={`/profile/${userName}/saved`}
+                onClick={() => setNum(3)}
+                style={{
+                  borderTop:
+                    tabNum === 3
+                      ? "1px solid rgb(var(--ig-primary-text))"
+                      : "0",
+                }}
+              >
+                <svg
+                  aria-label=""
+                  className={styles.postssvg}
+                  height="24"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="24"
+                >
+                  <title></title>
+                  <polygon
+                    fill="none"
+                    points="20 21 12 13.44 4 21 4 3 20 3 20 21"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                  ></polygon>
+                </svg>
+              </Link>
+            )}
+          </div>
+        </>
+      ) : (
+        <>
+          <header className={styles.MainDivHeader}>
+            <div className={styles.HeaderProfile}>
+              <div
+                className={styles.HeaderProfileDiv}
+                aria-disabled="false"
+                role="button"
+                tabIndex={0}
+              >
+                <canvas
+                  className={styles.ProfileCanvas}
+                  style={{
+                    left: "-9px",
+                    position: "absolute",
+                    top: "-9px",
+                    height: "168px",
+                    width: "168px",
+                  }}
+                ></canvas>
+                <span
+                  className={styles.ProfileSpan}
+                  role="link"
+                  tabIndex={-1}
+                  style={{ height: "150px", width: "150px" }}
+                >
+                  <Image
+                    width={0}
+                    height={0}
+                    sizes="100vw"
+                    src={`${userData?.image}`}
+                    alt={`${userData?.nickname}의 프로필 사진 `}
+                    crossOrigin="anonymous"
+                    draggable="false"
+                    className={styles.ProfileImage}
+                  />
+                </span>
+              </div>
             </div>
-          </Link>
-        )}
-      </div>
-      {/* <UserPosts userEmail={userEmail} /> */}
+            <section className={styles.HeaderSection}>
+              <div>
+                <div className={styles.HeaderSectionNameDiv}>
+                  <div className={styles.HeaderSectionNameDiv2}>
+                    <div className={styles.HeaderSectionNameDiv3}>
+                      <Link
+                        href="#"
+                        role="link"
+                        tabIndex={0}
+                        className={styles.HeaderSectionNameDiv4}
+                      >
+                        <h2 className={styles.NameH2} dir="auto" tabIndex={-1}>
+                          {`${userData?.nickname}`}
+                        </h2>
+                      </Link>
+                    </div>
+                  </div>
+                  {!isMe ? (
+                    <div className={styles.HeaderSectionEmo}>
+                      <div className={styles.HeaderSectionFollowBtn}>
+                        <div
+                          className={styles.HeaderSectionFollowBtn2}
+                          tabIndex={0}
+                        >
+                          {session && (
+                            <button
+                              className={styles.HeaderSectionFollowBtn4}
+                              style={{
+                                backgroundColor: followed
+                                  ? "rgb(239, 239, 239)"
+                                  : "rgb(0, 149, 246)",
+                                color: followed
+                                  ? "rgb(0,0,0)"
+                                  : "rgb(255,255,255)",
+                              }}
+                              type="button"
+                              onClick={onFollow}
+                              onMouseEnter={() => setHovered(true)}
+                              onMouseLeave={() => setHovered(false)}
+                            >
+                              <div
+                                className={styles.HeaderSectionFollowBtn5}
+                                style={{ height: "100%" }}
+                              >
+                                <div
+                                  className={styles.HeaderSectionFollowBtn6}
+                                  dir="auto"
+                                >
+                                  {followed
+                                    ? hovered
+                                      ? "팔로우 취소"
+                                      : "팔로잉"
+                                    : "팔로우"}
+                                </div>
+                              </div>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className={styles.HeaderSectionProfileEdit}>
+                      <div className={styles.HeaderSectionProfileEdit2}>
+                        <div className={styles.HeaderSectionProfileEdit3}>
+                          <Link
+                            href={"/accounts/edit"}
+                            className={styles.HeaderSectionProfileEdit4}
+                            role="link"
+                            tabIndex={0}
+                          >
+                            {"프로필 편집"}
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className={styles.HeaderSectionBlank}>
+                <div></div>
+              </div>
+              <ul className={styles.ProfileInfo}>
+                <li className={styles.InfoLi}>
+                  {"게시글 "}
+                  <span className={styles.InfoSpan}>
+                    <span className={styles.InfoInnerSpan}>
+                      {userData._count.posts || 0}
+                    </span>
+                  </span>
+                </li>
+                <li className={styles.InfoLi}>
+                  {"팔로워 "}
+                  <span className={styles.InfoSpan}>
+                    <span className={styles.InfoInnerSpan}>{`${
+                      userData?._count?.Followers || 0
+                    }`}</span>
+                  </span>
+                </li>
+                <li className={styles.InfoLi}>
+                  {"팔로우 "}
+                  <span className={styles.InfoSpan}>
+                    <span className={styles.InfoInnerSpan}>{`${
+                      userData?._count?.Followings || 0
+                    }`}</span>
+                  </span>
+                </li>
+              </ul>
+              <div className={styles.ProfileContent}>
+                <div className={styles.ProfileContentId}>
+                  <span className={styles.ProfileContentIdSpan}>
+                    {`${userData?.nickname}`}
+                  </span>
+                </div>
+                <div className={styles.ProfileContentType}>
+                  {/* <div className={styles.ProfileContentType2} dir="auto">
+                {"교육"}
+              </div> */}
+                </div>
+                <h1 className={styles.ProfileContentInfo} dir="auto">
+                  {`${userData.Info.intro}`}
+                  <br />
+                  {/* <Link
+                href="#"
+                className={styles.InfoLink}
+                tabIndex={0}
+                role="link"
+              >
+                {"자기가 태그한 사람~~~"}
+              </Link> */}
+                </h1>
+                <button className={styles.ProfileContentBtn} type="button">
+                  {userData?.Info.website && (
+                    <div className={styles.ProfileBtnLink}>
+                      <span className={styles.LinkSvgSpan}>
+                        <svg
+                          aria-label="링크 아이콘"
+                          className={styles.LinkSvg}
+                          fill="currentColor"
+                          height="12"
+                          role="img"
+                          viewBox="0 0 24 24"
+                          width="12"
+                        >
+                          <title>링크 아이콘</title>
+                          <path
+                            d="m9.726 5.123 1.228-1.228a6.47 6.47 0 0 1 9.15 9.152l-1.227 1.227m-4.603 4.603-1.228 1.228a6.47 6.47 0 0 1-9.15-9.152l1.227-1.227"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                          ></path>
+                          <line
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            x1="8.471"
+                            x2="15.529"
+                            y1="15.529"
+                            y2="8.471"
+                          ></line>
+                        </svg>
+                      </span>
+                      <div className={styles.ProfileLinkDiv} dir="auto">
+                        <Link
+                          href={`${
+                            userData?.Info.website.startsWith("http://") ||
+                            userData?.Info.website.startsWith("https://")
+                              ? userData.Info.website
+                              : `https://${userData?.Info.website}`
+                          }`}
+                        >
+                          {`${userData?.Info.website}`}
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+                </button>
+              </div>
+            </section>
+          </header>
+          <div className={styles.PostType} role="tablist">
+            <Link
+              href={`/profile/${userName}/`}
+              role="tab"
+              tabIndex={0}
+              className={styles.PostLink}
+              onClick={() => setNum(0)}
+              style={{
+                color:
+                  tabNum === 0
+                    ? "rgb(var(--ig-primary-text))"
+                    : "rgb(115, 115, 115)",
+                borderTop:
+                  tabNum === 0 ? "1px solid rgb(var(--ig-primary-text))" : "0",
+              }}
+            >
+              <div className={styles.PostLinkDiv}>
+                <svg
+                  className={styles.PostLinkSvg}
+                  fill="currentColor"
+                  height="12"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="12"
+                >
+                  <title></title>
+                  <rect
+                    fill="none"
+                    height="18"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    width="18"
+                    x="3"
+                    y="3"
+                  ></rect>
+                  <line
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    x1="9.015"
+                    x2="9.015"
+                    y1="3"
+                    y2="21"
+                  ></line>
+                  <line
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    x1="14.985"
+                    x2="14.985"
+                    y1="3"
+                    y2="21"
+                  ></line>
+                  <line
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    x1="21"
+                    x2="3"
+                    y1="9.015"
+                    y2="9.015"
+                  ></line>
+                  <line
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    x1="21"
+                    x2="3"
+                    y1="14.985"
+                    y2="14.985"
+                  ></line>
+                </svg>
+                <span className={styles.PostLinkSpan}>게시글</span>
+              </div>
+            </Link>
+            <Link
+              aria-selected="false"
+              className={styles.PostVideoLink}
+              href={`/profile/${userName}/reels`}
+              role="tab"
+              tabIndex={0}
+              onClick={() => setNum(1)}
+              style={{
+                color:
+                  tabNum === 1
+                    ? "rgb(var(--ig-primary-text))"
+                    : "rgb(115, 115, 115)",
+                borderTop:
+                  tabNum === 1 ? "1px solid rgb(var(--ig-primary-text))" : "0",
+              }}
+            >
+              <div className={styles.PostLinkDiv}>
+                <svg
+                  aria-label=""
+                  className={styles.PostLinkSvg}
+                  fill="currentColor"
+                  height="12"
+                  role="img"
+                  viewBox="0 0 24 24"
+                  width="12"
+                >
+                  <title></title>
+                  <line
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    x1="2.049"
+                    x2="21.95"
+                    y1="7.002"
+                    y2="7.002"
+                  ></line>
+                  <line
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    x1="13.504"
+                    x2="16.362"
+                    y1="2.001"
+                    y2="7.002"
+                  ></line>
+                  <line
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    x1="7.207"
+                    x2="10.002"
+                    y1="2.11"
+                    y2="7.002"
+                  ></line>
+                  <path
+                    d="M2 12.001v3.449c0 2.849.698 4.006 1.606 4.945.94.908 2.098 1.607 4.946 1.607h6.896c2.848 0 4.006-.699 4.946-1.607.908-.939 1.606-2.096 1.606-4.945V8.552c0-2.848-.698-4.006-1.606-4.945C19.454 2.699 18.296 2 15.448 2H8.552c-2.848 0-4.006.699-4.946 1.607C2.698 4.546 2 5.704 2 8.552Z"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                  ></path>
+                  <path
+                    d="M9.763 17.664a.908.908 0 0 1-.454-.787V11.63a.909.909 0 0 1 1.364-.788l4.545 2.624a.909.909 0 0 1 0 1.575l-4.545 2.624a.91.91 0 0 1-.91 0Z"
+                    fillRule="evenodd"
+                  ></path>
+                </svg>
+                <span className={styles.PostLinkSpan}>릴스</span>
+              </div>
+            </Link>
+            <Link
+              aria-selected="false"
+              className={styles.PostVideoLink}
+              href={`/profile/${userName}/myMap`}
+              role="tab"
+              tabIndex={0}
+              onClick={() => setNum(2)}
+              style={{
+                color:
+                  tabNum === 2
+                    ? "rgb(var(--ig-primary-text))"
+                    : "rgb(115, 115, 115)",
+                borderTop:
+                  tabNum === 2 ? "1px solid rgb(var(--ig-primary-text))" : "0",
+              }}
+            >
+              <div className={styles.PostLinkDiv}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M10.567 0c-3.235 0-5.868 2.626-5.868 5.868 0 .878.361 2.036.879 3.353s1.202 2.78 1.884 4.148c1.365 2.732 2.732 5.086 2.732 5.086.416.768 1.779.768 2.195 0 0 0 1.367-2.354 2.732-5.086.682-1.368 1.202-2.78 1.884-4.148.518-1.317.879-2.475.879-3.353C16.435 2.626 13.802 0 10.567 0zM10.567 2.283c1.534 0 2.782 1.248 2.782 2.782 0 1.534-1.248 2.782-2.782 2.782-1.534 0-2.782-1.248-2.782-2.782 0-1.534 1.248-2.782 2.782-2.782zm-5.795 13.046L.638 18.119v6.945l4.234-1.861zm15.631 0L16.269 18.119v6.945l4.234-1.861zm-10.832.568v6.364l4.234 1.861v-6.363c-.459.848-.789 1.42-.789 1.42-.362.625-1.34.625-1.702 0C9.569 17.515 9.15 16.551 8.571 15.897z" />
+                </svg>
+
+                <span className={styles.PostLinkSpan}>지도보기</span>
+              </div>
+            </Link>
+            {session && userName === session?.user!.name && (
+              <Link
+                aria-selected="false"
+                className={styles.PostSavedLink}
+                href={`/profile/${userName}/saved`}
+                role="tab"
+                tabIndex={0}
+                onClick={() => setNum(3)}
+                style={{
+                  color:
+                    tabNum === 3
+                      ? "rgb(var(--ig-primary-text))"
+                      : "rgb(115, 115, 115)",
+                  borderTop:
+                    tabNum === 3
+                      ? "1px solid rgb(var(--ig-primary-text))"
+                      : "0",
+                }}
+              >
+                <div className={styles.PostLinkDiv}>
+                  <svg
+                    aria-label=""
+                    className={styles.PostLinkSvg}
+                    height="12"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    width="12"
+                  >
+                    <title></title>
+                    <polygon
+                      fill="none"
+                      points="20 21 12 13.44 4 21 4 3 20 3 20 21"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                    ></polygon>
+                  </svg>
+                  <span className={styles.PostLinkSpan}>저장됨</span>
+                </div>
+              </Link>
+            )}
+          </div>
+        </>
+      )}
     </>
   );
 }

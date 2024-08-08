@@ -16,7 +16,7 @@ type Props = {
 
 export default function FollowList({ user }: Props) {
   const [followed, setFollowed] = useState(false);
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   useEffect(() => {
     const isFollowed = !!user.Followers?.find(
@@ -271,7 +271,7 @@ export default function FollowList({ user }: Props) {
                           width={44}
                           height={44}
                           className={styles.ImageLink2Image}
-                        ></Image>
+                        />
                       </Link>
                     </div>
                   </div>

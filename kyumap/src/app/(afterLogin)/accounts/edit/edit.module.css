@@ -1,3 +1,13 @@
+@media screen and (max-width: 736px) {
+  .rootDiv6 {
+    flex-direction: column; /* 세로로 배치 */
+  }
+
+  .rootDiv9 {
+    margin-top: 32px; /* 텍스트와 버튼 사이 여백 추가 */
+  }
+}
+
 .rootDiv {
   overflow-x: auto;
   min-width: 0;

@@ -21,19 +21,10 @@ export default async function ProfileLayout({
   const { userName } = params;
   const userEmail = await getUserEmail(userName);
 
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery({
-    queryKey: ["users", userEmail],
-    queryFn: getUser,
-  });
-
-  const dehydrateState = dehydrate(queryClient);
   return (
-    <HydrationBoundary state={dehydrateState}>
-      <div className={styles.MainDiv}>
-        <ProfileSection userEmail={userEmail} userName={userName} />
-        {children}
-      </div>
-    </HydrationBoundary>
+    <div className={styles.MainDiv}>
+      <ProfileSection userEmail={userEmail} userName={userName} />
+      {children}
+    </div>
   );
 }
