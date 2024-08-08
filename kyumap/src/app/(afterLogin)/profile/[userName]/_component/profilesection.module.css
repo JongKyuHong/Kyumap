@@ -1,0 +1,1568 @@
+@media screen and (min-width: 736px) {
+  .MainDivHeader {
+    margin-bottom: 44px;
+  }
+
+  .PostLink {
+    margin-right: 60px;
+  }
+
+  .HeaderProfile {
+    margin-right: 30px;
+    flex-grow: 1;
+    flex-basis: 0px;
+  }
+
+  .HeaderSection {
+    flex-grow: 2;
+    flex-basis: 30px;
+  }
+
+  .HeaderSectionBlank {
+    margin-bottom: 20px;
+  }
+
+  .PostSavedLink {
+    margin-right: 60px;
+  }
+
+  .PostVideoLink {
+    margin-right: 60px;
+  }
+}
+
+.MainDivHeader {
+  display: flex;
+  flex-shrink: 0;
+  align-items: stretch;
+  flex-direction: row;
+  position: relative;
+}
+
+.PostSavedLink {
+  align-items: center;
+  color: rgb(var(--ig-secondary-text));
+  text-decoration: none;
+  font-family: var(--font-family-system);
+  align-items: center;
+  cursor: pointer;
+  display: flex !important;
+  flex-direction: row;
+  height: 52px;
+  justify-content: center;
+  text-transform: uppercase;
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-bottom-style: none;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  display: inline;
+  border-left-width: 0;
+  padding-left: 0;
+  background-color: transparent;
+  touch-action: manipulation;
+  border-right-style: none;
+  border-right-width: 0;
+  box-sizing: border-box;
+  border-top-width: 0;
+  padding-right: 0;
+  margin-left: 0;
+  -webkit-tap-highlight-color: transparent;
+  border-top-style: none;
+  border-left-style: none;
+  text-align: inherit;
+  margin-right: 0;
+  list-style: none;
+  outline: none;
+}
+
+.PostLink {
+  align-items: center;
+  text-decoration: none;
+  /* border-top: 1px solid rgb(var(--ig-primary-text)) !important; */
+  /* color: rgb(var(--ig-primary-text)); */
+  margin-top: -1px !important;
+  font-family: var(--font-family-system);
+  cursor: pointer;
+  display: flex !important;
+  flex-direction: row;
+  height: 52px;
+  justify-content: center;
+  text-transform: uppercase;
+  padding-top: 0;
+  margin-bottom: 0;
+  border-bottom-style: none;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  border-left-width: 0;
+  padding-left: 0;
+  background-color: transparent;
+  touch-action: manipulation;
+  border-right-style: none;
+  border-right-width: 0;
+  box-sizing: border-box;
+  padding-right: 0;
+  margin-left: 0;
+  -webkit-tap-highlight-color: transparent;
+  border-left-style: none;
+  text-align: inherit;
+  list-style: none;
+  outline: none;
+}
+
+.HeaderProfile {
+  justify-content: center;
+  flex-direction: column;
+  display: flex;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.HeaderProfileDiv {
+  cursor: pointer;
+  align-items: center;
+  align-self: center;
+  display: block;
+  flex: none;
+  justify-content: center;
+  position: relative;
+}
+
+.ProfileCanvas {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  aspect-ratio: auto 168 / 168;
+}
+
+.ProfileSpan {
+  overflow-x: hidden;
+  overflow-y: hidden;
+  border-bottom-left-radius: 50%;
+  border-top-right-radius: 50%;
+  background-color: rgb(var(--ig-secondary-background));
+  box-sizing: border-box;
+  flex-shrink: 0;
+  position: relative;
+  display: block;
+  border-bottom-right-radius: 50%;
+  border-top-left-radius: 50%;
+}
+
+.ProfileImage {
+  width: 100%;
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  height: 100%;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  -webkit-touch-callout: none;
+  border-left-width: 0;
+  object-fit: cover;
+  padding-left: 0;
+  font-size: 100%;
+  border-right-width: 0;
+  border-top-width: 0;
+  padding-right: 0;
+  margin-left: 0;
+  vertical-align: baseline;
+  margin-right: 0;
+  border: 0;
+  -webkit-user-drag: none;
+}
+
+.HeaderSection {
+  padding-top: 0;
+  min-width: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  flex-shrink: 1;
+  border-left-width: 0;
+  padding-left: 0;
+  font-size: 100%;
+  flex-direction: column;
+  border-right-width: 0;
+  box-sizing: border-box;
+  border-top-width: 0;
+  display: flex;
+  color: rgb(var(--ig-primary-text));
+  padding-right: 0;
+  align-items: stretch;
+  position: relative;
+  margin-left: 0;
+  vertical-align: baseline;
+  margin-right: 0;
+}
+
+.HeaderSectionNameDiv {
+  min-width: 0;
+  flex-shrink: 1;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  position: relative;
+}
+
+.HeaderSectionNameDiv2 {
+  overflow-x: hidden;
+  overflow-y: hidden;
+  flex-shrink: 1;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  position: static;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  margin-right: 20px;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.HeaderSectionNameDiv3 {
+  overflow-x: hidden;
+  max-width: 100%;
+  overflow-y: hidden;
+  display: flex;
+}
+
+.HeaderSectionNameDiv4 {
+  text-decoration: none;
+  padding-top: 0;
+  min-width: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-top-width: 0;
+  border-bottom-style: none;
+  border-bottom-width: 0;
+  border-top-style: none;
+  padding-bottom: 0;
+  flex-shrink: 1;
+  border-left-width: 0;
+  padding-left: 0;
+  background-color: transparent;
+  touch-action: manipulation;
+  border-right-style: none;
+  border-right-width: 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  padding-right: 0;
+  cursor: pointer;
+  flex-direction: row;
+  position: relative;
+  margin-left: 0;
+  -webkit-tap-highlight-color: transparent;
+  border-left-style: none;
+  text-align: inherit;
+  margin-right: 0;
+  list-style: none;
+  outline: none;
+  color: rgb(var(--ig-link));
+}
+
+.NameH2 {
+  line-height: var(--base-line-clamp-line-height);
+  --base-line-clamp-line-height: 25px;
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-weight: 400;
+  color: rgb(var(--ig-primary-text));
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  position: relative;
+  font-size: var(--system-20-font-size);
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  margin-left: 0 !important;
+  word-break: break-word;
+}
+
+.NameH2::before {
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.NameH2::after {
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.HeaderSectionEmo {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  margin-left: 20px;
+  background-color: transparent;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  flex-direction: row;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.HeaderSectionFollowBtn {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  margin-left: 8px;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.HeaderSectionFollowBtn2 {
+  overflow-y: visible;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 1;
+  margin-left: 8px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.HeaderSectionFollowBtn4 {
+  /* background-color: rgb(var(--ig-primary-button)) !important; */
+  border: none;
+  border-radius: 8px;
+  /* color: rgb(var(--web-always-white)); */
+  position: relative;
+  text-align: center;
+  -webkit-appearance: none;
+  background: none;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: block;
+  font-size: 14px;
+  font-weight: var(--font-weight-system-semibold);
+  padding: 7px 16px !important;
+  pointer-events: auto;
+  text-overflow: ellipsis;
+  text-transform: inherit;
+  -webkit-user-select: none;
+  width: auto;
+  line-height: var(--system-14-line-height);
+  font-family: var(--font-family-system);
+  margin: 0;
+}
+
+.HeaderSectionFollowBtn5 {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  justify-content: center;
+  background-color: transparent;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  flex-direction: row;
+  align-self: auto;
+  position: relative;
+  padding-left: 4px;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  padding-right: 4px;
+  border-top-right-radius: 0;
+}
+
+.HeaderSectionFollowBtn6 {
+  display: block;
+  font-weight: var(--font-weight-system-semibold);
+  margin: 0;
+  font-size: var(--system-14-font-size);
+  line-height: var(--system-14-line-height);
+  font-family: var(--font-family-system);
+}
+
+.HeaderSectionProfileEdit {
+  overflow-y: visible;
+  overflow-x: visible;
+  flex-shrink: 1;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  column-gap: 8px;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  row-gap: 8px;
+  align-items: stretch;
+  flex-direction: row;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.HeaderSectionProfileEdit2 {
+  overflow-y: visible;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  column-gap: 8px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-direction: row;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 1;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.HeaderSectionProfileEdit3 {
+  overflow-y: visible;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 1;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.HeaderSectionProfileEdit4 {
+  color: rgb(var(--ig-primary-text));
+  text-decoration: none;
+  border-bottom-color: var(--always-dark-overlay);
+  border-top-color: var(--always-dark-overlay);
+  padding-top: 0;
+  min-width: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-top-width: 0;
+  min-height: 0;
+  border-bottom-style: none;
+  border-bottom-width: 0;
+  border-top-style: none;
+  padding-bottom: 0;
+  width: auto;
+  height: 32px;
+  font-weight: var(--font-weight-system-semibold);
+  border-left-width: 0;
+  text-overflow: ellipsis;
+  justify-content: center;
+  appearance: none;
+  border-top-right-radius: 8px;
+  touch-action: manipulation;
+  flex-basis: auto;
+  border-right-style: none;
+  border-right-width: 0;
+  border-right-color: var(--always-dark-overlay);
+  border-bottom-left-radius: 8px;
+  box-sizing: border-box;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 8px;
+  flex-shrink: 0;
+  border-left-color: var(--always-dark-overlay);
+  text-align: center;
+  cursor: pointer;
+  outline-style: none;
+  padding-left: 16px;
+  flex-direction: row;
+  padding-right: 16px;
+  position: relative;
+  margin-left: 0;
+  border-top-left-radius: 8px;
+  z-index: 0;
+  -webkit-tap-highlight-color: transparent;
+  font-family: var(--font-family-system);
+  background-color: rgb(var(--ig-secondary-button-background));
+  font-size: 0.875rem;
+  line-height: var(--system-14-line-height);
+  border-left-style: none;
+  margin-right: 0;
+  list-style: none;
+  outline: none;
+}
+.ProfileInfo {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+
+.InfoLi {
+  font-size: var(--system-16-font-size);
+  margin-right: 40px;
+}
+
+.InfoLi:first-child {
+  margin-left: 0;
+}
+
+.InfoLi:last-child {
+  margin-right: 0;
+}
+
+.InfoSpan {
+  color: rgb(var(--ig-primary-text));
+  font-weight: 600;
+}
+
+.InfoInnerSpan {
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+  word-wrap: break-word;
+  margin-left: 0;
+  text-align: inherit;
+  margin-right: 0;
+  text-decoration: none;
+}
+.ProfileContent {
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  border-left-width: 0;
+  padding-left: 0;
+  flex-direction: column;
+  border-right-width: 0;
+  box-sizing: border-box;
+  border-top-width: 0;
+  align-items: flex-start;
+  display: flex;
+  padding-right: 0;
+  flex-shrink: 0;
+  position: relative;
+  margin-left: 0;
+  vertical-align: baseline;
+  margin-right: 0;
+}
+
+.ProfileContentId {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  justify-content: center;
+  background-color: transparent;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  position: static;
+  flex-direction: row;
+  align-self: auto;
+  flex-grow: 0;
+  row-gap: 10px;
+  column-gap: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ProfileContentType {
+  overflow-y: visible;
+  overflow-x: visible;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ProfileContentIdSpan {
+  line-height: var(--base-line-clamp-line-height);
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-size: var(--system-14-font-size);
+  color: rgb(var(--ig-primary-text));
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  font-weight: 600;
+  position: relative;
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  margin-left: 0 !important;
+  word-break: break-word;
+}
+
+.ProfileContentIdSpan::before {
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.ProfileContentIdSpan::after {
+  height: 0;
+  display: block;
+  content: "";
+}
+.ProfileContentInfo {
+  display: block;
+  color: rgb(var(--ig-primary-text));
+  font-weight: var(--font-weight-system-regular);
+  margin: 0;
+  font-size: var(--system-14-font-size);
+  line-height: var(--system-14-line-height);
+  font-family: var(--font-family-system);
+}
+.ProfileContentBtn {
+  border: 0;
+  color: rgb(var(--ig-primary-button));
+  display: inline-block;
+  padding: 0 !important;
+  position: relative;
+  text-align: center;
+  font-family: var(--font-family-system);
+  -webkit-appearance: none;
+  background: none;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: var(--font-weight-system-semibold);
+  pointer-events: auto;
+  text-overflow: ellipsis;
+  text-transform: inherit;
+  -webkit-user-select: none;
+  width: auto;
+  line-height: var(--system-14-line-height);
+  margin: 0;
+}
+.ProfileBtnLink {
+  display: inline-flex;
+}
+
+.LinkSvgSpan {
+  padding-top: 3px;
+  margin-right: 7px;
+}
+.LinkSvg {
+  color: rgb(var(--ig-link));
+  position: relative;
+  display: block;
+}
+.ProfileLinkDiv {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgb(var(--ig-link));
+  font-weight: var(--font-weight-system-semibold);
+  margin: 0;
+  font-size: var(--system-14-font-size);
+  line-height: var(--system-14-line-height);
+  font-family: var(--font-family-system);
+}
+.PostType {
+  text-transform: uppercase;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  border-top-color: rgb(var(--ig-separator));
+  text-align: center;
+  color: rgb(var(--grey-5));
+  font-weight: 600;
+  letter-spacing: 1px;
+  font-size: 0.75rem;
+  border-top-width: 1px;
+  border-top-style: solid;
+}
+
+.PostLinkDiv {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  flex-direction: row;
+  align-self: auto;
+  justify-content: center;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.PostLinkSvg {
+  color: rgb(var(--ig-primary-text));
+  position: relative;
+  display: block;
+}
+.PostLinkSpan {
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  border-left-width: 0;
+  padding-left: 0;
+  font-size: 100%;
+  border-right-width: 0;
+  border-top-width: 0;
+  padding-right: 0;
+  margin-left: 6px;
+  vertical-align: baseline;
+  margin-right: 0;
+}
+
+.PostVideoLink {
+  align-items: center;
+  color: rgb(var(--ig-secondary-text));
+  text-decoration: none;
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-bottom-style: none;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  display: inline;
+  border-left-width: 0;
+  padding-left: 0;
+  background-color: transparent;
+  touch-action: manipulation;
+  border-right-style: none;
+  border-right-width: 0;
+  box-sizing: border-box;
+  border-top-width: 0;
+  padding-right: 0;
+  cursor: pointer;
+  margin-left: 0;
+  -webkit-tap-highlight-color: transparent;
+  border-top-style: none;
+  border-left-style: none;
+  text-align: inherit;
+  /* margin-right: 0; */
+  list-style: none;
+  text-decoration: none;
+  outline: none;
+  font-family: var(--font-family-system);
+  align-items: center;
+  cursor: pointer;
+  display: flex !important;
+  flex-direction: row;
+  height: 52px;
+  justify-content: center;
+  text-transform: uppercase;
+}
+
+.MMainDivHeader {
+  margin-top: 16px;
+  grid-template-columns: 120px 1fr;
+  width: 100%;
+  display: grid;
+}
+
+.MMsection {
+  grid-row-end: 3;
+  margin-left: 16px;
+  margin-right: 28px;
+  justify-content: center;
+  grid-column-start: 1;
+  display: flex;
+  align-items: center;
+  grid-row-start: 1;
+}
+
+.MMsectionDiv {
+  justify-content: center;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  position: relative;
+  flex-grow: 1;
+}
+
+.MMsectionDiv2 {
+  border-bottom-color: var(--always-dark-overlay);
+  border-top-color: var(--always-dark-overlay);
+  padding-top: 0;
+  min-width: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-top-width: 0;
+  min-height: 0;
+  border-bottom-width: 0;
+  border-bottom-style: solid;
+  padding-bottom: 0;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-left-width: 0;
+  justify-content: center;
+  padding-left: 0;
+  background-color: transparent;
+  touch-action: manipulation;
+  flex-basis: auto;
+  border-right-width: 0;
+  align-self: center;
+  border-right-color: var(--always-dark-overlay);
+  box-sizing: border-box;
+  user-select: none;
+  align-items: center;
+  padding-right: 0;
+  border-top-right-radius: inherit;
+  flex-shrink: 0;
+  border-left-color: var(--always-dark-overlay);
+  border-left-style: solid;
+  cursor: pointer;
+  outline-style: none;
+  flex-direction: row;
+  border-top-left-radius: inherit;
+  position: relative;
+  margin-left: 0;
+  display: block;
+  z-index: 0;
+  -webkit-tap-highlight-color: transparent;
+  border-bottom-right-radius: inherit;
+  text-align: inherit;
+  border-bottom-left-radius: inherit;
+  margin-right: 0;
+  list-style: none;
+  text-decoration: none;
+  outline: none;
+}
+
+.Mcanvas {
+  left: -7px;
+  position: absolute;
+  top: -7px;
+  height: 91px;
+  width: 91px;
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  aspect-ratio: auto 182 / 182;
+}
+
+.MMSpan {
+  height: 77px;
+  width: 77px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  border-bottom-left-radius: 50%;
+  border-top-right-radius: 50%;
+  background-color: rgb(var(--ig-secondary-background));
+  box-sizing: border-box;
+  flex-shrink: 0;
+  position: relative;
+  display: block;
+  border-bottom-right-radius: 50%;
+  border-top-left-radius: 50%;
+}
+
+.MMImage {
+  width: 100%;
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-top-width: 0;
+  height: 100%;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  -webkit-touch-callout: none;
+  border-left-width: 0;
+  object-fit: cover;
+  padding-left: 0;
+  font-size: 100%;
+  border-right-width: 0;
+  padding-right: 0;
+  margin-left: 0;
+  vertical-align: baseline;
+  margin-right: 0;
+  border: 0;
+}
+
+.MMImage::after {
+  border-top-color: rgba(var(--web-always-black), 0.0975);
+  border-top-style: solid;
+  border-top-width: 1px;
+  bottom: 0;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  top: 0;
+  border-bottom-color: rgba(var(--web-always-black), 0.0975);
+  border-bottom-left-radius: 50%;
+  border-right-style: solid;
+  border-bottom-right-radius: 50%;
+  border-right-color: rgba(var(--web-always-black), 0.0975);
+  border-left-color: rgba(var(--web-always-black), 0.0975);
+  pointer-events: none;
+  border-top-right-radius: 50%;
+  content: "";
+  right: 0;
+  position: absolute;
+  border-left-style: solid;
+  border-top-left-radius: 50%;
+  left: 0;
+  border-right-width: 1px;
+  border-left-width: 1px;
+}
+
+.MMsection2 {
+  margin-bottom: 0;
+  margin-right: 16px;
+  margin-top: auto;
+  margin-bottom: 20px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  grid-column-start: 2;
+  grid-row-start: 1;
+}
+
+.MProfileSectionDiv {
+  margin-bottom: 12px;
+  min-width: 0;
+  flex-shrink: 1;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  position: relative;
+}
+
+.MProfileSectionDiv2 {
+  overflow-x: hidden;
+  overflow-y: hidden;
+  margin-right: 4px;
+  flex-shrink: 1;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  position: static;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.MProfileSectionDiv3 {
+  overflow-x: hidden;
+  max-width: 100%;
+  overflow-y: hidden;
+  display: flex;
+}
+
+.MProfileSectionLink {
+  text-decoration: none;
+  padding-top: 0;
+  min-width: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-top-width: 0;
+  border-bottom-style: none;
+  border-bottom-width: 0;
+  border-top-style: none;
+  padding-bottom: 0;
+  flex-shrink: 1;
+  border-left-width: 0;
+  padding-left: 0;
+  background-color: transparent;
+  touch-action: manipulation;
+  border-right-style: none;
+  border-right-width: 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  padding-right: 0;
+  cursor: pointer;
+  flex-direction: row;
+  position: relative;
+  margin-left: 0;
+  -webkit-tap-highlight-color: transparent;
+  border-left-style: none;
+  text-align: inherit;
+  margin-right: 0;
+  list-style: none;
+  text-decoration: none;
+  outline: none;
+  color: rgb(var(--ig-link));
+}
+
+.MProfileSectionLinkH2 {
+  line-height: 25px;
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-weight: 400;
+  color: rgb(var(--ig-primary-text));
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  position: relative;
+  font-size: var(--system-20-font-size);
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  margin-left: 0 !important;
+  word-break: break-word;
+  padding: 0;
+}
+
+.MProfileSectionLinkH2::before {
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.MProfileSectionLinkH2::after {
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.MProfileSectionLinkSpan {
+  overflow-x: hidden;
+  max-width: 100%;
+  overflow-y: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.MProfileSectionBtn {
+  max-width: 250px;
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.MProfileSectionBtn2 {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  align-items: stretch;
+  flex-direction: row;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 0;
+  column-gap: 4px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.MProfileSectionBtn3 {
+  overflow-y: visible;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom-right-radius: 0;
+  align-items: stretch;
+  align-self: auto;
+  justify-content: flex-start;
+  position: relative;
+  flex-grow: 1;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.MProfileSectionBtn4 {
+  border: none;
+  color: rgb(var(--ig-primary-text));
+  background-color: rgb(var(--ig-secondary-button-background));
+  border-radius: 8px;
+  position: relative;
+}
+
+.MProfileSectionDivBtn5 {
+  height: 100%;
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  justify-content: center;
+  background-color: transparent;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  flex-direction: row;
+  align-self: auto;
+  position: relative;
+  padding-left: 4px;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  padding-right: 4px;
+  border-top-right-radius: 0;
+}
+
+.MProfileSectionDiv6 {
+  display: block;
+  font-weight: var(--font-weight-system-semibold);
+  margin: 0;
+  font-size: var(--system-14-font-size);
+  line-height: var(--system-14-line-height);
+  font-family: var(--font-family-system);
+}
+
+.MMsection3 {
+  grid-column-start: 1;
+  grid-row-start: 6;
+  grid-column-end: 3;
+}
+
+.Mul {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  border-top-color: rgb(var(--ig-separator));
+  border-top-width: 1px;
+  border-top-style: solid;
+  padding-left: 0;
+  display: flex;
+  padding-right: 0;
+  flex-direction: row;
+  justify-content: space-around;
+  list-style-type: none;
+  margin: 0;
+}
+
+.Mli {
+  width: 33.3%;
+  font-size: var(--system-14-font-size);
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.MliSpan {
+  line-height: 18px;
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-size: var(--system-14-font-size);
+  font-weight: 400;
+  text-align: center;
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  color: rgb(var(--ig-secondary-text));
+  position: relative;
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  margin-left: 0 !important;
+  word-break: break-word;
+}
+
+.MliSpan::before {
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.MliSpan::after {
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.MliSpan2 {
+  color: rgb(var(--ig-primary-text));
+  font-weight: 600;
+  display: block;
+}
+
+.MliSpan3 {
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+  word-wrap: break-word;
+  margin-left: 0;
+  text-align: inherit;
+  margin-right: 0;
+  text-decoration: none;
+}
+
+.MMsection4 {
+  margin-bottom: 21px;
+  margin-top: 0;
+  grid-row-start: 4;
+  margin-right: 16px;
+  grid-column-start: 1;
+  margin-left: 16px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  grid-column-end: 3;
+}
+
+.MMsectionDiv3 {
+  overflow-y: hidden;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-top-width: 0;
+  border-bottom-width: 0;
+  padding-bottom: 0;
+  border-left-width: 0;
+  padding-left: 0;
+  flex-direction: column;
+  border-right-width: 0;
+  box-sizing: border-box;
+  align-items: flex-start;
+  display: flex;
+  padding-right: 0;
+  flex-shrink: 0;
+  position: relative;
+  margin-left: 0;
+  vertical-align: baseline;
+  margin-right: 0;
+}
+
+.MMsectionDiv4 {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  justify-content: center;
+  background-color: transparent;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  position: static;
+  flex-direction: row;
+  align-self: auto;
+  flex-grow: 0;
+  column-gap: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.MMsectionDiv5 {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  row-gap: 8px;
+  flex-shrink: 0;
+  position: static;
+  flex-direction: row;
+  align-self: auto;
+  justify-content: flex-start;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.MMsectionDivSpan {
+  line-height: 18px;
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-size: var(--system-14-font-size);
+  color: rgb(var(--ig-primary-text));
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  font-weight: 600;
+  position: relative;
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  margin-left: 0 !important;
+  word-break: break-word;
+}
+
+.MMsectionDivSpan::before {
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.MMsectionDivSpan::after {
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.MMsectionDiv6 {
+  max-width: 100%;
+  display: inline-flex;
+}
+
+.MMsectionDivSpan2 {
+  padding-top: 3px;
+  margin-right: 7px;
+}
+
+.linkSvg2 {
+  color: rgb(var(--ig-link));
+  position: relative;
+  display: block;
+  forced-color-adjust: auto;
+}
+
+.MMsectionDiv7 {
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.MMsectionDivLink {
+  color: rgb(var(--ig-link));
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.MMsectionLinkSpan {
+  line-height: 18px;
+  overflow-y: visible;
+  min-width: 0;
+  margin-bottom: 0 !important;
+  overflow-x: visible;
+  max-width: 100%;
+  margin-top: 0 !important;
+  font-size: var(--system-14-font-size);
+  color: rgb(var(--ig-link));
+  margin-right: 0 !important;
+  word-wrap: break-word;
+  font-weight: 600;
+  position: relative;
+  display: block;
+  font-family: var(--font-family-system);
+  white-space: pre-line;
+  margin-left: 0 !important;
+  word-break: break-word;
+}
+
+.MMsectionLinkSpan::before {
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.MMsectionLinkSpan::after {
+  height: 0;
+  display: block;
+  content: "";
+}
+
+.MMsectionLinkSpan2 {
+  overflow-x: hidden;
+  max-width: 100%;
+  overflow-y: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.MMSection5 {
+  margin-right: 16px;
+  grid-row-start: 2;
+  grid-column-end: 3;
+  grid-column-start: 2;
+}
+
+.MMSection6 {
+  grid-row-start: 5;
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
+
+.MMSection7 {
+  margin-top: 24px;
+  grid-row-start: 3;
+  margin-top: 44px;
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
+
+.MMDiv {
+  border-top-color: rgb(var(--ig-separator));
+  border-top-width: 1px;
+  border-top-style: solid;
+  text-transform: uppercase;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: rgb(var(--grey-5));
+  font-weight: 600;
+  letter-spacing: 1px;
+  font-size: 0.75rem;
+}
+
+.MMLink {
+  align-items: center;
+  color: rgb(var(--ig-primary-text));
+  text-decoration: none;
+  padding-top: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-top-width: 0;
+  border-bottom-style: none;
+  border-bottom-width: 0;
+  border-top-style: none;
+  padding-bottom: 0;
+  border-left-width: 0;
+  padding-left: 0;
+  background-color: transparent;
+  touch-action: manipulation;
+  border-right-style: none;
+  border-right-width: 0;
+  box-sizing: border-box;
+  padding-right: 0;
+  cursor: pointer;
+  margin-left: 0;
+  -webkit-tap-highlight-color: transparent;
+  border-left-style: none;
+  text-align: inherit;
+  margin-right: 0;
+  list-style: none;
+  outline: none;
+  flex: 1 1 auto;
+  height: 44px;
+  font-family: var(--font-family-system);
+  align-items: center;
+  cursor: pointer;
+  display: flex !important;
+  flex-direction: row;
+  justify-content: center;
+  text-transform: uppercase;
+}
+
+.postssvg {
+  position: relative;
+  display: block;
+  forced-color-adjust: auto;
+}

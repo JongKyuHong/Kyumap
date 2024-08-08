@@ -58,29 +58,31 @@ export default function ResponsiveNav() {
                             role="button"
                             tabIndex={0}
                           >
-                            <div className={styles.MDiv7}>
-                              <div className={styles.MDiv9}>
-                                {isDark ? (
-                                  <Image
-                                    alt="Kyumap"
-                                    src={smallLogodark}
-                                    aria-label="Kyumap"
-                                    width={103}
-                                    height={29}
-                                    priority={true}
-                                  />
-                                ) : (
-                                  <Image
-                                    alt="Kyumap"
-                                    src={smallLogo}
-                                    aria-label="Kyumap"
-                                    width={103}
-                                    height={29}
-                                    priority={true}
-                                  />
-                                )}
+                            <Link href="/home">
+                              <div className={styles.MDiv7}>
+                                <div className={styles.MDiv9}>
+                                  {isDark ? (
+                                    <Image
+                                      alt="Kyumap"
+                                      src={smallLogodark}
+                                      aria-label="Kyumap"
+                                      width={103}
+                                      height={29}
+                                      priority={true}
+                                    />
+                                  ) : (
+                                    <Image
+                                      alt="Kyumap"
+                                      src={smallLogo}
+                                      aria-label="Kyumap"
+                                      width={103}
+                                      height={29}
+                                      priority={true}
+                                    />
+                                  )}
+                                </div>
                               </div>
-                            </div>
+                            </Link>
                             <div className={styles.MDiv8} role="none"></div>
                           </div>
                         </div>

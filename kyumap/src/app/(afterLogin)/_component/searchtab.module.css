@@ -998,3 +998,72 @@
   position: relative;
   display: block;
 }
+@media only screen and (max-width: 768px) {
+  .containerDiv {
+    width: 100%;
+    padding-left: 8px;
+    padding-right: 8px;
+    box-shadow: none;
+    border-radius: 0;
+    height: auto;
+  }
+
+  .containerDiv2 {
+    overflow-y: auto;
+  }
+
+  .barHeader {
+    padding-top: 8px;
+    padding-bottom: 20px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .headerSpan {
+    font-size: var(--system-20-font-size);
+    text-align: center;
+  }
+
+  .barBody {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .searchBar {
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  .searchBarInput {
+    font-size: var(--system-14-font-size);
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .recentLink {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .profileLink {
+    height: 40px;
+    width: 40px;
+  }
+
+  .profileId {
+    font-size: var(--system-14-font-size);
+  }
+
+  .profileBodySpan {
+    font-size: var(--system-12-font-size);
+  }
+
+  .profileXbox3 {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+
+  .profileXbox {
+    margin-left: 8px;
+  }
+}
