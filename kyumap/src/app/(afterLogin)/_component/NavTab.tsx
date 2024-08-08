@@ -213,7 +213,7 @@ export default function NavTab({ session }: Props) {
                         >
                           <div className={styles.MHomeDiv}>
                             <Link
-                              href="#" // /explore/
+                              href="/explore/search" // /explore/
                               role="link"
                               tabIndex={0}
                               className={styles.MHomeLink}

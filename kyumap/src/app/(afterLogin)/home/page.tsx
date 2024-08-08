@@ -15,6 +15,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Kyumap - 나만의 맛집 지도",
   description: "Kyumap에서 나만의 맛집들을 친구들에게 소개해보세요.",
+  metadataBase: new URL("https://kyumap.vercel.app"),
   openGraph: {
     title: "Kyumap - 나만의 맛집 지도",
     description: "Kyumap에서 나만의 맛집들을 친구들에게 소개해보세요.",
