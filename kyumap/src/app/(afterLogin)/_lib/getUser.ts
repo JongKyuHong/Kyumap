@@ -14,7 +14,6 @@ export const getUser: QueryFunction<
         tags: ["users", userEmail],
       },
       credentials: "include",
-      cache: "no-store",
     }
   );
   if (!res.ok) {

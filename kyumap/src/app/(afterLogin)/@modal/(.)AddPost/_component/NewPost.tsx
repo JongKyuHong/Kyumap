@@ -316,7 +316,7 @@ export default function NewPost() {
   };
 
   const calculateImgSize = () => {
-    if (mobile) {
+    if (isMobile) {
       return {
         maxHeight: "300px",
         maxWidth: "330px",

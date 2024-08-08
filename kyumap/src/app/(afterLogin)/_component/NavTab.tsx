@@ -134,7 +134,7 @@ export default function NavTab({ session }: Props) {
   return (
     <>
       {userData &&
-        (mobile ? (
+        (isMobile ? (
           <div className={styles.MleftSectionWrapper}>
             <div className={styles.MleftSectionOuter} tabIndex={-1}>
               <div className={styles.MleftSectionInner}>

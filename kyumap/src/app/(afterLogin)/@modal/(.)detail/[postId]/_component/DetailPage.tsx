@@ -890,7 +890,7 @@ export default function DetailPage({ postId }: Props) {
                             maxWidth: "100%",
                           }}
                         >
-                          {mobile ? (
+                          {isMobile ? (
                             <article
                               className={styles.DetailModalRootArticleW}
                               role="presentation"
@@ -958,7 +958,7 @@ export default function DetailPage({ postId }: Props) {
                                       <div
                                         className={styles.DetailImageDivInner3}
                                         style={{
-                                          paddingBottom: !mobile
+                                          paddingBottom: !isMobile
                                             ? "75%"
                                             : "100%",
                                         }}
@@ -1553,7 +1553,7 @@ export default function DetailPage({ postId }: Props) {
                                       <div
                                         className={styles.DetailImageDivInner3}
                                         style={{
-                                          paddingBottom: !mobile
+                                          paddingBottom: !isMobile
                                             ? "75%"
                                             : "100%",
                                         }}

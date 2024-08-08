@@ -510,7 +510,7 @@ export default function ReelPost({ postId }: Props) {
 
   return (
     <>
-      {mobile ? (
+      {isMobile ? (
         <>
           <Post post={post} />
           <ResponsiveNav />

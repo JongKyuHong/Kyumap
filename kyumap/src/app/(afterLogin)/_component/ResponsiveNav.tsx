@@ -41,7 +41,7 @@ export default function ResponsiveNav() {
 
   return (
     <>
-      {mobile && (
+      {isMobile && (
         <>
           <div style={{ order: 0 }}>
             <nav className={styles.MNav}>

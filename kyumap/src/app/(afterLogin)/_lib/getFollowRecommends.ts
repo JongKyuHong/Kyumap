@@ -6,7 +6,6 @@ export async function getFollowRecommends(userEmail: string) {
         tags: ["users", "followRecommends", userEmail],
       },
       credentials: "include",
-      cache: "no-store",
     }
   );
   // The return value is *not* serialized
