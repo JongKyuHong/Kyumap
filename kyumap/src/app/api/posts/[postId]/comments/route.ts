@@ -26,7 +26,6 @@ export async function POST(req: NextRequest, { params }: Props) {
       postId: postId,
       userNickname: data.User.name,
       userEmail: data.User.email,
-      userImage: data.User.image,
       content: data.comment,
     };
 

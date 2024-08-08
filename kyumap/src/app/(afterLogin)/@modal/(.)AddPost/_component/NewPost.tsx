@@ -171,8 +171,6 @@ export default function NewPost() {
         postFormData.append("userEmail", session.user.email);
       if (session?.user?.name)
         postFormData.append("userName", session.user.name);
-      if (session?.user?.image)
-        postFormData.append("userImage", session.user.image);
       postFormData.append("title", storeTitle);
       postFormData.append("content", content);
 

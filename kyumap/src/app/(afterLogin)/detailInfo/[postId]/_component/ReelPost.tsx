@@ -21,6 +21,7 @@ import Post from "@/app/(afterLogin)/_component/Post";
 import ResponsiveNav from "@/app/(afterLogin)/_component/ResponsiveNav";
 import MoreInfoOverlay from "@/app/(afterLogin)/reels/_component/MoreInfoOverlay";
 import { IUser } from "@/model/User";
+import LoadingComponent from "@/app/_component/LoadingComponent";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -506,6 +507,7 @@ export default function ReelPost({ postId }: Props) {
     router.push(`/detailInfo/${postId}`);
   }, [router, postId]);
 
+  if (userLoading) return <LoadingComponent />;
   if (!post) return null;
 
   return (
@@ -682,7 +684,7 @@ export default function ReelPost({ postId }: Props) {
                                         className={styles.Image}
                                         crossOrigin="anonymous"
                                         draggable="false"
-                                        src={`${post?.userImage}`}
+                                        src={`${userData!.image}`}
                                         width={0}
                                         height={0}
                                         sizes="100vw"
@@ -796,7 +798,7 @@ export default function ReelPost({ postId }: Props) {
                                           className={styles.contentLinkImage}
                                           crossOrigin="anonymous"
                                           draggable="false"
-                                          src={`${post.userImage}`}
+                                          src={`${userData!.image}`}
                                           alt={`${post.userNickname}의 프로필 사진`}
                                           width={0}
                                           height={0}

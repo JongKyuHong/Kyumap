@@ -389,7 +389,7 @@ export default function ActionButtons({ post }: Props) {
               postId: Number(commentData.postId),
               userNickname: commentData.userSession.name,
               userEmail: commentData.userSession.email,
-              userImage: commentData.userSession.image,
+              // userImage: commentData.userSession.image,
               content: commentData.CommentText,
               Hearts: [],
               _count: {
@@ -460,7 +460,7 @@ export default function ActionButtons({ post }: Props) {
               postId: Number(commentData.postId),
               userNickname: commentData.userSession.name,
               userEmail: commentData.userSession.email,
-              userImage: commentData.userSession.image,
+              // userImage: commentData.userSession.image,
               content: commentData.CommentText,
               Hearts: [],
               _count: {

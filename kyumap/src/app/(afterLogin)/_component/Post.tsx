@@ -11,6 +11,10 @@ import { IPost } from "@/model/Post";
 import ActionButtons from "./ActionButtons";
 import { useRouter } from "next/navigation";
 import MoreInfoOverlay from "../reels/_component/MoreInfoOverlay";
+import { useQuery } from "@tanstack/react-query";
+import { IUser } from "@/model/User";
+import { getUser } from "../_lib/getUser";
+import LoadingComponent from "@/app/_component/LoadingComponent";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -30,6 +34,17 @@ export default function Post({ post }: Props) {
 
   const router = useRouter();
   const imgArticle = [];
+
+  const { data: user, isLoading } = useQuery<
+    IUser,
+    Object,
+    IUser,
+    [string, string]
+  >({
+    queryKey: ["users", post?.userEmail as string],
+    queryFn: getUser,
+    enabled: !!post,
+  });
 
   // IntersectionObserver콜백 함수
   const handleIntersection = useCallback(
@@ -139,6 +154,7 @@ export default function Post({ post }: Props) {
     router.push(`/detailInfo/${post.postId}`);
   }, [router, post.postId]);
 
+  if (isLoading) return <LoadingComponent />;
   if (!post) return null;
 
   return (
@@ -173,7 +189,7 @@ export default function Post({ post }: Props) {
                       >
                         <Image
                           alt="프로필 사진"
-                          src={`${post.userImage}`}
+                          src={`${user!.image}`}
                           width={32}
                           height={32}
                           className={styles.articleUserProfileImage}

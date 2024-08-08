@@ -11,6 +11,7 @@ import Image from "next/image";
 import LoadingComponent from "@/app/_component/LoadingComponent";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { getUser } from "../_lib/getUser";
 
 type Props = {
   session: any;
@@ -23,6 +24,17 @@ export default function FollowRecommendSection({ session }: Props) {
     setDesktop(isDesktop);
   }, [isDesktop]);
 
+  const { data: userData, isLoading: userLoading } = useQuery<
+    IUser,
+    Object,
+    IUser,
+    [string, string]
+  >({
+    queryKey: ["users", session.user.email as string],
+    queryFn: getUser,
+    enabled: !!session,
+  });
+
   const { data: RecommendsData, isLoading } = useQuery<IUser[]>({
     queryKey: ["users", "followRecommends", session?.user!.email],
     queryFn: () => getFollowRecommends(session?.user!.email as string),
@@ -30,6 +42,7 @@ export default function FollowRecommendSection({ session }: Props) {
     gcTime: 300 * 1000,
   });
 
+  if (isLoading || userLoading) return <LoadingComponent />;
   if (!desktop || !session) return null;
 
   return (
@@ -59,7 +72,7 @@ export default function FollowRecommendSection({ session }: Props) {
                             }}
                           ></canvas>
                           <Link
-                            href={`/profile/${session?.user?.name}`}
+                            href={`/profile/${userData!.nickname}`}
                             className={styles.ImageLink}
                             style={{ height: "44px", width: "44px" }}
                             tabIndex={0}
@@ -71,8 +84,8 @@ export default function FollowRecommendSection({ session }: Props) {
                               draggable="false"
                               width={44}
                               height={44}
-                              alt={`${session?.user?.name}님의 프로필`}
-                              src={`${session?.user?.image}`}
+                              alt={`${userData!.nickname}님의 프로필`}
+                              src={`${userData!.image}`}
                             />
                           </Link>
                         </div>
@@ -83,7 +96,7 @@ export default function FollowRecommendSection({ session }: Props) {
                         <div className={styles.MyAccountInfoInnerDiv}>
                           <div className={styles.MyAccountInfoId}>
                             <Link
-                              href={`/profile/${session?.user?.name}`}
+                              href={`/profile/${userData!.nickname}`}
                               className={styles.IdLink}
                               tabIndex={0}
                               role="link"
@@ -97,7 +110,7 @@ export default function FollowRecommendSection({ session }: Props) {
                                   className={styles.NameSpan}
                                   style={{ lineHeight: "18px" }}
                                 >
-                                  {`${session?.user?.name}`}
+                                  {`${userData!.nickname}`}
                                 </span>
                               </div>
                             </span>

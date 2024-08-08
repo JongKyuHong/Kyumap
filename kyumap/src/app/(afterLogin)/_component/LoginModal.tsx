@@ -156,7 +156,10 @@ export default function LoginModal() {
                                   >
                                     {isDark ? (
                                       <Image
-                                        src={smallLogodark.src}
+                                        width={0}
+                                        height={0}
+                                        sizes="100vw"
+                                        src={smallLogodark}
                                         alt="logo"
                                         style={{
                                           backgroundPosition: "0px -52px",
@@ -170,7 +173,10 @@ export default function LoginModal() {
                                       />
                                     ) : (
                                       <Image
-                                        src={smallLogo.src}
+                                        width={0}
+                                        height={0}
+                                        sizes="100vw"
+                                        src={smallLogo}
                                         alt="logo"
                                         style={{
                                           backgroundPosition: "0px -52px",
