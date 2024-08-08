@@ -4,7 +4,7 @@ import { IReply, replySchema } from "./Reply";
 export interface IComment extends Document {
   postId: number;
   userNickname: string;
-  userImage: string;
+  // userImage: string;
   userEmail: string;
   content: string;
   createdAt: Date;
@@ -29,10 +29,10 @@ const commentSchema: Schema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  userImage: {
-    type: String,
-    required: true,
-  },
+  // userImage: {
+  //   type: String,
+  //   required: true,
+  // },
   content: {
     type: String,
     required: true,

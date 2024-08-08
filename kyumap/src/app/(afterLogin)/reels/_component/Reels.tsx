@@ -17,6 +17,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { IPost } from "@/model/Post";
 import { IUser } from "@/model/User";
+import LoadingComponent from "@/app/_component/LoadingComponent";
 
 type Props = {
   post: any;
@@ -394,6 +395,8 @@ export default function Reels({ post }: Props) {
     }
   };
 
+  if (userLoading) return <LoadingComponent />;
+
   return (
     <>
       <div className={styles.rootDiv2}>
@@ -504,7 +507,7 @@ export default function Reels({ post }: Props) {
                                                     height={0}
                                                     sizes="100vw"
                                                     alt={`${post.userNickname}님의 프로필`}
-                                                    src={`${post.userImage}`}
+                                                    src={`${userData!.image}`}
                                                     className={
                                                       styles.profileImage2
                                                     }
@@ -825,7 +828,7 @@ export default function Reels({ post }: Props) {
                     <Image
                       className={styles.profileImg5}
                       style={{ objectFit: "cover" }}
-                      src={`${post.userImage}`}
+                      src={`${userData!.image}`}
                       alt={`${post.userNickname}님의 프로필`}
                       width={0}
                       height={0}

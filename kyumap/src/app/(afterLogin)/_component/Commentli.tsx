@@ -16,6 +16,8 @@ import {
   InfiniteData,
 } from "@tanstack/react-query";
 import LoadingComponent from "@/app/_component/LoadingComponent";
+import { IUser } from "@/model/User";
+import { getUser } from "../_lib/getUser";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -39,6 +41,16 @@ export default function Commentli({
   const [isReply, setReply] = useState(false);
   const { data: session, status } = useSession();
   const queryClient = useQueryClient();
+
+  const { data: user, isLoading } = useQuery<
+    IUser,
+    Object,
+    IUser,
+    [string, string]
+  >({
+    queryKey: ["users", comment?.userEmail as string],
+    queryFn: getUser,
+  });
 
   useEffect(() => {
     const liked = !!comment?.Hearts?.find(
@@ -231,6 +243,7 @@ export default function Commentli({
     }
   };
 
+  if (isLoading) return <LoadingComponent />;
   if (!comment) return null;
   let parts: any[] = [];
   if (comment && comment.content) {
@@ -271,7 +284,7 @@ export default function Commentli({
                   >
                     <Image
                       alt={`${comment.userNickname}님의 프로필 사진`}
-                      src={`${comment.userImage}`}
+                      src={`${user!.image}`}
                       width={0}
                       height={0}
                       sizes="100vw"

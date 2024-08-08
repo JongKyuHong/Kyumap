@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, ChangeEvent, useEffect } from "react";
+import React, { useState, ChangeEvent, useEffect, useRef } from "react";
 import styles from "./edit.module.css";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
@@ -14,14 +14,18 @@ import {
 import useDeviceSize from "../../_component/useDeviceSize";
 import ResponsiveNav from "../../_component/ResponsiveNav";
 import { IUser } from "@/model/User";
+import LoadingComponent from "@/app/_component/LoadingComponent";
 
 export default function Page() {
-  const { data: session } = useSession();
+  const { data: session, status, update } = useSession();
   const queryClient = useQueryClient();
   const [textAreaValue, setTextAreaValue] = useState("");
   const [gender, setGender] = useState("");
   const [introduce, setIntro] = useState("");
   const [infowebsite, setWebsite] = useState("");
+  const [profileImage, setProfileImage] = useState<File | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const {
     data: userData,
@@ -42,6 +46,9 @@ export default function Page() {
       setGender(userData.Info.gender);
       setIntro(userData.Info.intro);
       setWebsite(userData.Info.website);
+      if (!previewImage) {
+        setPreviewImage(userData.image); // 처음 불러올 때만 설정
+      }
     }
   }, [userData]);
 
@@ -64,18 +71,53 @@ export default function Page() {
 
   // 유저 정보 변경
   const { mutate: submitInfo, isPending } = useMutation({
-    mutationFn: () => {
-      const data = {
-        website: infowebsite,
-        intro: introduce,
-        gender: gender,
+    mutationFn: async () => {
+      let profileImageUrl = "";
+
+      if (profileImage) {
+        // 프로필 이미지 업로드 처리
+        const filename = encodeURIComponent(profileImage.name);
+        const result_url = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/image/upload?file=${filename}&type=image`
+        );
+        const uploadUrlData = await result_url.json();
+        const ImageFormData = new FormData();
+        ImageFormData.append("file", profileImage);
+
+        // 파일 업로드
+        await fetch(uploadUrlData.url, {
+          method: "POST",
+          body: ImageFormData,
+        });
+
+        profileImageUrl = `${uploadUrlData.url}/image/${filename}`;
+      }
+
+      // 유저 정보 업데이트 데이터 준비
+      const userInfoData = {
         email: session?.user!.email,
+        intro: introduce,
+        website: infowebsite,
+        gender: gender,
+        profileImageUrl: profileImageUrl || userData?.image, // 기존 프로필 이미지 URL 사용
       };
 
-      return fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users/info`, {
-        method: "post",
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/info`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userInfoData),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("프로필 업데이트에 실패했습니다.");
+      }
+
+      return profileImageUrl;
     },
     onMutate: async () => {
       await queryClient.cancelQueries({
@@ -95,6 +137,7 @@ export default function Page() {
           website: infowebsite,
           gender: gender,
           intro: introduce,
+          image: previewImage,
         })
       );
 
@@ -109,17 +152,45 @@ export default function Page() {
         );
       }
     },
-    onSuccess: (data) => {
+    onSuccess: (profileImageUrl) => {
+      alert("프로필이 저장되었습니다.");
       queryClient.invalidateQueries({
         queryKey: ["users", session!.user!.email],
       });
-      alert("프로필이 저장되었습니다.");
+      update({
+        user: {
+          ...session!.user,
+          image: profileImageUrl || session!.user!.image,
+        },
+      });
     },
   });
 
   const submitForm = () => {
     submitInfo();
   };
+
+  const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
+      setProfileImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleButtonClick = () => {
+    console.log("Button clicked"); // 버튼 클릭이 호출되는지 확인
+    if (fileInputRef.current) {
+      console.log("Input exists"); // ref가 제대로 설정되었는지 확인
+      fileInputRef.current.click();
+    }
+  };
+
+  if (status === "loading" || userLoading) return <LoadingComponent />;
 
   return (
     <>
@@ -139,59 +210,137 @@ export default function Page() {
               </h2>
             </div>
             <div className={styles.rootDiv5}>
-              <div className={styles.rootDiv6}>
-                <div className={styles.rootDiv7}>
-                  <span className={styles.rootSpan}>
-                    <div className={styles.spanInnerDiv}>
-                      <button className={styles.profileImageEditBtn}>
-                        <Image
-                          width={0}
-                          height={0}
-                          layout="fill"
-                          alt={`${session?.user!.name}님의 프로필`}
-                          src={`${session?.user!.image}`}
-                        />
-                      </button>
-                      <div>
-                        <form
-                          className={styles.rootForm}
-                          encType="multipart/form-data"
-                          method="POST"
-                          role="presentation"
+              {isMobile ? (
+                <>
+                  <div className={styles.rootDiv6}>
+                    <div className={styles.rootDiv7}>
+                      <span className={styles.rootSpan}>
+                        <div className={styles.spanInnerDiv}>
+                          <button
+                            className={styles.profileImageEditBtn}
+                            onClick={handleButtonClick}
+                          >
+                            <Image
+                              width={56}
+                              height={56}
+                              alt={`${session?.user!.name}님의 프로필`}
+                              src={previewImage || `${session?.user!.image}`}
+                              priority={true}
+                              style={{ objectFit: "cover" }}
+                            />
+                          </button>
+                          <div>
+                            <form
+                              className={styles.rootForm}
+                              encType="multipart/form-data"
+                              method="POST"
+                              role="presentation"
+                            >
+                              <input
+                                ref={fileInputRef}
+                                className={styles.formInput}
+                                accept="image/jpeg, image/png"
+                                type="file"
+                                name="file"
+                                onChange={handleImageChange}
+                              />
+                            </form>
+                          </div>
+                        </div>
+                      </span>
+                      <div className={styles.rootDiv8}>
+                        <span
+                          className={styles.divUserEmail}
+                          style={{ lineHeight: "20px" }}
+                          dir="auto"
                         >
-                          <input
-                            className={styles.formInput}
-                            accept="image/jpeg, image/png"
-                            type="file"
-                            name="file"
-                          />
-                        </form>
+                          {session?.user!.email}
+                        </span>
+                        <span
+                          className={styles.divUserName}
+                          style={{ lineHeight: "18px" }}
+                          dir="auto"
+                        >
+                          {session?.user!.name}
+                        </span>
                       </div>
                     </div>
-                  </span>
-                  <div className={styles.rootDiv8}>
-                    <span
-                      className={styles.divUserEmail}
-                      style={{ lineHeight: "20px" }}
-                      dir="auto"
+                  </div>
+                  <div className={styles.rootDiv9}>
+                    <div
+                      className={styles.rootDiv10}
+                      role="button"
+                      onClick={handleButtonClick}
                     >
-                      {session?.user!.email}
+                      {"사진 변경"}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className={styles.rootDiv6}>
+                  <div className={styles.rootDiv7}>
+                    <span className={styles.rootSpan}>
+                      <div className={styles.spanInnerDiv}>
+                        <button
+                          className={styles.profileImageEditBtn}
+                          onClick={handleButtonClick}
+                        >
+                          <Image
+                            width={56}
+                            height={56}
+                            alt={`${session?.user!.name}님의 프로필`}
+                            src={previewImage || `${session?.user!.image}`}
+                            priority={true}
+                            style={{ objectFit: "cover" }}
+                          />
+                        </button>
+                        <div>
+                          <form
+                            className={styles.rootForm}
+                            encType="multipart/form-data"
+                            method="POST"
+                            role="presentation"
+                          >
+                            <input
+                              ref={fileInputRef}
+                              className={styles.formInput}
+                              accept="image/jpeg, image/png"
+                              type="file"
+                              name="file"
+                              onChange={handleImageChange}
+                            />
+                          </form>
+                        </div>
+                      </div>
                     </span>
-                    <span
-                      className={styles.divUserName}
-                      style={{ lineHeight: "18px" }}
-                      dir="auto"
+                    <div className={styles.rootDiv8}>
+                      <span
+                        className={styles.divUserEmail}
+                        style={{ lineHeight: "20px" }}
+                        dir="auto"
+                      >
+                        {session?.user!.email}
+                      </span>
+                      <span
+                        className={styles.divUserName}
+                        style={{ lineHeight: "18px" }}
+                        dir="auto"
+                      >
+                        {session?.user!.name}
+                      </span>
+                    </div>
+                  </div>
+                  <div className={styles.rootDiv9}>
+                    <div
+                      className={styles.rootDiv10}
+                      role="button"
+                      onClick={handleButtonClick}
                     >
-                      {session?.user!.name}
-                    </span>
+                      {"사진 변경"}
+                    </div>
                   </div>
                 </div>
-                <div className={styles.rootDiv9}>
-                  <div className={styles.rootDiv10} role="button">
-                    {"사진 변경"}
-                  </div>
-                </div>
-              </div>
+              )}
             </div>
             <div className={styles.rootDiv11}>
               <div className={styles.rootDiv12}>
