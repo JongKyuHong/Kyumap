@@ -11,17 +11,17 @@ import LoadingComponent from "@/app/_component/LoadingComponent";
 
 // { session }: any
 export default function MainSection() {
-  const [mobile, setMobile] = useState(false);
+  const [isLoading, setLoading] = useState(true);
   const { isMobile } = useDeviceSize();
-  // const { data: session, status } = useSession();
-  // if (status === "loading") return <LoadingComponent />;
-  // if (!session) return null;
+
   useEffect(() => {
-    setMobile(isMobile);
+    setLoading(false);
   }, [isMobile]);
+  if (isLoading) return <LoadingComponent />;
+
   return (
     <>
-      {mobile ? (
+      {isMobile ? (
         <section className={style.MSection2}>
           <main className={style.Mmain}>
             <div className={style.MDiv2}>

@@ -6,7 +6,6 @@ export const getPost = async ({ queryKey }: { queryKey: [string, string] }) => {
       next: {
         tags: ["posts", postId],
       },
-      cache: "no-store",
       credentials: "include",
     }
   );

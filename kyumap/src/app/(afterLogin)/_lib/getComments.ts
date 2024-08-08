@@ -12,7 +12,6 @@ export const getComments: QueryFunction<
       next: {
         tags: ["posts", postId, "comments"],
       },
-      cache: "no-store",
     }
   );
   // The return value is *not* serialized
