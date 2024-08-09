@@ -46,7 +46,7 @@ export default function Reels({ post }: Props) {
   } = useQuery<IUser, Object, IUser, [string, string]>({
     queryKey: ["users", session?.user?.email as string],
     queryFn: getUser,
-    staleTime: 5 * 60 * 1000, // fresh -> stale, 5분이라는 기준
+    staleTime: 5 * 60 * 1000, 
     gcTime: 10 * 60 * 1000,
   });
 

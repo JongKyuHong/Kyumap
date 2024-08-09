@@ -21,6 +21,7 @@ import Post from "@/app/(afterLogin)/_component/Post";
 import ResponsiveNav from "@/app/(afterLogin)/_component/ResponsiveNav";
 import MoreInfoOverlay from "@/app/(afterLogin)/reels/_component/MoreInfoOverlay";
 import { IUser } from "@/model/User";
+import { getAddressFromCoordinates } from "@/app/(afterLogin)/@modal/(.)AddPost/_component/action";
 import LoadingComponent from "@/app/_component/LoadingComponent";
 
 dayjs.locale("ko");
@@ -45,6 +46,7 @@ export default function ReelPost({ postId }: Props) {
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMenu, setIsMenu] = useState(false);
   const [mobile, setMobile] = useState(false);
+  const [address, setAddress] = useState<string | null>("");
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const { isMobile } = useDeviceSize();
@@ -57,26 +59,35 @@ export default function ReelPost({ postId }: Props) {
   >({
     queryKey: ["posts", postId.toString(), "comments"],
     queryFn: getComments,
-    staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
+    staleTime: 60 * 1000,
     gcTime: 300 * 1000,
   });
 
-  const { data: post } = useQuery<IPost, Object, IPost, [string, string]>({
+  const { data: post, isLoading: postLoading } = useQuery<
+    IPost,
+    Object,
+    IPost,
+    [string, string]
+  >({
     queryKey: ["posts", postId],
     queryFn: getPost,
-    staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
+    staleTime: 60 * 1000,
     gcTime: 300 * 1000,
   });
+
   const { data: session } = useSession();
-  const {
-    data: userData,
-    error: userError,
-    isLoading: userLoading,
-  } = useQuery<IUser, Object, IUser, [string, string]>({
-    queryKey: ["users", session?.user?.email as string],
+
+  const { data: userData, isLoading: userLoading } = useQuery<
+    IUser,
+    Object,
+    IUser,
+    [string, string]
+  >({
+    queryKey: ["users", post?.userEmail as string],
     queryFn: getUser,
-    staleTime: 5 * 60 * 1000, // fresh -> stale, 5분이라는 기준
+    staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
+    enabled: !!post,
   });
 
   const router = useRouter();
@@ -84,7 +95,14 @@ export default function ReelPost({ postId }: Props) {
 
   // 좋아요 저장됨 상태 업데이트
   useEffect(() => {
-    if (userData) {
+    if (userData && post) {
+      const calculateAdr = async () => {
+        const adr = await getAddressFromCoordinates(
+          post!.position.lat,
+          post!.position.lng
+        );
+        setAddress(adr.address_name);
+      };
       const ssave = !!userData?.Saved.find(
         (v: any) => v.id === post?.postId.toString()
       );
@@ -92,10 +110,11 @@ export default function ReelPost({ postId }: Props) {
       const liked = !!post?.Hearts?.find(
         (v) => v.email === session?.user?.email
       );
+      calculateAdr();
       setLiked(liked);
       setSaved(ssave);
     }
-  }, [userData, post?.postId, post?.Hearts, session?.user?.email]);
+  }, [userData, post, session?.user?.email]);
 
   useEffect(() => {
     setMobile(isMobile);
@@ -507,8 +526,8 @@ export default function ReelPost({ postId }: Props) {
     router.push(`/detailInfo/${postId}`);
   }, [router, postId]);
 
-  if (userLoading) return <LoadingComponent />;
-  if (!post) return null;
+  if (postLoading || userLoading) return <LoadingComponent />;
+  if (!post || !userData) return null;
 
   return (
     <>
@@ -866,6 +885,12 @@ export default function ReelPost({ postId }: Props) {
                                           style={{ lineHeight: "18px" }}
                                         >
                                           {post.content}
+                                        </span>
+                                        <span
+                                          className={styles.contentDivSpan2}
+                                          style={{ lineHeight: "18px" }}
+                                        >
+                                          {`주소 : ${address}`}
                                         </span>
                                       </div>
                                     </span>

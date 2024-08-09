@@ -25,6 +25,7 @@ import Comment from "../../../../_component/Comment";
 import { getUser } from "../../../../_lib/getUser";
 import { IUser } from "@/model/User";
 import LoadingComponent from "@/app/_component/LoadingComponent";
+import { getAddressFromCoordinates } from "../../../(.)AddPost/_component/action";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -54,6 +55,7 @@ export default function DetailPage({ postId }: Props) {
   const [isPosting, setIsPosting] = useState(false);
   const [isSaved, setSaved] = useState(false);
   const [mobile, setMobile] = useState(false);
+  const [address, setAddress] = useState<string | null>("");
 
   const { data: session } = useSession();
 
@@ -71,14 +73,14 @@ export default function DetailPage({ postId }: Props) {
   >({
     queryKey: ["posts", postId.toString(), "comments"],
     queryFn: getComments,
-    staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
+    staleTime: 60 * 1000, 
     gcTime: 300 * 1000,
   });
 
   const { data: post } = useQuery<IPost, Object, IPost, [string, string]>({
     queryKey: ["posts", postId],
     queryFn: getPost,
-    staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
+    staleTime: 60 * 1000, 
     gcTime: 300 * 1000,
   });
 
@@ -98,12 +100,20 @@ export default function DetailPage({ postId }: Props) {
 
   // 좋아요 저장됨 상태 업데이트
   useEffect(() => {
-    if (!user) return;
+    if (!user || !post) return;
+    const calculateAdr = async () => {
+      const adr = await getAddressFromCoordinates(
+        post!.position.lat,
+        post!.position.lng
+      );
+      setAddress(adr.address_name);
+    };
     const ssave = !!user?.Saved.find(
       (v: any) => v.id === post?.postId.toString()
     );
 
     const liked = !!post?.Hearts?.find((v) => v.email === session?.user?.email);
+    calculateAdr();
     setLiked(liked);
     setSaved(ssave);
   }, [post, session?.user?.email, user]);
@@ -2394,6 +2404,18 @@ export default function DetailPage({ postId }: Props) {
                                                         >
                                                           {post!.content}
                                                         </h1>
+                                                        <br />
+                                                        <div
+                                                          className={
+                                                            styles.ContentDivH1
+                                                          }
+                                                          style={{
+                                                            fontWeight:
+                                                              "normal",
+                                                          }}
+                                                        >
+                                                          {`주소 : ${address}`}
+                                                        </div>
                                                       </div>
                                                       <div
                                                         className={
