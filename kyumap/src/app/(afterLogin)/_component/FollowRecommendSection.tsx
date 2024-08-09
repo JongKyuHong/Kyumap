@@ -38,7 +38,7 @@ export default function FollowRecommendSection({ session }: Props) {
   const { data: RecommendsData, isLoading } = useQuery<IUser[]>({
     queryKey: ["users", "followRecommends", session?.user!.email],
     queryFn: () => getFollowRecommends(session?.user!.email as string),
-    staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
+    staleTime: 60 * 1000, 
     gcTime: 300 * 1000,
   });
 

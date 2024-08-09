@@ -39,7 +39,7 @@ export default function UserPosts({ userEmail }: Props) {
       initialPageParam: 0,
       queryFn: getUserPosts,
       getNextPageParam: (lastPage) => lastPage.at(-1)?.postId,
-      staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
+      staleTime: 60 * 1000,
       gcTime: 300 * 1000,
     });
 
