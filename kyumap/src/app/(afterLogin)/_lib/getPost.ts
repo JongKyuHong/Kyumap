@@ -14,5 +14,6 @@ export const getPost = async ({ queryKey }: { queryKey: [string, string] }) => {
     throw new Error("Failed to fetch data");
   }
   const data = await res.json();
+
   return data;
 };
