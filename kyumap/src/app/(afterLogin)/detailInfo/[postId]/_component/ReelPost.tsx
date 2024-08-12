@@ -526,7 +526,7 @@ export default function ReelPost({ postId }: Props) {
     router.push(`/detailInfo/${postId}`);
   }, [router, postId]);
 
-  if (postLoading || userLoading) return <LoadingComponent />;
+  // if (postLoading || userLoading) return <LoadingComponent />;
   if (!post || !userData) return null;
 
   return (

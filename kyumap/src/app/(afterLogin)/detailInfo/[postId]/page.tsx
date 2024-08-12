@@ -5,6 +5,9 @@ import {
 } from "@tanstack/react-query";
 import ReelPost from "./_component/ReelPost";
 import { getPost } from "../../_lib/getPost";
+import { getComments } from "../../_lib/getComments";
+import { getUser } from "../../_lib/getUser";
+import { IPost } from "@/model/Post";
 
 type Props = {
   params: {
@@ -31,5 +34,25 @@ export async function generateMetadata({ params }: Props) {
 }
 
 export default async function Page({ params }: Props) {
-  return <ReelPost postId={params.postId} />;
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: ["posts", params.postId],
+    queryFn: getPost,
+  });
+
+  const post = queryClient.getQueryData<IPost>(["posts", params.postId]);
+
+  await queryClient.prefetchQuery({
+    queryKey: ["users", post?.userEmail as string],
+    queryFn: getUser,
+  });
+
+  const dehydrateState = dehydrate(queryClient);
+
+  return (
+    <HydrationBoundary state={dehydrateState}>
+      <ReelPost postId={params.postId} />
+    </HydrationBoundary>
+  );
 }
