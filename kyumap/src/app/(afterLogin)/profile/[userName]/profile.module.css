@@ -548,6 +548,26 @@
   border-top-right-radius: 0;
 }
 
+.PostLinkDiv {
+  overflow-y: visible;
+  overflow-x: visible;
+  align-content: stretch;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  flex-direction: row;
+  align-self: auto;
+  justify-content: center;
+  position: relative;
+  flex-grow: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
 .CamDiv {
   border-bottom-color: var(--always-dark-overlay);
   padding-top: 0;
