@@ -27,7 +27,7 @@ export default function SearchResult({
   >({
     queryKey: ["search", searchParams],
     queryFn: getSearchResult,
-    staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
+    staleTime: 60 * 1000, 
     gcTime: 300 * 1000,
   });
 

@@ -43,7 +43,7 @@ export default function ProfileSection({ userEmail, userName }: Props) {
   } = useQuery<IUser, Object, IUser, [string, string]>({
     queryKey: ["users", userEmail],
     queryFn: getUser,
-    staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
+    staleTime: 60 * 1000, 
     gcTime: 300 * 1000,
   });
 
