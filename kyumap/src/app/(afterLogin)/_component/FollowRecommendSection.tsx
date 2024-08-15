@@ -35,10 +35,11 @@ export default function FollowRecommendSection({ session }: Props) {
     enabled: !!session,
   });
 
+  // 팔로우 추천 목록
   const { data: RecommendsData, isLoading } = useQuery<IUser[]>({
     queryKey: ["users", "followRecommends", session?.user!.email],
     queryFn: () => getFollowRecommends(session?.user!.email as string),
-    staleTime: 60 * 1000, 
+    staleTime: 60 * 1000,
     gcTime: 300 * 1000,
   });
 

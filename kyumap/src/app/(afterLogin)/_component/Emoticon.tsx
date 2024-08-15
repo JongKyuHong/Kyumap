@@ -8,6 +8,7 @@ interface propsType {
   left: number;
 }
 
+// 이모티콘 창
 export default function Emoticon({ top, left }: propsType) {
   const [modalPosition, setModalPosition] = useState({ width: 0, height: 0 });
   const [isModalVisible, setIsModalVisible] = useState(true);

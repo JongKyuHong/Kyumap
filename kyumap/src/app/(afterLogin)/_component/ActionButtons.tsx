@@ -24,28 +24,38 @@ import LoadingComponent from "@/app/_component/LoadingComponent";
 
 interface Props {
   post: IPost;
+  otherText?: string | undefined;
+  replyTargetProps?: string | undefined;
 }
 
-export default function ActionButtons({ post }: Props) {
+export default function ActionButtons({
+  post,
+  otherText,
+  replyTargetProps,
+}: Props) {
   // Post의 버튼들을 따로 다루는 컴포넌트
   const queryClient = useQueryClient();
   const { data: session } = useSession();
-  const [CommentText, setComment] = useState("");
+  const [CommentText, setComment] = useState(otherText ?? "");
   const [isLiked, setLiked] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
   // 좋아요 중복 방지용 state
   const [isSaved, setSaved] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
+  const [ReplyTargetId, setReplyTargetId] = useState("");
 
-  const {
-    data: user,
-    isLoading,
-    error,
-  } = useQuery<IUser, Object, IUser, [string, string]>({
+  const { data: user } = useQuery<IUser, Object, IUser, [string, string]>({
     queryKey: ["users", session?.user?.email as string],
     queryFn: getUser,
     enabled: !!session?.user?.email, // session과 email이 있을 때만 쿼리 실행
   });
+
+  useEffect(() => {
+    if (otherText && replyTargetProps) {
+      setComment(otherText);
+      setReplyTargetId(replyTargetProps);
+    }
+  }, [otherText]);
 
   useEffect(() => {
     if (!user) return;
@@ -499,6 +509,118 @@ export default function ActionButtons({ post }: Props) {
     },
   });
 
+  const addReplyComment = useMutation({
+    mutationFn: async (commentData: {
+      postId: String;
+      replyTarget: string; // parent Id임
+      CommentText: string;
+      userSession: any;
+    }) => {
+      return await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${postId.toString()}/${
+          commentData.replyTarget
+        }/reply`,
+        {
+          credentials: "include",
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            comment: commentData.CommentText,
+            User: commentData.userSession,
+          }),
+        }
+      );
+    },
+    onMutate: async (commentData) => {
+      if (isPosting) return; // 이미 요청 중이면 아무 작업도 하지 않음
+      setIsPosting(true); // 요청 시작 시 상태 업데이트
+
+      // Optimistic Update: 임시로 캐시 업데이트
+      const previousComments = queryClient.getQueryData<IComment[]>([
+        "posts",
+        commentData.postId.toString(),
+        "comments",
+      ]);
+
+      queryClient.setQueryData(
+        ["posts", commentData.postId.toString(), "comments"],
+        (old: any) => {
+          if (!old) return old;
+
+          return [
+            ...old,
+            {
+              postId: commentData.postId,
+              userNickname: commentData.userSession.name,
+              userEmail: commentData.userSession.email,
+              // userImage: commentData.userSession.image,
+              content: commentData.CommentText,
+              Hearts: [],
+              _count: {
+                Hearts: 0,
+                Comments: 0,
+              },
+              reply: [],
+              createdAt: new Date().toISOString(),
+            },
+          ];
+        }
+      );
+
+      const previousPost = queryClient.getQueryData<IPost>([
+        "posts",
+        commentData.postId.toString(),
+      ]);
+
+      queryClient.setQueryData(
+        ["posts", commentData.postId.toString()],
+        (old: any) => {
+          if (!old) return old;
+
+          return {
+            ...old,
+            _count: {
+              ...old._count,
+              Comments: old._count.Comments + 1,
+            },
+          };
+        }
+      );
+
+      return { previousComments, previousPost };
+    },
+    onError: (err, variables, context) => {
+      // 에러 발생 시 이전 상태로 롤백
+      if (context?.previousComments) {
+        queryClient.setQueryData(
+          ["posts", variables.postId.toString(), "comments"],
+          context.previousComments
+        );
+      }
+      if (context?.previousPost) {
+        queryClient.setQueryData(
+          ["posts", variables.postId.toString()],
+          context.previousPost
+        );
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["posts", postId.toString(), "comments"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["posts", postId.toString()],
+      });
+      setReplyTargetId("");
+      setComment("");
+    },
+    onSettled: () => {
+      setIsPosting(false); // 요청 완료 후 상태 업데이트
+    },
+  });
+
   // 하트를 클릭했을때
   const onClickHeart: MouseEventHandler<HTMLDivElement> = (e) => {
     e.stopPropagation();
@@ -514,7 +636,6 @@ export default function ActionButtons({ post }: Props) {
   // 저장됨 클릭
   const onClickSaved: MouseEventHandler<HTMLDivElement> = (e) => {
     e.stopPropagation();
-
     if (isSaved) {
       // 이미 저장함
       unsaved.mutate();
@@ -535,6 +656,15 @@ export default function ActionButtons({ post }: Props) {
     }
     const userSession = session.user;
     const postId = post.postId.toString();
+    if (otherText && ReplyTargetId) {
+      const replyTarget = ReplyTargetId;
+      addReplyComment.mutate({
+        postId,
+        replyTarget,
+        CommentText,
+        userSession,
+      });
+    }
     addComment.mutate({ postId, CommentText, userSession });
   };
 

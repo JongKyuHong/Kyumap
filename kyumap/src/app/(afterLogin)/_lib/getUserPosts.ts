@@ -1,20 +1,11 @@
-import { QueryFunctionContext, QueryFunction } from "@tanstack/query-core";
-import { IPost } from "@/model/Post";
-
-// type Props = {
-//   queryKey: [_1: string, userEmail: string, _2: string];
-//   pageParam: number;
-// };
-
-type Props = QueryFunctionContext<[string, string, string]> & {
-  pageParam?: number;
+// pageParam은 초기에는 0, 후에는 페이지의 마지막 psotId
+type Props = {
+  queryKey: [_1: string, userEmail: string, _2: string];
+  pageParam: number;
 };
 
-export const getUserPosts: QueryFunction<
-  IPost[],
-  [string, string, string],
-  number
-> = async ({ queryKey, pageParam }: Props) => {
+// 유저의 게시글을 불러옴
+export async function getUserPosts({ queryKey, pageParam }: Props) {
   const [_1, userEmail, _2] = queryKey;
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${userEmail}/posts?cursor=${pageParam}`,
@@ -24,14 +15,11 @@ export const getUserPosts: QueryFunction<
       },
     }
   );
-  // The return value is *not* serialized
-  // You can return Date, Map, Set, etc.
 
   if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
     throw new Error("Failed to fetch data");
   }
 
   const data = await res.json();
   return data;
-};
+}

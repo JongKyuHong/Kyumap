@@ -10,6 +10,7 @@ type Props = {
 
 export async function GET(req: NextRequest, { params }: Props) {
   await dbConnect();
+  // 주소 정보 있는 게시글 가져옴
   const data = await Post.find({
     userEmail: params.userEmail,
     "position.lat": { $ne: "" },

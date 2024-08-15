@@ -46,7 +46,7 @@ export default function Reels({ post }: Props) {
   } = useQuery<IUser, Object, IUser, [string, string]>({
     queryKey: ["users", session?.user?.email as string],
     queryFn: getUser,
-    staleTime: 5 * 60 * 1000, 
+    staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });
 
@@ -206,6 +206,7 @@ export default function Reels({ post }: Props) {
     },
   });
 
+  // 저장됨
   const saved = useMutation({
     mutationFn: () => {
       return fetch(
@@ -337,6 +338,7 @@ export default function Reels({ post }: Props) {
     },
   });
 
+  // 릴스 클릭 시
   const onClickVideo = () => {
     if (videoRef.current) {
       if (videoRef.current.paused) {
@@ -349,11 +351,13 @@ export default function Reels({ post }: Props) {
     }
   };
 
+  //
   const onClickMoreInfo = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     setMoreInfo(!isMoreInfo);
   };
 
+  // 음소거 토글
   const toggleMute = () => {
     setMuted(!isMuted);
     if (videoRef.current) {
@@ -403,7 +407,7 @@ export default function Reels({ post }: Props) {
         <div className={styles.rootDiv3}>
           <div
             className={styles.rootDiv4}
-            style={{ height: "820px", width: "461px" }}
+            // style={{ height: "820px", width: "461px" }}
           >
             <div className={styles.rootDiv6}>
               <div className={styles.rootDiv7}>
@@ -551,6 +555,12 @@ export default function Reels({ post }: Props) {
                                           >
                                             {post.content || " "}
                                           </span>
+                                          <span
+                                            aria-hidden="true"
+                                            className={styles.bodySpan2}
+                                          >
+                                            {"접기"}
+                                          </span>
                                         </div>
                                       ) : (
                                         // <MoreInfoOverlay postId={post.postId} />
@@ -563,16 +573,21 @@ export default function Reels({ post }: Props) {
                                           <div className={styles.bodyBody}>
                                             <div className={styles.bodyBody2}>
                                               <span className={styles.bodySpan}>
-                                                {post.content || " "}
-                                                {/* 나중에 초반내용으로 수정 */}
+                                                {post.content.length > 10
+                                                  ? `${post.content.slice(
+                                                      0,
+                                                      10
+                                                    )}...`
+                                                  : post.content || " "}
                                               </span>
-                                              <span
-                                                aria-hidden="true"
-                                                className={styles.bodySpan2}
-                                              >
-                                                {"... "}
-                                                {"더 보기"}
-                                              </span>
+                                              {post.content.length > 10 && (
+                                                <span
+                                                  aria-hidden="true"
+                                                  className={styles.bodySpan2}
+                                                >
+                                                  {"더 보기"}
+                                                </span>
+                                              )}
                                             </div>
                                           </div>
                                         </div>

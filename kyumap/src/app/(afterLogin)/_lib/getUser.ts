@@ -1,10 +1,8 @@
-import { QueryFunction } from "@tanstack/query-core";
-import { IUser } from "@/model/User";
-
-export const getUser: QueryFunction<
-  IUser,
-  [_1: string, userEmail: string]
-> = async ({ queryKey, signal, meta }) => {
+type Props = {
+  queryKey: [string, string];
+};
+// 유저정보 가져오기
+export async function getUser({ queryKey }: Props) {
   const [_1, userEmail] = queryKey;
 
   const res = await fetch(
@@ -22,4 +20,4 @@ export const getUser: QueryFunction<
   const data = await res.json();
 
   return data;
-};
+}

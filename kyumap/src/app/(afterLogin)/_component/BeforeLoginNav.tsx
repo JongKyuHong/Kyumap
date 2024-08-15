@@ -6,9 +6,12 @@ import smallLogo from "../../../../public/smallLogo.png";
 import smallLogodark from "../../../../public/smallLogodark.png";
 import React, { useEffect, useState } from "react";
 
+// 비 로그인시 상단에 나타나는 Nav입니다.
 export default function BeforeLoginNav() {
+  // 다크모드 여부를 결정하는 state
   const [isDark, setDark] = useState<boolean>(false);
 
+  // 컴포넌트가 처음으로 렌더링 될때 로컬스토리지에 있는 다크모드 여부를 확인하여 state를 적용합니다.
   useEffect(() => {
     const savedDarkMode = localStorage.getItem("darkMode");
     if (savedDarkMode !== null) {

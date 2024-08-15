@@ -33,11 +33,13 @@ const getSearchHistory = (): IUser[] => {
   return searchHistoryString ? JSON.parse(searchHistoryString) : [];
 };
 
+// 검색 탭
 export default function SearchTab({ onClickMounted }: Props) {
   const [isSearchHistory, setSearchHistory] = useState(true);
   const [historyInfo, setHistory] = useState<IUser[]>(getSearchHistory());
   const [searchInput, setInput] = useState("");
 
+  // 검색 창이 변경될때마다
   const onChangeInputData = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInput(value);
@@ -48,10 +50,12 @@ export default function SearchTab({ onClickMounted }: Props) {
     }
   };
 
+  
   const onClickSearch = () => {
     setSearchHistory(false);
   };
 
+  // 입력한 검색기록을 지우면 검색 히스토리가 보임
   const onClickXBtn = () => {
     setInput("");
     setSearchHistory(true);
@@ -62,12 +66,14 @@ export default function SearchTab({ onClickMounted }: Props) {
     setHistory(getSearchHistory());
   };
 
+  // 검색 기록을 지우면 로컬 스토리지에서도 삭제
   const handleDelete = (index: number) => {
     const update = historyInfo.filter((_, i) => i !== index);
     setHistory(update);
     localStorage.setItem("searchHistory", JSON.stringify(update));
   };
 
+  // 모두 지우기
   const handleAllDelete = () => {
     localStorage.removeItem("searchHistory");
     setHistory([]);

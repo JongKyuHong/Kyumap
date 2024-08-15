@@ -27,6 +27,7 @@ interface PreviewItem {
   thumbnailUrl?: string;
 }
 
+// 새로운 게시글
 export default function NewPost() {
   const { data: session } = useSession();
   const [content, setContent] = useState("");
@@ -51,6 +52,7 @@ export default function NewPost() {
   const [tablet, setTablet] = useState(false);
   const [mobile, setMobile] = useState(false);
 
+  // 다크모드 판별
   useEffect(() => {
     const rootElement = document.documentElement;
     const currentTheme = rootElement.getAttribute("color-theme");
@@ -82,6 +84,7 @@ export default function NewPost() {
     }
   };
 
+  // 게시글 업로드
   const { mutate, isPending } = useMutation({
     mutationFn: async (e: FormEvent) => {
       e.preventDefault(); // 기본 폼 제출 동작 방지
@@ -218,6 +221,7 @@ export default function NewPost() {
     },
   });
 
+  // 폼 제출
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (isPending) return;
@@ -234,6 +238,7 @@ export default function NewPost() {
     setRightBody(true);
   };
 
+  // 섬네일 생성
   const generateVideoThumbnail = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const video = document.createElement("video"); // 비디오 엘리먼트 생성
@@ -274,6 +279,7 @@ export default function NewPost() {
     });
   };
 
+  // 파일 업로드
   const onUpload: ChangeEventHandler<HTMLInputElement> = async (e) => {
     e.preventDefault();
     if (e.target.files && e.target.files.length > 0) {
@@ -313,6 +319,7 @@ export default function NewPost() {
     }
   };
 
+  // 화면 크기에 따라 이미지 크기 변경
   const calculateImgSize = () => {
     if (isMobile) {
       return {
@@ -341,19 +348,23 @@ export default function NewPost() {
     }
   };
 
+  // 이미지 미리보기 삭제
   const onRemovePreview = () => {
     setPreview([]);
     router.back();
   };
 
+  // 이벤트 전파 막기
   const stopPropa = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
   };
 
+  // 이미지 하나당 대체 텍스트 하나씩 생성하게 해줌
   useEffect(() => {
     setAltTexts(preview.map(() => ""));
   }, [preview]);
 
+  // 이미지의 계수가 여러개인지 판별
   useEffect(() => {
     if (preview.length > 1) {
       setMultiImg(true);
@@ -362,10 +373,12 @@ export default function NewPost() {
     }
   }, [isMultiImg, preview]);
 
+  // 다음 이미지
   const onClickNextBtn = () => {
     setNumber(currentNumber + 1);
   };
 
+  // 이전 이미지
   const onClickPrevBtn = () => {
     setNumber(currentNumber - 1);
   };
@@ -375,10 +388,12 @@ export default function NewPost() {
     setContent(newText); // 텍스트 상태 업데이트
   };
 
+  // 이모티콘 창
   const onClickEmoticon = () => {
     setEmo(!isClickedEmo);
   };
 
+  // 돌아가기 클릭 시 게시글 정보 입력 창인지 이미지 입력 창인지에 따라 다르게 동작
   const onClickExitBtn = () => {
     if (isRightBody) {
       setRightBody(false);
@@ -387,23 +402,28 @@ export default function NewPost() {
     }
   };
 
+  // 이모티콘 추가
   const addEmoticon = (e: React.MouseEvent<HTMLDivElement>) => {
     const innerText = e.currentTarget.innerText || "";
     setContent((prevText) => prevText + innerText);
   };
 
+  // 접근성 토글
   const onClickAccExpand = () => {
     setAccExpand(!isAccExpand);
   };
 
+  // 고급 설정 토글
   const onClickSettingExpand = () => {
     setSettingExpand(!isSettingExpand);
   };
 
+  // 좋아요 갯수 숨기기
   const onClickArticleInfoHide = () => {
     setArticleInfoHide(!isArticleInfoHide);
   };
 
+  // 댓글 숨기기
   const onClickCommentHide = () => {
     setCommentHide(!isCommentHide);
   };
@@ -415,6 +435,7 @@ export default function NewPost() {
     });
   };
 
+  // 대체 텍스트 변경
   const onClickAltTextChange = (
     e: ChangeEvent<HTMLInputElement>,
     index: number
