@@ -15,11 +15,13 @@ export async function GET(
     return NextResponse.json({ error: "Database connection failed" });
   }
 
+  // 초기에는 0, 그 다음은 마지막 postId
   const cursor = req.nextUrl.searchParams.get("cursor");
   const limit = 5;
 
   let query = {};
 
+  // 커서보다 postId가 큰 게시글 5개 가져옴
   if (cursor) {
     query = { postId: { $gt: Number(cursor) } };
   }

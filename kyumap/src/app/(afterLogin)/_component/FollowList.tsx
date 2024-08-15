@@ -9,14 +9,17 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { IUser } from "@/model/User";
 import { MouseEventHandler } from "react";
+import LoadingComponent from "@/app/_component/LoadingComponent";
 
 type Props = {
   user: IUser;
 };
 
+// 팔로우 추천 리스트의 개별 유저 항목
 export default function FollowList({ user }: Props) {
+  // 유저가 팔로우 상태인지
   const [followed, setFollowed] = useState(false);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
     const isFollowed = !!user.Followers?.find(
@@ -28,6 +31,7 @@ export default function FollowList({ user }: Props) {
 
   const queryClient = useQueryClient();
 
+  // 팔로우
   const follow = useMutation({
     mutationFn: (userEmail: string) => {
       return fetch(
@@ -120,6 +124,7 @@ export default function FollowList({ user }: Props) {
     },
   });
 
+  // 언팔로우
   const unfollow = useMutation({
     mutationFn: (userEmail: string) => {
       return fetch(
@@ -210,6 +215,7 @@ export default function FollowList({ user }: Props) {
     },
   });
 
+  // 팔로우 or 팔로잉 버튼을 누른경우
   const onFollow: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
     e.preventDefault();
@@ -225,7 +231,7 @@ export default function FollowList({ user }: Props) {
   };
 
   if (status === "loading") {
-    return <p>로딩중...</p>;
+    return <LoadingComponent />;
   }
 
   return (

@@ -19,6 +19,7 @@ export default function MapComponent({ location, setLocation }: Props) {
   const postcodeRef = useRef<any>(null); // 다중 Postcode 객체 참조 추가
 
   useEffect(() => {
+    // 지도 초기화
     const initMap = () => {
       if (!mapContainer.current) return;
 
@@ -69,6 +70,7 @@ export default function MapComponent({ location, setLocation }: Props) {
       });
     };
 
+    // 페이지가 완전히 로드되면 지도를 초기화
     if (document.readyState === "complete") {
       initMap();
     } else {
@@ -77,6 +79,7 @@ export default function MapComponent({ location, setLocation }: Props) {
     }
   }, [setLocation]);
 
+  // 위치찾기 클릭 시 우편번호 검색
   const handleLocationClick = () => {
     if (typeof window.sample5_execDaumPostcode === "function") {
       window.sample5_execDaumPostcode();

@@ -11,6 +11,7 @@ type Props = {
 export async function GET(req: NextRequest, { params }: Props) {
   await dbConnect();
   const postId = params.postId;
+  // 게시글 불러오기
   const post = await Post.findOne({ postId: postId });
   return NextResponse.json(post);
 }
@@ -20,6 +21,7 @@ export async function DELETE(req: NextRequest, { params }: Props) {
     await dbConnect();
     const postId = Number(params.postId);
     const userEmail = await req.json();
+    // 삭제
     const post = await Post.findOneAndDelete({
       postId: postId,
       userEmail: userEmail,

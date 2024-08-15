@@ -1,5 +1,6 @@
 "use server";
 
+// 주소를 통해 좌표로 변환 ( 위도, 경도 )
 export async function getCoordinatesFromAddress(address: string) {
   const apiKey = `${process.env.KAKAO_REST_API_KEY}`;
   const url = `https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(
@@ -22,6 +23,7 @@ export async function getCoordinatesFromAddress(address: string) {
   }
 }
 
+// 위도 경도를 받아 주소로 변환
 export async function getAddressFromCoordinates(
   latitude: string,
   longitude: string

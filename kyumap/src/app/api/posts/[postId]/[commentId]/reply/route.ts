@@ -17,6 +17,7 @@ export async function POST(req: NextRequest, { params }: Props) {
   const userName = data.User.name;
   const userEmail = data.User.email;
   const commentid = new ObjectId(params.commentId);
+  // commentId와 일치하는 댓글에 답글 추가
   const comment = await Comment.findOneAndUpdate(
     { _id: commentid },
     {
@@ -27,6 +28,7 @@ export async function POST(req: NextRequest, { params }: Props) {
           content: data.comment,
         },
       },
+      // 댓글의 답글 개수 증가
       $inc: { "_count.Comments": 1 },
     },
     { new: true }

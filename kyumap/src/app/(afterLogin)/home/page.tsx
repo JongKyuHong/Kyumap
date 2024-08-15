@@ -3,13 +3,6 @@ import MainSection from "../_component/MainSection";
 import styles from "../layout.module.css";
 import FollowRecommendSection from "../_component/FollowRecommendSection";
 import { auth } from "@/auth";
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from "@tanstack/react-query";
-import { getPostRecommends } from "../_lib/getPostRecommends";
-
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

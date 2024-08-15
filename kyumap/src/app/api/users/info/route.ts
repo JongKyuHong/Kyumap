@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     if (data.profileImageUrl) {
       updateFields["image"] = data.profileImageUrl;
     }
-
+    // 사용자 소개 업데이트
     const user = await User.findOneAndUpdate(
       { email: data.email },
       updateFields,

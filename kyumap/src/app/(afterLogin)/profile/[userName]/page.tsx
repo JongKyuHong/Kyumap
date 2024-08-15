@@ -8,6 +8,7 @@ type Props = {
   };
 };
 
+// 동적 메타 데이터 설정
 export async function generateMetadata({ params }: Props) {
   const userEmail = await getUserEmail(params.userName);
   return {

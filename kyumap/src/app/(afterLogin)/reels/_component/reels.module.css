@@ -48,23 +48,18 @@
   display: flex;
 }
 
-/* @media (min-width: 1920px) {
+@media (min-width: 1921px) {
   .rootDiv4 {
-    height: 1144px;
-    width: 643px;
+    height: 1144px !important;
+    width: 643px !important;
   }
 }
-
-@media (min-width: 1920px) {
-    .rootDiv4 {
-      height: 1144px;
-      width: 643px;
-    }
-  } */
 
 .rootDiv4 {
   max-height: inherit;
   display: flex;
+  height: 820px;
+  width: 461px;
 }
 
 .rootDiv6 {
