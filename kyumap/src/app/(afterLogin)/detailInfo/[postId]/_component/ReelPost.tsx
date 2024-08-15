@@ -31,10 +31,8 @@ type Props = {
   postId: string;
 };
 
+// 상세페이지 정보
 export default function ReelPost({ postId }: Props) {
-  const [isLiked, setLiked] = useState(false);
-  const [isLiking, setIsLiking] = useState(false);
-  const [isSaved, setSaved] = useState(false);
   const [isUserPaused, setIsUserPaused] = useState(false); // 사용자가 직접 일시정지했는지 여부
   const [isMuted, setMuted] = useState(true);
   const [targetCommentId, setTargetCommentId] = useState("");
@@ -42,15 +40,16 @@ export default function ReelPost({ postId }: Props) {
   const [replyTarget, setReplyTarget] = useState("");
   const [CommentText, setComment] = useState("");
   const [isCtype, setCType] = useState(true); // comment라면 true, reply라면 false
-  const [isPosting, setIsPosting] = useState(false);
+  // const [isPosting, setIsPosting] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMenu, setIsMenu] = useState(false);
-  const [mobile, setMobile] = useState(false);
+  // const [mobile, setMobile] = useState(false);
   const [address, setAddress] = useState<string | null>("");
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const { isMobile } = useDeviceSize();
 
+  // 댓글 정보를 불러옴
   const { data: comments } = useQuery<
     IComment[],
     Object,
@@ -63,26 +62,19 @@ export default function ReelPost({ postId }: Props) {
     gcTime: 300 * 1000,
   });
 
-  const { data: post, isLoading: postLoading } = useQuery<
-    IPost,
-    Object,
-    IPost,
-    [string, string]
-  >({
+  // 게시글 정보를 불러옴
+  const { data: post } = useQuery<IPost, Object, IPost, [string, string]>({
     queryKey: ["posts", postId],
     queryFn: getPost,
     staleTime: 60 * 1000,
     gcTime: 300 * 1000,
   });
 
+  // 세션 정보를 불러옴
   const { data: session } = useSession();
 
-  const { data: userData, isLoading: userLoading } = useQuery<
-    IUser,
-    Object,
-    IUser,
-    [string, string]
-  >({
+  // 유저 정보를 불러옴
+  const { data: userData } = useQuery<IUser, Object, IUser, [string, string]>({
     queryKey: ["users", post?.userEmail as string],
     queryFn: getUser,
     staleTime: 5 * 60 * 1000,
@@ -103,157 +95,15 @@ export default function ReelPost({ postId }: Props) {
         );
         setAddress(adr.address_name);
       };
-      const ssave = !!userData?.Saved.find(
-        (v: any) => v.id === post?.postId.toString()
-      );
-
-      const liked = !!post?.Hearts?.find(
-        (v) => v.email === session?.user?.email
-      );
       calculateAdr();
-      setLiked(liked);
-      setSaved(ssave);
     }
   }, [userData, post, session?.user?.email]);
 
-  useEffect(() => {
-    setMobile(isMobile);
-  }, [isMobile]);
+  // useEffect(() => {
+  //   setMobile(isMobile);
+  // }, [isMobile]);
 
-  const addComment = useMutation({
-    mutationFn: async (commentData: {
-      postId: String;
-      CommentText: string;
-      userSession: any;
-    }) => {
-      return await fetch(
-        `${
-          process.env.NEXT_PUBLIC_BASE_URL
-        }/api/posts/${postId.toString()}/comments`,
-        {
-          credentials: "include",
-          method: "post",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            comment: commentData.CommentText,
-            User: commentData.userSession,
-          }),
-        }
-      );
-    },
-    onMutate: async (commentData) => {
-      if (isPosting) return; // 이미 요청 중이면 아무 작업도 하지 않음
-      setIsPosting(true); // 요청 시작 시 상태 업데이트
-
-      // Optimistic Update: 임시로 캐시 업데이트
-      const previousComments = queryClient.getQueryData<IComment[]>([
-        "posts",
-        postId.toString(),
-        "comments",
-      ]);
-      queryClient.setQueryData(
-        ["posts", postId.toString(), "comments"],
-        (old: any) => {
-          if (!old) return old;
-
-          return [
-            ...old,
-            {
-              comment: commentData.CommentText,
-              User: commentData.userSession,
-            },
-          ];
-        }
-      );
-
-      const previousPost = queryClient.getQueryData<IPost>([
-        "posts",
-        postId.toString(),
-      ]);
-      queryClient.setQueryData(["posts", postId.toString()], (old: any) => {
-        if (!old) return old;
-
-        return {
-          ...old,
-          _count: {
-            ...old._count,
-            Comments: old._count.Comments + 1,
-          },
-        };
-      });
-
-      return { previousComments, previousPost };
-    },
-    onError: (err, variables, context) => {
-      // 에러 발생 시 이전 상태로 롤백
-      if (context?.previousComments) {
-        queryClient.setQueryData(
-          ["posts", postId.toString(), "comments"],
-          context.previousComments
-        );
-      }
-      if (context?.previousPost) {
-        queryClient.setQueryData(
-          ["posts", postId.toString()],
-          context.previousPost
-        );
-      }
-    },
-    onSuccess: (data, commentData) => {
-      // 성공 시 캐시를 무효화하여 최신 댓글 목록을 가져옵니다.
-      const previousComments = queryClient.getQueryData<IComment[]>([
-        "posts",
-        postId.toString(),
-        "comments",
-      ]);
-
-      // 게시물의 현재 정보를 가져옵니다.
-      const post = queryClient.getQueryData<IPost>([
-        "posts",
-        postId.toString(),
-      ]);
-
-      if (previousComments && post) {
-        // 댓글 배열을 업데이트합니다.
-        queryClient.setQueryData(
-          ["posts", postId.toString(), "comments"],
-          [
-            ...previousComments,
-            {
-              comment: commentData.CommentText,
-              User: commentData.userSession,
-            }, // 임시 댓글 객체
-          ]
-        );
-
-        // 게시물의 댓글 수를 1 증가시킵니다.
-        const updatedPost = {
-          ...post,
-          _count: {
-            ...post._count,
-            Comments: post._count.Comments + 1,
-          },
-        };
-
-        // 업데이트된 게시물 정보를 캐시에 저장합니다.
-        queryClient.setQueryData(["posts", postId.toString()], updatedPost);
-      }
-
-      queryClient.invalidateQueries({
-        queryKey: ["posts", postId.toString(), "comments"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["posts", postId.toString()],
-      });
-      setComment("");
-    },
-    onSettled: () => {
-      setIsPosting(false); // 요청 완료 후 상태 업데이트
-    },
-  });
-
+  // 삭제 mutation
   const deleteComment = useMutation({
     mutationFn: async (commentData: {
       postId: String;
@@ -341,108 +191,7 @@ export default function ReelPost({ postId }: Props) {
     },
   });
 
-  const addReplyComment = useMutation({
-    mutationFn: async (commentData: {
-      postId: String;
-      replyTarget: string; // parent Id임
-      CommentText: string;
-      userSession: any;
-    }) => {
-      return await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${postId.toString()}/${
-          commentData.replyTarget
-        }/reply`,
-        {
-          credentials: "include",
-          method: "post",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            comment: commentData.CommentText,
-            User: commentData.userSession,
-          }),
-        }
-      );
-    },
-    onMutate: async (commentData) => {
-      if (isPosting) return; // 이미 요청 중이면 아무 작업도 하지 않음
-      setIsPosting(true); // 요청 시작 시 상태 업데이트
-
-      // Optimistic Update: 임시로 캐시 업데이트
-      const previousComments = queryClient.getQueryData<IComment[]>([
-        "posts",
-        commentData.postId.toString(),
-        "comments",
-      ]);
-
-      queryClient.setQueryData(
-        ["posts", commentData.postId.toString(), "comments"],
-        (old: any) => {
-          if (!old) return old;
-
-          return [
-            ...old,
-            {
-              comment: commentData.CommentText,
-              User: commentData.userSession,
-            },
-          ];
-        }
-      );
-
-      const previousPost = queryClient.getQueryData<IPost>([
-        "posts",
-        commentData.postId.toString(),
-      ]);
-
-      queryClient.setQueryData(
-        ["posts", commentData.postId.toString()],
-        (old: any) => {
-          if (!old) return old;
-
-          return {
-            ...old,
-            _count: {
-              ...old._count,
-              Comments: old._count.Comments + 1,
-            },
-          };
-        }
-      );
-
-      return { previousComments, previousPost };
-    },
-    onError: (err, variables, context) => {
-      // 에러 발생 시 이전 상태로 롤백
-      if (context?.previousComments) {
-        queryClient.setQueryData(
-          ["posts", variables.postId.toString(), "comments"],
-          context.previousComments
-        );
-      }
-      if (context?.previousPost) {
-        queryClient.setQueryData(
-          ["posts", variables.postId.toString()],
-          context.previousPost
-        );
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["posts", postId.toString(), "comments"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["posts", postId.toString()],
-      });
-      setReplyTarget("");
-      setComment("");
-    },
-    onSettled: () => {
-      setIsPosting(false); // 요청 완료 후 상태 업데이트
-    },
-  });
-
+  // 게시글 이미지 / 동영상 클릭 시
   const onClickVideo = () => {
     if (videoRef.current) {
       if (videoRef.current.paused) {
@@ -473,10 +222,6 @@ export default function ReelPost({ postId }: Props) {
     setExitBtn(e);
   };
 
-  const onChangeTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setComment(e.target.value);
-  };
-
   const onClickRemoveComment = () => {
     if (!session) {
       return null;
@@ -491,30 +236,11 @@ export default function ReelPost({ postId }: Props) {
     setExitBtn(false);
   };
 
+  // ctype이 true인 경우 코멘트 false인 경우 답글로 간주함
   const ReplyInfo = (commenttext: string, id: string, ctype: boolean) => {
     setReplyTarget(id);
     setComment("@" + commenttext + " ");
     setCType(ctype);
-  };
-
-  const onSubmitComment = () => {
-    if (!session || isPosting) {
-      return null;
-    }
-    const userSession = session.user;
-    if (!isCtype) {
-      // true면 comment false면 답글
-      if (replyTarget) {
-        addReplyComment.mutate({
-          postId,
-          replyTarget,
-          CommentText,
-          userSession,
-        });
-      }
-    } else {
-      addComment.mutate({ postId, CommentText, userSession });
-    }
   };
 
   const closeMenu = () => {
@@ -915,7 +641,11 @@ export default function ReelPost({ postId }: Props) {
                           </div>
                         </div>
                         <div className={styles.contentDiv5}>
-                          <ActionButtons post={post} />
+                          <ActionButtons
+                            post={post}
+                            otherText={CommentText}
+                            replyTargetProps={replyTarget}
+                          />
                         </div>
                         <div className={styles.contentDiv6}></div>
                       </div>

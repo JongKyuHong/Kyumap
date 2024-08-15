@@ -1,15 +1,14 @@
+// 추천 팔로우 목록
 export async function getFollowRecommends(userEmail: string) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/followRecommends/${userEmail}`,
     {
       next: {
-        tags: ["users", "followRecommends", userEmail],
+        tags: ["users", "followRecommends", userEmail], 
       },
       credentials: "include",
     }
   );
-  // The return value is *not* serialized
-  // You can return Date, Map, Set, etc.
 
   if (!res.ok) {
     const errorData = await res.json();

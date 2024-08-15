@@ -25,6 +25,7 @@ export default async function RootLayout({ children, modal }: Props) {
                 <div className={styles.leafChild}>
                   <div className={styles.container} style={{ height: "100%" }}>
                     <>
+                      {/* 로그인 된 사용자 인경우 Nav를 비로그인은 BeforeLoginNav를 보여줌 */}
                       {session ? <Nav session={session} /> : <BeforeLoginNav />}
                       <div className={styles.rightSectionWrapper}>
                         <section className={styles.rootSection}>

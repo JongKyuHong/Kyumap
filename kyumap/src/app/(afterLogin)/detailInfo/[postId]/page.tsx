@@ -5,7 +5,6 @@ import {
 } from "@tanstack/react-query";
 import ReelPost from "./_component/ReelPost";
 import { getPost } from "../../_lib/getPost";
-import { getComments } from "../../_lib/getComments";
 import { getUser } from "../../_lib/getUser";
 import { IPost } from "@/model/Post";
 
@@ -15,6 +14,7 @@ type Props = {
   };
 };
 
+// 동적 메타데이터
 export async function generateMetadata({ params }: Props) {
   const post = await getPost({ queryKey: ["posts", params.postId] });
   return {
@@ -33,6 +33,7 @@ export async function generateMetadata({ params }: Props) {
   };
 }
 
+// ssr설정
 export default async function Page({ params }: Props) {
   const queryClient = new QueryClient();
 

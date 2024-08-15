@@ -9,6 +9,7 @@ type Props = {
   onClickMounted: () => void;
 };
 
+// 검색 결과 정보를 보여줌
 export default function SearchCard({
   userData,
   onClick,
@@ -18,6 +19,7 @@ export default function SearchCard({
     onClick(userData);
     onClickMounted();
   };
+
   return (
     <Link
       href={`/profile/${userData.nickname}`}

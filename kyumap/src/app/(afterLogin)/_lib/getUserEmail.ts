@@ -1,6 +1,4 @@
-// getUserEmail.js
-
-// Function to retrieve userEmail using userName
+// 유저 이름을 통해 유저 이메일 가져오기
 export async function getUserEmail(userName: string) {
   const user = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/email/${userName}`

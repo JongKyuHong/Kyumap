@@ -17,6 +17,7 @@ export default function RootLayout({ children }: Props) {
       <body className={styles.MainBody}>
         <AuthSession>{children}</AuthSession>
       </body>
+      {/* API를 사용하기 위한 script입니다. */}
       <script
         src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
         async

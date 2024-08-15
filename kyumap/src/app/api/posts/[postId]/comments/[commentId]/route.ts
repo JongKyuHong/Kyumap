@@ -22,12 +22,16 @@ export async function DELETE(req: NextRequest, { params }: Props) {
     const comment = await Comment.findOne({ _id: commentId });
     const reply = await Comment.findOne({ "reply._id": commentId });
     if (!comment && !reply) {
-      return NextResponse.json({ error: "Comment not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "댓글을 찾을 수 없습니다." },
+        { status: 404 }
+      );
     }
     if (comment) {
+      // 댓글삭제
       if (comment.userEmail !== userSession.email) {
         return NextResponse.json(
-          { error: "You are not authorized to delete this comment" },
+          { error: "댓글을 삭제할 권한이 없습니다." },
           { status: 403 }
         );
       }
@@ -38,9 +42,10 @@ export async function DELETE(req: NextRequest, { params }: Props) {
         { new: true }
       );
     } else if (reply) {
+      // 답글삭제
       if (reply.userEmail !== userSession.email) {
         return NextResponse.json(
-          { error: "You are not authorized to delete this reply" },
+          { error: "답글을 삭제할 권한이 없습니다." },
           { status: 403 }
         );
       }

@@ -9,19 +9,20 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { useSession } from "next-auth/react";
 import { IComment } from "@/model/Comment";
 import Commentli from "./Commentli";
-import LoadingComponent from "@/app/_component/LoadingComponent";
 
+// 한국어 시간 표시를 위한 dajs 설정
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
 
 type Props = {
-  comment: IComment;
+  comment: IComment; // 코멘트 모델을 타입으로
   postId: string;
-  onClickExitBtnChild: Function;
+  onClickExitBtnChild: Function; // 부모에서 전달한 삭제 창 핸들러
   parentId: string;
-  ReplyInfo: Function;
+  ReplyInfo: Function; // 부모에서 전달한 답글 정보 핸들러, 답글 달기를 누르면 댓글창에 @답글작성자 가 뜨게되어 답글을 달 수 있음
 };
 
+// 코멘트 창을 담당하는 컴포넌트
 export default function Comment({
   comment,
   postId,
@@ -29,7 +30,9 @@ export default function Comment({
   parentId,
   ReplyInfo,
 }: Props) {
+  // 댓글의 답글이 존재 여부 state
   const [hasReply, setHasReply] = useState(false);
+  // 답글 보기를 클릭했는지
   const [isClickedReply, setClickedReply] = useState(false);
   const { data: session } = useSession();
 
@@ -52,6 +55,7 @@ export default function Comment({
   return (
     <div className={styles.CommentDiv}>
       <ul className={styles.CommentUl}>
+        {/*  */}
         <Commentli
           comment={comment}
           ReplyInfo={ReplyInfo}
@@ -59,6 +63,7 @@ export default function Comment({
           postId={postId}
           parentId={parentId}
         />
+        {/* 답글이 존재하면 */}
         {hasReply && (
           <li>
             <ul className={styles.ulReply}>
@@ -77,6 +82,7 @@ export default function Comment({
                   </button>
                 </div>
               </li>
+              {/* 답글 보기를 클릭했을때 */}
               {isClickedReply &&
                 comment!.reply!.map((data, index) => (
                   <Reply

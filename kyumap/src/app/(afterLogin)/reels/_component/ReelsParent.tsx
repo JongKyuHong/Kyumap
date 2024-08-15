@@ -10,8 +10,10 @@ import crypto from "crypto";
 import LoadingComponent from "@/app/_component/LoadingComponent";
 
 export default function ReelsParent() {
+  // 현재 인덱스 관리
   const [currentIndex, setCurrentIndex] = useState(0);
   const [endIndex, setEndIndex] = useState(0);
+  // 릴스 목록을 받아옴
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery<
     IPost[],
     Object,
@@ -25,14 +27,16 @@ export default function ReelsParent() {
     getNextPageParam: (lastPage) => lastPage.at(-1)?.postId,
     staleTime: 60 * 1000,
     gcTime: 300 * 1000,
-    refetchOnWindowFocus: true,
-    refetchOnMount: true,
+    // refetchOnWindowFocus: true, // 윈도우 포커스 시 다시 페칭
+    // refetchOnMount: true, // 컴포넌트 마운트 시 다시 페칭
   });
 
+  // 전체 비디오 데이터를 평탄화하여 저장
   const allReelsData = useMemo(() => {
     return data?.pages.flat() || [];
   }, [data]);
 
+  // 현재 릴스의 id를 해시로 변경하여 url 변경
   if (allReelsData && allReelsData.length > 0) {
     const hashId = generateMD5Hash(
       allReelsData[currentIndex].postId.toString()
@@ -40,6 +44,7 @@ export default function ReelsParent() {
     history.replaceState(null, "", `/reels/${hashId}`);
   }
 
+  // 컴포넌트 마운트시에 로컬 스토리지에 저장된 데이터 가져옴
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedIndex = Number(localStorage.getItem("reelsIndex")) || 0;
@@ -49,6 +54,7 @@ export default function ReelsParent() {
     }
   }, []);
 
+  // 비디오 데이터의 길이가 변경될 때, 로컬 스토리지에 저장
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (!localStorage.getItem("reelsLength")) {
@@ -62,6 +68,7 @@ export default function ReelsParent() {
     }
   }, [allReelsData.length]);
 
+  // 스크롤 핸들러 현재 인덱스를 변경을 줌, 처음, 마지막 인덱스인경우 따로 처리
   const handleScroll = useCallback(
     (event: WheelEvent) => {
       if (event.deltaY > 0) {
@@ -85,6 +92,7 @@ export default function ReelsParent() {
     [allReelsData, currentIndex, endIndex]
   );
 
+  // 현재 인덱스 변경 시 해시 ID 갱신
   useEffect(() => {
     if (allReelsData && allReelsData.length > 0) {
       const hashId = generateMD5Hash(
@@ -94,10 +102,12 @@ export default function ReelsParent() {
     }
   }, [currentIndex, allReelsData]);
 
+  // 해시 함수
   function generateMD5Hash(data: string) {
     return crypto.createHash("md5").update(data).digest("hex");
   }
 
+  // 스크롤 이벤트 등록
   useEffect(() => {
     window.addEventListener("wheel", handleScroll);
 
@@ -106,11 +116,10 @@ export default function ReelsParent() {
     };
   }, [handleScroll]);
 
+  // 데이터 페칭중에는 로딩
   if (isFetching) {
     return <LoadingComponent />;
   }
-
-  console.log(data, "data");
 
   return (
     <div className={`${styles.rootDiv}`} tabIndex={0}>

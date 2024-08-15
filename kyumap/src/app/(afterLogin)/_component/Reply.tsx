@@ -9,12 +9,7 @@ import "dayjs/locale/ko";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { IComment } from "@/model/Comment";
 import { useSession } from "next-auth/react";
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-  InfiniteData,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { IReply } from "@/model/Reply";
 import LoadingComponent from "@/app/_component/LoadingComponent";
 import { IUser } from "@/model/User";
@@ -38,11 +33,12 @@ export default function Reply({
   onClickExitBtn,
   postId,
 }: Props) {
+  // 답글 좋아요를 눌렀는지 state
   const [isCommentLiked, setCommentLiked] = useState(false);
-  const [isReply, setReply] = useState(false);
   const { data: session } = useSession();
   const queryClient = useQueryClient();
 
+  // 유저 정보
   const { data: user, isLoading } = useQuery<
     IUser,
     Object,
@@ -53,6 +49,7 @@ export default function Reply({
     queryFn: getUser,
   });
 
+  // 좋아요를 이미 눌렀는지 확인
   useEffect(() => {
     const liked = !!comment?.Hearts?.find(
       (v) => v.email === session?.user?.email
@@ -64,6 +61,7 @@ export default function Reply({
     ReplyInfo(comment.userNickname, parentId, false);
   };
 
+  // 좋아요
   const commentHeart = useMutation({
     mutationFn: async (commentData: {
       postId: string;
@@ -142,6 +140,7 @@ export default function Reply({
     },
   });
 
+  // 좋아요 취소
   const commentUnheart = useMutation({
     mutationFn: async (commentData: {
       postId: string;
@@ -240,6 +239,7 @@ export default function Reply({
   if (isLoading) return <LoadingComponent />;
   if (!comment) return null;
 
+  // @와 문자열 분리
   let parts: any[] = [];
   if (comment && comment.content) {
     parts = comment.content.split(/(@\w+)/g);

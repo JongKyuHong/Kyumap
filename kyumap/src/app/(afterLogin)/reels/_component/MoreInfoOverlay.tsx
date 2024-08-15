@@ -6,7 +6,8 @@ import { useRouter } from "next/navigation";
 import { getPost } from "@/app/(afterLogin)/_lib/getPost";
 import { useEffect, useState } from "react";
 import { IPost } from "@/model/Post";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import LoadingComponent from "@/app/_component/LoadingComponent";
 
 type Props = {
   postId: number;
@@ -24,17 +25,20 @@ export default function MoreInfoOverlay({
   const { data: session } = useSession();
   const queryClient = useQueryClient();
 
+  const { data: postData } = useQuery<IPost, Object, IPost, [string, string]>({
+    queryKey: ["posts", postId.toString()],
+    queryFn: getPost,
+    staleTime: 60 * 1000,
+    gcTime: 300 * 1000,
+  });
+
   useEffect(() => {
-    const postInfo = async () => {
-      const fetchedPost = await getPost({
-        queryKey: ["users", postId.toString()],
-      });
-      setPost(fetchedPost);
-    };
+    if (postData) {
+      setPost(postData);
+    }
+  }, [postId, postData]);
 
-    postInfo();
-  }, [postId]);
-
+  // 클립보드에 복사
   const handleCopy = () => {
     const textToCopy = `${process.env.NEXT_PUBLIC_BASE_URL}/detail/${postId}`;
 
@@ -50,6 +54,7 @@ export default function MoreInfoOverlay({
     // router.back();
   };
 
+  // 게시글 삭제
   const deletePost = useMutation({
     mutationFn: () => {
       return fetch(`/api/posts/${postId}`, {
@@ -103,7 +108,7 @@ export default function MoreInfoOverlay({
   };
 
   if (!post) {
-    return <div>Loading...</div>;
+    return <LoadingComponent />;
   }
 
   return (

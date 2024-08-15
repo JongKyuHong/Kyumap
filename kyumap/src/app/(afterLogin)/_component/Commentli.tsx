@@ -9,12 +9,7 @@ import "dayjs/locale/ko";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { IComment } from "@/model/Comment";
 import { useSession } from "next-auth/react";
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-  InfiniteData,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingComponent from "@/app/_component/LoadingComponent";
 import { IUser } from "@/model/User";
 import { getUser } from "../_lib/getUser";
@@ -30,6 +25,7 @@ type Props = {
   parentId: string;
 };
 
+// 실제 댓글 내용, 좋아요 정보 등등을 담은 컴포넌트
 export default function Commentli({
   comment,
   ReplyInfo,
@@ -37,11 +33,12 @@ export default function Commentli({
   postId,
   parentId,
 }: Props) {
+  // 댓글 좋아요 state
   const [isCommentLiked, setCommentLiked] = useState(false);
-  const [isReply, setReply] = useState(false);
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const queryClient = useQueryClient();
 
+  // 유저정보
   const { data: user, isLoading } = useQuery<
     IUser,
     Object,
@@ -52,14 +49,12 @@ export default function Commentli({
     queryFn: getUser,
   });
 
+  // 댓글이 좋아요 되었는지
   useEffect(() => {
     const liked = !!comment?.Hearts?.find(
       (v) => v.email === session?.user?.email
     );
     setCommentLiked(liked);
-
-    const isitReply = comment.hasOwnProperty("parent");
-    setReply(isitReply);
   }, [comment, session]);
 
   const onClickReply = () => {
@@ -146,6 +141,7 @@ export default function Commentli({
     },
   });
 
+  // 좋아요 취소
   const commentUnheart = useMutation({
     mutationFn: async (commentData: {
       postId: string;
@@ -245,12 +241,12 @@ export default function Commentli({
 
   if (isLoading) return <LoadingComponent />;
   if (!comment) return null;
+
+  // 댓글 내용과 @를 분리
   let parts: any[] = [];
   if (comment && comment.content) {
     parts = comment.content.split(/(@\w+)/g);
   }
-
-  if (isLoading) return <LoadingComponent />;
 
   return (
     // <div role="button" tabIndex={0} className={styles.CommentUlDiv}>
@@ -316,7 +312,7 @@ export default function Commentli({
             </h3>
             <div className={styles.CommentContentInnerDiv}>
               <span className={styles.CommentContentSpan} dir="auto">
-                {/* {comment.content} */}
+                {/* @가 있는 부분은 링크를 붙이고 실제 댓글 내용은 문자열로 그대로 출력 */}
                 {parts.map((part, index) =>
                   part.startsWith("@") ? (
                     <Link

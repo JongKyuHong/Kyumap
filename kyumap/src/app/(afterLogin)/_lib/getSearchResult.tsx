@@ -1,10 +1,9 @@
-import { QueryFunction } from "@tanstack/query-core";
-import { IUser } from "@/model/User";
+type Props = {
+  queryKey: [string, string];
+};
 
-export const getSearchResult: QueryFunction<
-  IUser[],
-  [_1: string, searchParams: string]
-> = async ({ queryKey }) => {
+// 검색결과를 불러옴
+export async function getSearchResult({ queryKey }: Props) {
   const [_1, searchParams] = queryKey;
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/search/${searchParams}`,
@@ -14,14 +13,10 @@ export const getSearchResult: QueryFunction<
       },
     }
   );
-  // The return value is *not* serialized
-  // You can return Date, Map, Set, etc.
-
   if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
     throw new Error("Failed to fetch data");
   }
 
   const data = await res.json();
   return data;
-};
+}
