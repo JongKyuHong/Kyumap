@@ -23,6 +23,7 @@ type Props = {
   session: any;
 };
 
+// 왼쪽 네비게이션 바
 export default function NavTab({ session }: Props) {
   const pathname = usePathname(); // 현재 경로 가져옴
   const [isEx, setEx] = useState(false);
@@ -111,14 +112,14 @@ export default function NavTab({ session }: Props) {
   } = useQuery<IUser, Object, IUser, [string, string]>({
     queryKey: ["users", userEmail as string],
     queryFn: getUser,
-    staleTime: 5 * 60 * 1000, 
+    staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
     enabled: !!userEmail,
   });
 
-  // if (userLoading) {
-  //   return <LoadingComponent />;
-  // }
+  if (userLoading) {
+    return <LoadingComponent />;
+  }
 
   // 다크모드 토글
   const onClickDark = () => {

@@ -13,6 +13,7 @@ type Props = {
   onClickDark: () => void;
 };
 
+// NavTab의 햄버거 버튼을 클릭하면 나오는 메뉴
 export default function MenuDetail({ darkMode, onClickDark }: Props) {
   const queryClient = useQueryClient();
   const [clicked, setClicked] = useState(false);

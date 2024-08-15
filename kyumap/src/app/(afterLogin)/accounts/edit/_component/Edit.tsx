@@ -27,6 +27,7 @@ export default function Edit() {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  // 유저 정보 불러오기
   const {
     data: userData,
     error: userError,
@@ -52,6 +53,7 @@ export default function Edit() {
     }
   }, [userData, previewImage]);
 
+  // 소개 변경시 동작
   const handleTextAreaChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const value = event.target.value;
     if (value.length <= 150) {
@@ -59,11 +61,13 @@ export default function Edit() {
     }
   };
 
+  // 성별 변경 시
   const handleGenderChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setGender(value);
   };
 
+  // 웹사이트 변경 시
   const handleSiteChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setWebsite(value);

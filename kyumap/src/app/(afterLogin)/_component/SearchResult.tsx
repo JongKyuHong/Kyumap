@@ -1,7 +1,5 @@
 "use client";
 
-import Post from "@/app/(afterLogin)/_component/Post";
-import { IPost } from "@/model/Post";
 import { getSearchResult } from "@/app/(afterLogin)/_lib/getSearchResult";
 import { useQuery } from "@tanstack/react-query";
 import SearchCard from "./SearchCard";
@@ -14,11 +12,13 @@ type Props = {
   onClickMounted: () => void;
 };
 
+// 검색 결과
 export default function SearchResult({
   searchParams,
   addToHistory,
   onClickMounted,
 }: Props) {
+  // 검색 결과 데이터를 불러옴
   const { data, error, isLoading } = useQuery<
     IUser[],
     Object,
@@ -27,7 +27,7 @@ export default function SearchResult({
   >({
     queryKey: ["search", searchParams],
     queryFn: getSearchResult,
-    staleTime: 60 * 1000, 
+    staleTime: 60 * 1000,
     gcTime: 300 * 1000,
   });
 
@@ -39,10 +39,12 @@ export default function SearchResult({
     return <div>Error</div>;
   }
 
+  // 검색 결과가 없는경우
   if (!Array.isArray(data)) {
     return <div>No results found</div>;
   }
 
+  // 검색결과를 card로 보여줌
   return (
     <>
       {data.map((userData, index) => (

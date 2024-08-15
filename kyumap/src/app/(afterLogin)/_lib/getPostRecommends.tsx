@@ -1,6 +1,9 @@
+// 초기 pageParam은 0, 그 후에는 마지막 게시글의 postId가 된다.
 type Props = { pageParam?: number };
 
+// 추천 게시물 목록을 불러옴
 export async function getPostRecommends({ pageParam }: Props) {
+  // 커서로 pageParam을 넘김
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts?cursor=${pageParam}`,
     {

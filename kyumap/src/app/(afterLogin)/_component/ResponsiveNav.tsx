@@ -8,15 +8,15 @@ import Image from "next/image";
 import Link from "next/link";
 import useDeviceSize from "./useDeviceSize";
 import { useSession } from "next-auth/react";
-import LoadingComponent from "@/app/_component/LoadingComponent";
 
+// 모바일 환경에서 사용하는 Nav
 export default function ResponsiveNav() {
   const { isMobile } = useDeviceSize();
-  const [clickedAddPost, setAddPost] = useState(false);
   const [isDark, setDark] = useState<boolean>(false);
   const [mobile, setMobile] = useState(false);
   const { data: session } = useSession();
 
+  // 다크모드 여부 확인
   useEffect(() => {
     const savedDarkMode = localStorage.getItem("darkMode");
     if (savedDarkMode !== null) {
@@ -33,15 +33,11 @@ export default function ResponsiveNav() {
     setMobile(isMobile);
   }, [isMobile]);
 
-  const onClickAddpost = () => {
-    setAddPost(!clickedAddPost);
-  };
-
   if (!session) return null;
 
   return (
     <>
-      {isMobile && (
+      {mobile && (
         <>
           <div style={{ order: 0 }}>
             <nav className={styles.MNav}>
@@ -101,7 +97,6 @@ export default function ResponsiveNav() {
                                 role="link"
                                 tabIndex={0}
                                 className={styles.MLink}
-                                onClick={onClickAddpost}
                               >
                                 <div className={styles.MDiv16}>
                                   <div>

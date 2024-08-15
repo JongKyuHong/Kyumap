@@ -10,6 +10,7 @@ type Props = {
 
 export async function GET(req: NextRequest, { params }: Props) {
   await dbConnect();
+  // 닉네임으로 유저정보 가져오기
   const user = await User.findOne({ nickname: params.userName });
   return NextResponse.json(user);
 }

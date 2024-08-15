@@ -12,6 +12,7 @@ export async function POST(req: NextRequest, { params }: Props) {
   try {
     const postId = params.postId;
     const userData = await req.json();
+    // 유저의 저장됨 항목에 추가
     const user = await User.findOneAndUpdate(
       { email: userData.user.email },
       {
@@ -36,6 +37,7 @@ export async function DELETE(req: NextRequest, { params }: Props) {
   const userData = await req.json();
 
   try {
+    // 저장됨 항목에서 삭제
     const user = await User.findOneAndUpdate(
       { email: userData.user.email },
       { $pull: { Saved: { id: postId } } }, // $pull 연산자를 사용하여 postId 제거

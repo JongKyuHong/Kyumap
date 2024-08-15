@@ -8,6 +8,7 @@ type Props = {
   };
 };
 
+// 게시글 정보에 따라 동적으로 메타데이터 설정
 export async function generateMetadata({ params }: Props) {
   const post = await getPost({ queryKey: ["posts", params.postId] });
   return {
