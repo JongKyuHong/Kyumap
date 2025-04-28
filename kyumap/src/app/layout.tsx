@@ -11,6 +11,7 @@ import AuthSession from "./_component/AuthSession";
 type Props = {
   children: React.ReactNode;
 };
+
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="ko">

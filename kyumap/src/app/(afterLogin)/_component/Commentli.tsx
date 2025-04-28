@@ -13,6 +13,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingComponent from "@/app/_component/LoadingComponent";
 import { IUser } from "@/model/User";
 import { getUser } from "../_lib/getUser";
+import { useCommentHeart, useCommentUnheart } from "../_lib/mutateFactory";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -62,164 +63,167 @@ export default function Commentli({
   };
 
   // 댓글 좋아요 mutation
-  const commentHeart = useMutation({
-    mutationFn: async (commentData: {
-      postId: string;
-      commentId: string;
-      userSession: any;
-    }) => {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${commentData.postId}/${commentData.commentId}/heart`,
-        {
-          credentials: "include",
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ userSession: commentData.userSession }),
-        }
-      );
+  // const commentHeart = useMutation({
+  //   mutationFn: async (commentData: {
+  //     postId: string;
+  //     commentId: string;
+  //     userSession: any;
+  //   }) => {
+  //     const response = await fetch(
+  //       `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${commentData.postId}/${commentData.commentId}/heart`,
+  //       {
+  //         credentials: "include",
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({ userSession: commentData.userSession }),
+  //       }
+  //     );
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message);
-      }
+  //     if (!response.ok) {
+  //       const error = await response.json();
+  //       throw new Error(error.message);
+  //     }
 
-      return response.json();
-    },
-    // 낙관적 업데이트를 위해 캐시 데이터 미리 수정
-    onMutate: async (commentData) => {
-      await queryClient.cancelQueries({
-        queryKey: ["posts", commentData.postId, "comments"],
-      });
-      // 이전 댓글 데이터를 가져옵니다.
-      const previousComments = queryClient.getQueryData<IComment[]>([
-        "posts",
-        commentData.postId,
-        "comments",
-      ]);
+  //     return response.json();
+  //   },
+  //   // 낙관적 업데이트를 위해 캐시 데이터 미리 수정
+  //   onMutate: async (commentData) => {
+  //     await queryClient.cancelQueries({
+  //       queryKey: ["posts", commentData.postId, "comments"],
+  //     });
+  //     // 이전 댓글 데이터를 가져옵니다.
+  //     const previousComments = queryClient.getQueryData<IComment[]>([
+  //       "posts",
+  //       commentData.postId,
+  //       "comments",
+  //     ]);
 
-      if (previousComments) {
-        // 좋아요를 누른 댓글의 좋아요 수를 업데이트합니다.
-        const updatedComments = previousComments.map((comment) =>
-          comment._id === commentData.commentId
-            ? {
-                ...comment,
-                _count: {
-                  ...comment._count,
-                  Hearts: comment._count.Hearts + 1,
-                },
-                Hearts: [
-                  ...(comment.Hearts || []),
-                  commentData.userSession.email,
-                ],
-              }
-            : comment
-        );
+  //     if (previousComments) {
+  //       // 좋아요를 누른 댓글의 좋아요 수를 업데이트합니다.
+  //       const updatedComments = previousComments.map((comment) =>
+  //         comment._id === commentData.commentId
+  //           ? {
+  //               ...comment,
+  //               _count: {
+  //                 ...comment._count,
+  //                 Hearts: comment._count.Hearts + 1,
+  //               },
+  //               Hearts: [
+  //                 ...(comment.Hearts || []),
+  //                 commentData.userSession.email,
+  //               ],
+  //             }
+  //           : comment
+  //       );
 
-        // 업데이트된 댓글 데이터를 캐시에 저장합니다.
-        queryClient.setQueryData(
-          ["posts", commentData.postId, "comments"],
-          updatedComments
-        );
-      }
+  //       // 업데이트된 댓글 데이터를 캐시에 저장합니다.
+  //       queryClient.setQueryData(
+  //         ["posts", commentData.postId, "comments"],
+  //         updatedComments
+  //       );
+  //     }
 
-      return { previousComments };
-    },
-    onError: (error, commentData, context) => {
-      queryClient.setQueryData(
-        ["posts", commentData.postId, "comments"],
-        context?.previousComments
-      );
-    },
-    onSuccess: (data, commentData) => {
-      // 성공 시, 최신 데이터를 가져오기 위해 캐시를 무효화합니다.
-      queryClient.invalidateQueries({
-        queryKey: ["posts", commentData.postId, "comments"],
-      });
-      setCommentLiked(true);
-    },
-  });
+  //     return { previousComments };
+  //   },
+  //   onError: (error, commentData, context) => {
+  //     queryClient.setQueryData(
+  //       ["posts", commentData.postId, "comments"],
+  //       context?.previousComments
+  //     );
+  //   },
+  //   onSuccess: (data, commentData) => {
+  //     // 성공 시, 최신 데이터를 가져오기 위해 캐시를 무효화합니다.
+  //     queryClient.invalidateQueries({
+  //       queryKey: ["posts", commentData.postId, "comments"],
+  //     });
+  //     setCommentLiked(true);
+  //   },
+  // });
 
   // 좋아요 취소
-  const commentUnheart = useMutation({
-    mutationFn: async (commentData: {
-      postId: string;
-      commentId: string;
-      userSession: any;
-    }) => {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${commentData.postId}/${commentData.commentId}/heart`,
-        {
-          credentials: "include",
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ userSession: commentData.userSession }),
-        }
-      );
+  // const commentUnheart = useMutation({
+  //   mutationFn: async (commentData: {
+  //     postId: string;
+  //     commentId: string;
+  //     userSession: any;
+  //   }) => {
+  //     const response = await fetch(
+  //       `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${commentData.postId}/${commentData.commentId}/heart`,
+  //       {
+  //         credentials: "include",
+  //         method: "DELETE",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({ userSession: commentData.userSession }),
+  //       }
+  //     );
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message);
-      }
+  //     if (!response.ok) {
+  //       const error = await response.json();
+  //       throw new Error(error.message);
+  //     }
 
-      return response.json();
-    },
-    onMutate: async (commentData) => {
-      await queryClient.cancelQueries({
-        queryKey: ["posts", commentData.postId, "comments"],
-      });
+  //     return response.json();
+  //   },
+  //   onMutate: async (commentData) => {
+  //     await queryClient.cancelQueries({
+  //       queryKey: ["posts", commentData.postId, "comments"],
+  //     });
 
-      // 이전 댓글 데이터를 가져옵니다.
-      const previousComments = queryClient.getQueryData<IComment[]>([
-        "posts",
-        commentData.postId,
-        "comments",
-      ]);
+  //     // 이전 댓글 데이터를 가져옵니다.
+  //     const previousComments = queryClient.getQueryData<IComment[]>([
+  //       "posts",
+  //       commentData.postId,
+  //       "comments",
+  //     ]);
 
-      if (previousComments) {
-        // 좋아요를 취소한 댓글의 좋아요 수를 업데이트하고 이메일 정보를 삭제합니다.
-        const updatedComments = previousComments.map((comment) => {
-          if (comment._id === commentData.commentId) {
-            return {
-              ...comment,
-              Hearts: comment.Hearts.filter(
-                (heart) => heart.email !== commentData.userSession.email
-              ),
-              _count: {
-                ...comment._count,
-                Hearts: comment._count.Hearts - 1,
-              },
-            };
-          }
-          return comment;
-        });
+  //     if (previousComments) {
+  //       // 좋아요를 취소한 댓글의 좋아요 수를 업데이트하고 이메일 정보를 삭제합니다.
+  //       const updatedComments = previousComments.map((comment) => {
+  //         if (comment._id === commentData.commentId) {
+  //           return {
+  //             ...comment,
+  //             Hearts: comment.Hearts.filter(
+  //               (heart) => heart.email !== commentData.userSession.email
+  //             ),
+  //             _count: {
+  //               ...comment._count,
+  //               Hearts: comment._count.Hearts - 1,
+  //             },
+  //           };
+  //         }
+  //         return comment;
+  //       });
 
-        // 업데이트된 댓글 데이터를 캐시에 저장합니다.
-        queryClient.setQueryData(
-          ["posts", commentData.postId, "comments"],
-          updatedComments
-        );
-      }
+  //       // 업데이트된 댓글 데이터를 캐시에 저장합니다.
+  //       queryClient.setQueryData(
+  //         ["posts", commentData.postId, "comments"],
+  //         updatedComments
+  //       );
+  //     }
 
-      return { previousComments };
-    },
-    onError: (error, commentData, context) => {
-      queryClient.setQueryData(
-        ["posts", commentData.postId, "comments"],
-        context?.previousComments
-      );
-    },
-    onSuccess: (data, commentData) => {
-      // 성공 시, 최신 데이터를 가져오기 위해 캐시를 무효화합니다.
-      queryClient.invalidateQueries({
-        queryKey: ["posts", commentData.postId, "comments"],
-      });
-      setCommentLiked(false);
-    },
-  });
+  //     return { previousComments };
+  //   },
+  //   onError: (error, commentData, context) => {
+  //     queryClient.setQueryData(
+  //       ["posts", commentData.postId, "comments"],
+  //       context?.previousComments
+  //     );
+  //   },
+  //   onSuccess: (data, commentData) => {
+  //     // 성공 시, 최신 데이터를 가져오기 위해 캐시를 무효화합니다.
+  //     queryClient.invalidateQueries({
+  //       queryKey: ["posts", commentData.postId, "comments"],
+  //     });
+  //     setCommentLiked(false);
+  //   },
+  // });
+
+  const commentHeart = useCommentHeart();
+  const commentUnheart = useCommentUnheart();
 
   const onClickCommentHeart = (comment_id: string) => {
     // 댓글에 좋아요

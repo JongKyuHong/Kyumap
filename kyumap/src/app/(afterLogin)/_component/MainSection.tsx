@@ -3,20 +3,20 @@
 import React, { useEffect, useState } from "react";
 import styles from "./mainsection.module.css";
 import style from "./msection.module.css";
-import PostRecommends from "./PostRecommends";
+import PostRecommends from "./Post/PostRecommends";
 import useDeviceSize from "./useDeviceSize";
 import { useSession } from "next-auth/react";
-import LoadingComponent from "@/app/_component/LoadingComponent";
+// import LoadingComponent from "@/app/_component/LoadingComponent";
 
 // /home 페이지의 게시글이 렌더링되는 부분
 export default function MainSection() {
-  const [isLoading, setLoading] = useState(true);
+  // const [isLoading, setLoading] = useState(true);
   const { isMobile } = useDeviceSize();
 
-  useEffect(() => {
-    setLoading(false);
-  }, [isMobile]);
-  if (isLoading) return <LoadingComponent />;
+  // useEffect(() => {
+  //   setLoading(false);
+  // }, [isMobile]);
+  // if (isLoading) return <LoadingComponent />;
 
   return (
     <>

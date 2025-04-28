@@ -3,8 +3,8 @@ import styles from "./layout.module.css";
 import RQProvider from "./_component/RQProvider";
 import Nav from "./_component/Nav";
 import { auth } from "@/auth";
-import ClientComponent from "./_component/ClientComponent";
 import BeforeLoginNav from "./_component/BeforeLoginNav";
+import ResponsiveNav from "./_component/ResponsiveNav";
 
 type Props = { children: ReactNode; modal: ReactNode };
 
@@ -40,7 +40,7 @@ export default async function RootLayout({ children, modal }: Props) {
                             }}
                             role="main"
                           >
-                            <ClientComponent />
+                            <ResponsiveNav />
                             {children}
                           </main>
                         </section>

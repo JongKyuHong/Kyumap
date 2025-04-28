@@ -7,7 +7,7 @@ import { getPost } from "@/app/(afterLogin)/_lib/getPost";
 import { useEffect, useState } from "react";
 import { IPost } from "@/model/Post";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import LoadingComponent from "@/app/_component/LoadingComponent";
+// import LoadingComponent from "@/app/_component/LoadingComponent";
 
 type Props = {
   postId: number;
@@ -107,9 +107,9 @@ export default function MoreInfoOverlay({
     router.back();
   };
 
-  if (!post) {
-    return <LoadingComponent />;
-  }
+  // if (!post) {
+  //   return <LoadingComponent />;
+  // }
 
   return (
     <div className={styles.rootMenu1} onClick={onClose}>
@@ -125,7 +125,7 @@ export default function MoreInfoOverlay({
                     <div className={styles.menuDiv4}>
                       <div className={styles.menuDiv5}>
                         <div className={styles.menuDiv6}>
-                          {post.userEmail === session?.user!.email ? (
+                          {post!.userEmail === session?.user!.email ? (
                             <>
                               <button
                                 className={styles.menuBtn}

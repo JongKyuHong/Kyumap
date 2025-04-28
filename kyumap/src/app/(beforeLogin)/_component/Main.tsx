@@ -8,7 +8,7 @@ export default function Main() {
     <>
       <div className={styles.left}>
         <div className={styles.left2}>
-          <Image src={mainLogo.src} alt="logo" className={styles.leftImg} />
+          <Image src={mainLogo} alt="logo" className={styles.leftImg} />
         </div>
       </div>
       <div className={styles.right}>

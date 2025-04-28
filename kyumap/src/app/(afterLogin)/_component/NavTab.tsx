@@ -15,9 +15,6 @@ import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { IUser } from "../../../model/User";
 import { getUser } from "@/app/(afterLogin)/_lib/getUser";
 import { usePathname } from "next/navigation";
-import { useSession } from "next-auth/react";
-import LoadingComponent from "@/app/_component/LoadingComponent";
-import BeforeLoginNav from "./BeforeLoginNav";
 
 type Props = {
   session: any;
@@ -117,9 +114,9 @@ export default function NavTab({ session }: Props) {
     enabled: !!userEmail,
   });
 
-  if (userLoading) {
-    return <LoadingComponent />;
-  }
+  // if (userLoading) {
+  //   return <LoadingComponent />;
+  // }
 
   // 다크모드 토글
   const onClickDark = () => {

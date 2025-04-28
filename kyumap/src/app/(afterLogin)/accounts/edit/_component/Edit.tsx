@@ -187,9 +187,7 @@ export default function Edit() {
   };
 
   const handleButtonClick = () => {
-    console.log("Button clicked"); // 버튼 클릭이 호출되는지 확인
     if (fileInputRef.current) {
-      console.log("Input exists"); // ref가 제대로 설정되었는지 확인
       fileInputRef.current.click();
     }
   };

@@ -5,6 +5,8 @@ type Props = {
 export async function getUser({ queryKey }: Props) {
   const [_1, userEmail] = queryKey;
 
+  console.log(userEmail);
+
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${userEmail}`,
     {

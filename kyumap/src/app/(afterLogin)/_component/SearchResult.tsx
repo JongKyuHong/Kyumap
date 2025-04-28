@@ -31,9 +31,9 @@ export default function SearchResult({
     gcTime: 300 * 1000,
   });
 
-  if (isLoading) {
-    return <LoadingComponent />;
-  }
+  // if (isLoading) {
+  //   return <LoadingComponent />;
+  // }
 
   if (error) {
     return <div>Error</div>;

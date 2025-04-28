@@ -73,14 +73,14 @@ export default function DetailPage({ postId }: Props) {
   >({
     queryKey: ["posts", postId.toString(), "comments"],
     queryFn: getComments,
-    staleTime: 60 * 1000, 
+    staleTime: 60 * 1000,
     gcTime: 300 * 1000,
   });
 
   const { data: post } = useQuery<IPost, Object, IPost, [string, string]>({
     queryKey: ["posts", postId],
     queryFn: getPost,
-    staleTime: 60 * 1000, 
+    staleTime: 60 * 1000,
     gcTime: 300 * 1000,
   });
 

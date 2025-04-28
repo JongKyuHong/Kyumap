@@ -12,13 +12,8 @@ export const {
     signIn: "i/flow/login",
     newUser: "i/flow/signup",
   },
-  callbacks: {
-    jwt({ token }) {
-      return token;
-    },
-    session({ session, user }) {
-      return session;
-    },
+  jwt: {
+    maxAge: 60 * 60 * 24,
   },
   providers: [
     CredentialsProvider({
@@ -55,7 +50,6 @@ export const {
           throw new Error("Invalid user data received from server.");
         }
 
-        // 서버로부터 받은 Set-Cookie 헤더를 파싱해서 쿠키 설정
         let setCookie = authResponse.headers.get("Set-Cookie");
         if (setCookie) {
           const parsed = cookie.parse(setCookie);
@@ -71,4 +65,12 @@ export const {
       },
     }),
   ],
+  callbacks: {
+    jwt({ token }) {
+      return token;
+    },
+    session({ session, user }) {
+      return session;
+    },
+  },
 });

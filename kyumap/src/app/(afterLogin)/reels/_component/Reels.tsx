@@ -12,7 +12,7 @@ import {
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { getUser } from "@/app/(afterLogin)/_lib/getUser"; // 유저 정보를 가져오는 함수
-import MoreInfoOverlay from "./MoreInfoOverlay";
+import MoreInfoOverlay from "../../_component/Post/MoreInfoOverlay";
 import { useRouter, usePathname } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { IPost } from "@/model/Post";

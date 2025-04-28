@@ -17,7 +17,7 @@ import { useSession } from "next-auth/react";
 import styles from "./post.module.css";
 import { IPost } from "@/model/Post";
 import { useRouter } from "next/navigation";
-import { getUser } from "../_lib/getUser";
+import { getUser } from "../../_lib/getUser";
 import { IComment } from "@/model/Comment";
 import { IUser } from "@/model/User";
 import LoadingComponent from "@/app/_component/LoadingComponent";

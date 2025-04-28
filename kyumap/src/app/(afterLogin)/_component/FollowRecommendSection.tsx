@@ -8,7 +8,7 @@ import styles from "./mainsection.module.css";
 import useDeviceSize from "./useDeviceSize";
 import Link from "next/link";
 import Image from "next/image";
-import LoadingComponent from "@/app/_component/LoadingComponent";
+// import LoadingComponent from "@/app/_component/LoadingComponent";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { getUser } from "../_lib/getUser";
@@ -43,8 +43,9 @@ export default function FollowRecommendSection({ session }: Props) {
     gcTime: 300 * 1000,
   });
 
-  if (isLoading || userLoading) return <LoadingComponent />;
+  // if (isLoading || userLoading) return <LoadingComponent />;
   if (!desktop || !session) return null;
+  if (!userData || !RecommendsData) return null;
 
   return (
     <div className={styles.FollowList}>

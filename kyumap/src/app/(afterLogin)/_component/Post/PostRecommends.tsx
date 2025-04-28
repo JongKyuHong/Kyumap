@@ -1,12 +1,13 @@
 "use client";
 
 import { useInfiniteQuery, InfiniteData } from "@tanstack/react-query";
-import { getPostRecommends } from "../_lib/getPostRecommends";
-import Post from "@/app/(afterLogin)/_component/Post";
+import { getPostRecommends } from "../../_lib/getPostRecommends";
+import Post from "@/app/(afterLogin)/_component/Post/Post";
 import { IPost } from "@/model/Post";
 import { Fragment, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 
+// 추천 포스트를 보여주는 컴포넌트
 export default function PostRecommends() {
   const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery<
     IPost[],

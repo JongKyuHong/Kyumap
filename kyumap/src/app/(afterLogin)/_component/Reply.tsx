@@ -14,6 +14,10 @@ import { IReply } from "@/model/Reply";
 import LoadingComponent from "@/app/_component/LoadingComponent";
 import { IUser } from "@/model/User";
 import { getUser } from "../_lib/getUser";
+import {
+  useCommentReplyHeart,
+  useCommentReplyUnHeart,
+} from "../_lib/mutateFactory";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -35,7 +39,8 @@ export default function Reply({
 }: Props) {
   // 답글 좋아요를 눌렀는지 state
   const [isCommentLiked, setCommentLiked] = useState(false);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
   const queryClient = useQueryClient();
 
   // 유저 정보
@@ -48,6 +53,8 @@ export default function Reply({
     queryKey: ["users", comment?.userEmail as string],
     queryFn: getUser,
   });
+
+  console.log(user, "user");
 
   // 좋아요를 이미 눌렀는지 확인
   useEffect(() => {
@@ -62,163 +69,10 @@ export default function Reply({
   };
 
   // 좋아요
-  const commentHeart = useMutation({
-    mutationFn: async (commentData: {
-      postId: string;
-      commentId: string;
-      userSession: any;
-    }) => {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${commentData.postId}/${commentData.commentId}/reply/heart`,
-        {
-          credentials: "include",
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ userSession: commentData.userSession }),
-        }
-      );
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message);
-      }
-
-      return response.json();
-    },
-    onMutate: async (commentData) => {
-      await queryClient.cancelQueries({
-        queryKey: ["posts", commentData.postId, "comments"],
-      });
-      // 이전 댓글 데이터를 가져옵니다.
-      const previousComments = queryClient.getQueryData<IComment[]>([
-        "posts",
-        commentData.postId,
-        "comments",
-      ]);
-
-      if (previousComments) {
-        // 좋아요를 누른 댓글의 좋아요 수를 업데이트합니다.
-        const updatedComments = previousComments.map((comment) =>
-          comment._id === commentData.commentId
-            ? {
-                ...comment,
-                _count: {
-                  ...comment._count,
-                  Hearts: comment._count.Hearts + 1,
-                },
-                Hearts: [
-                  ...(comment.Hearts || []),
-                  commentData.userSession.email,
-                ],
-              }
-            : comment
-        );
-
-        // 업데이트된 댓글 데이터를 캐시에 저장합니다.
-        queryClient.setQueryData(
-          ["posts", commentData.postId, "comments"],
-          updatedComments
-        );
-      }
-
-      return { previousComments };
-    },
-    onError: (error, commentData, context) => {
-      queryClient.setQueryData(
-        ["posts", commentData.postId, "comments"],
-        context?.previousComments
-      );
-    },
-    onSuccess: (data, commentData) => {
-      // 성공 시, 최신 데이터를 가져오기 위해 캐시를 무효화합니다.
-      queryClient.invalidateQueries({
-        queryKey: ["posts", commentData.postId, "comments"],
-      });
-      setCommentLiked(true);
-    },
-  });
+  const commentHeart = useCommentReplyHeart(setCommentLiked);
 
   // 좋아요 취소
-  const commentUnheart = useMutation({
-    mutationFn: async (commentData: {
-      postId: string;
-      commentId: string;
-      userSession: any;
-    }) => {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${commentData.postId}/${commentData.commentId}/reply/heart`,
-        {
-          credentials: "include",
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ userSession: commentData.userSession }),
-        }
-      );
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message);
-      }
-
-      return response.json();
-    },
-    onMutate: async (commentData) => {
-      await queryClient.cancelQueries({
-        queryKey: ["posts", commentData.postId, "comments"],
-      });
-
-      // 이전 댓글 데이터를 가져옵니다.
-      const previousComments = queryClient.getQueryData<IComment[]>([
-        "posts",
-        commentData.postId,
-        "comments",
-      ]);
-
-      if (previousComments) {
-        // 좋아요를 취소한 댓글의 좋아요 수를 업데이트하고 이메일 정보를 삭제합니다.
-        const updatedComments = previousComments.map((comment) => {
-          if (comment._id === commentData.commentId) {
-            return {
-              ...comment,
-              Hearts: comment.Hearts.filter(
-                (heart) => heart.email !== commentData.userSession.email
-              ),
-              _count: {
-                ...comment._count,
-                Hearts: comment._count.Hearts - 1,
-              },
-            };
-          }
-          return comment;
-        });
-
-        // 업데이트된 댓글 데이터를 캐시에 저장합니다.
-        queryClient.setQueryData(
-          ["posts", commentData.postId, "comments"],
-          updatedComments
-        );
-      }
-
-      return { previousComments };
-    },
-    onError: (error, commentData, context) => {
-      queryClient.setQueryData(
-        ["posts", commentData.postId, "comments"],
-        context?.previousComments
-      );
-    },
-    onSuccess: (data, commentData) => {
-      // 성공 시, 최신 데이터를 가져오기 위해 캐시를 무효화합니다.
-      queryClient.invalidateQueries({
-        queryKey: ["posts", commentData.postId, "comments"],
-      });
-      setCommentLiked(false);
-    },
-  });
+  const commentUnheart = useCommentReplyUnHeart(setCommentLiked);
 
   const onClickCommentHeart = (comment_id: string) => {
     // 댓글에 좋아요
