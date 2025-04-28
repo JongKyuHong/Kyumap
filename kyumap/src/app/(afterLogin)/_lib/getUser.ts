@@ -4,9 +4,7 @@ type Props = {
 // 유저정보 가져오기
 export async function getUser({ queryKey }: Props) {
   const [_1, userEmail] = queryKey;
-
-  console.log(userEmail);
-
+  
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${userEmail}`,
     {

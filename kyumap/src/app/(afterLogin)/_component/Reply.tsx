@@ -54,8 +54,6 @@ export default function Reply({
     queryFn: getUser,
   });
 
-  console.log(user, "user");
-
   // 좋아요를 이미 눌렀는지 확인
   useEffect(() => {
     const liked = !!comment?.Hearts?.find(

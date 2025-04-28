@@ -13,8 +13,6 @@ export default function Emoticon({ top, left }: propsType) {
   const [modalPosition, setModalPosition] = useState({ width: 0, height: 0 });
   const [isModalVisible, setIsModalVisible] = useState(true);
 
-  console.log("hi");
-
   useEffect(() => {
     setModalPosition({
       width: left,

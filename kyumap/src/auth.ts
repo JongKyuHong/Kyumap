@@ -50,12 +50,6 @@ export const {
           throw new Error("Invalid user data received from server.");
         }
 
-        let setCookie = authResponse.headers.get("Set-Cookie");
-        if (setCookie) {
-          const parsed = cookie.parse(setCookie);
-          cookies().set("connect.sid", parsed["connect.sid"], parsed);
-        }
-
         return {
           email: user.email,
           name: user.nickname,
