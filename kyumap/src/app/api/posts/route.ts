@@ -17,7 +17,7 @@ export async function GET(
 
   // 초기에는 0, 그 다음은 마지막 postId
   const cursor = req.nextUrl.searchParams.get("cursor");
-  const limit = 5;
+  const limit = 1;
 
   let query = {};
 

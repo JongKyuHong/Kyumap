@@ -26,6 +26,14 @@ import { getUser } from "../../../../_lib/getUser";
 import { IUser } from "@/model/User";
 import LoadingComponent from "@/app/_component/LoadingComponent";
 import { getAddressFromCoordinates } from "../../../(.)AddPost/_component/action";
+import {
+  useComment,
+  useHeart,
+  useReplyComment,
+  useSave,
+  useUnheart,
+  useUnsave,
+} from "@/app/(afterLogin)/_lib/mutateFactory";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -152,261 +160,16 @@ export default function DetailPage({ postId }: Props) {
   };
 
   // 좋아요
-  const heart = useMutation({
-    mutationFn: () => {
-      return fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${postId}/heart`,
-        {
-          method: "post",
-          credentials: "include",
-          body: JSON.stringify(session),
-        }
-      );
-    },
-    onMutate: async () => {
-      if (isLiking) return; // 이미 요청 중이면 아무 작업도 하지 않음
-      setIsLiking(true); // 요청 시작 시 상태 업데이트
-      // setLiked(true); // Optimistic update: 즉시 좋아요 상태 변경
-
-      // 현재 캐시된 포스트 데이터를 가져옵니다.
-      await queryClient.cancelQueries({ queryKey: ["posts", postId] });
-      const previousPost = queryClient.getQueryData<IPost>(["posts", postId]);
-
-      // 새로운 포스트 데이터를 만들어 캐시를 업데이트합니다.
-      if (previousPost) {
-        const updatedPost = {
-          ...previousPost,
-          Hearts: [
-            ...previousPost.Hearts,
-            { email: session?.user?.email as string },
-          ],
-          _count: {
-            ...previousPost._count,
-            Hearts: previousPost._count.Hearts + 1,
-          },
-        };
-        queryClient.setQueryData(["posts", postId], updatedPost);
-      }
-
-      return { previousPost };
-    },
-    onError: (error, variables, context) => {
-      // 에러가 발생하면 이전 포스트 데이터로 롤백합니다.
-      if (context?.previousPost) {
-        queryClient.setQueryData(["posts", postId], context.previousPost);
-        // setLiked(false); // 롤백 시 좋아요 상태도 롤백
-      }
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts", postId] });
-      setIsLiking(false);
-    },
-  });
-
+  const heart = useHeart({ setIsLiking, isLiking });
   // 좋아요 취소
-  const unheart = useMutation({
-    mutationFn: () => {
-      return fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${postId}/heart`,
-        {
-          method: "delete",
-          credentials: "include",
-          body: JSON.stringify(session),
-        }
-      );
-    },
-    onMutate: async () => {
-      if (isLiking) return; // 이미 요청 중이면 아무 작업도 하지 않음
-      setIsLiking(true); // 요청 시작 시 상태 업데이트
-      // setLiked(false); // Optimistic update: 즉시 좋아요 취소 상태 변경
-
-      // 현재 캐시된 포스트 데이터를 가져옵니다.
-      await queryClient.cancelQueries({ queryKey: ["posts", postId] });
-      const previousPost = queryClient.getQueryData<IPost>(["posts", postId]);
-
-      // 새로운 포스트 데이터를 만들어 캐시를 업데이트합니다.
-      if (previousPost) {
-        const updatedPost = {
-          ...previousPost,
-          Hearts: previousPost.Hearts.filter(
-            (v: any) => v.email !== session?.user?.email
-          ),
-          _count: {
-            ...previousPost._count,
-            Hearts: previousPost._count.Hearts - 1,
-          },
-        };
-        queryClient.setQueryData(["posts", postId], updatedPost);
-      }
-
-      return { previousPost };
-    },
-    onError: (error, variables, context) => {
-      // 에러가 발생하면 이전 포스트 데이터로 롤백합니다.
-      if (context?.previousPost) {
-        queryClient.setQueryData(["posts", postId], context.previousPost);
-        // setLiked(true); // 롤백 시 좋아요 상태도 롤백
-      }
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts", postId] });
-      setIsLiking(false);
-    },
-  });
+  const unheart = useUnheart({ setIsLiking, isLiking });
 
   // 댓글 달기
-  const addComment = useMutation({
-    mutationFn: async (commentData: {
-      postId: String;
-      CommentText: string;
-      userSession: any;
-    }) => {
-      return await fetch(
-        `${
-          process.env.NEXT_PUBLIC_BASE_URL
-        }/api/posts/${postId.toString()}/comments`,
-        {
-          credentials: "include",
-          method: "post",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            comment: commentData.CommentText,
-            User: commentData.userSession,
-          }),
-        }
-      );
-    },
-    onMutate: async (commentData) => {
-      if (isPosting) return; // 이미 요청 중이면 아무 작업도 하지 않음
-      setIsPosting(true); // 요청 시작 시 상태 업데이트
-
-      // Optimistic Update: 임시로 캐시 업데이트
-      const previousComments = queryClient.getQueryData<IComment[]>([
-        "posts",
-        postId.toString(),
-        "comments",
-      ]);
-      queryClient.setQueryData(
-        ["posts", postId.toString(), "comments"],
-        (old: any) => {
-          if (!old) return old;
-
-          return [
-            ...old,
-            {
-              postId: Number(commentData.postId),
-              userNickname: commentData.userSession.name,
-              userEmail: commentData.userSession.email,
-              // userImage: commentData.userSession.image,
-              content: commentData.CommentText,
-              Hearts: [],
-              _count: {
-                Hearts: 0,
-                Comments: 0,
-              },
-              reply: [],
-              createdAt: new Date(),
-            },
-          ];
-        }
-      );
-
-      const previousPost = queryClient.getQueryData<IPost>([
-        "posts",
-        postId.toString(),
-      ]);
-      queryClient.setQueryData(["posts", postId.toString()], (old: any) => {
-        if (!old) return old;
-
-        return {
-          ...old,
-          _count: {
-            ...old._count,
-            Comments: old._count.Comments + 1,
-          },
-        };
-      });
-
-      return { previousComments, previousPost };
-    },
-    onError: (err, variables, context) => {
-      // 에러 발생 시 이전 상태로 롤백
-      if (context?.previousComments) {
-        queryClient.setQueryData(
-          ["posts", postId.toString(), "comments"],
-          context.previousComments
-        );
-      }
-      if (context?.previousPost) {
-        queryClient.setQueryData(
-          ["posts", postId.toString()],
-          context.previousPost
-        );
-      }
-    },
-    onSuccess: (data, commentData) => {
-      // 성공 시 캐시를 무효화하여 최신 댓글 목록을 가져옵니다.
-      const previousComments = queryClient.getQueryData<IComment[]>([
-        "posts",
-        postId.toString(),
-        "comments",
-      ]);
-
-      // 게시물의 현재 정보를 가져옵니다.
-      const post = queryClient.getQueryData<IPost>([
-        "posts",
-        postId.toString(),
-      ]);
-
-      if (previousComments && post) {
-        // 댓글 배열을 업데이트합니다.
-        queryClient.setQueryData(
-          ["posts", postId.toString(), "comments"],
-          [
-            ...previousComments,
-            {
-              postId: Number(commentData.postId),
-              userNickname: commentData.userSession.name,
-              userEmail: commentData.userSession.email,
-              // userImage: commentData.userSession.image,
-              content: commentData.CommentText,
-              Hearts: [],
-              _count: {
-                Hearts: 0,
-                Comments: 0,
-              },
-              reply: [],
-              createdAt: new Date(),
-            },
-          ]
-        );
-
-        // 게시물의 댓글 수를 1 증가시킵니다.
-        const updatedPost = {
-          ...post,
-          _count: {
-            ...post._count,
-            Comments: post._count.Comments + 1,
-          },
-        };
-
-        // 업데이트된 게시물 정보를 캐시에 저장합니다.
-        queryClient.setQueryData(["posts", postId.toString()], updatedPost);
-      }
-
-      queryClient.invalidateQueries({
-        queryKey: ["posts", postId.toString(), "comments"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["posts", postId.toString()],
-      });
-    },
-    onSettled: () => {
-      setIsPosting(false); // 요청 완료 후 상태 업데이트
-      setComment("");
-    },
+  const addComment = useComment({
+    postId: Number(postId),
+    isPosting,
+    setIsPosting,
+    setComment,
   });
 
   const deleteComment = useMutation({
@@ -496,246 +259,18 @@ export default function DetailPage({ postId }: Props) {
     },
   });
 
-  const addReplyComment = useMutation({
-    mutationFn: async (commentData: {
-      postId: String;
-      replyTarget: string; // parent Id임
-      CommentText: string;
-      userSession: any;
-    }) => {
-      return await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${postId.toString()}/${
-          commentData.replyTarget
-        }/reply`,
-        {
-          credentials: "include",
-          method: "post",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            comment: commentData.CommentText,
-            User: commentData.userSession,
-          }),
-        }
-      );
-    },
-    onMutate: async (commentData) => {
-      if (isPosting) return; // 이미 요청 중이면 아무 작업도 하지 않음
-      setIsPosting(true); // 요청 시작 시 상태 업데이트
-
-      // Optimistic Update: 임시로 캐시 업데이트
-      const previousComments = queryClient.getQueryData<IComment[]>([
-        "posts",
-        commentData.postId.toString(),
-        "comments",
-      ]);
-
-      queryClient.setQueryData(
-        ["posts", commentData.postId.toString(), "comments"],
-        (old: any) => {
-          if (!old) return old;
-
-          return [
-            ...old,
-            {
-              postId: commentData.postId,
-              userNickname: commentData.userSession.name,
-              userEmail: commentData.userSession.email,
-              // userImage: commentData.userSession.image,
-              content: commentData.CommentText,
-              Hearts: [],
-              _count: {
-                Hearts: 0,
-                Comments: 0,
-              },
-              reply: [],
-              createdAt: new Date().toISOString(),
-            },
-          ];
-        }
-      );
-
-      const previousPost = queryClient.getQueryData<IPost>([
-        "posts",
-        commentData.postId.toString(),
-      ]);
-
-      queryClient.setQueryData(
-        ["posts", commentData.postId.toString()],
-        (old: any) => {
-          if (!old) return old;
-
-          return {
-            ...old,
-            _count: {
-              ...old._count,
-              Comments: old._count.Comments + 1,
-            },
-          };
-        }
-      );
-
-      return { previousComments, previousPost };
-    },
-    onError: (err, variables, context) => {
-      // 에러 발생 시 이전 상태로 롤백
-      if (context?.previousComments) {
-        queryClient.setQueryData(
-          ["posts", variables.postId.toString(), "comments"],
-          context.previousComments
-        );
-      }
-      if (context?.previousPost) {
-        queryClient.setQueryData(
-          ["posts", variables.postId.toString()],
-          context.previousPost
-        );
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["posts", postId.toString(), "comments"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["posts", postId.toString()],
-      });
-      setReplyTarget("");
-      setComment("");
-    },
-    onSettled: () => {
-      setIsPosting(false); // 요청 완료 후 상태 업데이트
-    },
+  const addReplyComment = useReplyComment({
+    postId: Number(postId),
+    isPosting,
+    setIsPosting,
+    setComment,
+    ReplyTargetId: replyTarget,
+    setReplyTargetId: setReplyTarget,
   });
 
-  const saved = useMutation({
-    mutationFn: () => {
-      return fetch(
-        `${
-          process.env.NEXT_PUBLIC_BASE_URL
-        }/api/posts/${postId.toString()}/save`,
-        {
-          method: "post",
-          credentials: "include",
-          body: JSON.stringify(session),
-        }
-      );
-    },
-    onMutate: async () => {
-      await queryClient.cancelQueries({
-        queryKey: ["user", session!.user!.email],
-      });
-      const previousUserData = queryClient.getQueryData([
-        "user",
-        session!.user!.email,
-      ]);
+  const saved = useSave({ setSaved });
 
-      queryClient.setQueryData(
-        ["user", session!.user!.email],
-        (oldData: any) => {
-          if (!oldData) {
-            return {
-              email: session!.user!.email,
-              nickname: session!.user!.name, // 기본 닉네임 (필요에 따라 수정)
-              image: session!.user!.image, // 기본 이미지 (필요에 따라 수정)
-              Saved: [postId.toString()],
-              Followers: [],
-              Followings: [],
-              _count: {
-                Followers: 0,
-                Followings: 0,
-              },
-            };
-          }
-
-          return {
-            ...oldData,
-            Saved: oldData.Saved
-              ? [...oldData.Saved, postId.toString()]
-              : [postId.toString()],
-          };
-        }
-      );
-
-      return { previousUserData };
-    },
-    onError: (err, variables, context) => {
-      if (context && context.previousUserData) {
-        queryClient.setQueryData(
-          ["user", session!.user!.email],
-          context.previousUserData
-        );
-      }
-    },
-    onSuccess() {
-      setSaved(true);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["user", session!.user!.email],
-      });
-    },
-  });
-
-  const unsaved = useMutation({
-    mutationFn: () => {
-      return fetch(
-        `${
-          process.env.NEXT_PUBLIC_BASE_URL
-        }/api/posts/${postId.toString()}/save`,
-        {
-          method: "delete",
-          credentials: "include",
-          body: JSON.stringify(session),
-        }
-      );
-    },
-    onMutate: async () => {
-      if (!session || !session.user || !session.user.email) {
-        throw new Error("Session or user information is missing");
-      }
-
-      await queryClient.cancelQueries({
-        queryKey: ["user", session!.user!.email],
-      });
-      const previousUserData = queryClient.getQueryData([
-        "user",
-        session!.user!.email,
-      ]);
-
-      queryClient.setQueryData(
-        ["user", session!.user!.email],
-        (oldData: any) => {
-          if (!oldData || !oldData.Saved) {
-            return oldData;
-          }
-          return {
-            ...oldData,
-            Saved: oldData.Saved.filter((v: any) => v.id !== postId.toString()),
-          };
-        }
-      );
-
-      return { previousUserData };
-    },
-    onError: (err, variables, context) => {
-      console.log(err, "err");
-      if (context && context.previousUserData) {
-        queryClient.setQueryData(
-          ["user", session!.user!.email],
-          context.previousUserData
-        );
-      }
-    },
-    onSuccess() {
-      setSaved(false);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["user", session!.user!.email],
-      });
-    },
-  });
+  const unsaved = useUnsave({ setSaved });
 
   const onChangeTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setComment(e.target.value);
@@ -767,9 +302,9 @@ export default function DetailPage({ postId }: Props) {
     e.stopPropagation();
     if (isLiking) return;
     if (isLiked) {
-      unheart.mutate();
+      unheart.mutate({ postId: Number(postId), session });
     } else {
-      heart.mutate();
+      heart.mutate({ postId: Number(postId), session });
     }
   };
 
@@ -812,14 +347,14 @@ export default function DetailPage({ postId }: Props) {
       // true면 comment false면 답글
       if (replyTarget) {
         addReplyComment.mutate({
-          postId,
-          replyTarget,
+          postId: Number(postId),
+          ReplyTargetId: replyTarget,
           CommentText,
           userSession,
         });
       }
     } else {
-      addComment.mutate({ postId, CommentText, userSession });
+      addComment.mutate({ postId: Number(postId), CommentText, userSession });
     }
   };
 
@@ -827,9 +362,9 @@ export default function DetailPage({ postId }: Props) {
     e.stopPropagation();
     if (isSaved) {
       // 이미 저장함
-      unsaved.mutate();
+      unsaved.mutate({ postId: Number(postId), session });
     } else {
-      saved.mutate();
+      saved.mutate({ postId: Number(postId), session });
     }
   };
 
