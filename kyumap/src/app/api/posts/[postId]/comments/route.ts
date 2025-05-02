@@ -33,6 +33,16 @@ export async function POST(req: NextRequest, { params }: Props) {
     // 댓글 생성
     const comment = await Comment.create(inputData);
 
+    const updatedComment = await Comment.findOneAndUpdate(
+      { _id: comment._id }, // 생성된 댓글의 _id를 찾아서
+      { threadId: comment._id }, // threadId 필드를 그 _id 값으로 업데이트
+      { new: true } // 업데이트된 문서를 반환받기 위해 new: true 옵션 사용
+    );
+
+    if (!updatedComment) {
+      console.error(`Failed to update threadId for comment ${comment._id}`);
+    }
+
     // post에 _count늘려주기
     const post = await Post.findOneAndUpdate(
       { postId: postId },
@@ -40,7 +50,7 @@ export async function POST(req: NextRequest, { params }: Props) {
       { new: true }
     );
 
-    return NextResponse.json({ comment, post });
+    return NextResponse.json({ comment: updatedComment, post });
   } catch (error) {
     console.error(error);
 

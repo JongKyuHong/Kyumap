@@ -18,6 +18,7 @@ import {
   useCommentReplyHeart,
   useCommentReplyUnHeart,
 } from "../_lib/mutateFactory";
+import { useRouter } from "next/navigation";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -41,7 +42,7 @@ export default function Reply({
   const [isCommentLiked, setCommentLiked] = useState(false);
   const { data: session, status } = useSession();
 
-  const queryClient = useQueryClient();
+  const router = useRouter();
 
   // 유저 정보
   const { data: user, isLoading } = useQuery<
@@ -63,6 +64,7 @@ export default function Reply({
   }, [comment, session]);
 
   const onClickReply = () => {
+    console.log(comment, comment.userNickname, parentId, "검사");
     ReplyInfo(comment.userNickname, parentId, false);
   };
 
@@ -86,6 +88,13 @@ export default function Reply({
         commentHeart.mutate({ postId, commentId, userSession });
       }
     }
+  };
+
+  const onClickLink = (text: string) => {
+    router.back();
+    setTimeout(() => {
+      router.push(`/profile/${text}`);
+    }, 100);
   };
 
   if (isLoading) return <LoadingComponent />;
@@ -163,13 +172,13 @@ export default function Reply({
                   {/* {comment.content} */}
                   {parts.map((part, index) =>
                     part.startsWith("@") ? (
-                      <Link
-                        href={`/profile/${part.slice(1)}`}
+                      <button
                         key={index}
                         className={styles.Mention}
+                        onClick={() => onClickLink(part.slice(1))}
                       >
                         {part}
-                      </Link>
+                      </button>
                     ) : (
                       part
                     )

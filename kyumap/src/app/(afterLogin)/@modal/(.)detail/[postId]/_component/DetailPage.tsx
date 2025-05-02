@@ -325,9 +325,12 @@ export default function DetailPage({ postId }: Props) {
     setExitBtn(e);
   };
 
+  // 답글 달기를 눌렀을때
   const ReplyInfo = (commenttext: string, id: string, ctype: boolean) => {
     setReplyTarget(id);
     setComment("@" + commenttext + " ");
+
+    // 답글인지 판별이였는데
     setCType(ctype);
   };
 
@@ -2012,7 +2015,6 @@ export default function DetailPage({ postId }: Props) {
                                                           onClickExitBtnChild={
                                                             onClickExitBtnChild
                                                           }
-                                                          parentId={comment._id}
                                                           ReplyInfo={ReplyInfo}
                                                         />
                                                       )

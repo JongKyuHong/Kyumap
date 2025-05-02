@@ -13,7 +13,7 @@ export interface IComment extends Document {
     Hearts: number;
     Comments: number;
   };
-  reply: IReply[];
+  threadId: mongoose.Types.ObjectId;
 }
 
 const commentSchema: Schema = new mongoose.Schema({
@@ -29,10 +29,10 @@ const commentSchema: Schema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // userImage: {
-  //   type: String,
-  //   required: true,
-  // },
+  threadId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Comment",
+  },
   content: {
     type: String,
     required: true,
@@ -40,12 +40,6 @@ const commentSchema: Schema = new mongoose.Schema({
   Hearts: [
     {
       email: { type: String },
-    },
-  ],
-  reply: [
-    {
-      type: replySchema,
-      default: [],
     },
   ],
   _count: {

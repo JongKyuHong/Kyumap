@@ -60,6 +60,7 @@ export default function Commentli({
   }, [comment, session]);
 
   const onClickReply = () => {
+    
     ReplyInfo(comment.userNickname, parentId, false);
   };
 
@@ -166,6 +167,7 @@ export default function Commentli({
                 {parts.map((part, index) =>
                   part.startsWith("@") ? (
                     <button
+                      key={index}
                       className={styles.Mention}
                       onClick={() => onClickLink(part.slice(1))}
                     >
