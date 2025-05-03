@@ -34,6 +34,7 @@ import {
   useUnheart,
   useUnsave,
 } from "@/app/(afterLogin)/_lib/mutateFactory";
+import mongoose from "mongoose";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -53,8 +54,9 @@ export default function DetailPage({ postId }: Props) {
   const [isEmoClicked, setEmoClicked] = useState(false);
   const [isClickedExitBtn, setExitBtn] = useState(false);
   const [targetCommentId, setTargetCommentId] = useState("");
-  const [replyTarget, setReplyTarget] = useState("");
-  const [isCtype, setCType] = useState(true); // comment라면 true, reply라면 false
+  const [threadId, setThreadId] = useState<mongoose.Types.ObjectId | null>(
+    null
+  ); // 최상의 댓글의 _id
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isUserPaused, setIsUserPaused] = useState(false); // 사용자가 직접 일시정지했는지 여부
   const [isMuted, setMuted] = useState(true);
@@ -170,6 +172,7 @@ export default function DetailPage({ postId }: Props) {
     isPosting,
     setIsPosting,
     setComment,
+    setThreadId,
   });
 
   const deleteComment = useMutation({
@@ -260,12 +263,10 @@ export default function DetailPage({ postId }: Props) {
   });
 
   const addReplyComment = useReplyComment({
-    postId: Number(postId),
     isPosting,
     setIsPosting,
     setComment,
-    ReplyTargetId: replyTarget,
-    setReplyTargetId: setReplyTarget,
+    setThreadId,
   });
 
   const saved = useSave({ setSaved });
@@ -326,12 +327,16 @@ export default function DetailPage({ postId }: Props) {
   };
 
   // 답글 달기를 눌렀을때
-  const ReplyInfo = (commenttext: string, id: string, ctype: boolean) => {
-    setReplyTarget(id);
-    setComment("@" + commenttext + " ");
+  const ReplyInfo = (
+    userNickname: string,
+    parentId: string,
+    rootId: mongoose.Types.ObjectId | null
+  ) => {
+    // textarea에 답글 대상 id를 넣음
+    setComment(CommentText + "@" + userNickname + " ");
 
     // 답글인지 판별이였는데
-    setCType(ctype);
+    setThreadId(rootId);
   };
 
   const CommentInfo = (commenttext: string, id: string) => {};
@@ -346,18 +351,16 @@ export default function DetailPage({ postId }: Props) {
       return null;
     }
     const userSession = session.user;
-    if (!isCtype) {
+    if (!threadId) {
       // true면 comment false면 답글
-      if (replyTarget) {
-        addReplyComment.mutate({
-          postId: Number(postId),
-          ReplyTargetId: replyTarget,
-          CommentText,
-          userSession,
-        });
-      }
+      addReplyComment.mutate({
+        postId: Number(postId),
+        threadId,
+        CommentText,
+        userSession,
+      });
     } else {
-      addComment.mutate({ postId: Number(postId), CommentText, userSession });
+      addComment.mutate({ postId: Number(postId), threadId, CommentText, userSession });
     }
   };
 

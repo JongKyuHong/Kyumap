@@ -96,14 +96,14 @@ export default function ActionButtons({
     setComment,
   });
 
-  const addReplyComment = useReplyComment({
-    postId,
-    isPosting,
-    setIsPosting,
-    setComment,
-    ReplyTargetId,
-    setReplyTargetId,
-  });
+  // const addReplyComment = useReplyComment({
+  //   postId,
+  //   isPosting,
+  //   setIsPosting,
+  //   setComment,
+  //   ReplyTargetId,
+  //   setReplyTargetId,
+  // });
 
   // 하트를 클릭했을때
   const onClickHeart: MouseEventHandler<HTMLDivElement> = (e) => {

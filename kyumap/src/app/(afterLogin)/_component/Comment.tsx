@@ -49,7 +49,6 @@ export default function Comment({
   // 댓글에 답글이 있는지 확인하고 상태를 업데이트
   useEffect(() => {
     const has = comment?._count?.Comments > 0 ? true : false;
-    console.log(data, "답글들어옴?");
     setHasReply(has);
   }, [postId, comment, session]);
 
@@ -72,7 +71,7 @@ export default function Comment({
           ReplyInfo={ReplyInfo}
           onClickExitBtn={onClickExitBtn}
           postId={postId}
-          parentId={comment._id}
+          threadId={comment._id}
         />
         {/* 답글이 존재하면 */}
         {hasReply && (

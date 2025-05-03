@@ -31,7 +31,6 @@ const commentSchema: Schema = new mongoose.Schema({
   },
   threadId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Comment",
   },
   content: {
     type: String,

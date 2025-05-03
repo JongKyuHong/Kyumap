@@ -24,7 +24,7 @@ type Props = {
   ReplyInfo: Function;
   onClickExitBtn: Function;
   postId: string;
-  parentId: string;
+  threadId: string;
 };
 
 // 실제 댓글 내용, 좋아요 정보 등등을 담은 컴포넌트
@@ -33,7 +33,7 @@ export default function Commentli({
   ReplyInfo,
   onClickExitBtn,
   postId,
-  parentId,
+  threadId,
 }: Props) {
   // 댓글 좋아요 state
   const [isCommentLiked, setCommentLiked] = useState(false);
@@ -60,8 +60,7 @@ export default function Commentli({
   }, [comment, session]);
 
   const onClickReply = () => {
-    
-    ReplyInfo(comment.userNickname, parentId, false);
+    ReplyInfo(comment.userNickname, comment._id, threadId);
   };
 
   const commentHeart = useCommentHeart();
