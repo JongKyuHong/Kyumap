@@ -9,6 +9,8 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { useSession } from "next-auth/react";
 import { IComment } from "@/model/Comment";
 import Commentli from "./Commentli";
+import { useQuery } from "@tanstack/react-query";
+import { getReplys } from "../_lib/getReplys";
 
 // 한국어 시간 표시를 위한 dajs 설정
 dayjs.locale("ko");
@@ -18,8 +20,8 @@ type Props = {
   comment: IComment; // 코멘트 모델을 타입으로
   postId: string;
   onClickExitBtnChild: Function; // 부모에서 전달한 삭제 창 핸들러
-  parentId: string;
   ReplyInfo: Function; // 부모에서 전달한 답글 정보 핸들러, 답글 달기를 누르면 댓글창에 @답글작성자 가 뜨게되어 답글을 달 수 있음
+  setThreadIdProps?: Function;
 };
 
 // 코멘트 창을 담당하는 컴포넌트
@@ -27,7 +29,6 @@ export default function Comment({
   comment,
   postId,
   onClickExitBtnChild,
-  parentId,
   ReplyInfo,
 }: Props) {
   // 댓글의 답글이 존재 여부 state
@@ -35,6 +36,15 @@ export default function Comment({
   // 답글 보기를 클릭했는지
   const [isClickedReply, setClickedReply] = useState(false);
   const { data: session } = useSession();
+
+  const {
+    data: replysData, // getReplys 함수가 가져온 답글 목록 데이터
+  } = useQuery<IComment[], Object, IComment[], [string, string]>({
+    queryKey: ["reply", comment._id],
+    queryFn: getReplys,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
+  });
 
   // 댓글에 답글이 있는지 확인하고 상태를 업데이트
   useEffect(() => {
@@ -61,7 +71,7 @@ export default function Comment({
           ReplyInfo={ReplyInfo}
           onClickExitBtn={onClickExitBtn}
           postId={postId}
-          parentId={parentId}
+          threadId={comment._id}
         />
         {/* 답글이 존재하면 */}
         {hasReply && (
@@ -84,9 +94,9 @@ export default function Comment({
               </li>
               {/* 답글 보기를 클릭했을때 */}
               {isClickedReply &&
-                comment!.reply!.map((data, index) => (
+                replysData &&
+                replysData.map((data, index) => (
                   <Reply
-                    parentId={parentId}
                     key={index}
                     comment={data}
                     ReplyInfo={ReplyInfo}

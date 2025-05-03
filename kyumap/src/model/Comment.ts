@@ -6,14 +6,14 @@ export interface IComment extends Document {
   userNickname: string;
   // userImage: string;
   userEmail: string;
-  content: string;
   createdAt: Date;
   Hearts: { email: string }[];
   _count: {
     Hearts: number;
     Comments: number;
   };
-  reply: IReply[];
+  threadId: mongoose.Types.ObjectId | null;
+  content: string;
 }
 
 const commentSchema: Schema = new mongoose.Schema({
@@ -29,10 +29,9 @@ const commentSchema: Schema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // userImage: {
-  //   type: String,
-  //   required: true,
-  // },
+  threadId: {
+    type: mongoose.Schema.Types.ObjectId,
+  },
   content: {
     type: String,
     required: true,
@@ -40,12 +39,6 @@ const commentSchema: Schema = new mongoose.Schema({
   Hearts: [
     {
       email: { type: String },
-    },
-  ],
-  reply: [
-    {
-      type: replySchema,
-      default: [],
     },
   ],
   _count: {

@@ -2,11 +2,13 @@ import {
   InfiniteData,
   useMutation,
   useQueryClient,
+  QueryKey,
 } from "@tanstack/react-query";
 import { IComment } from "@/model/Comment";
 import { useSession } from "next-auth/react";
 import { IUser } from "@/model/User";
 import { IPost } from "@/model/Post";
+import mongoose from "mongoose";
 
 // Like a comment
 export function useCommentHeart() {
@@ -17,6 +19,7 @@ export function useCommentHeart() {
       postId: string;
       commentId: string;
       userSession: any;
+      threadId: mongoose.Types.ObjectId | null;
     }) => {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${commentData.postId}/${commentData.commentId}/heart`,
@@ -26,7 +29,6 @@ export function useCommentHeart() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ userSession: commentData.userSession }),
         }
       );
 
@@ -83,6 +85,9 @@ export function useCommentHeart() {
       queryClient.invalidateQueries({
         queryKey: ["posts", commentData.postId, "comments"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["reply", commentData.threadId],
+      });
     },
   });
 }
@@ -96,6 +101,7 @@ export function useCommentUnheart() {
       postId: string;
       commentId: string;
       userSession: any;
+      threadId: mongoose.Types.ObjectId | null;
     }) => {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${commentData.postId}/${commentData.commentId}/heart`,
@@ -161,6 +167,9 @@ export function useCommentUnheart() {
     onSuccess: (data, commentData) => {
       queryClient.invalidateQueries({
         queryKey: ["posts", commentData.postId, "comments"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["reply", commentData.threadId],
       });
     },
   });
@@ -369,14 +378,17 @@ export function useCommentReplyHeart(
       userSession: any;
     }) => {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${commentData.postId}/${commentData.commentId}/reply/heart`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/reply/heart`,
         {
           credentials: "include",
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ userSession: commentData.userSession }),
+          body: JSON.stringify({
+            userSession: commentData.userSession,
+            commendId: commentData.commentId,
+          }),
         }
       );
 
@@ -893,11 +905,15 @@ export function useComment({
   isPosting,
   setIsPosting,
   setComment,
+  setThreadId,
 }: {
   postId: number;
   isPosting: boolean;
   setIsPosting: React.Dispatch<React.SetStateAction<boolean>>;
   setComment: React.Dispatch<React.SetStateAction<string>>;
+  setThreadId: React.Dispatch<
+    React.SetStateAction<mongoose.Types.ObjectId | null>
+  >;
 }) {
   const queryClient = useQueryClient();
 
@@ -905,6 +921,7 @@ export function useComment({
     // mutationFn 정의
     mutationFn: async (commentData: {
       postId: number;
+      threadId: mongoose.Types.ObjectId | null;
       CommentText: string;
       userSession: any;
     }) => {
@@ -921,6 +938,7 @@ export function useComment({
           body: JSON.stringify({
             comment: commentData.CommentText,
             User: commentData.userSession,
+            threadId: commentData.threadId,
           }),
         }
       );
@@ -931,40 +949,61 @@ export function useComment({
       if (isPosting) return; // 이미 요청 중이면 아무 작업도 하지 않음
       setIsPosting(true); // 요청 시작 시 상태 업데이트
 
+      await queryClient.cancelQueries({
+        queryKey: ["posts", commentData.postId.toString(), "comments"],
+      });
+      await queryClient.cancelQueries({
+        queryKey: ["posts", commentData.postId.toString()],
+      });
+
+      const replyListQueryKey = commentData.threadId
+        ? ["reply", commentData.threadId.toString()]
+        : undefined;
+      if (replyListQueryKey) {
+        await queryClient.cancelQueries({ queryKey: replyListQueryKey });
+      }
+
       // Optimistic Update: 임시로 캐시 업데이트
       const previousComments = queryClient.getQueryData<IComment[]>([
         "posts",
         commentData.postId.toString(),
         "comments",
       ]);
-      queryClient.setQueryData(
-        ["posts", commentData.postId.toString(), "comments"],
-        (old: any) => {
-          if (!old) return old;
-
-          return [
-            ...old,
-            {
-              postId: Number(commentData.postId),
-              userNickname: commentData.userSession.name,
-              userEmail: commentData.userSession.email,
-              content: commentData.CommentText,
-              Hearts: [],
-              _count: {
-                Hearts: 0,
-                Comments: 0,
-              },
-              reply: [],
-              createdAt: new Date(),
-            },
-          ];
-        }
-      );
 
       const previousPost = queryClient.getQueryData<IPost>([
         "posts",
         commentData.postId.toString(),
       ]);
+
+      const previousReplyList = replyListQueryKey
+        ? queryClient.getQueryData<IComment[]>(replyListQueryKey)
+        : undefined;
+
+      if (!commentData.threadId) {
+        queryClient.setQueryData(
+          ["posts", commentData.postId.toString(), "comments"],
+          (old: any) => {
+            if (!old) return old;
+            return [
+              ...old,
+              {
+                postId: Number(commentData.postId),
+                userNickname: commentData.userSession.name,
+                userEmail: commentData.userSession.email,
+                content: commentData.CommentText,
+                Hearts: [],
+                _count: {
+                  Hearts: 0,
+                  Comments: 0,
+                },
+                threadId: commentData.threadId,
+                createdAt: new Date(),
+              },
+            ];
+          }
+        );
+      }
+
       queryClient.setQueryData(
         ["posts", commentData.postId.toString()],
         (old: any) => {
@@ -1001,55 +1040,6 @@ export function useComment({
 
     // onSuccess: 성공 시 캐시 업데이트 및 쿼리 무효화
     onSuccess: (data, commentData) => {
-      const previousComments = queryClient.getQueryData<IComment[]>([
-        "posts",
-        commentData.postId.toString(),
-        "comments",
-      ]);
-
-      const post = queryClient.getQueryData<IPost>([
-        "posts",
-        commentData.postId.toString(),
-      ]);
-
-      if (previousComments && post) {
-        // 댓글 배열을 업데이트합니다.
-        queryClient.setQueryData(
-          ["posts", commentData.postId.toString(), "comments"],
-          [
-            ...previousComments,
-            {
-              postId: Number(commentData.postId),
-              userNickname: commentData.userSession.name,
-              userEmail: commentData.userSession.email,
-              content: commentData.CommentText,
-              Hearts: [],
-              _count: {
-                Hearts: 0,
-                Comments: 0,
-              },
-              reply: [],
-              createdAt: new Date(),
-            },
-          ]
-        );
-
-        // 게시물의 댓글 수를 1 증가시킵니다.
-        const updatedPost = {
-          ...post,
-          _count: {
-            ...post._count,
-            Comments: post._count.Comments + 1,
-          },
-        };
-
-        // 업데이트된 게시물 정보를 캐시에 저장합니다.
-        queryClient.setQueryData(
-          ["posts", commentData.postId.toString()],
-          updatedPost
-        );
-      }
-
       // 쿼리 무효화
       queryClient.invalidateQueries({
         queryKey: ["posts", commentData.postId.toString(), "comments"],
@@ -1057,141 +1047,16 @@ export function useComment({
       queryClient.invalidateQueries({
         queryKey: ["posts", commentData.postId.toString()],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["reply", commentData.threadId],
+      });
     },
 
     // onSettled: 요청 완료 후 상태 업데이트
     onSettled: () => {
       setIsPosting(false); // 요청 완료 후 상태 업데이트
+      setThreadId(null);
       setComment(""); // 댓글 텍스트 초기화
-    },
-  });
-}
-
-export function useReplyComment({
-  postId,
-  isPosting,
-  setIsPosting,
-  setComment,
-  ReplyTargetId,
-  setReplyTargetId,
-}: {
-  postId: number;
-  isPosting: boolean;
-  setIsPosting: React.Dispatch<React.SetStateAction<boolean>>;
-  setComment: React.Dispatch<React.SetStateAction<string>>;
-  ReplyTargetId: string;
-  setReplyTargetId: React.Dispatch<React.SetStateAction<string>>;
-}) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (commentData: {
-      postId: number;
-      ReplyTargetId: string;
-      CommentText: string;
-      userSession: any;
-    }) => {
-      return await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/${commentData.postId}/${commentData.ReplyTargetId}/reply`,
-        {
-          credentials: "include",
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            comment: commentData.CommentText,
-            User: commentData.userSession,
-          }),
-        }
-      );
-    },
-
-    onMutate: async (commentData) => {
-      if (isPosting) return; // 이미 요청 중이면 아무 작업도 하지 않음
-      setIsPosting(true); // 요청 시작 시 상태 업데이트
-
-      // Optimistic Update: 임시로 캐시 업데이트
-      const previousComments = queryClient.getQueryData<IComment[]>([
-        "posts",
-        commentData.postId,
-        "comments",
-      ]);
-      queryClient.setQueryData(
-        ["posts", commentData.postId, "comments"],
-        (old: any) => {
-          if (!old) return old;
-
-          return [
-            ...old,
-            {
-              postId: commentData.postId, // postId는 string
-              userNickname: commentData.userSession.name,
-              userEmail: commentData.userSession.email,
-              content: commentData.CommentText,
-              Hearts: [],
-              _count: {
-                Hearts: 0,
-                Comments: 0,
-              },
-              reply: [],
-              createdAt: new Date().toISOString(),
-            },
-          ];
-        }
-      );
-
-      const previousPost = queryClient.getQueryData<IPost>([
-        "posts",
-        commentData.postId,
-      ]);
-      queryClient.setQueryData(["posts", commentData.postId], (old: any) => {
-        if (!old) return old;
-
-        return {
-          ...old,
-          _count: {
-            ...old._count,
-            Comments: old._count.Comments + 1,
-          },
-        };
-      });
-
-      return { previousComments, previousPost };
-    },
-
-    onError: (err, variables, context) => {
-      // 에러 발생 시 이전 상태로 롤백
-      if (context?.previousComments) {
-        queryClient.setQueryData(
-          ["posts", variables.postId, "comments"],
-          context.previousComments
-        );
-      }
-      if (context?.previousPost) {
-        queryClient.setQueryData(
-          ["posts", variables.postId],
-          context.previousPost
-        );
-      }
-    },
-
-    onSuccess: (data, commentData) => {
-      // Optimistic Update에 의해 이미 업데이트된 댓글 배열을 다시 확인하고, 성공적으로 데이터를 업데이트합니다.
-      queryClient.invalidateQueries({
-        queryKey: ["posts", commentData.postId, "comments"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["posts", commentData.postId],
-      });
-
-      // 댓글 텍스트와 targetId 초기화
-      setReplyTargetId("");
-      setComment("");
-    },
-
-    onSettled: () => {
-      setIsPosting(false); // 요청 완료 후 상태 업데이트
     },
   });
 }

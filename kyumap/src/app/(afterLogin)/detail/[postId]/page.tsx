@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props) {
 export default async function Page({ params }: Props) {
   return (
     <>
-      <Home />
+      {/* <Home /> */}
       <DetailPage postId={params.postId} />
     </>
   );

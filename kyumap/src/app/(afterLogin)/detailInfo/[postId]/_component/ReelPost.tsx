@@ -23,6 +23,7 @@ import MoreInfoOverlay from "@/app/(afterLogin)/_component/Post/MoreInfoOverlay"
 import { IUser } from "@/model/User";
 import { getAddressFromCoordinates } from "@/app/(afterLogin)/@modal/(.)AddPost/_component/action";
 import LoadingComponent from "@/app/_component/LoadingComponent";
+import mongoose from "mongoose";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -37,9 +38,10 @@ export default function ReelPost({ postId }: Props) {
   const [isMuted, setMuted] = useState(true);
   const [targetCommentId, setTargetCommentId] = useState("");
   const [isClickedExitBtn, setExitBtn] = useState(false);
-  const [replyTarget, setReplyTarget] = useState("");
+  const [threadId, setThreadId] = useState<mongoose.Types.ObjectId | null>(
+    null
+  );
   const [CommentText, setComment] = useState("");
-  const [isCtype, setCType] = useState(true); // comment라면 true, reply라면 false
   // const [isPosting, setIsPosting] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMenu, setIsMenu] = useState(false);
@@ -236,11 +238,15 @@ export default function ReelPost({ postId }: Props) {
     setExitBtn(false);
   };
 
-  // ctype이 true인 경우 코멘트 false인 경우 답글로 간주함
-  const ReplyInfo = (commenttext: string, id: string, ctype: boolean) => {
-    setReplyTarget(id);
-    setComment("@" + commenttext + " ");
-    setCType(ctype);
+  const ReplyInfo = (
+    userNickname: string,
+    rootId: mongoose.Types.ObjectId | null
+  ) => {
+    // textarea에 답글 대상 id를 넣음
+    setComment(CommentText + "@" + userNickname + " ");
+
+    // 답글인지 판별이였는데
+    setThreadId(rootId);
   };
 
   const closeMenu = () => {
@@ -633,7 +639,6 @@ export default function ReelPost({ postId }: Props) {
                                     comment={comment}
                                     postId={postId.toString()}
                                     onClickExitBtnChild={onClickExitBtnChild}
-                                    parentId={comment._id}
                                     ReplyInfo={ReplyInfo}
                                   />
                                 ))}
@@ -644,7 +649,7 @@ export default function ReelPost({ postId }: Props) {
                           <ActionButtons
                             post={post}
                             otherText={CommentText}
-                            replyTargetProps={replyTarget}
+                            rootId={threadId}
                           />
                         </div>
                         <div className={styles.contentDiv6}></div>

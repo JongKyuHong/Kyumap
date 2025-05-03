@@ -33,7 +33,6 @@ export async function generateMetadata({ params }: Props) {
   };
 }
 
-// ssr설정
 export default async function Page({ params }: Props) {
   const queryClient = new QueryClient();
 

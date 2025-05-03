@@ -15,6 +15,7 @@ import { IUser } from "@/model/User";
 import { getUser } from "../_lib/getUser";
 import { useCommentHeart, useCommentUnheart } from "../_lib/mutateFactory";
 import { useRouter } from "next/navigation";
+import mongoose from "mongoose";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -24,7 +25,7 @@ type Props = {
   ReplyInfo: Function;
   onClickExitBtn: Function;
   postId: string;
-  parentId: string;
+  threadId: mongoose.Types.ObjectId | null;
 };
 
 // 실제 댓글 내용, 좋아요 정보 등등을 담은 컴포넌트
@@ -33,7 +34,7 @@ export default function Commentli({
   ReplyInfo,
   onClickExitBtn,
   postId,
-  parentId,
+  threadId,
 }: Props) {
   // 댓글 좋아요 state
   const [isCommentLiked, setCommentLiked] = useState(false);
@@ -60,7 +61,7 @@ export default function Commentli({
   }, [comment, session]);
 
   const onClickReply = () => {
-    ReplyInfo(comment.userNickname, parentId, false);
+    ReplyInfo(comment.userNickname, threadId);
   };
 
   const commentHeart = useCommentHeart();
@@ -73,13 +74,13 @@ export default function Commentli({
       if (session) {
         const commentId = comment_id;
         const userSession = session.user;
-        commentUnheart.mutate({ postId, commentId, userSession });
+        commentUnheart.mutate({ postId, commentId, userSession, threadId });
       }
     } else {
       if (session) {
         const commentId = comment_id;
         const userSession = session.user;
-        commentHeart.mutate({ postId, commentId, userSession });
+        commentHeart.mutate({ postId, commentId, userSession, threadId });
       }
     }
   };
@@ -166,6 +167,7 @@ export default function Commentli({
                 {parts.map((part, index) =>
                   part.startsWith("@") ? (
                     <button
+                      key={index}
                       className={styles.Mention}
                       onClick={() => onClickLink(part.slice(1))}
                     >

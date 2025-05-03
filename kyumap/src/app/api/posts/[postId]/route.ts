@@ -9,11 +9,18 @@ type Props = {
 };
 
 export async function GET(req: NextRequest, { params }: Props) {
-  await dbConnect();
-  const postId = params.postId;
-  // 게시글 불러오기
-  const post = await Post.findOne({ postId: postId });
-  return NextResponse.json(post);
+  try {
+    await dbConnect();
+    const postId = params.postId;
+    // 게시글 불러오기
+    const post = await Post.findOne({ postId: postId });
+    return NextResponse.json(post);
+  } catch (error) {
+    return NextResponse.json({
+      error: "서버 오류가 발생하였습니다.",
+      status: 500,
+    });
+  }
 }
 
 export async function DELETE(req: NextRequest, { params }: Props) {

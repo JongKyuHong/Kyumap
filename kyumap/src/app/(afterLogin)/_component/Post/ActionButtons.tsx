@@ -24,25 +24,20 @@ import LoadingComponent from "@/app/_component/LoadingComponent";
 import {
   useComment,
   useHeart,
-  useReplyComment,
   useSave,
   useUnheart,
   useUnsave,
 } from "../../_lib/mutateFactory";
+import mongoose from "mongoose";
 
 interface Props {
   post: IPost;
   otherText?: string | undefined;
-  replyTargetProps?: string | undefined;
+  rootId?: mongoose.Types.ObjectId | null;
 }
 
-export default function ActionButtons({
-  post,
-  otherText,
-  replyTargetProps,
-}: Props) {
+export default function ActionButtons({ post, otherText, rootId }: Props) {
   // Post의 버튼들을 따로 다루는 컴포넌트
-  const queryClient = useQueryClient();
   const { data: session } = useSession();
   const [CommentText, setComment] = useState(otherText ?? "");
   const [isLiked, setLiked] = useState(false);
@@ -50,7 +45,9 @@ export default function ActionButtons({
   // 좋아요 중복 방지용 state
   const [isSaved, setSaved] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
-  const [ReplyTargetId, setReplyTargetId] = useState("");
+  const [threadId, setThreadId] = useState<mongoose.Types.ObjectId | null>(
+    null
+  );
 
   const { data: user } = useQuery<IUser, Object, IUser, [string, string]>({
     queryKey: ["users", session?.user?.email as string],
@@ -59,11 +56,16 @@ export default function ActionButtons({
   });
 
   useEffect(() => {
-    if (otherText && replyTargetProps) {
+    if (otherText) {
       setComment(otherText);
-      setReplyTargetId(replyTargetProps);
     }
   }, [otherText]);
+
+  useEffect(() => {
+    if (rootId) {
+      setThreadId(rootId);
+    }
+  }, [rootId]);
 
   useEffect(() => {
     if (!user) return;
@@ -94,15 +96,7 @@ export default function ActionButtons({
     isPosting,
     setIsPosting,
     setComment,
-  });
-
-  const addReplyComment = useReplyComment({
-    postId,
-    isPosting,
-    setIsPosting,
-    setComment,
-    ReplyTargetId,
-    setReplyTargetId,
+    setThreadId,
   });
 
   // 하트를 클릭했을때
@@ -143,15 +137,7 @@ export default function ActionButtons({
       return router.push(`/NewLogin`);
     }
     const userSession = session.user;
-    if (otherText && ReplyTargetId) {
-      addReplyComment.mutate({
-        postId,
-        ReplyTargetId,
-        CommentText,
-        userSession,
-      });
-    }
-    addComment.mutate({ postId, CommentText, userSession });
+    addComment.mutate({ postId, threadId, CommentText, userSession });
   };
 
   return (
