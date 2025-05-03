@@ -29,7 +29,6 @@ import { getAddressFromCoordinates } from "../../../(.)AddPost/_component/action
 import {
   useComment,
   useHeart,
-  useReplyComment,
   useSave,
   useUnheart,
   useUnsave,
@@ -180,6 +179,7 @@ export default function DetailPage({ postId }: Props) {
       postId: String;
       commentId: string;
       userSession: any;
+      commentThreadId: mongoose.Types.ObjectId | null;
     }) => {
       const response = await fetch(
         `${
@@ -191,7 +191,6 @@ export default function DetailPage({ postId }: Props) {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ userSession: commentData.userSession }),
         }
       );
 
@@ -258,17 +257,12 @@ export default function DetailPage({ postId }: Props) {
       queryClient.invalidateQueries({
         queryKey: ["posts", postId.toString()],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["reply", commentData.commentThreadId],
+      });
       setExitBtn(false);
     },
   });
-
-  const addReplyComment = useReplyComment({
-    isPosting,
-    setIsPosting,
-    setComment,
-    setThreadId,
-  });
-
   const saved = useSave({ setSaved });
 
   const unsaved = useUnsave({ setSaved });
@@ -315,7 +309,13 @@ export default function DetailPage({ postId }: Props) {
     }
     const commentId = targetCommentId;
     const userSession = session.user;
-    deleteComment.mutate({ postId, commentId, userSession });
+    const commentThreadId = threadId;
+    deleteComment.mutate({
+      postId,
+      commentId,
+      userSession,
+      commentThreadId: commentThreadId,
+    });
   };
 
   // Comment 컴포넌트로 보낼 함수
@@ -329,7 +329,6 @@ export default function DetailPage({ postId }: Props) {
   // 답글 달기를 눌렀을때
   const ReplyInfo = (
     userNickname: string,
-    parentId: string,
     rootId: mongoose.Types.ObjectId | null
   ) => {
     // textarea에 답글 대상 id를 넣음
@@ -351,17 +350,12 @@ export default function DetailPage({ postId }: Props) {
       return null;
     }
     const userSession = session.user;
-    if (!threadId) {
-      // true면 comment false면 답글
-      addReplyComment.mutate({
-        postId: Number(postId),
-        threadId,
-        CommentText,
-        userSession,
-      });
-    } else {
-      addComment.mutate({ postId: Number(postId), threadId, CommentText, userSession });
-    }
+    addComment.mutate({
+      postId: Number(postId),
+      threadId,
+      CommentText,
+      userSession,
+    });
   };
 
   const onClickSaved: MouseEventHandler<HTMLDivElement> = (e) => {
@@ -2184,63 +2178,61 @@ export default function DetailPage({ postId }: Props) {
           </div>
         </div>
       </div>
-      {isClickedExitBtn && (
+      <div style={{ display: isClickedExitBtn ? "block" : "none" }}>
         <div>
-          <div>
-            <div className={styles.ExitBtn}>
-              <div className={styles.ExitBtn2}>
-                <div className={styles.ExitBtn3}>
-                  <div className={styles.ExitBtn4}></div>
-                  <div className={styles.ExitBtn5} tabIndex={-1}>
-                    <div className={styles.ExitBtn6}>
-                      <div className={styles.ExitBtn7}>
-                        <div className={styles.ExitBtn8} role="dialog">
-                          <div className={styles.ExitBtn9}>
-                            <div className={styles.ExitBtnModal} role="dialog">
-                              <div
-                                style={{
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  height: "100%",
-                                  maxWidth: "100%",
-                                }}
-                              >
-                                <div className={styles.ExitBtnModal2}>
-                                  <div className={styles.ExitBtnModalHeader}>
-                                    <span
-                                      className={styles.ExitBtnModalHeader2}
-                                      dir="auto"
-                                      style={{ lineHeight: "25px" }}
-                                    >
-                                      {"댓글을 삭제하시겠어요?"}
-                                    </span>
-                                    <span
-                                      className={styles.ExitBtnModalHeader3}
-                                      dir="auto"
-                                      style={{ lineHeight: "25px" }}
-                                    >
-                                      {
-                                        "지금 나가면 수정 내용이 저장되지 않습니다."
-                                      }
-                                    </span>
-                                  </div>
-                                  <div
-                                    className={styles.ExitBtnModalBody}
-                                    style={{ lineHeight: "18px" }}
+          <div className={styles.ExitBtn}>
+            <div className={styles.ExitBtn2}>
+              <div className={styles.ExitBtn3}>
+                <div className={styles.ExitBtn4}></div>
+                <div className={styles.ExitBtn5} tabIndex={-1}>
+                  <div className={styles.ExitBtn6}>
+                    <div className={styles.ExitBtn7}>
+                      <div className={styles.ExitBtn8} role="dialog">
+                        <div className={styles.ExitBtn9}>
+                          <div className={styles.ExitBtnModal} role="dialog">
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                height: "100%",
+                                maxWidth: "100%",
+                              }}
+                            >
+                              <div className={styles.ExitBtnModal2}>
+                                <div className={styles.ExitBtnModalHeader}>
+                                  <span
+                                    className={styles.ExitBtnModalHeader2}
+                                    dir="auto"
+                                    style={{ lineHeight: "25px" }}
                                   >
-                                    <button
-                                      className={styles.ExitBtnBtn}
-                                      onClick={onClickRemoveComment}
-                                    >
-                                      삭제
-                                    </button>
-                                    <button
-                                      className={styles.ExitBtnBtn2}
-                                      onClick={onClickExitBtnClose}
-                                    >
-                                      취소
-                                    </button>
-                                  </div>
+                                    {"댓글을 삭제하시겠어요?"}
+                                  </span>
+                                  <span
+                                    className={styles.ExitBtnModalHeader3}
+                                    dir="auto"
+                                    style={{ lineHeight: "25px" }}
+                                  >
+                                    {
+                                      "지금 나가면 수정 내용이 저장되지 않습니다."
+                                    }
+                                  </span>
+                                </div>
+                                <div
+                                  className={styles.ExitBtnModalBody}
+                                  style={{ lineHeight: "18px" }}
+                                >
+                                  <button
+                                    className={styles.ExitBtnBtn}
+                                    onClick={onClickRemoveComment}
+                                  >
+                                    삭제
+                                  </button>
+                                  <button
+                                    className={styles.ExitBtnBtn2}
+                                    onClick={onClickExitBtnClose}
+                                  >
+                                    취소
+                                  </button>
                                 </div>
                               </div>
                             </div>
@@ -2254,7 +2246,7 @@ export default function DetailPage({ postId }: Props) {
             </div>
           </div>
         </div>
-      )}
+      </div>
     </>
   );
 }

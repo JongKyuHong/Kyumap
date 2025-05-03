@@ -10,11 +10,26 @@ type Props = {
 };
 
 export async function GET(req: NextRequest, { params }: Props) {
-  await dbConnect();
-  const postId = params.postId;
-  // 댓글 받아오기
-  const allComments = await Comment.find({ postId: postId });
-  return NextResponse.json(allComments);
+  try {
+    await dbConnect();
+    const postId = params.postId;
+    // 댓글 받아오기
+    const allComments = await Comment.find({
+      postId: postId,
+      $expr: {
+        $eq: ["$_id", "$threadId"],
+      },
+    });
+    return NextResponse.json(allComments);
+  } catch (error) {
+    console.error(error);
+
+    // 오류 발생 시 에러 응답 반환
+    return NextResponse.json(
+      { message: "댓글 목록을 불러오는데 실패하였습니다." },
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(req: NextRequest, { params }: Props) {
@@ -51,6 +66,17 @@ export async function POST(req: NextRequest, { params }: Props) {
       } else {
         console.error(`Failed to update threadId for comment ${comment._id}`);
       }
+    } else {
+      const res = await Comment.findOneAndUpdate(
+        {
+          _id: IsThreadId,
+        },
+        {
+          $inc: {
+            "_count.Comments": 1,
+          },
+        }
+      );
     }
 
     // post에 _count늘려주기

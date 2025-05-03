@@ -10,13 +10,14 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { IComment } from "@/model/Comment";
 import { useSession } from "next-auth/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { IReply } from "@/model/Reply";
 import LoadingComponent from "@/app/_component/LoadingComponent";
 import { IUser } from "@/model/User";
 import { getUser } from "../_lib/getUser";
 import {
+  useCommentHeart,
   useCommentReplyHeart,
   useCommentReplyUnHeart,
+  useCommentUnheart,
 } from "../_lib/mutateFactory";
 import { useRouter } from "next/navigation";
 
@@ -24,15 +25,13 @@ dayjs.locale("ko");
 dayjs.extend(relativeTime);
 
 type Props = {
-  parentId: string;
-  comment: IReply;
+  comment: IComment;
   ReplyInfo: Function;
   onClickExitBtn: Function;
   postId: string;
 };
 
 export default function Reply({
-  parentId,
   comment,
   ReplyInfo,
   onClickExitBtn,
@@ -64,15 +63,14 @@ export default function Reply({
   }, [comment, session]);
 
   const onClickReply = () => {
-    console.log(comment, comment.userNickname, parentId, "검사");
-    ReplyInfo(comment.userNickname, parentId, false);
+    ReplyInfo(comment.userNickname, comment.threadId);
   };
 
   // 좋아요
-  const commentHeart = useCommentReplyHeart(setCommentLiked);
+  const commentHeart = useCommentHeart();
 
   // 좋아요 취소
-  const commentUnheart = useCommentReplyUnHeart(setCommentLiked);
+  const commentUnheart = useCommentUnheart();
 
   const onClickCommentHeart = (comment_id: string) => {
     // 댓글에 좋아요
@@ -80,12 +78,14 @@ export default function Reply({
       if (isCommentLiked) {
         // 이미 댓글 좋아요를 눌렀으면
         const commentId = comment_id;
+        const threadId = comment.threadId;
         const userSession = session.user;
-        commentUnheart.mutate({ postId, commentId, userSession });
+        commentUnheart.mutate({ postId, commentId, userSession, threadId });
       } else {
         const commentId = comment_id;
+        const threadId = comment.threadId;
         const userSession = session.user;
-        commentHeart.mutate({ postId, commentId, userSession });
+        commentHeart.mutate({ postId, commentId, userSession, threadId });
       }
     }
   };

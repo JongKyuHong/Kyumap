@@ -21,6 +21,7 @@ type Props = {
   postId: string;
   onClickExitBtnChild: Function; // 부모에서 전달한 삭제 창 핸들러
   ReplyInfo: Function; // 부모에서 전달한 답글 정보 핸들러, 답글 달기를 누르면 댓글창에 @답글작성자 가 뜨게되어 답글을 달 수 있음
+  setThreadIdProps?: Function;
 };
 
 // 코멘트 창을 담당하는 컴포넌트
@@ -37,11 +38,10 @@ export default function Comment({
   const { data: session } = useSession();
 
   const {
-    data, // getReplys 함수가 가져온 답글 목록 데이터
+    data: replysData, // getReplys 함수가 가져온 답글 목록 데이터
   } = useQuery<IComment[], Object, IComment[], [string, string]>({
     queryKey: ["reply", comment._id],
     queryFn: getReplys,
-    enabled: isClickedReply,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 10,
   });
@@ -93,17 +93,17 @@ export default function Comment({
                 </div>
               </li>
               {/* 답글 보기를 클릭했을때 */}
-              {/* {isClickedReply &&
-                comment!.reply!.map((data, index) => (
+              {isClickedReply &&
+                replysData &&
+                replysData.map((data, index) => (
                   <Reply
-                    parentId={parentId}
                     key={index}
                     comment={data}
                     ReplyInfo={ReplyInfo}
                     onClickExitBtn={onClickExitBtn}
                     postId={postId}
                   />
-                ))} */}
+                ))}
             </ul>
           </li>
         )}
