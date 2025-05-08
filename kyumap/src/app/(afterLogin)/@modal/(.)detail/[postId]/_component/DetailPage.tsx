@@ -34,6 +34,9 @@ import {
   useUnsave,
 } from "@/app/(afterLogin)/_lib/mutateFactory";
 import mongoose from "mongoose";
+import { getSearchUsers } from "@/app/(afterLogin)/_lib/getSearchUsers";
+import UserSearchModal from "@/app/(afterLogin)/_component/Post/UserSearchModal";
+import ReactDOM from "react-dom";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -41,6 +44,13 @@ dayjs.extend(relativeTime);
 type Props = {
   postId: string;
 };
+
+interface IUserSearchResult {
+  _id: mongoose.Types.ObjectId | null;
+  email: string;
+  nickname: string;
+  image: string;
+}
 
 const videoExtensions = [".mp4", ".avi", ".mov", ".wmv", ".flv", ".mkv"];
 
@@ -65,6 +75,7 @@ export default function DetailPage({ postId }: Props) {
   const [isSaved, setSaved] = useState(false);
   const [mobile, setMobile] = useState(false);
   const [address, setAddress] = useState<string | null>("");
+  const [isClient, setIsClient] = useState<boolean>(false);
 
   const { data: session } = useSession();
 
@@ -73,6 +84,10 @@ export default function DetailPage({ postId }: Props) {
   useEffect(() => {
     setMobile(isMobile);
   }, [isMobile]);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const { data: comments } = useQuery<
     IComment[],
@@ -126,6 +141,69 @@ export default function DetailPage({ postId }: Props) {
     setLiked(liked);
     setSaved(ssave);
   }, [post, session?.user?.email, user]);
+
+  const [isSearchingUsers, setIsSearchingUsers] = useState(false); // 사용자 검색 모드 상태
+  const [searchTerm, setSearchTerm] = useState(""); // @ 뒤의 검색어 상태
+  const [mentionTriggerIndex, setMentionTriggerIndex] = useState(-1); // @ 기호의 위치 인덱스
+
+  const { data: searchResults, isLoading: isSearching } = useQuery<
+    IUserSearchResult[],
+    Object,
+    IUserSearchResult[],
+    [string, string]
+  >({
+    // 실제 데이터 타입 명시
+    queryKey: ["userSearch", searchTerm],
+    queryFn: getSearchUsers,
+    enabled: isSearchingUsers && searchTerm.length >= 1, // 검색 모드이고 검색어 1글자 이상일 때만 실행
+    staleTime: 1000 * 60 * 1,
+  });
+
+  const commentInputRef = useRef<HTMLDivElement | null>(null);
+  const [modalPosition, setModalPosition] = useState<{
+    top: number;
+    left: number;
+  }>({ top: 0, left: 0 });
+
+  // 댓글창 위치 계산
+  useEffect(() => {
+    if (commentInputRef.current) {
+      const rect = commentInputRef.current.getBoundingClientRect();
+      setModalPosition({
+        top: rect.top - 20, // 댓글창 위로 100px 띄움 (원하는 만큼 조정)
+        left: rect.left,
+      });
+    }
+  }, [isSearchingUsers]);
+
+  const handleSelectUser = (user: {
+    _id: mongoose.Types.ObjectId | null;
+    nickname: string;
+    email: string;
+    image: string;
+  }) => {
+    const mentionRegex = /@\S*$/; // 마지막 '@'로 시작하는 단어를 찾음
+    const replaced = CommentText.replace(mentionRegex, `@${user.nickname}`);
+    setComment(replaced + " ");
+    setThreadId(user._id);
+    setIsSearchingUsers(false);
+  };
+
+  const searchResultsModal =
+    isClient && typeof window !== "undefined"
+      ? ReactDOM.createPortal(
+          <UserSearchModal
+            isSearchingUsers={isSearchingUsers}
+            searchTerm={searchTerm}
+            searchResults={searchResults}
+            handleSelectUser={handleSelectUser}
+            isSearching={isSearching}
+            position={modalPosition}
+            onClose={() => setIsSearchingUsers(false)}
+          />,
+          document.body
+        )
+      : null;
 
   // 비디오 일시정지/재생 토글
   const onClickVideo = () => {
@@ -267,8 +345,39 @@ export default function DetailPage({ postId }: Props) {
 
   const unsaved = useUnsave({ setSaved });
 
-  const onChangeTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setComment(e.target.value);
+  const onChangeTextArea = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    // 이벤트 타입 명시
+    const newValue = event.target.value;
+    setComment(newValue);
+
+    const atIndex = newValue.lastIndexOf("@");
+
+    if (atIndex !== -1) {
+      const textAfterAt = newValue.substring(atIndex + 1);
+      if (!textAfterAt.includes(" ")) {
+        // @ 뒤의 텍스트가 공백 없이 이어지고 있다면, 검색 모드로 전환합니다.
+        setIsSearchingUsers(true); // 사용자 검색 모드 ON
+        setSearchTerm(textAfterAt); // @ 뒤의 텍스트를 검색어로 설정
+        setMentionTriggerIndex(atIndex); // @ 기호의 위치 인덱스 저장 (나중에 사용자 선택 시 삽입 위치 계산에 사용)
+      } else {
+        // @ 뒤에 공백이 있다면, 사용자 검색 모드를 종료합니다.
+        setIsSearchingUsers(false); // 사용자 검색 모드 OFF
+        setSearchTerm(""); // 검색어 초기화
+        setMentionTriggerIndex(-1); // @ 위치 초기화
+      }
+    } else {
+      // @ 기호가 없다면, 사용자 검색 모드를 종료합니다.
+      setIsSearchingUsers(false); // 사용자 검색 모드 OFF
+      setSearchTerm(""); // 검색어 초기화
+      setMentionTriggerIndex(-1); // @ 위치 초기화
+    }
+
+    // 입력창 내용 전체가 비워지면 (모두 삭제 등), 검색 모드를 종료합니다.
+    if (newValue === "") {
+      setIsSearchingUsers(false);
+      setSearchTerm("");
+      setMentionTriggerIndex(-1);
+    }
   };
 
   useEffect(() => {
@@ -2065,6 +2174,7 @@ export default function DetailPage({ postId }: Props) {
                                         </div>
                                         <section
                                           className={styles.AddCommentSide}
+                                          ref={commentInputRef}
                                         >
                                           <div>
                                             <form
@@ -2161,6 +2271,7 @@ export default function DetailPage({ postId }: Props) {
                                             </form>
                                           </div>
                                         </section>
+                                        {searchResultsModal}
                                       </div>
                                     </div>
                                   </div>

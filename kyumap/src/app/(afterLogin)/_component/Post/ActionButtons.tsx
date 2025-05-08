@@ -5,6 +5,7 @@ import React, {
   ChangeEvent,
   MouseEventHandler,
   useEffect,
+  useRef,
 } from "react";
 import {
   useMutation,
@@ -29,11 +30,21 @@ import {
   useUnsave,
 } from "../../_lib/mutateFactory";
 import mongoose from "mongoose";
+import { getSearchUsers } from "../../_lib/getSearchUsers";
+import UserSearchModal from "./UserSearchModal";
+import ReactDOM from "react-dom";
 
 interface Props {
   post: IPost;
   otherText?: string | undefined;
   rootId?: mongoose.Types.ObjectId | null;
+}
+
+interface IUserSearchResult {
+  _id: mongoose.Types.ObjectId | null;
+  email: string;
+  nickname: string;
+  image: string;
 }
 
 export default function ActionButtons({ post, otherText, rootId }: Props) {
@@ -48,12 +59,49 @@ export default function ActionButtons({ post, otherText, rootId }: Props) {
   const [threadId, setThreadId] = useState<mongoose.Types.ObjectId | null>(
     null
   );
+  const [isSearchingUsers, setIsSearchingUsers] = useState(false); // 사용자 검색 모드 상태
+  const [searchTerm, setSearchTerm] = useState(""); // @ 뒤의 검색어 상태
+  const [mentionTriggerIndex, setMentionTriggerIndex] = useState(-1); // @ 기호의 위치 인덱스
+  const [isClient, setIsClient] = useState<boolean>(false);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const { data: user } = useQuery<IUser, Object, IUser, [string, string]>({
     queryKey: ["users", session?.user?.email as string],
     queryFn: getUser,
     enabled: !!session?.user?.email, // session과 email이 있을 때만 쿼리 실행
   });
+
+  const { data: searchResults, isLoading: isSearching } = useQuery<
+    IUserSearchResult[],
+    Object,
+    IUserSearchResult[],
+    [string, string]
+  >({
+    // 실제 데이터 타입 명시
+    queryKey: ["userSearch", searchTerm],
+    queryFn: getSearchUsers,
+    enabled: isSearchingUsers && searchTerm.length >= 1, // 검색 모드이고 검색어 1글자 이상일 때만 실행
+    staleTime: 1000 * 60 * 1,
+  });
+
+  const commentInputRef = useRef<HTMLDivElement | null>(null);
+  const [modalPosition, setModalPosition] = useState<{
+    top: number;
+    left: number;
+  }>({ top: 0, left: 0 });
+
+  // 댓글창 위치 계산
+  useEffect(() => {
+    if (commentInputRef.current) {
+      const rect = commentInputRef.current.getBoundingClientRect();
+      setModalPosition({
+        top: rect.top - 20, // 댓글창 위로 100px 띄움 (원하는 만큼 조정)
+        left: rect.left,
+      });
+    }
+  }, [isSearchingUsers]);
 
   useEffect(() => {
     if (otherText) {
@@ -126,8 +174,54 @@ export default function ActionButtons({ post, otherText, rootId }: Props) {
     }
   };
 
-  const handleTextareaChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    setComment(event.target.value);
+  const handleTextareaChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    // 이벤트 타입 명시
+    const newValue = event.target.value;
+    setComment(newValue);
+
+    const atIndex = newValue.lastIndexOf("@");
+
+    if (atIndex !== -1) {
+      const textAfterAt = newValue.substring(atIndex + 1);
+      if (!textAfterAt.includes(" ")) {
+        // @ 뒤의 텍스트가 공백 없이 이어지고 있다면, 검색 모드로 전환합니다.
+        setIsSearchingUsers(true); // 사용자 검색 모드 ON
+        setSearchTerm(textAfterAt); // @ 뒤의 텍스트를 검색어로 설정
+        setMentionTriggerIndex(atIndex); // @ 기호의 위치 인덱스 저장 (나중에 사용자 선택 시 삽입 위치 계산에 사용)
+      } else {
+        // @ 뒤에 공백이 있다면, 사용자 검색 모드를 종료합니다.
+        setIsSearchingUsers(false); // 사용자 검색 모드 OFF
+        setSearchTerm(""); // 검색어 초기화
+        setMentionTriggerIndex(-1); // @ 위치 초기화
+      }
+    } else {
+      // @ 기호가 없다면, 사용자 검색 모드를 종료합니다.
+      setIsSearchingUsers(false); // 사용자 검색 모드 OFF
+      setSearchTerm(""); // 검색어 초기화
+      setMentionTriggerIndex(-1); // @ 위치 초기화
+    }
+
+    // 입력창 내용 전체가 비워지면 (모두 삭제 등), 검색 모드를 종료합니다.
+    if (newValue === "") {
+      setIsSearchingUsers(false);
+      setSearchTerm("");
+      setMentionTriggerIndex(-1);
+    }
+  };
+
+  const handleSelectUser = (user: {
+    _id: mongoose.Types.ObjectId | null;
+    nickname: string;
+    email: string;
+    image: string;
+  }) => {
+    const mentionRegex = /@\S*$/; // 마지막 '@'로 시작하는 단어를 찾음
+    const replaced = CommentText.replace(mentionRegex, `@${user.nickname}`);
+    setComment(replaced + " ");
+    setThreadId(user._id);
+    setIsSearchingUsers(false);
   };
 
   // 게시를 클릭하면 디테일 페이지로 이동하게
@@ -139,6 +233,22 @@ export default function ActionButtons({ post, otherText, rootId }: Props) {
     const userSession = session.user;
     addComment.mutate({ postId, threadId, CommentText, userSession });
   };
+
+  const searchResultsModal =
+    isClient && typeof window !== "undefined"
+      ? ReactDOM.createPortal(
+          <UserSearchModal
+            isSearchingUsers={isSearchingUsers}
+            searchTerm={searchTerm}
+            searchResults={searchResults}
+            handleSelectUser={handleSelectUser}
+            isSearching={isSearching}
+            position={modalPosition}
+            onClose={() => setIsSearchingUsers(false)}
+          />,
+          document.body
+        )
+      : null;
 
   return (
     <div className={styles.articleContent}>
@@ -347,62 +457,64 @@ export default function ActionButtons({ post, otherText, rootId }: Props) {
               </Link>
             </div>
           )}
-
           {!post.hideComments && (
-            <div className={styles.commentInput}>
-              <section className={styles.inputSection}>
-                <div className={styles.inputSecitonDiv}>
-                  <form className={styles.formInput} method="POST">
-                    <div className={styles.formInputDiv}>
-                      <div className={styles.formInputInnerDiv}>
-                        <div
-                          className={styles.formInputInnerDiv2}
-                          role="button"
-                          tabIndex={0}
-                        >
-                          <div className={styles.formInputInnerDiv3}>
-                            <svg
-                              aria-label="이모티콘"
-                              className={styles.Emoticon}
-                              fill="currentColor"
-                              height="13"
-                              role="img"
-                              viewBox="0 0 24 24"
-                              width="13"
-                            >
-                              <title>이모티콘</title>
-                              <path d="M15.83 10.997a1.167 1.167 0 1 0 1.167 1.167 1.167 1.167 0 0 0-1.167-1.167Zm-6.5 1.167a1.167 1.167 0 1 0-1.166 1.167 1.167 1.167 0 0 0 1.166-1.167Zm5.163 3.24a3.406 3.406 0 0 1-4.982.007 1 1 0 1 0-1.557 1.256 5.397 5.397 0 0 0 8.09 0 1 1 0 0 0-1.55-1.263ZM12 .503a11.5 11.5 0 1 0 11.5 11.5A11.513 11.513 0 0 0 12 .503Zm0 21a9.5 9.5 0 1 1 9.5-9.5 9.51 9.51 0 0 1-9.5 9.5Z"></path>
-                            </svg>
-                          </div>
-                        </div>
-                      </div>
-                      <textarea
-                        name="comment"
-                        aria-label="댓글 달기..."
-                        className={styles.formInputTextArea}
-                        placeholder="댓글 달기..."
-                        autoComplete="off"
-                        autoCorrect="off"
-                        value={CommentText}
-                        onChange={handleTextareaChange}
-                      ></textarea>
-                      {CommentText ? (
-                        <div className={styles.EnterBtn}>
+            <>
+              <div className={styles.commentInput} ref={commentInputRef}>
+                <section className={styles.inputSection}>
+                  <div className={styles.inputSecitonDiv}>
+                    <form className={styles.formInput} method="POST">
+                      <div className={styles.formInputDiv}>
+                        <div className={styles.formInputInnerDiv}>
                           <div
-                            className={styles.EnterDiv}
+                            className={styles.formInputInnerDiv2}
                             role="button"
                             tabIndex={0}
-                            onClick={onSubmitComment}
                           >
-                            게시
+                            <div className={styles.formInputInnerDiv3}>
+                              <svg
+                                aria-label="이모티콘"
+                                className={styles.Emoticon}
+                                fill="currentColor"
+                                height="13"
+                                role="img"
+                                viewBox="0 0 24 24"
+                                width="13"
+                              >
+                                <title>이모티콘</title>
+                                <path d="M15.83 10.997a1.167 1.167 0 1 0 1.167 1.167 1.167 1.167 0 0 0-1.167-1.167Zm-6.5 1.167a1.167 1.167 0 1 0-1.166 1.167 1.167 1.167 0 0 0 1.166-1.167Zm5.163 3.24a3.406 3.406 0 0 1-4.982.007 1 1 0 1 0-1.557 1.256 5.397 5.397 0 0 0 8.09 0 1 1 0 0 0-1.55-1.263ZM12 .503a11.5 11.5 0 1 0 11.5 11.5A11.513 11.513 0 0 0 12 .503Zm0 21a9.5 9.5 0 1 1 9.5-9.5 9.51 9.51 0 0 1-9.5 9.5Z"></path>
+                              </svg>
+                            </div>
                           </div>
                         </div>
-                      ) : null}
-                    </div>
-                  </form>
-                </div>
-              </section>
-            </div>
+                        <textarea
+                          name="comment"
+                          aria-label="댓글 달기..."
+                          className={styles.formInputTextArea}
+                          placeholder="댓글 달기..."
+                          autoComplete="off"
+                          autoCorrect="off"
+                          value={CommentText}
+                          onChange={handleTextareaChange}
+                        ></textarea>
+                        {CommentText ? (
+                          <div className={styles.EnterBtn}>
+                            <div
+                              className={styles.EnterDiv}
+                              role="button"
+                              tabIndex={0}
+                              onClick={onSubmitComment}
+                            >
+                              게시
+                            </div>
+                          </div>
+                        ) : null}
+                      </div>
+                    </form>
+                  </div>
+                </section>
+              </div>
+              {searchResultsModal}
+            </>
           )}
         </div>
       </div>

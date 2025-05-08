@@ -87,7 +87,6 @@ export default function ReelPost({ postId }: Props) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  // 좋아요 저장됨 상태 업데이트
   useEffect(() => {
     if (userData && post) {
       const calculateAdr = async () => {

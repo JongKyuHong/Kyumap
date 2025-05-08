@@ -62,7 +62,6 @@ export async function POST(req: NextRequest, { params }: Props) {
 
       if (result) {
         updatedComment = result; // 업데이트 성공 시 updatedComment 변수를 업데이트된 문서로 교체
-        console.log(`threadId 업데이트 성공: ${updatedComment._id}`);
       } else {
         console.error(`Failed to update threadId for comment ${comment._id}`);
       }
