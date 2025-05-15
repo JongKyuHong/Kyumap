@@ -34,6 +34,9 @@ import {
   useUnsave,
 } from "@/app/(afterLogin)/_lib/mutateFactory";
 import mongoose from "mongoose";
+import { getSearchUsers } from "@/app/(afterLogin)/_lib/getSearchUsers";
+import UserSearchModal from "@/app/(afterLogin)/_component/Post/UserSearchModal";
+import ReactDOM from "react-dom";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -41,6 +44,13 @@ dayjs.extend(relativeTime);
 type Props = {
   postId: string;
 };
+
+interface IUserSearchResult {
+  _id: mongoose.Types.ObjectId | null;
+  email: string;
+  nickname: string;
+  image: string;
+}
 
 const videoExtensions = [".mp4", ".avi", ".mov", ".wmv", ".flv", ".mkv"];
 
@@ -65,6 +75,7 @@ export default function DetailPage({ postId }: Props) {
   const [isSaved, setSaved] = useState(false);
   const [mobile, setMobile] = useState(false);
   const [address, setAddress] = useState<string | null>("");
+  const [isClient, setIsClient] = useState<boolean>(false);
 
   const { data: session } = useSession();
 
@@ -73,6 +84,13 @@ export default function DetailPage({ postId }: Props) {
   useEffect(() => {
     setMobile(isMobile);
   }, [isMobile]);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  const [mounted, setMounted] = useState(false);
+  const router = useRouter();
 
   const { data: comments } = useQuery<
     IComment[],
@@ -104,7 +122,6 @@ export default function DetailPage({ postId }: Props) {
     enabled: !!post,
   });
 
-  const router = useRouter();
   const queryClient = useQueryClient();
 
   // 좋아요 저장됨 상태 업데이트
@@ -126,6 +143,69 @@ export default function DetailPage({ postId }: Props) {
     setLiked(liked);
     setSaved(ssave);
   }, [post, session?.user?.email, user]);
+
+  const [isSearchingUsers, setIsSearchingUsers] = useState(false); // 사용자 검색 모드 상태
+  const [searchTerm, setSearchTerm] = useState(""); // @ 뒤의 검색어 상태
+  const [mentionTriggerIndex, setMentionTriggerIndex] = useState(-1); // @ 기호의 위치 인덱스
+
+  const { data: searchResults, isLoading: isSearching } = useQuery<
+    IUserSearchResult[],
+    Object,
+    IUserSearchResult[],
+    [string, string]
+  >({
+    // 실제 데이터 타입 명시
+    queryKey: ["userSearch", searchTerm],
+    queryFn: getSearchUsers,
+    enabled: isSearchingUsers && searchTerm.length >= 1, // 검색 모드이고 검색어 1글자 이상일 때만 실행
+    staleTime: 1000 * 60 * 1,
+  });
+
+  const commentInputRef = useRef<HTMLDivElement | null>(null);
+  const [modalPosition, setModalPosition] = useState<{
+    top: number;
+    left: number;
+  }>({ top: 0, left: 0 });
+
+  // 댓글창 위치 계산
+  useEffect(() => {
+    if (commentInputRef.current) {
+      const rect = commentInputRef.current.getBoundingClientRect();
+      setModalPosition({
+        top: rect.top - 20, // 댓글창 위로 100px 띄움 (원하는 만큼 조정)
+        left: rect.left,
+      });
+    }
+  }, [isSearchingUsers]);
+
+  const handleSelectUser = (user: {
+    _id: mongoose.Types.ObjectId | null;
+    nickname: string;
+    email: string;
+    image: string;
+  }) => {
+    const mentionRegex = /@\S*$/; // 마지막 '@'로 시작하는 단어를 찾음
+    const replaced = CommentText.replace(mentionRegex, `@${user.nickname}`);
+    setComment(replaced + " ");
+    setThreadId(user._id);
+    setIsSearchingUsers(false);
+  };
+
+  const searchResultsModal =
+    isClient && typeof window !== "undefined"
+      ? ReactDOM.createPortal(
+          <UserSearchModal
+            isSearchingUsers={isSearchingUsers}
+            searchTerm={searchTerm}
+            searchResults={searchResults}
+            handleSelectUser={handleSelectUser}
+            isSearching={isSearching}
+            position={modalPosition}
+            onClose={() => setIsSearchingUsers(false)}
+          />,
+          document.body
+        )
+      : null;
 
   // 비디오 일시정지/재생 토글
   const onClickVideo = () => {
@@ -267,8 +347,39 @@ export default function DetailPage({ postId }: Props) {
 
   const unsaved = useUnsave({ setSaved });
 
-  const onChangeTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setComment(e.target.value);
+  const onChangeTextArea = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    // 이벤트 타입 명시
+    const newValue = event.target.value;
+    setComment(newValue);
+
+    const atIndex = newValue.lastIndexOf("@");
+
+    if (atIndex !== -1) {
+      const textAfterAt = newValue.substring(atIndex + 1);
+      if (!textAfterAt.includes(" ")) {
+        // @ 뒤의 텍스트가 공백 없이 이어지고 있다면, 검색 모드로 전환합니다.
+        setIsSearchingUsers(true); // 사용자 검색 모드 ON
+        setSearchTerm(textAfterAt); // @ 뒤의 텍스트를 검색어로 설정
+        setMentionTriggerIndex(atIndex); // @ 기호의 위치 인덱스 저장 (나중에 사용자 선택 시 삽입 위치 계산에 사용)
+      } else {
+        // @ 뒤에 공백이 있다면, 사용자 검색 모드를 종료합니다.
+        setIsSearchingUsers(false); // 사용자 검색 모드 OFF
+        setSearchTerm(""); // 검색어 초기화
+        setMentionTriggerIndex(-1); // @ 위치 초기화
+      }
+    } else {
+      // @ 기호가 없다면, 사용자 검색 모드를 종료합니다.
+      setIsSearchingUsers(false); // 사용자 검색 모드 OFF
+      setSearchTerm(""); // 검색어 초기화
+      setMentionTriggerIndex(-1); // @ 위치 초기화
+    }
+
+    // 입력창 내용 전체가 비워지면 (모두 삭제 등), 검색 모드를 종료합니다.
+    if (newValue === "") {
+      setIsSearchingUsers(false);
+      setSearchTerm("");
+      setMentionTriggerIndex(-1);
+    }
   };
 
   useEffect(() => {
@@ -938,30 +1049,33 @@ export default function DetailPage({ postId }: Props) {
                                                 styles.ModalCommentSpanW3
                                               }
                                             >
-                                              <Link
-                                                href="#"
-                                                className={
-                                                  styles.ModalCommentSpanLinkW
-                                                }
-                                                role="link"
-                                                tabIndex={0}
-                                              >
-                                                <span
+                                              {!post.hideLikesAndViews && (
+                                                <Link
+                                                  href="#"
                                                   className={
-                                                    styles.ModalCommentSpanW4
+                                                    styles.ModalCommentSpanLinkW
                                                   }
+                                                  role="link"
+                                                  tabIndex={0}
                                                 >
-                                                  {"좋아요"}
                                                   <span
                                                     className={
-                                                      styles.ModalCommentSpanW5
+                                                      styles.ModalCommentSpanW4
                                                     }
                                                   >
-                                                    {post._count.Comments || 0}
+                                                    {"좋아요"}
+                                                    <span
+                                                      className={
+                                                        styles.ModalCommentSpanW5
+                                                      }
+                                                    >
+                                                      {post._count.Comments ||
+                                                        0}
+                                                    </span>
+                                                    {"개"}
                                                   </span>
-                                                  {"개"}
-                                                </span>
-                                              </Link>
+                                                </Link>
+                                              )}
                                             </span>
                                           </div>
                                         </div>
@@ -1638,59 +1752,69 @@ export default function DetailPage({ postId }: Props) {
                                         <section
                                           className={styles.EmoticonSide}
                                         >
-                                          <span className={styles.iconSpan}>
-                                            <div
-                                              className={`${styles.iconDiv} ${
-                                                isLiked ? styles.clicked : ""
-                                              }`}
-                                              role="button"
-                                              tabIndex={0}
-                                              onClick={onClickHeart}
-                                            >
+                                          {!post.hideLikesAndViews && (
+                                            <span className={styles.iconSpan}>
                                               <div
-                                                className={styles.iconInnerDiv}
+                                                className={`${styles.iconDiv} ${
+                                                  isLiked ? styles.clicked : ""
+                                                }`}
+                                                role="button"
+                                                tabIndex={0}
+                                                onClick={onClickHeart}
                                               >
-                                                <span>
-                                                  <svg
-                                                    aria-label={
-                                                      isLiked
-                                                        ? "좋아요 취소"
-                                                        : "좋아요"
-                                                    }
-                                                    className={
-                                                      isLiked
-                                                        ? styles.iconSvgClicked
-                                                        : styles.iconSvg
-                                                    }
-                                                    fill="currentColor"
-                                                    height="24"
-                                                    role="img"
-                                                    viewBox={
-                                                      isLiked
-                                                        ? "0 0 48 48"
-                                                        : "0 0 24 24"
-                                                    }
-                                                    width="24"
-                                                  >
-                                                    <title>
-                                                      {isLiked
-                                                        ? "좋아요 취소"
-                                                        : "좋아요"}
-                                                    </title>
-                                                    <path
-                                                      d={
+                                                <div
+                                                  className={
+                                                    styles.iconInnerDiv
+                                                  }
+                                                >
+                                                  <span>
+                                                    <svg
+                                                      aria-label={
                                                         isLiked
-                                                          ? "M34.6 3.1c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5s1.1-.2 1.6-.5c1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z"
-                                                          : "M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938m0-2a6.04 6.04 0 0 0-4.797 2.127 6.052 6.052 0 0 0-4.787-2.127A6.985 6.985 0 0 0 .5 9.122c0 3.61 2.55 5.827 5.015 7.97.283.246.569.494.853.747l1.027.918a44.998 44.998 0 0 0 3.518 3.018 2 2 0 0 0 2.174 0 45.263 45.263 0 0 0 3.626-3.115l.922-.824c.293-.26.59-.519.885-.774 2.334-2.025 4.98-4.32 4.98-7.94a6.985 6.985 0 0 0-6.708-7.218Z"
+                                                          ? "좋아요 취소"
+                                                          : "좋아요"
                                                       }
-                                                    ></path>
-                                                  </svg>
-                                                </span>
+                                                      className={
+                                                        isLiked
+                                                          ? styles.iconSvgClicked
+                                                          : styles.iconSvg
+                                                      }
+                                                      fill="currentColor"
+                                                      height="24"
+                                                      role="img"
+                                                      viewBox={
+                                                        isLiked
+                                                          ? "0 0 48 48"
+                                                          : "0 0 24 24"
+                                                      }
+                                                      width="24"
+                                                    >
+                                                      <title>
+                                                        {isLiked
+                                                          ? "좋아요 취소"
+                                                          : "좋아요"}
+                                                      </title>
+                                                      <path
+                                                        d={
+                                                          isLiked
+                                                            ? "M34.6 3.1c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5s1.1-.2 1.6-.5c1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z"
+                                                            : "M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938m0-2a6.04 6.04 0 0 0-4.797 2.127 6.052 6.052 0 0 0-4.787-2.127A6.985 6.985 0 0 0 .5 9.122c0 3.61 2.55 5.827 5.015 7.97.283.246.569.494.853.747l1.027.918a44.998 44.998 0 0 0 3.518 3.018 2 2 0 0 0 2.174 0 45.263 45.263 0 0 0 3.626-3.115l.922-.824c.293-.26.59-.519.885-.774 2.334-2.025 4.98-4.32 4.98-7.94a6.985 6.985 0 0 0-6.708-7.218Z"
+                                                        }
+                                                      ></path>
+                                                    </svg>
+                                                  </span>
+                                                </div>
                                               </div>
-                                            </div>
-                                          </span>
+                                            </span>
+                                          )}
                                           <span className={styles.iconSpan_x}>
                                             <div
+                                              style={{
+                                                paddingLeft:
+                                                  post.hideLikesAndViews
+                                                    ? "0px"
+                                                    : "8px",
+                                              }}
                                               className={styles.iconDiv}
                                               role="button"
                                               tabIndex={0}
@@ -1782,42 +1906,46 @@ export default function DetailPage({ postId }: Props) {
                                             </div>
                                           </span>
                                         </section>
-                                        <section className={styles.LikeSide}>
-                                          <div className={styles.LikeDiv}>
-                                            <div className={styles.LikeDiv2}>
-                                              <span
-                                                className={styles.LikeSpan}
-                                                dir="auto"
-                                              >
-                                                <Link
-                                                  href="#"
-                                                  role="link"
-                                                  tabIndex={0}
-                                                  className={styles.LikeLink}
+                                        {!post.hideLikesAndViews && (
+                                          <section className={styles.LikeSide}>
+                                            <div className={styles.LikeDiv}>
+                                              <div className={styles.LikeDiv2}>
+                                                <span
+                                                  className={styles.LikeSpan}
+                                                  dir="auto"
                                                 >
-                                                  <span
-                                                    className={
-                                                      styles.LikeInnerSpan
-                                                    }
-                                                    style={{
-                                                      lineHeight: "18px",
-                                                    }}
+                                                  <Link
+                                                    href="#"
+                                                    role="link"
+                                                    tabIndex={0}
+                                                    className={styles.LikeLink}
                                                   >
-                                                    {"좋아요 "}
                                                     <span
                                                       className={
-                                                        styles.LikeCount
+                                                        styles.LikeInnerSpan
                                                       }
+                                                      style={{
+                                                        lineHeight: "18px",
+                                                      }}
                                                     >
-                                                      {post._count.Hearts || 0}
+                                                      {"좋아요 "}
+                                                      <span
+                                                        className={
+                                                          styles.LikeCount
+                                                        }
+                                                      >
+                                                        {post._count.Hearts ||
+                                                          0}
+                                                      </span>
+                                                      {"개"}
                                                     </span>
-                                                    {"개"}
-                                                  </span>
-                                                </Link>
-                                              </span>
+                                                  </Link>
+                                                </span>
+                                              </div>
                                             </div>
-                                          </div>
-                                        </section>
+                                          </section>
+                                        )}
+
                                         <div className={styles.ContentSide}>
                                           <ul className={styles.ContentUl}>
                                             <div
@@ -2002,20 +2130,24 @@ export default function DetailPage({ postId }: Props) {
                                                     styles.ContentCommentDiv
                                                   }
                                                 >
-                                                  {comments &&
-                                                    comments.map(
-                                                      (comment, index) => (
-                                                        <Comment
-                                                          key={index}
-                                                          comment={comment}
-                                                          postId={postId.toString()}
-                                                          onClickExitBtnChild={
-                                                            onClickExitBtnChild
-                                                          }
-                                                          ReplyInfo={ReplyInfo}
-                                                        />
+                                                  {!post.hideComments
+                                                    ? comments &&
+                                                      comments.map(
+                                                        (comment, index) => (
+                                                          <Comment
+                                                            key={index}
+                                                            comment={comment}
+                                                            postId={postId.toString()}
+                                                            onClickExitBtnChild={
+                                                              onClickExitBtnChild
+                                                            }
+                                                            ReplyInfo={
+                                                              ReplyInfo
+                                                            }
+                                                          />
+                                                        )
                                                       )
-                                                    )}
+                                                    : "댓글을 사용할 수 없는 게시글입니다."}
                                                 </div>
                                               </div>
                                             </div>
@@ -2065,6 +2197,7 @@ export default function DetailPage({ postId }: Props) {
                                         </div>
                                         <section
                                           className={styles.AddCommentSide}
+                                          ref={commentInputRef}
                                         >
                                           <div>
                                             <form
@@ -2114,13 +2247,18 @@ export default function DetailPage({ postId }: Props) {
                                                   name="comment"
                                                   onChange={onChangeTextArea}
                                                   aria-label="댓글 달기..."
-                                                  placeholder="댓글 달기..."
+                                                  placeholder={
+                                                    post.hideComments
+                                                      ? "댓글을 사용할 수 없습니다."
+                                                      : "댓글 달기..."
+                                                  }
                                                   autoComplete="off"
                                                   autoCorrect="off"
                                                   className={
                                                     styles.CommentFormArea
                                                   }
                                                   value={CommentText}
+                                                  disabled={!!post.hideComments}
                                                 />
                                                 <div
                                                   className={
@@ -2161,6 +2299,7 @@ export default function DetailPage({ postId }: Props) {
                                             </form>
                                           </div>
                                         </section>
+                                        {searchResultsModal}
                                       </div>
                                     </div>
                                   </div>

@@ -15,19 +15,18 @@ export async function GET(
     return NextResponse.json({ error: "Database connection failed" });
   }
 
-  // 초기에는 0, 그 다음은 마지막 postId
   const cursor = req.nextUrl.searchParams.get("cursor");
-  const limit = 1;
+  const limit = 5;
 
   let query = {};
 
-  // 커서보다 postId가 큰 게시글 5개 가져옴
+  // 일찍 생성된 데이터 기준으로
   if (cursor) {
-    query = { postId: { $gt: Number(cursor) } };
+    query = { createdAt: { $lt: new Date(cursor) } };
   }
 
   try {
-    const posts = await Post.find(query).sort({ postId: 1 }).limit(limit);
+    const posts = await Post.find(query).sort({ createdAt: -1 }).limit(limit);
     return NextResponse.json(posts);
   } catch (err: any) {
     return NextResponse.json({ error: err.message });

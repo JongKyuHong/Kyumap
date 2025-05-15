@@ -14,12 +14,15 @@ export default function PostRecommends() {
     Object,
     InfiniteData<IPost[]>,
     [_1: string, _2: string],
-    number
+    string
   >({
     queryKey: ["posts", "recommends"], // 쿼리 키 설정
     queryFn: getPostRecommends, // 데이터 페칭 함수
-    initialPageParam: 0, // 초기 페이지 파라미터
-    getNextPageParam: (lastPage) => lastPage.at(-1)?.postId, // 다음 페이지 파라미터 설정
+    initialPageParam: "", // 초기 페이지 파라미터
+    getNextPageParam: (lastPage) => {
+      const lastPost = lastPage.at(-1);
+      return lastPost ? lastPost.createdAt.toString() : undefined;
+    }, // 다음 페이지 파라미터 설정
     staleTime: 60 * 1000, // 데이터가 신선함을 유지하는 시간 (1분)
     gcTime: 300 * 1000, // 가비지 컬렉션 시간 (5분)
     refetchOnWindowFocus: true, // 윈도우 포커스 시 다시 페칭

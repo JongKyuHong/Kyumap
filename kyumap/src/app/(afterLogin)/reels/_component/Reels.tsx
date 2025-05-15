@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import styles from "./reels.module.css";
-import {
+import React, {
   useState,
   useRef,
   useEffect,
@@ -18,12 +18,18 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { IPost } from "@/model/Post";
 import { IUser } from "@/model/User";
 import LoadingComponent from "@/app/_component/LoadingComponent";
+import {
+  useHeart,
+  useSave,
+  useUnheart,
+  useUnsave,
+} from "../../_lib/mutateFactory";
 
 type Props = {
   post: any;
 };
 
-export default function Reels({ post }: Props) {
+function Reels({ post }: Props) {
   const { data: session } = useSession();
   const [isMuted, setMuted] = useState(true);
   const [isMoreInfo, setMoreInfo] = useState(false);
@@ -66,278 +72,13 @@ export default function Reels({ post }: Props) {
     }
   }, [userData, post, session?.user?.email]);
 
-  const heart = useMutation({
-    mutationFn: () => {
-      return fetch(
-        `${
-          process.env.NEXT_PUBLIC_BASE_URL
-        }/api/posts/${post.postId.toString()}/heart`,
-        {
-          method: "post",
-          credentials: "include",
-          body: JSON.stringify(session),
-        }
-      );
-    },
-    onMutate: async () => {
-      if (isLiking) return; // 이미 요청 중이면 아무 작업도 하지 않음
-      setIsLiking(true); // 요청 시작 시 상태 업데이트
-      // setLiked(true); // Optimistic update: 즉시 좋아요 상태 변경
+  const heart = useHeart({ setIsLiking, isLiking });
 
-      // 현재 캐시된 포스트 데이터를 가져옵니다.
-      await queryClient.cancelQueries({
-        queryKey: ["posts", post.postId.toString()],
-      });
-      const previousPost = queryClient.getQueryData<IPost>([
-        "posts",
-        post.postId.toString(),
-      ]);
+  const unheart = useUnheart({ setIsLiking, isLiking });
 
-      // 새로운 포스트 데이터를 만들어 캐시를 업데이트합니다.
-      if (previousPost) {
-        const updatedPost = {
-          ...previousPost,
-          Hearts: [
-            ...previousPost.Hearts,
-            { email: session?.user?.email as string },
-          ],
-          _count: {
-            ...previousPost._count,
-            Hearts: previousPost._count.Hearts + 1,
-          },
-        };
-        queryClient.setQueryData(
-          ["posts", post.postId.toString()],
-          updatedPost
-        );
-      }
+  const saved = useSave({ setSaved });
 
-      return { previousPost };
-    },
-    onError: (error, variables, context) => {
-      // 에러가 발생하면 이전 포스트 데이터로 롤백합니다.
-      if (context?.previousPost) {
-        queryClient.setQueryData(
-          ["posts", post.postId.toString()],
-          context.previousPost
-        );
-        // setLiked(false); // 롤백 시 좋아요 상태도 롤백
-      }
-    },
-    onSuccess: () => {
-      setLiked(true);
-      setHeartsCount(HeartsCount + 1);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["posts", post.postId.toString()],
-      });
-      setIsLiking(false);
-    },
-  });
-
-  // 좋아요 취소
-  const unheart = useMutation({
-    mutationFn: () => {
-      return fetch(
-        `${
-          process.env.NEXT_PUBLIC_BASE_URL
-        }/api/posts/${post.postId.toString()}/heart`,
-        {
-          method: "delete",
-          credentials: "include",
-          body: JSON.stringify(session),
-        }
-      );
-    },
-    onMutate: async () => {
-      if (isLiking) return; // 이미 요청 중이면 아무 작업도 하지 않음
-      setIsLiking(true); // 요청 시작 시 상태 업데이트
-      // setLiked(false); // Optimistic update: 즉시 좋아요 취소 상태 변경
-
-      // 현재 캐시된 포스트 데이터를 가져옵니다.
-      await queryClient.cancelQueries({
-        queryKey: ["posts", post.postId.toString()],
-      });
-      const previousPost = queryClient.getQueryData<IPost>([
-        "posts",
-        post.postId.toString(),
-      ]);
-
-      // 새로운 포스트 데이터를 만들어 캐시를 업데이트합니다.
-      if (previousPost) {
-        const updatedPost = {
-          ...previousPost,
-          Hearts: previousPost.Hearts.filter(
-            (v: any) => v.email !== session?.user?.email
-          ),
-          _count: {
-            ...previousPost._count,
-            Hearts: previousPost._count.Hearts - 1,
-          },
-        };
-        queryClient.setQueryData(
-          ["posts", post.postId.toString()],
-          updatedPost
-        );
-      }
-
-      return { previousPost };
-    },
-    onError: (error, variables, context) => {
-      // 에러가 발생하면 이전 포스트 데이터로 롤백합니다.
-      if (context?.previousPost) {
-        queryClient.setQueryData(
-          ["posts", post.postId.toString()],
-          context.previousPost
-        );
-        // setLiked(true); // 롤백 시 좋아요 상태도 롤백
-      }
-    },
-    onSuccess: () => {
-      setLiked(false);
-      setHeartsCount(HeartsCount - 1);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["posts", post.postId.toString()],
-      });
-      setIsLiking(false);
-    },
-  });
-
-  // 저장됨
-  const saved = useMutation({
-    mutationFn: () => {
-      return fetch(
-        `${
-          process.env.NEXT_PUBLIC_BASE_URL
-        }/api/posts/${post.postId.toString()}/save`,
-        {
-          method: "post",
-          credentials: "include",
-          body: JSON.stringify(session),
-        }
-      );
-    },
-    onMutate: async () => {
-      await queryClient.cancelQueries({
-        queryKey: ["user", session!.user!.email],
-      });
-      const previousUserData = queryClient.getQueryData([
-        "user",
-        session!.user!.email,
-      ]);
-
-      queryClient.setQueryData(
-        ["user", session!.user!.email],
-        (oldData: any) => {
-          if (!oldData) {
-            return {
-              email: session!.user!.email,
-              nickname: session!.user!.name, // 기본 닉네임 (필요에 따라 수정)
-              image: session!.user!.image, // 기본 이미지 (필요에 따라 수정)
-              Saved: [post.postId.toString()],
-              Followers: [],
-              Followings: [],
-              _count: {
-                Followers: 0,
-                Followings: 0,
-              },
-            };
-          }
-
-          return {
-            ...oldData,
-            Saved: oldData.Saved
-              ? [...oldData.Saved, post.postId.toString()]
-              : [post.postId.toString()],
-          };
-        }
-      );
-
-      return { previousUserData };
-    },
-    onError: (err, variables, context) => {
-      if (context && context.previousUserData) {
-        queryClient.setQueryData(
-          ["user", session!.user!.email],
-          context.previousUserData
-        );
-      }
-    },
-    onSuccess() {
-      setSaved(true);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["user", session!.user!.email],
-      });
-    },
-  });
-
-  const unsaved = useMutation({
-    mutationFn: () => {
-      return fetch(
-        `${
-          process.env.NEXT_PUBLIC_BASE_URL
-        }/api/posts/${post.postId.toString()}/save`,
-        {
-          method: "delete",
-          credentials: "include",
-          body: JSON.stringify(session),
-        }
-      );
-    },
-    onMutate: async () => {
-      if (!session || !session.user || !session.user.email) {
-        throw new Error("Session or user information is missing");
-      }
-
-      await queryClient.cancelQueries({
-        queryKey: ["user", session!.user!.email],
-      });
-      const previousUserData = queryClient.getQueryData([
-        "user",
-        session!.user!.email,
-      ]);
-
-      queryClient.setQueryData(
-        ["user", session!.user!.email],
-        (oldData: any) => {
-          if (!oldData || !oldData.Saved) {
-            return oldData;
-          }
-          return {
-            ...oldData,
-            Saved: oldData.Saved.filter(
-              (v: any) => v.id !== post.postId.toString()
-            ),
-          };
-        }
-      );
-
-      return { previousUserData };
-    },
-    onError: (err, variables, context) => {
-      console.log(err, "err");
-      if (context && context.previousUserData) {
-        queryClient.setQueryData(
-          ["user", session!.user!.email],
-          context.previousUserData
-        );
-      }
-    },
-    onSuccess() {
-      setSaved(false);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["user", session!.user!.email],
-      });
-    },
-  });
-
+  const unsaved = useUnsave({ setSaved });
   // 릴스 클릭 시
   const onClickVideo = () => {
     if (videoRef.current) {
@@ -383,9 +124,9 @@ export default function Reels({ post }: Props) {
     if (isLiking) return;
     if (isLiked) {
       // 이미 좋아요를 눌렀으면
-      unheart.mutate();
+      unheart.mutate({ postId: post.postId, session });
     } else {
-      heart.mutate();
+      heart.mutate({ postId: post.postId, session });
     }
   };
 
@@ -393,9 +134,9 @@ export default function Reels({ post }: Props) {
     e.stopPropagation();
     if (isSaved) {
       // 이미 저장함
-      unsaved.mutate();
+      unsaved.mutate({ postId: post.postId, session });
     } else {
-      saved.mutate();
+      saved.mutate({ postId: post.postId, session });
     }
   };
 
@@ -723,7 +464,10 @@ export default function Reels({ post }: Props) {
                 </div>
               </div>
             </div>
-            <div className={styles.comments}>
+            <Link
+              href={`/detailInfo/${post.postId}`}
+              className={styles.comments}
+            >
               <div className={styles.comments2}>
                 <div className={styles.comments3}>
                   <svg
@@ -759,7 +503,7 @@ export default function Reels({ post }: Props) {
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
             <div className={styles.saved}>
               <div>
                 <div
@@ -872,3 +616,11 @@ export default function Reels({ post }: Props) {
     </>
   );
 }
+
+export default React.memo(Reels, (prevProps, nextProps) => {
+  return (
+    prevProps.post.postId === nextProps.post.postId &&
+    prevProps.post._count.Hearts === nextProps.post._count.Hearts &&
+    prevProps.post._count.Comments === nextProps.post._count.Comments
+  );
+});

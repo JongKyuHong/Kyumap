@@ -570,8 +570,6 @@
   vertical-align: baseline;
 }
 
-
-
 .postImage {
   left: 0;
   width: 100%;
@@ -1570,4 +1568,8 @@
   text-align: center;
   -webkit-user-select: none;
   vertical-align: middle;
+}
+
+.commentInputWrapper {
+  position: relative;
 }

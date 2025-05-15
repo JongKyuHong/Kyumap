@@ -1,5 +1,5 @@
 type Props = {
-  pageParam?: number;
+  pageParam?: string;
 };
 
 // 릴스 목록을 가져오는
