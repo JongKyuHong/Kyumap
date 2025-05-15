@@ -1,12 +1,15 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import styles from "./moreInfoOverlay.module.css";
 import { useRouter } from "next/navigation";
 import { getPost } from "@/app/(afterLogin)/_lib/getPost";
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import styles from "./moreInfoOverlay.module.css";
 import { IPost } from "@/model/Post";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import LoadingComponent from "@/app/_component/LoadingComponent";
+import toggleLikesAndViews from "../../_lib/toggleLikesAndView";
+import toggleHideComments from "../../_lib/toggleHideComments";
 // import LoadingComponent from "@/app/_component/LoadingComponent";
 
 type Props = {
@@ -21,6 +24,8 @@ export default function MoreInfoOverlay({
   onOpenDetail,
 }: Props) {
   const [post, setPost] = useState<IPost | null>(null);
+  const [isHideComments, setHideComments] = useState<boolean>(false);
+  const [isHideLikesAndViews, setHideLikesAndViews] = useState<boolean>(false);
   const router = useRouter();
   const { data: session } = useSession();
   const queryClient = useQueryClient();
@@ -35,6 +40,12 @@ export default function MoreInfoOverlay({
   useEffect(() => {
     if (postData) {
       setPost(postData);
+      if (postData?.hideComments) {
+        setHideComments(true);
+      }
+      if (postData.hideLikesAndViews) {
+        setHideLikesAndViews(true);
+      }
     }
   }, [postId, postData]);
 
@@ -107,9 +118,37 @@ export default function MoreInfoOverlay({
     router.back();
   };
 
-  // if (!post) {
-  //   return <LoadingComponent />;
-  // }
+  const onClickLikesAndViews = async () => {
+    const res = await toggleLikesAndViews(postId);
+    if (res.success) {
+      await queryClient.invalidateQueries({
+        queryKey: ["posts", "recommends"],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["posts", postId.toString()],
+      });
+      setHideLikesAndViews(!isHideLikesAndViews);
+    }
+    onClose();
+  };
+
+  const onClickhideComments = async () => {
+    const res = await toggleHideComments(postId);
+    if (res.success) {
+      await queryClient.invalidateQueries({
+        queryKey: ["posts", "recommends"],
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["posts", postId.toString()],
+      });
+      setHideComments(!isHideComments);
+    }
+    onClose();
+  };
+
+  if (!post) {
+    return <LoadingComponent />;
+  }
 
   return (
     <div className={styles.rootMenu1} onClick={onClose}>
@@ -134,11 +173,21 @@ export default function MoreInfoOverlay({
                                 삭제
                               </button>
                               <button className={styles.menuBtn2}>수정</button>
-                              <button className={styles.menuBtn2}>
-                                다른 사람에게 좋아요 수 숨기기 취소
+                              <button
+                                className={styles.menuBtn2}
+                                onClick={onClickLikesAndViews}
+                              >
+                                {isHideLikesAndViews
+                                  ? "좋아요 숨기기 취소"
+                                  : "좋아요 숨기기"}
                               </button>
-                              <button className={styles.menuBtn2}>
-                                댓글 기능 설정
+                              <button
+                                className={styles.menuBtn2}
+                                onClick={onClickhideComments}
+                              >
+                                {isHideComments
+                                  ? "댓글 숨기기 취소"
+                                  : "댓글 숨기기"}
                               </button>
                               <button
                                 className={styles.menuBtn2}

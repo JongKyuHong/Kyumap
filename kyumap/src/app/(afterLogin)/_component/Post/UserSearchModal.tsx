@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./UserSearchModal.module.css";
+import styles from "./userSearchModal.module.css";
 import Image from "next/image";
 import mongoose from "mongoose";
 

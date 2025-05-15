@@ -206,6 +206,8 @@ export default React.memo(Post, (prevProps, nextProps) => {
   return (
     prevProps.post.postId === nextProps.post.postId &&
     prevProps.post._count.Hearts === nextProps.post._count.Hearts &&
-    prevProps.post._count.Comments === nextProps.post._count.Comments
+    prevProps.post._count.Comments === nextProps.post._count.Comments &&
+    prevProps.post.hideLikesAndViews === nextProps.post.hideLikesAndViews &&
+    prevProps.post.hideComments === nextProps.post.hideComments
   );
 });

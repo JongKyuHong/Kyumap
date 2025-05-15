@@ -241,41 +241,63 @@ export default function NewPost() {
   // 섬네일 생성
   const generateVideoThumbnail = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
-      const video = document.createElement("video"); // 비디오 엘리먼트 생성
-      const canvas = document.createElement("canvas"); // 캔버스 엘리먼트 생성
-      const context = canvas.getContext("2d"); // 캔버스 컨텍스트 가져오기
-      const reader = new FileReader(); // 파일 리더 생성
+      const video = document.createElement("video");
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      const reader = new FileReader();
 
-      // 파일 리더가 파일을 성공적으로 읽었을 때 호출되는 함수
-      reader.onload = (event) => {
-        video.src = event.target?.result as string; // 비디오 소스 설정
-        // 비디오 데이터가 로드되었을 때 호출되는 함수
-        video.onloadeddata = () => {
-          canvas.width = video.videoWidth; // 캔버스 너비 설정
-          canvas.height = video.videoHeight; // 캔버스 높이 설정
-          video.currentTime = 1; // 첫 번째 초의 프레임을 사용
-        };
+      video.crossOrigin = "anonymous";
 
-        video.onseeked = () => {
-          if (context) {
-            context.drawImage(video, 0, 0, canvas.width, canvas.height); // 비디오 프레임을 캔버스에 그림
-            const thumbnailUrl = canvas.toDataURL("image/png"); // 캔버스를 데이터 URL로 변환
-            resolve(thumbnailUrl); // 썸네일 URL 반환
-          } else {
-            reject("캔버스 컨텍스트를 가져올 수 없습니다.");
+      reader.onload = () => {
+        video.src = reader.result as string;
+
+        video.onloadedmetadata = async () => {
+          try {
+            // 준비될 때까지 기다림
+            const waitForReady = () => {
+              return new Promise<void>((resolve) => {
+                const check = () => {
+                  if (video.readyState >= 2) resolve();
+                  else setTimeout(check, 50);
+                };
+                check();
+              });
+            };
+
+            await waitForReady();
+
+            // 시점 이동
+            video.currentTime = Math.min(0.1, video.duration / 2);
+
+            video.onseeked = () => {
+              canvas.width = video.videoWidth;
+              canvas.height = video.videoHeight;
+
+              setTimeout(() => {
+                if (context) {
+                  context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                  const thumbnailUrl = canvas.toDataURL("image/png");
+                  resolve(thumbnailUrl);
+                } else {
+                  reject("캔버스 컨텍스트 없음");
+                }
+              }, 100); // 100ms 지연 후 drawImage
+            };
+          } catch (err) {
+            reject("썸네일 추출 중 오류: " + (err as any)?.message);
           }
         };
 
         video.onerror = (error: any) => {
-          reject("비디오 로드 중 오류 발생: " + error.message);
+          reject("비디오 로드 오류: " + error.message);
         };
       };
 
       reader.onerror = (error: any) => {
-        reject("파일 읽기 중 오류 발생: " + error.message);
+        reject("파일 읽기 오류: " + error.message);
       };
 
-      reader.readAsDataURL(file); // 파일을 데이터 URL로 읽음
+      reader.readAsDataURL(file);
     });
   };
 
@@ -727,7 +749,6 @@ export default function NewPost() {
                                                               sizes="100vw"
                                                               crossOrigin="anonymous"
                                                               draggable="false"
-                                                              priority={true}
                                                             />
                                                           </span>
                                                         </div>
@@ -1449,7 +1470,6 @@ export default function NewPost() {
                                                                 height={44}
                                                                 width={67}
                                                                 src={`${preview[index]?.dataUrl}`}
-                                                                priority={true}
                                                                 alt={
                                                                   "postImage"
                                                                 }
@@ -1955,9 +1975,8 @@ export default function NewPost() {
                                                   }}
                                                   width={0}
                                                   height={0}
-                                                  alt={"postImage"}
                                                   sizes="100vw"
-                                                  priority={true}
+                                                  alt={"postImage"}
                                                 />
                                                 <div
                                                   className={styles.imgTab3}
@@ -2097,7 +2116,7 @@ export default function NewPost() {
                                                     width={0}
                                                     height={0}
                                                     sizes="100vw"
-                                                    priority={true}
+                                                    // priority={true}
                                                   />
                                                 </div>
                                               </div>
